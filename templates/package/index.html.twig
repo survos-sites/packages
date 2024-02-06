@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Package index{% endblock %}
+
+
+{% block body %}
+    <h1>Package index</h1>
+
+    {% include "package/_table.html.twig" %}
+
+    <a class="btn btn-primary" href="{{ path('package_new') }}"><span class="fas fa-plus"></span>New  Package</a>
+{% endblock %}

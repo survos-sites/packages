@@ -1,0 +1,34 @@
+
+
+<table class="table js-datatable">
+    <thead>
+    <tr>
+        <th>actions</th>
+                    <th>Id</th>
+                    <th>Name</th>
+            </tr>
+    </thead>
+    <tbody>
+    {% for package in packages %}
+    <tr>
+        <td>
+            <a href="{{ path('package_show', package.rp) }}">
+                <span class="fas fa-eye"></span>
+                <i class="bi bi-info"></i>
+            </a>
+            <a href="{{ path('package_edit', package.rp) }}">
+                <span class="fas fa-edit"></span>
+                <i class="bi bi-pencil"></i>
+            </a>
+        </td>
+
+                    <td>{{ package.id }}</td>
+                    <td>{{ package.name }}</td>
+            </tr>
+    {% else %}
+    <tr>
+        <td colspan="3">no records found</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

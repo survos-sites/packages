@@ -1,0 +1,8 @@
+#survos_base:
+#  theme: umbrella
+#
+#twig:
+#  globals:
+#    theme: umbrella
+#  paths:
+#    'vendor/survos/base-bundle/templates/umbrella': 'theme'

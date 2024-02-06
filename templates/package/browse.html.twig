@@ -1,0 +1,73 @@
+{% extends "package/base.html.twig" %}
+
+{% block title %}Bundle Browser{% endblock %}
+
+{% block body %}
+
+    'name',
+    'shortName',
+    'description',
+    {name: 'keywords', title: 'keywords', block: 'list'},
+    {% component api_grid with {
+        class: packageClass,
+        apiRoute: apiRoute,
+        caller: _self,
+        columns: [
+            {name: 'vendor', browsable: true},
+            {name: 'description', searchable: true},
+            {name: 'symfonyVersions', title: 'symfony', block: 'list'},
+            {name: 'phpVersions', title: 'php', block: 'list'},
+            'marking'
+        ]
+    } %}
+
+        <twig:block name="vendor">
+            <p class="line-limit-2 text-wrap" style="max-width: 200px">
+
+                <a target="_blank" href="{{ path('package_show', row.rp) }}">
+                    SHOW
+                </a>
+
+                <b><a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
+                        {{ row.name|default('??') }}
+                    </a>
+                </b>
+            </p>
+        </twig:block>
+        <twig:block name="description">
+            <p class="line-limit-1 text-wrap" style="max-width: 600px">
+                {{ row.description }}
+            </p>
+        </twig:block>
+
+        <twig:block name="list">
+            {% set items = attribute(row, field_name) %}
+            {% set max = 3 %}
+            <ul class="list-unstyled">
+                {% for item in items|slice(0, 3) %}
+            <li class="list-inline-item">{{ item }}
+                {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
+            </li>
+            {% endfor %}
+
+            </ul>
+{#            <b>!{{ field_name }}</b>#}
+{#            {{ attribute(row, field_name)|json_encode }}#}
+{#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }}#}
+        </twig:block>
+        <twig:block name="shortName">
+            <a target="_blank" href="{{ path('package_show', row.rp) }}">
+                Show
+            </a>
+            {{ row.vendor }}<br/>
+            <span class="bi bi-github">
+
+        </span>
+            <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
+                {{ row.shortName }}
+            </a>
+        </twig:block>
+
+    {% endcomponent %}
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BASE Package{% endblock %}
+
+{% block page_title %}{{ package }}{% endblock %}
+{% block page_subtitle %}{{ app.request.get('_route') }}{% endblock %}
+
+{% block body %}
+
+If we have a Package entity, we should display it here.
+
+{% endblock %}

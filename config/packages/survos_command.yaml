@@ -1,0 +1,5 @@
+survos_command:
+  # could also add expose=true to a ClassAttribute, with security or something
+  namespaces: [app, project, generate]
+#    app: true
+#    project: true # isGranted('PROJECT_ADMIN') ??

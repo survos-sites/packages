@@ -1,0 +1,19 @@
+survos_bootstrap:
+  routes:
+    login: app_login
+    logout: app_logout
+    register: app_register
+    offcanvas: app_settings
+  options:
+    theme: bootswatch
+    allow_login: true
+    offcanvas: false
+  app:
+    code: repo
+    abbr: repo
+
+  menu_options:
+    showAppMenu: true
+    repo: null
+#    frontPage: false
+#    showAppMenu: true
