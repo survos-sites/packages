@@ -10,7 +10,7 @@
         "api-platform/core": "^3.2",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^2.18 || ^3.0",
+        "doctrine/orm": "^2.18",
         "meilisearch/meilisearch-php": "^1.6",
         "nelmio/cors-bundle": "^2.4",
         "nyholm/psr7": "^1.0",
@@ -100,7 +100,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "7.0.*"
         }
     },

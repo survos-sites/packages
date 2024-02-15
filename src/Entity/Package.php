@@ -32,6 +32,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
 #[ApiResource(
+    operations: [new Get(), new GetCollection(
+        name: 'doctrine-packages'
+    )],
     normalizationContext: ['groups' => ['package.read', 'marking', 'browse', 'transitions', 'rp']],
     denormalizationContext: ['groups' => ["Default", "minimum", "browse"]],
 )]
