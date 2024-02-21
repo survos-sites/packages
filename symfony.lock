@@ -52,6 +52,18 @@
     "knplabs/knp-menu-bundle": {
         "version": "v3.3.0"
     },
+    "knplabs/packagist-api": {
+        "version": "2.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.6",
+            "ref": "6db69661915a16528535b90973e02593cc3b84e3"
+        },
+        "files": [
+            "config/packages/knp_packagist_api.yaml"
+        ]
+    },
     "nelmio/cors-bundle": {
         "version": "2.4",
         "recipe": {
