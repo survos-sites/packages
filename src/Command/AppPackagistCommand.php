@@ -26,7 +26,7 @@ use Zenstruck\Console\RunsProcesses;
 use Packagist\Api\Client;
 use function Symfony\Component\String\u;
 
-#[AsCommand('app:packagist', 'Search and Load repos from packagist')]
+#[AsCommand('app:load-data', 'Search and Load repos from packagist')]
 final class AppPackagistCommand extends InvokableServiceCommand
 {
     use ConfigureWithAttributes;
@@ -255,7 +255,8 @@ final class AppPackagistCommand extends InvokableServiceCommand
 
     public function fetch(int $pageSize, Client $client): void
     {
-        $packages = $this->packageRepository->findBy(['vendor' => 'symfony'], limit: $pageSize);
+//        $packages = $this->packageRepository->findBy(['vendor' => 'symfony'], limit: $pageSize);
+        $packages = $this->packageRepository->findAll();
         /** @var Result $result */
         foreach ($packages as $survosPackage) {
             $name = $survosPackage->getName();

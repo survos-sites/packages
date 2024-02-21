@@ -5,8 +5,6 @@
 
     {{ package.stars }}
     {{ package.data.time|ago }}
-    <h3>{{ package.dependencies|length }} Projects </h3>
-    {{ include('dependency/_table.html.twig', {dependencies: package.dependencies})}}
 
     <twig:item_grid
         :data="package.data.require">

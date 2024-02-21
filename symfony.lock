@@ -91,10 +91,10 @@
         ]
     },
     "survos/api-grid-bundle": {
-        "version": "1.5.148"
+        "version": "1.5.156"
     },
     "survos/bootstrap-bundle": {
-        "version": "1.5.148"
+        "version": "1.5.156"
     },
     "survos/command-bundle": {
         "version": "1.5",
@@ -110,7 +110,7 @@
         ]
     },
     "survos/core-bundle": {
-        "version": "1.5.148"
+        "version": "1.5.156"
     },
     "survos/crawler-bundle": {
         "version": "1.5",
@@ -126,10 +126,10 @@
         ]
     },
     "survos/inspection-bundle": {
-        "version": "1.5.148"
+        "version": "1.5.156"
     },
     "survos/workflow-helper-bundle": {
-        "version": "1.5.148"
+        "version": "1.5.156"
     },
     "symfony/asset-mapper": {
         "version": "7.0",
@@ -343,7 +343,7 @@
         "version": "v2.14.0"
     },
     "symfony/ux-twig-component": {
-        "version": "2.14",
+        "version": "2.15",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
