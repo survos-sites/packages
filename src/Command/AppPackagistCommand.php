@@ -51,7 +51,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         #[Option(description: 'load the bundle names and vendors')] bool                      $setup = false,
         #[Option(description: 'fetch the latest version json')] bool                          $fetch = false,
         #[Option(description: 'process the json in the database')] bool                       $process = false,
-        #[Option(description: 'page size')] int                                               $pageSize = 100
+        #[Option(description: 'page size')] int                                               $pageSize = 100000
     ): void
     {
 
@@ -204,6 +204,12 @@ final class AppPackagistCommand extends InvokableServiceCommand
                                 !in_array($dependency, ['symfony/flex'])) {
                                 [$vendor, $shortName] = explode('/', $dependency);
                                 if ($vendor == 'symfony') {
+                                    // too many false positives with "*" or ">2.0".
+                                    if (!preg_match("/\d/", $version)) {
+                                        dump($version);
+                                        $okay = false;
+                                        break;
+                                    }
                                     try {
                                         $constraint = $parser->parse($version);
                                     } catch (\Exception $exception) {

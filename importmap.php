@@ -71,79 +71,79 @@ return [
         'type' => 'css',
     ],
     'datatables.net-plugins/i18n/en-GB.mjs' => [
-        'version' => '1.13.6',
+        'version' => '2.0.2',
     ],
     'datatables.net-bs5' => [
-        'version' => '1.13.8',
+        'version' => '2.0.0',
     ],
     'jquery' => [
         'version' => '3.7.1',
     ],
     'datatables.net' => [
-        'version' => '1.13.8',
+        'version' => '2.0.0',
     ],
     'datatables.net-bs5/css/dataTables.bootstrap5.min.css' => [
-        'version' => '1.13.8',
+        'version' => '2.0.0',
         'type' => 'css',
     ],
     'datatables.net-buttons-bs5' => [
-        'version' => '2.4.2',
+        'version' => '3.0.1',
     ],
     'datatables.net-buttons' => [
-        'version' => '2.4.2',
+        'version' => '3.0.1',
     ],
     'datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css' => [
-        'version' => '2.4.2',
+        'version' => '3.0.1',
         'type' => 'css',
     ],
     'datatables.net-responsive-bs5' => [
-        'version' => '2.5.0',
+        'version' => '3.0.1',
     ],
     'datatables.net-responsive' => [
-        'version' => '2.5.0',
+        'version' => '3.0.1',
     ],
     'datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css' => [
-        'version' => '2.5.0',
+        'version' => '3.0.1',
         'type' => 'css',
     ],
     'datatables.net-scroller-bs5' => [
-        'version' => '2.3.0',
+        'version' => '2.4.1',
     ],
     'datatables.net-scroller' => [
-        'version' => '2.3.0',
+        'version' => '2.4.1',
     ],
     'datatables.net-scroller-bs5/css/scroller.bootstrap5.min.css' => [
-        'version' => '2.3.0',
+        'version' => '2.4.1',
         'type' => 'css',
     ],
     'datatables.net-searchpanes-bs5' => [
-        'version' => '2.2.0',
+        'version' => '2.3.0',
     ],
     'datatables.net-searchpanes' => [
-        'version' => '2.2.0',
+        'version' => '2.3.0',
     ],
     'datatables.net-searchpanes-bs5/css/searchPanes.bootstrap5.min.css' => [
-        'version' => '2.2.0',
+        'version' => '2.3.0',
         'type' => 'css',
     ],
     'datatables.net-searchbuilder-bs5' => [
-        'version' => '1.6.0',
+        'version' => '1.7.0',
     ],
     'datatables.net-searchbuilder' => [
-        'version' => '1.6.0',
+        'version' => '1.7.0',
     ],
     'datatables.net-searchbuilder-bs5/css/searchBuilder.bootstrap5.min.css' => [
-        'version' => '1.6.0',
+        'version' => '1.7.0',
         'type' => 'css',
     ],
     'datatables.net-select-bs5' => [
-        'version' => '1.7.0',
+        'version' => '2.0.0',
     ],
     'datatables.net-select' => [
-        'version' => '1.7.0',
+        'version' => '2.0.0',
     ],
     'datatables.net-select-bs5/css/select.bootstrap5.min.css' => [
-        'version' => '1.7.0',
+        'version' => '2.0.0',
         'type' => 'css',
     ],
     'bootstrap' => [
@@ -154,6 +154,14 @@ return [
     ],
     'bootstrap/dist/css/bootstrap.min.css' => [
         'version' => '5.3.2',
+        'type' => 'css',
+    ],
+    'bootstrap-icons/font/bootstrap-icons.min.css' => [
+        'version' => '1.11.3',
+        'type' => 'css',
+    ],
+    'bootswatch/dist/materia/bootstrap.min.css' => [
+        'version' => '5.3.3',
         'type' => 'css',
     ],
 ];

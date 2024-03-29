@@ -14,6 +14,7 @@
         caller: _self,
         columns: [
             {name: 'vendor', browsable: true},
+            {name: 'shortName'},
             {name: 'description', searchable: true},
             {name: 'symfonyVersions', title: 'symfony', block: 'list'},
             {name: 'phpVersions', title: 'php', block: 'list'},
@@ -22,17 +23,20 @@
     } %}
 
         <twig:block name="vendor">
-            <p class="line-limit-2 text-wrap" style="max-width: 200px">
-
-                <a target="_blank" href="{{ path('package_show', row.rp) }}">
-                    SHOW
-                </a>
-
-                <b><a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
-                        {{ row.name|default('??') }}
-                    </a>
-                </b>
+            <p class="xline-limit-2 xtext-wrap" style="max-width: 200px">
+                {{ row.vendor }}
             </p>
+        </twig:block>
+        <twig:block name="xxshortName">
+            <a target="_blank" href="{{ path('package_show', row.rp) }}">
+                {{ row.shortName|default('??') }}
+            </a>
+
+            <b><a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
+                    (packagist)
+                </a>
+            </b>
+
         </twig:block>
         <twig:block name="description">
             <p class="line-limit-1 text-wrap" style="max-width: 600px">
@@ -44,27 +48,26 @@
             {% set items = attribute(row, field_name) %}
             {% set max = 3 %}
             <ul class="list-unstyled">
-                {% for item in items|slice(0, 3) %}
-            <li class="list-inline-item">{{ item }}
-                {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
-            </li>
+            {% for item in items|slice(0, 3) %}
+                <li class="list-inline-item">{{ item }}
+                    {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
+                </li>
             {% endfor %}
-
             </ul>
 {#            <b>!{{ field_name }}</b>#}
 {#            {{ attribute(row, field_name)|json_encode }}#}
 {#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }}#}
         </twig:block>
         <twig:block name="shortName">
+            <span>
             <a target="_blank" href="{{ path('package_show', row.rp) }}">
                 Show
             </a>
-            {{ row.vendor }}<br/>
-            <span class="bi bi-github">
-
+            {{ row.vendor }}
         </span>
+
             <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
-                {{ row.shortName }}
+                <span class="bi bi-github"></span> {{ row.shortName }}
             </a>
         </twig:block>
 

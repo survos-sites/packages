@@ -1,5 +1,8 @@
 {% extends "@SurvosBootstrap/%s/base.html.twig"|format(theme) %}
 
-{% block javascripts %}
-    {{ parent() }}
-{% endblock %}
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
