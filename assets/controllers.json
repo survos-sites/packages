@@ -1,6 +1,11 @@
 {
     "controllers": {
         "@survos/api-grid-bundle": {
+            "js_twig": {
+                "enabled": true,
+                "fetch": "lazy",
+                "autoimport": []
+            },
             "api_grid": {
                 "enabled": true,
                 "fetch": "lazy",

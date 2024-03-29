@@ -1,6 +1,6 @@
 {
     "name": "packages",
-    "description": "A repo, maybe get this from github",
+    "description": "PWA/datatables showing Symfony bundles",
     "keywords": [
         "php",
         "symfony"

@@ -29,7 +29,6 @@ use function Symfony\Component\String\u;
 #[AsCommand('app:load-data', 'Search and Load repos from packagist')]
 final class AppPackagistCommand extends InvokableServiceCommand
 {
-    use ConfigureWithAttributes;
     use RunsCommands;
     use RunsProcesses;
 

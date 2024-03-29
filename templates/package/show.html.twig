@@ -4,7 +4,7 @@
     <h1>{{ package.name }}</h1>
 
     {{ package.stars }}
-    {{ package.data.time|ago }}
+    {{ package.data.time|time_diff }}
 
     <twig:item_grid
         :data="package.data.require">

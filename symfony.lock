@@ -52,6 +52,9 @@
     "knplabs/knp-menu-bundle": {
         "version": "v3.3.0"
     },
+    "knplabs/knp-time-bundle": {
+        "version": "v2.2.0"
+    },
     "knplabs/packagist-api": {
         "version": "2.1",
         "recipe": {
