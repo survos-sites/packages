@@ -74,16 +74,16 @@ return [
         'version' => '2.0.2',
     ],
     'datatables.net-bs5' => [
-        'version' => '2.0.0',
+        'version' => '2.0.3',
     ],
     'jquery' => [
         'version' => '3.7.1',
     ],
     'datatables.net' => [
-        'version' => '2.0.0',
+        'version' => '2.0.3',
     ],
     'datatables.net-bs5/css/dataTables.bootstrap5.min.css' => [
-        'version' => '2.0.0',
+        'version' => '2.0.3',
         'type' => 'css',
     ],
     'datatables.net-buttons-bs5' => [
