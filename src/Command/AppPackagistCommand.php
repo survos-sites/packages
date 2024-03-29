@@ -61,7 +61,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         if ($setup) {
             foreach (
                 $client->all([
-                    'type' => 'symfony-bundle']) as $packageName
+                    'type' => 'symfony-bundle']) as $idx => $packageName
             ) {
                 [$vendor, $shortName] = explode('/', $packageName);
 
@@ -74,6 +74,10 @@ final class AppPackagistCommand extends InvokableServiceCommand
                 $survosPackage
                     ->setVendor($vendor)
                     ->setShortName($shortName);
+                if (($idx % 100) == 1) {
+                    $this->entityManager->flush();
+                    $io->writeln("flushing $idx");
+                }
             }
             $this->entityManager->flush();
             $this->io()->writeln("bundled loaded: " . $this->packageRepository->count([]));
