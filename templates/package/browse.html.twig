@@ -8,12 +8,13 @@
     'shortName',
     'description',
     {name: 'keywords', title: 'keywords', block: 'list'},
+    {name: 'vendor', browsable: true},
     {% component api_grid with {
         class: packageClass,
         apiRoute: apiRoute,
         caller: _self,
         columns: [
-            {name: 'vendor', browsable: true},
+            {name: 'id'},
             {name: 'shortName'},
             {name: 'description', searchable: true},
             {name: 'symfonyVersions', title: 'symfony', block: 'list'},

@@ -51,7 +51,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         #[Option(description: 'load the bundle names and vendors')] bool                      $setup = false,
         #[Option(description: 'fetch the latest version json')] bool                          $fetch = false,
         #[Option(description: 'process the json in the database')] bool                       $process = false,
-        #[Option(description: 'page size')] int                                               $pageSize = 100000
+        #[Option(name: 'page-size', description: 'page size')] int                                               $pageSize = 100000
     ): void
     {
 

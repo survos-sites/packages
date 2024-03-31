@@ -17,6 +17,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\PackageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Survos\ApiGrid\Api\Filter\FacetsFieldSearchFilter;
@@ -77,7 +78,7 @@ class Package implements RouteParametersInterface, MarkingInterface
     #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_VALID_REQUIREMENTS)]
     final const TRANSITION_VALID = 'valid';
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column(type: 'integer')]
     #[Groups(['browse'])]
     private $id;
