@@ -13,6 +13,9 @@
         class: packageClass,
         apiRoute: apiRoute,
         caller: _self,
+        globals: {
+            packagistIcon: ux_icon('simple-icons:packagist'),
+        },
         columns: [
             {name: 'id'},
             {name: 'shortName'},
@@ -22,6 +25,7 @@
             'marking'
         ]
     } %}
+
 
         <twig:block name="vendor">
             <p class="xline-limit-2 xtext-wrap" style="max-width: 200px">
@@ -40,6 +44,7 @@
 
         </twig:block>
         <twig:block name="description">
+
             <p class="line-limit-1 text-wrap" style="max-width: 600px">
                 {{ row.description }}
             </p>
@@ -68,7 +73,9 @@
         </span>
 
             <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
-                <span class="bi bi-github"></span> {{ row.shortName }}
+                {{ globals.packagistIcon }}
+{#                <span class="bi bi-github"></span> #}
+                {{ row.shortName }}
             </a>
         </twig:block>
 

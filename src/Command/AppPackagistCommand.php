@@ -13,6 +13,7 @@ use PharIo\Version\VersionConstraintParser;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -158,14 +159,15 @@ final class AppPackagistCommand extends InvokableServiceCommand
         }
         $packages = $this->packageRepository->findBy(
             [
-                //            'marking' =>
-                //                [SurvosPackage::PLACE_VALID_REQUIREMENTS, SurvosPackage::PLACE_OUTDATED_PHP, SurvosPackage::PLACE_COMPOSER_LOADED]
+                            'marking' =>
+                                [SurvosPackage::PLACE_NEW,  SurvosPackage::PLACE_COMPOSER_LOADED]
             ],
             limit: $pageSize
         );
         /** @var Result $result */
         $progressBar = new ProgressBar($this->io()->output(), count($packages));
         $progressBar->start();
+        $distribution = [];
         foreach ($packages as $survosPackage) {
             $progressBar->advance();
             $name = $survosPackage->getName();
@@ -208,9 +210,12 @@ final class AppPackagistCommand extends InvokableServiceCommand
                                 !in_array($dependency, ['symfony/flex'])) {
                                 [$vendor, $shortName] = explode('/', $dependency);
                                 if ($vendor == 'symfony') {
+                                    if (!array_key_exists($dependency, $distribution)) {
+                                        $distribution[$dependency]=0;
+                                    }
+                                    $distribution[$dependency]++;
                                     // too many false positives with "*" or ">2.0".
                                     if (!preg_match("/\d/", $version)) {
-                                        dump($version);
                                         $okay = false;
                                         break;
                                     }
@@ -260,12 +265,24 @@ final class AppPackagistCommand extends InvokableServiceCommand
             }
         }
         $progressBar->finish();
+        $table = new Table($this->io());
+        $table->setHeaders(['bundle','count']);
+        asort($distribution);
+        foreach ($distribution as $bundle=>$count) {
+            $table->addRow([$bundle, $count]);
+        }
+        $table->render();
+
+        $this->io()->writeln("total " . count($packages));
     }
 
     public function fetch(int $pageSize, Client $client): void
     {
 //        $packages = $this->packageRepository->findBy(['vendor' => 'symfony'], limit: $pageSize);
-        $packages = $this->packageRepository->findAll();
+        $packages = $this->packageRepository->findBy(
+            ['marking' => [SurvosPackage::PLACE_NEW]],
+            ['name' => 'ASC']
+        );
         /** @var Result $result */
         foreach ($packages as $survosPackage) {
             $name = $survosPackage->getName();
