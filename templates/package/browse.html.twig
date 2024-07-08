@@ -6,9 +6,7 @@
 
     'name',
     'shortName',
-    'description',
     {name: 'keywords', title: 'keywords', block: 'list'},
-    {name: 'vendor', browsable: true},
     {% component api_grid with {
         class: packageClass,
         apiRoute: apiRoute,
@@ -18,6 +16,7 @@
         },
         columns: [
             {name: 'id'},
+            {name: 'vendor', browsable: true},
             {name: 'shortName'},
             {name: 'description', searchable: true},
             {name: 'symfonyVersions', title: 'symfony', block: 'list'},
@@ -28,9 +27,9 @@
 
 
         <twig:block name="vendor">
-            <p class="xline-limit-2 xtext-wrap" style="max-width: 200px">
+            <span class="xline-limit-2 xtext-wrap" style="max-width: 200px">
                 {{ row.vendor }}
-            </p>
+            </span>
         </twig:block>
         <twig:block name="xxshortName">
             <a target="_blank" href="{{ path('package_show', row.rp) }}">
@@ -44,10 +43,9 @@
 
         </twig:block>
         <twig:block name="description">
-
-            <p class="line-limit-1 text-wrap" style="max-width: 600px">
+            <span class="line-limit-1" style="max-width: 600px">
                 {{ row.description }}
-            </p>
+            </span>
         </twig:block>
 
         <twig:block name="list">
@@ -69,8 +67,7 @@
             <a target="_blank" href="{{ path('package_show', row.rp) }}">
                 Show
             </a>
-            {{ row.vendor }}
-        </span>
+            </span>
 
             <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
                 {{ globals.packagistIcon }}

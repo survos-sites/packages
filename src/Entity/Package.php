@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\PackageRepository;
+use App\Workflow\BundleWorkflowInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Schema\Sequence;
@@ -24,7 +25,6 @@ use Survos\ApiGrid\Api\Filter\FacetsFieldSearchFilter;
 use Survos\ApiGrid\State\MeiliSearchStateProvider;
 use Survos\CoreBundle\Entity\RouteParametersInterface;
 use Survos\CoreBundle\Entity\RouteParametersTrait;
-use Survos\CoreBundle\Entity\SurvosCoreEntity;
 use Survos\ApiGrid\Api\Filter\MultiFieldSearchFilter;
 use Survos\WorkflowBundle\Attribute\Transition;
 use Survos\WorkflowBundle\Traits\MarkingInterface;
@@ -57,26 +57,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
     arguments: ["searchParameterName" => "search"]
 )]
 //#[Groups(['package.read'])] // NO! The data is too big
-class Package implements RouteParametersInterface, MarkingInterface
+class Package implements RouteParametersInterface, MarkingInterface, BundleWorkflowInterface
 {
     use RouteParametersTrait;
     use MarkingTrait;
 
-    final const PLACE_NEW = 'new';
-    final const PLACE_COMPOSER_LOADED = 'loaded';
-    final const PLACE_OUTDATED = 'outdated_symfony';
-    final const PLACE_OUTDATED_PHP = 'php_too_old';
-    final const PLACE_ABANDONED = 'abandoned';
-    final const PLACE_VALID_REQUIREMENTS = 'valid';
 
-    #[Transition([self::PLACE_NEW], self::PLACE_COMPOSER_LOADED)]
-    final const TRANSITION_LOAD = 'load';
-
-    #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_OUTDATED)]
-    final const TRANSITION_OUTDATED = 'outdated';
-
-    #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_VALID_REQUIREMENTS)]
-    final const TRANSITION_VALID = 'valid';
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column(type: 'integer')]

@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Repository\PackageRepository;
+use App\Workflow\BundleWorkflow;
 use Composer\Semver\Comparator;
 use Doctrine\ORM\EntityManagerInterface;
 use Packagist\Api\Result\Package;
@@ -14,9 +15,11 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Workflow\WorkflowInterface;
 use Zenstruck\Console\Attribute\Argument;
 use Zenstruck\Console\Attribute\Option;
 use Zenstruck\Console\ConfigureWithAttributes;
@@ -35,11 +38,13 @@ final class AppPackagistCommand extends InvokableServiceCommand
 
 
     public function __construct(
-        private PackageRepository      $packageRepository,
-        private EntityManagerInterface $entityManager,
-        private SerializerInterface    $serializer,
-        private LoggerInterface        $logger,
-        string                         $name = null
+        private PackageRepository                                  $packageRepository,
+        private EntityManagerInterface                             $entityManager,
+        private SerializerInterface                                $serializer,
+        private LoggerInterface                                    $logger,
+        #[Target(BundleWorkflow::WORKFLOW_NAME)]
+        private readonly WorkflowInterface $workflow,
+        string                                                     $name = null
     )
     {
         parent::__construct($name);
@@ -52,9 +57,17 @@ final class AppPackagistCommand extends InvokableServiceCommand
         #[Option(description: 'load the bundle names and vendors')] bool                      $setup = false,
         #[Option(description: 'fetch the latest version json')] bool                          $fetch = false,
         #[Option(description: 'process the json in the database')] bool                       $process = false,
-        #[Option(name: 'page-size', description: 'page size')] int                                               $pageSize = 100000
+        #[Option(name: 'page-size', description: 'page size')] int                                               $pageSize = 100000,
+        #[Option(description: 'limit (for testing)')] int                                               $limit = 0
     ): void
     {
+        // note: we are handling abandoned earlier
+        $transitions = [
+            BundleWorkflow::TRANSITION_LOAD,
+            BundleWorkflow::TRANSITION_PHP_TOO_OLD,
+            BundleWorkflow::TRANSITION_OUTDATED,
+            BundleWorkflow::TRANSITION_VALID,
+            ];
 
         $client = new Client();
 //        'fields' => ['abandoned','repository','type'],
@@ -84,6 +97,22 @@ final class AppPackagistCommand extends InvokableServiceCommand
             $this->io()->writeln("bundled loaded: " . $this->packageRepository->count([]));
         }
 
+        foreach ($this->packageRepository->findBy([], limit: $limit) as $package) {
+            foreach ($transitions as $transition) {
+                if ($this->workflow->can($package, $transition)) {
+                    $this->workflow->apply($package, $transition);
+                    $this->entityManager->flush();
+                    dd($package, $transition);
+                } else {
+                    $reasons = $this->workflow->buildTransitionBlockerList($package, $transition);
+//                    dd($reasons);
+                }
+
+            }
+
+        }
+
+
         if ($fetch) {
             $this->fetch($pageSize, $client);
         }
@@ -104,7 +133,12 @@ final class AppPackagistCommand extends InvokableServiceCommand
     public function addPackage(Client $client, SurvosPackage $survosPackage): void
     {
         // @todo: cache
-        $composer = $client->getComposer($survosPackage->getName());
+        try {
+            $composer = $client->getComposer($survosPackage->getName());
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage() . "\n" .$survosPackage->getName());
+            return;
+        }
         assert(count($composer) == 1, "multiple packages: " . join("\n", array_keys($composer)));
         /**
          * @var string $packageName

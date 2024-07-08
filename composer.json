@@ -4,11 +4,11 @@
     "name": "survos-sites/packages",
     "description": "Symfony application showing Symfony bundles",
     "keywords": ["symfony","pwa","datatables"],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "version": "1.1.0",
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/core": "^3.2.18",
@@ -55,13 +55,13 @@
         "symfony/string": "^7.0.4",
         "symfony/translation": "^7.0.4",
         "symfony/twig-bundle": "^7.0.4",
-        "symfony/ux-icons": "2.x-dev",
+        "symfony/ux-icons": "^2.18",
         "symfony/ux-turbo": "^2.16",
         "symfony/validator": "^7.0.5",
         "symfony/web-link": "^7.0.3",
         "symfony/yaml": "^7.0.3",
-        "twig/extra-bundle": "^2.12|^3.8",
-        "twig/twig": "3.9.3"
+        "twig/extra-bundle": "^3.8",
+        "twig/twig": "^3.9"
     },
     "config": {
         "allow-plugins": {
@@ -111,7 +111,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "^7.0"
+            "require": "^7.1"
         }
     },
     "require-dev": {
