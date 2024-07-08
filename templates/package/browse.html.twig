@@ -6,7 +6,6 @@
 
     'name',
     'shortName',
-    'description',
     {name: 'keywords', title: 'keywords', block: 'list'},
     {% component api_grid with {
         class: packageClass,
@@ -36,9 +35,9 @@
 
         </twig:block>
         <twig:block name="vendor">
-            <p class="xline-limit-2 xtext-wrap" style="max-width: 200px">
+            <span class="xline-limit-2 xtext-wrap" style="max-width: 200px">
                 {{ row.vendor }}
-            </p>
+            </span>
         </twig:block>
         <twig:block name="xxshortName">
             <a target="_blank" href="{{ path('package_show', row.rp) }}">
@@ -52,10 +51,9 @@
 
         </twig:block>
         <twig:block name="description">
-
-            <p class="line-limit-1 text-wrap" style="max-width: 600px">
+            <span class="line-limit-1" style="max-width: 600px">
                 {{ row.description }}
-            </p>
+            </span>
         </twig:block>
 
         <twig:block name="list">
@@ -73,6 +71,11 @@
 {#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }}#}
         </twig:block>
         <twig:block name="shortName">
+            <span>
+            <a target="_blank" href="{{ path('package_show', row.rp) }}">
+                Show
+            </a>
+            </span>
             <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
                 {{ globals.packagistIcon }}
 {#                <span class="bi bi-github"></span> #}
