@@ -58,6 +58,18 @@
             "config/packages/knp_packagist_api.yaml"
         ]
     },
+    "knpuniversity/oauth2-client-bundle": {
+        "version": "2.18",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.20",
+            "ref": "1ff300d8c030f55c99219cc55050b97a695af3f6"
+        },
+        "files": [
+            "config/packages/knpu_oauth2_client.yaml"
+        ]
+    },
     "nelmio/cors-bundle": {
         "version": "2.4",
         "recipe": {
@@ -116,6 +128,9 @@
     },
     "survos/api-grid-bundle": {
         "version": "1.5.156"
+    },
+    "survos/auth-bundle": {
+        "version": "1.5.255"
     },
     "survos/bootstrap-bundle": {
         "version": "1.5.156"
