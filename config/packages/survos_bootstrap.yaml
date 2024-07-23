@@ -3,14 +3,12 @@ survos_bootstrap:
     login: app_login
     logout: app_logout
     register: app_register
-    offcanvas: app_settings
   options:
     theme: bootswatch
     allow_login: true
-    offcanvas: false
   app:
-    code: repo
-    abbr: repo
+    code: bundles
+    abbr: symfony<b>Bundles</b>
 
   menu_options:
     showAppMenu: true
