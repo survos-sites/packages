@@ -203,94 +203,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         $progressBar->start();
         $distribution = [];
         foreach ($packages as $survosPackage) {
-            $progressBar->advance();
-            $name = $survosPackage->getName();
-            $survosPackage->setSymfonyVersions([]);
-            $survosPackage->setPhpVersions([]);
-            $data = $survosPackage->getData();
-            if (!$data) {
-                continue;
-            }
-            $survosPackage->setKeywords($data['keywords'] ?? []); // could also get this from the json directly!
 
-            if ($data['abandoned'] || (count($data['require'] ?? []) == 0)) {
-                $survosPackage->setMarking(SurvosPackage::PLACE_ABANDONED);
-            } else {
-                foreach ($data['require'] ?? [] as $dependency => $version) {
-                    switch ($dependency) {
-                        case 'php':
-                            $okay = false; // unless we have a valid php version
-                            $survosPackage->setPhpVersions([]);
-                            try {
-                                $constraint = $parser->parse($version);
-                            } catch (\Exception $exception) {
-                                break; // probably >= 8.2 or something like that.
-                            }
-                            foreach ($allowed as $value) {
-                                if (!$complies = $constraint->complies($phpVersion = $phpVersions[$value])) {
-//                                dd(actual: $version, minimum: $phpVersion->getVersionString());
-                                } else {
-                                    $okay = true;
-                                    $survosPackage->addPhpVersion($value);
-                                }
-                            }
-                            if (!$okay) {
-                                $survosPackage->setMarking(SurvosPackage::PLACE_OUTDATED_PHP);
-                            }
-                            break;
-                        default:
-                            if (str_contains($dependency, 'symfony/') &&
-                                !u($dependency)->startsWith('symfony/ux') &&
-                                !in_array($dependency, ['symfony/flex'])) {
-                                [$vendor, $shortName] = explode('/', $dependency);
-                                if ($vendor == 'symfony') {
-                                    if (!array_key_exists($dependency, $distribution)) {
-                                        $distribution[$dependency]=0;
-                                    }
-                                    $distribution[$dependency]++;
-                                    // too many false positives with "*" or ">2.0".
-                                    if (!preg_match("/\d/", $version)) {
-                                        $okay = false;
-                                        break;
-                                    }
-                                    try {
-                                        $constraint = $parser->parse($version);
-                                    } catch (\Exception $exception) {
-                                        $this->logger->info(sprintf("%s %s\n%s\n%s",
-                                            $dependency, $version,
-                                            $this->getPackagistUrl($name),
-                                            $exception->getMessage()));
-                                        break;
-//                                    dd($dependency, $version, $exception);
-                                    }
-                                    foreach (['5.4', '6.4', '7.0'] as $x) {
-                                        $complies = $constraint->complies(new Version($x)); // true
-//                                    $complies = Comparator::greaterThan($version, $x); // 1.25.0 > 1.24.0
-//                                    if (!$complies) dd($complies, $x, $version);
-                                        if ($complies) {
-                                            $survosPackage->addSymfonyVersion($x);
-                                            $okay = true;
-                                        }
-                                    }
-                                }
-                            } else {
-                                $okay = true;
-                            }
-                            break;
-                    }
-                }
-            }
-
-            if (!in_array($survosPackage->getMarking(),
-                [SurvosPackage::PLACE_OUTDATED_PHP,
-                    SurvosPackage::PLACE_ABANDONED])) {
-                if (count($survosPackage->getSymfonyVersions()) == 0) {
-                    $this->logger->info("outdated " . $this->getPackagistUrl($name));
-                    $survosPackage->setMarking(SurvosPackage::PLACE_OUTDATED);
-                } else {
-                    $survosPackage->setMarking(SurvosPackage::PLACE_VALID_REQUIREMENTS);
-                }
-            }
 
             if ((($progressBar->getProgress() % 500) == 0)) {
 //                $this->logger->warning("Flushing");
@@ -326,9 +239,4 @@ final class AppPackagistCommand extends InvokableServiceCommand
         }
     }
 
-    private function getPackagistUrl($name): string
-    {
-        return sprintf("https://packagist.org/packages/$name");
-
-    }
 }

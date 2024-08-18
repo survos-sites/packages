@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\PackageRepository;
+use App\Workflow\BundleWorkflow;
 use App\Workflow\BundleWorkflowInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -57,7 +58,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     arguments: ["searchParameterName" => "search"]
 )]
 //#[Groups(['package.read'])] // NO! The data is too big
-class Package implements RouteParametersInterface, MarkingInterface, BundleWorkflowInterface
+class Package implements RouteParametersInterface, MarkingInterface, BundleWorkflowInterface, \Stringable
 {
     use RouteParametersTrait;
     use MarkingTrait;
@@ -108,6 +109,12 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastModifiedTime = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phpVersionString = null;
 
     public function __construct()
     {
@@ -274,6 +281,40 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public function setLastModifiedTime(?\DateTimeInterface $lastModifiedTime): static
     {
         $this->lastModifiedTime = $lastModifiedTime;
+
+        return $this;
+    }
+
+    public function getFlowCode(): string
+    {
+        return BundleWorkflow::WORKFLOW_NAME;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPhpVersionString(): ?string
+    {
+        return $this->phpVersionString;
+    }
+
+    public function setPhpVersionString(?string $phpVersionString): static
+    {
+        $this->phpVersionString = $phpVersionString;
 
         return $this;
     }

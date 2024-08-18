@@ -1,0 +1,11 @@
+zenstruck_twig_service:
+#  functions:
+#    - strlen # available as "fn_strlen()" in twig
+#    - [service.id, serviceMethod] # available as "fn_serviceMethod()" in twig
+#    - [Some\Class, somePublicStaticMethod] # available as "fn_somePublicStaticMethod()" in twig
+
+  # use the array key to customize the name
+  functions:
+    len: strlen # available as "fn_len()" in twig
+#    custom: [service.id, serviceMethod] # available as "fn_custom()" in twig
+#    alias: [Some\Class, somePublicStaticMethod] # available as "fn_alias()" in twig

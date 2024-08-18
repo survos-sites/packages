@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e24a98b3bfd3f27c060bfdbfa9a52e0",
+    "content-hash": "2c8da3363d34e143cca80c398400136d",
     "packages": [
         {
             "name": "api-platform/core",
@@ -11315,6 +11315,68 @@
                 }
             ],
             "time": "2024-02-19T13:23:41+00:00"
+        },
+        {
+            "name": "zenstruck/twig-service-bundle",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zenstruck/twig-service-bundle.git",
+                "reference": "f14ba6050bbd048fbfb15ebf65fc720d7d03d4a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zenstruck/twig-service-bundle/zipball/f14ba6050bbd048fbfb15ebf65fc720d7d03d4a9",
+                "reference": "f14ba6050bbd048fbfb15ebf65fc720d7d03d4a9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0",
+                "symfony/framework-bundle": "^5.4|^6.0|^7.0",
+                "symfony/twig-bundle": "^5.4|^6.0|^7.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^9.5",
+                "symfony/console": "^5.4|^6.0|^7.0",
+                "symfony/phpunit-bridge": "^6.1|^7.0",
+                "symfony/var-dumper": "^5.4|^6.0|^7.0",
+                "zenstruck/console-test": "^1.4"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Zenstruck\\Twig\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Bond",
+                    "email": "kevinbond@gmail.com"
+                }
+            ],
+            "description": "Make functions, static methods, Symfony service methods available in your twig templates.",
+            "homepage": "https://github.com/zenstruck/twig-service-bundle",
+            "keywords": [
+                "dependency injection",
+                "service",
+                "twig"
+            ],
+            "support": {
+                "issues": "https://github.com/zenstruck/twig-service-bundle/issues",
+                "source": "https://github.com/zenstruck/twig-service-bundle/tree/v1.5.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kbond",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-11-16T21:31:52+00:00"
         }
     ],
     "packages-dev": [

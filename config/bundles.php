@@ -30,4 +30,5 @@ return [
     Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
     OpenConext\MonitorBundle\OpenConextMonitorBundle::class => ['all' => true],
     Pierstoval\SmokeTesting\SmokeTestingBundle::class => ['dev' => true, 'test' => true],
+    Zenstruck\Twig\ZenstruckTwigServiceBundle::class => ['all' => true],
 ];
