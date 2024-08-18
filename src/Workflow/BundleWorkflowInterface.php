@@ -11,7 +11,7 @@ interface BundleWorkflowInterface
     final const string PLACE_COMPOSER_LOADED = 'composer_loaded';
     final const PLACE_SYMFONY_OUTDATED = 'outdated_symfony';
     final const PLACE_SYMFONY_OKAY = 'symfony_ok';
-    final const PLACE_OUTDATED_PHP = 'php_too_old';
+    final const PLACE_OUTDATED_PHP = 'php_is_too_old';
     final const PLACE_PHP_OKAY = 'php_ok';
     final const PLACE_ABANDONED = 'abandoned';
     final const PLACE_VALID_REQUIREMENTS = 'valid';

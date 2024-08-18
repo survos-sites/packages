@@ -90,7 +90,7 @@ class PackageService
     }
 
 
-    #[AsTwigFunction] // will be available as "someMethod" in twig
+    #[AsTwigFunction] // will be available as "fnValidPhpVersions" in twig
     public function validPhpVersions(Package $survosPackage): array
     {
         $results = [];

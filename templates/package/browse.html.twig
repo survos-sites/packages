@@ -3,16 +3,21 @@
 {% block title %}Bundle Browser{% endblock %}
 
 {% block body %}
-
     'name',
     'shortName',
     {name: 'keywords', title: 'keywords', block: 'list'},
+    {# because twig twig within this component is compiled to javascript, we need to pass the icons #}
     {% component api_grid with {
         class: packageClass,
         apiRoute: apiRoute,
         caller: _self,
         globals: {
             packagistIcon: ux_icon('simple-icons:packagist'),
+            iconMap: {
+                new:  ux_icon('clarity:new-line'),
+                composer_loaded: ux_icon('logos:composer'),
+                php_too_old:  ux_icon('icon-park-outline:invalid-files', {class: 'bg-danger text-white'}),
+            }
         },
         columns: [
             {name: 'id'},
@@ -50,6 +55,17 @@
             </b>
 
         </twig:block>
+        <twig:block name="marking">
+            {% set icon = globals.iconMap[row.marking]|default(false) %}
+            {% if icon %}
+                <span title="{{ row.marking }}">
+                {{ icon }}
+
+                </span>
+            {% else %}
+                {{ row.marking }}
+            {% endif %}
+        </twig:block>
         <twig:block name="description">
             <span class="line-limit-1" style="max-width: 600px">
                 {{ row.description }}
@@ -71,11 +87,11 @@
 {#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }}#}
         </twig:block>
         <twig:block name="shortName">
-            <span>
-            <a target="_blank" href="{{ path('package_show', row.rp) }}">
-                Show
-            </a>
-            </span>
+{#            <span>#}
+{#            <a target="_blank" href="{{ path('package_show', row.rp) }}">#}
+{#                Show#}
+{#            </a>#}
+{#            </span>#}
             <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
                 {{ globals.packagistIcon }}
 {#                <span class="bi bi-github"></span> #}

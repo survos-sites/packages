@@ -92,6 +92,10 @@ final class AppPackagistCommand extends InvokableServiceCommand
                     $this->entityManager->flush();
                     $io->writeln("flushing $idx");
                 }
+
+                if ($limit && ($idx >= $limit)) {
+                    break;
+                }
             }
             $this->entityManager->flush();
             $this->io()->writeln("bundled loaded: " . $this->packageRepository->count([]));
@@ -102,7 +106,8 @@ final class AppPackagistCommand extends InvokableServiceCommand
                 if ($this->workflow->can($package, $transition)) {
                     $this->workflow->apply($package, $transition);
                     $this->entityManager->flush();
-                    dd($package, $transition);
+                    $this->logger->info($package->getMarking());
+//                        dd($package, $transition);
                 } else {
                     $reasons = $this->workflow->buildTransitionBlockerList($package, $transition);
 //                    dd($reasons);

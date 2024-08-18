@@ -8,6 +8,7 @@ use Packagist\Api\Result\Package as PackagistPackage;
 use App\Message\ProcessPackage;
 use Packagist\Api\Client;
 use Psr\Log\LoggerInterface;
+use Survos\WorkflowBundle\Attribute\Transition;
 use Survos\WorkflowBundle\Attribute\Workflow;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -38,21 +39,39 @@ final class BundleWorkflow implements BundleWorkflowInterface
     // This name is used for injecting the workflow into a controller!
     const WORKFLOW_NAME = 'BundleWorkflow';
 
-    #[AsGuardListener(self::WORKFLOW_NAME, self::PLACE_OUTDATED_PHP)]
+    #[AsGuardListener(self::WORKFLOW_NAME)]
     public function onGuard(GuardEvent $event): void
     {
-        return;
-        $composer = $this->getComposer($this->getPackage($event));
+        $composer = $this->getComposer($package = $this->getPackage($event));
+        $transition = $event->getTransition();
+        $transitionName = $event->getTransition()->getName();
+//        if (empty($composer)) {
+//        }
+//        $package = $this->getPackage($event);
+//        dd($composer, $package);
         if (empty($composer)) {
+            switch ($transitionName) {
+                case self::TRANSITION_ABANDON:
+                case self::TRANSITION_LOAD:
+                    // okay
+                    break;
+                default:
+                    $event->setBlocked(true, 'Composer data is not yet loaded.');
+            }
+        }
 
+        $validPhpVersion = count($this->packageService->validPhpVersions($package));
+        switch ($event->getTransition()->getName()) {
+            case self::TRANSITION_PHP_TOO_OLD:
+                if ($validPhpVersion) {
+                    $event->setBlocked(true, 'Valid PHP versions.');
+                }
+                break;
+            case self::TRANSITION_PHP_OKAY:
+                if (!$validPhpVersion) {
+                    $event->setBlocked(true, 'No Valid PHP versions.');
+                }
         }
-        if (empty($title)) {
-            $event->setBlocked(true, 'This blog post cannot be marked as reviewed because it has no title.');
-        }
-        // if composer isn't loaded, we can only load or abandoned this
-        // admin or user owns the submission
-        // if the file no longer exists, we can't approve it.
-//        dd($event, __);
     }
 
     private function getPackage(TransitionEvent|GuardEvent $event): Package
@@ -75,6 +94,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
             $this->loadLatestVersionData($package);
         }
         $this->packageService->populateFromComposerData($package);
+//        dd($package);
     }
 
 //    #[Cache('1 day')]
