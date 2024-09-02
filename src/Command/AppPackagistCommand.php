@@ -38,13 +38,13 @@ final class AppPackagistCommand extends InvokableServiceCommand
 
 
     public function __construct(
-        private PackageRepository                                  $packageRepository,
-        private EntityManagerInterface                             $entityManager,
-        private SerializerInterface                                $serializer,
-        private LoggerInterface                                    $logger,
+        private PackageRepository          $packageRepository,
+        private EntityManagerInterface     $entityManager,
+        private SerializerInterface        $serializer,
+        private LoggerInterface            $logger,
         #[Target(BundleWorkflow::WORKFLOW_NAME)]
         private readonly WorkflowInterface $workflow,
-        string                                                     $name = null
+        string                             $name = null
     )
     {
         parent::__construct($name);
@@ -57,17 +57,20 @@ final class AppPackagistCommand extends InvokableServiceCommand
         #[Option(description: 'load the bundle names and vendors')] bool                      $setup = false,
         #[Option(description: 'fetch the latest version json')] bool                          $fetch = false,
         #[Option(description: 'process the json in the database')] bool                       $process = false,
-        #[Option(name: 'page-size', description: 'page size')] int                                               $pageSize = 100000,
-        #[Option(description: 'limit (for testing)')] int                                               $limit = 0
+        #[Option(name: 'page-size', description: 'page size')] int                            $pageSize = 100000,
+        #[Option(description: 'limit (for testing)')] int                                     $limit = 0,
+        #[Option(description: 'filter by marking')] ?string                                     $marking = null,
+
     ): void
     {
         // note: we are handling abandoned earlier
         $transitions = [
             BundleWorkflow::TRANSITION_LOAD,
             BundleWorkflow::TRANSITION_PHP_TOO_OLD,
+            BundleWorkflow::TRANSITION_PHP_OKAY,
             BundleWorkflow::TRANSITION_OUTDATED,
             BundleWorkflow::TRANSITION_VALID,
-            ];
+        ];
 
         $client = new Client();
 //        'fields' => ['abandoned','repository','type'],
@@ -101,26 +104,40 @@ final class AppPackagistCommand extends InvokableServiceCommand
             $this->io()->writeln("bundled loaded: " . $this->packageRepository->count([]));
         }
 
-        foreach ($this->packageRepository->findBy([], limit: $limit) as $package) {
-            foreach ($transitions as $transition) {
-                if ($this->workflow->can($package, $transition)) {
-                    $this->workflow->apply($package, $transition);
-                    $this->entityManager->flush();
-                    $this->logger->info($package->getMarking());
-//                        dd($package, $transition);
-                } else {
-                    $reasons = $this->workflow->buildTransitionBlockerList($package, $transition);
-//                    dd($reasons);
-                }
 
-            }
-
+        $where = [];
+        if ($marking) {
+            $where['marking'] = $marking;
         }
-
 
         if ($fetch) {
             $this->fetch($pageSize, $client);
         }
+
+        if ($process) {
+            foreach ($this->packageRepository->findBy($where, limit: $limit ?: 10000) as $package) {
+                do {
+                    $transitions = $this->workflow->getEnabledTransitions($package);
+                    foreach ($transitions as $t) {
+                        $transition = $t->getName();
+                        if ($this->workflow->can($package, $transition)) {
+                            $this->workflow->apply($package, $transition);
+                            $this->entityManager->flush();
+                            $this->logger->info($package->getName() . ': ' . $transition . "->" . $package->getMarking());
+//                        dd($package, $transition);
+                        } else {
+                            $reasons = $this->workflow->buildTransitionBlockerList($package, $transition);
+//                    dd($reasons);
+                        }
+                    }
+                    if (count($transitions) === 0) {
+                        $this->logger->info(sprintf("Skipping %s at %s no transitions", $package->getName(), $package->getMarking()));
+                    }
+                } while (count($transitions));
+            }
+        }
+
+
         if ($process) {
             $this->process($pageSize);
         }
@@ -141,7 +158,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         try {
             $composer = $client->getComposer($survosPackage->getName());
         } catch (\Exception $exception) {
-            $this->logger->error($exception->getMessage() . "\n" .$survosPackage->getName());
+            $this->logger->error($exception->getMessage() . "\n" . $survosPackage->getName());
             return;
         }
         assert(count($composer) == 1, "multiple packages: " . join("\n", array_keys($composer)));
@@ -198,8 +215,8 @@ final class AppPackagistCommand extends InvokableServiceCommand
         }
         $packages = $this->packageRepository->findBy(
             [
-                            'marking' =>
-                                [SurvosPackage::PLACE_NEW,  SurvosPackage::PLACE_COMPOSER_LOADED]
+                'marking' =>
+                    [SurvosPackage::PLACE_NEW, SurvosPackage::PLACE_COMPOSER_LOADED]
             ],
             limit: $pageSize
         );
@@ -218,9 +235,9 @@ final class AppPackagistCommand extends InvokableServiceCommand
         }
         $progressBar->finish();
         $table = new Table($this->io());
-        $table->setHeaders(['bundle','count']);
+        $table->setHeaders(['bundle', 'count']);
         asort($distribution);
-        foreach ($distribution as $bundle=>$count) {
+        foreach ($distribution as $bundle => $count) {
             $table->addRow([$bundle, $count]);
         }
         $table->render();

@@ -64,6 +64,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
         switch ($event->getTransition()->getName()) {
             case self::TRANSITION_PHP_TOO_OLD:
                 if ($validPhpVersion) {
+                    // block the PHP_TOO_OLD transition
                     $event->setBlocked(true, 'Valid PHP versions.');
                 }
                 break;

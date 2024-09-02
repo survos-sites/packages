@@ -14,10 +14,13 @@ use function Symfony\Component\String\u;
 
 class PackageService
 {
+    private VersionConstraintParser $parser;
     public function __construct(
         private readonly LoggerInterface $logger
     )
     {
+        $this->parser = new VersionConstraintParser();
+
     }
 
     public function populateFromComposerData(Package $survosPackage)
@@ -59,7 +62,7 @@ class PackageService
                                     break;
                                 }
                                 try {
-                                    $constraint = $parser->parse($version);
+                                    $constraint = $this->parser->parse($version);
                                 } catch (\Exception $exception) {
                                     $this->logger->info(sprintf("%s %s\n%s\n%s",
                                         $dependency, $version,
@@ -96,7 +99,6 @@ class PackageService
         $results = [];
         $okay = false; // unless we have a valid php version
         $survosPackage->setPhpVersions([]);
-        $parser = new VersionConstraintParser();
 
         $allowed = ['8.1','8.2','8.3'];
         foreach ($allowed as $value) {
@@ -109,11 +111,14 @@ class PackageService
 
         $versionString = $survosPackage->getPhpVersionString();
         $versionString = str_replace('>=', '^', $versionString);
+        $versionString = str_replace(' ', '', $versionString);
 
         try {
-            $constraint = $parser->parse($versionString);
+            $constraint = $this->parser->parse($versionString);
         } catch (\Exception $exception) {
-            dd($exception, $survosPackage->getPhpVersionString());
+            $this->logger->error($survosPackage->getPhpVersionString() . ' ' . $exception->getMessage());
+            return [];
+//            dd($exception, $survosPackage->getPhpVersionString());
         }
         foreach ($allowed as $value) {
             if ($complies = $constraint->complies($phpVersion = $phpVersions[$value])) {
