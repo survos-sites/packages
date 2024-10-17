@@ -43,6 +43,7 @@ final class AppMenu implements KnpMenuHelperInterface
     {
         $menu = $event->getMenu();
         $this->add($menu, uri: 'https://github.com/survos-sites/packages', label: "Github");
+
     }
 
     #[AsEventListener(event: KnpMenuEvent::NAVBAR_MENU)]
@@ -51,6 +52,7 @@ final class AppMenu implements KnpMenuHelperInterface
         $menu = $event->getMenu();
         $options = $event->getOptions();
         $nestedMenu = $this->addSubmenu($menu, 'Credits');
+        $this->add($menu, 'survos_riccox');
 
         foreach (['bundles', 'javascript'] as $type) {
             $this->addMenuItem($nestedMenu, ['uri' => "#$type", 'label' => ucfirst($type)]);
