@@ -25,7 +25,7 @@ final class AppMenu implements KnpMenuHelperInterface
     use KnpMenuHelperTrait;
 
     public function __construct(
-        #[Autowire('%kernel.environment%')] private string $env,
+        #[Autowire('%kernel.environment%')] protected string $env,
         private MenuService $menuService,
         private Security $security,
         private ?AuthorizationCheckerInterface $authorizationChecker = null

@@ -170,6 +170,9 @@
     "survos/maker-bundle": {
         "version": "1.5.198"
     },
+    "survos/meili-admin-bundle": {
+        "version": "1.5.370"
+    },
     "survos/workflow-helper-bundle": {
         "version": "1.5.156"
     },
