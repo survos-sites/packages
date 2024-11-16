@@ -7,11 +7,16 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
 
+import '@tabler/core';
+import '@tabler/core/dist/css/tabler.min.css';
+
 // start the Stimulus application
 import './bootstrap.js';
-import 'bootstrap'
-// import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootswatch/dist/materia/bootstrap.min.css'
 
-import 'bootstrap-icons/font/bootstrap-icons.min.css'
-
+// import 'bootstrap'
+// hack to support bg-seconary
+import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootswatch/dist/materia/bootstrap.min.css'
+//
+// import 'bootstrap-icons/font/bootstrap-icons.min.css'
+//

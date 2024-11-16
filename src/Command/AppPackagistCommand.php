@@ -63,7 +63,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
 
     ): void
     {
-        // note: we are handling abandoned earlier
+//        // note: we are handling abandoned earlier
         $transitions = [
             BundleWorkflow::TRANSITION_LOAD,
             BundleWorkflow::TRANSITION_PHP_TOO_OLD,
@@ -115,26 +115,30 @@ final class AppPackagistCommand extends InvokableServiceCommand
         }
 
         if ($process) {
-            foreach ($this->packageRepository->findBy($where, limit: $limit ?: 10000) as $package) {
-                do {
-                    $transitions = $this->workflow->getEnabledTransitions($package);
-                    foreach ($transitions as $t) {
-                        $transition = $t->getName();
-                        if ($this->workflow->can($package, $transition)) {
-                            $this->workflow->apply($package, $transition);
+            $packages = $this->packageRepository->findBy($where, limit: $limit ?: 100000);
+            $progressBar = new ProgressBar($io, count($packages));
+            foreach ($packages as $package) {
+                $progressBar->advance();
+//                    $transitions = $this->workflow->getEnabledTransitions($package);
+                    foreach ($transitions as $transitionName) {
+//                        $transitionName = $t->getName();
+                        $original = $package->getMarking();
+                        if ($this->workflow->can($package, $transitionName)) {
+                            $this->workflow->apply($package, $transitionName);
                             $this->entityManager->flush();
-                            $this->logger->info($package->getName() . ': ' . $transition . "->" . $package->getMarking());
+                            $this->logger->info($package->getName() . " @$original ==>" . $transitionName . "->" . $package->getMarking());
 //                        dd($package, $transition);
                         } else {
-                            $reasons = $this->workflow->buildTransitionBlockerList($package, $transition);
+//                            $this->logger->info("Skipping " . $package->getName() . " @$original ==>" . $transitionName);
+//                            $reasons = $this->workflow->buildTransitionBlockerList($package, $transitionName);
 //                    dd($reasons);
                         }
                     }
-                    if (count($transitions) === 0) {
-                        $this->logger->info(sprintf("Skipping %s at %s no transitions", $package->getName(), $package->getMarking()));
-                    }
-                } while (count($transitions));
+//                    if (count($transitions) === 0) {
+//                        $this->logger->info(sprintf("Skipping %s at %s no transitions", $package->getName(), $package->getMarking()));
+//                    }
             }
+            $progressBar->finish();
         }
 
 

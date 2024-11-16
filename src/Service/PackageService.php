@@ -71,7 +71,7 @@ class PackageService
                                     break;
 //                                    dd($dependency, $version, $exception);
                                 }
-                                foreach (['5.4', '6.4', '7.0'] as $x) {
+                                foreach (['5.4', '6.4', '7.0','7.1','7.2'] as $x) {
                                     $complies = $constraint->complies(new Version($x)); // true
 //                                    $complies = Comparator::greaterThan($version, $x); // 1.25.0 > 1.24.0
 //                                    if (!$complies) dd($complies, $x, $version);
@@ -112,11 +112,14 @@ class PackageService
         $versionString = $survosPackage->getPhpVersionString();
         $versionString = str_replace('>=', '^', $versionString);
         $versionString = str_replace(' ', '', $versionString);
+        if (preg_match('/^\^\d$/', $versionString, $m)) {
+            $versionString .= '.0';
+        }
 
         try {
             $constraint = $this->parser->parse($versionString);
         } catch (\Exception $exception) {
-            $this->logger->error($survosPackage->getPhpVersionString() . ' ' . $exception->getMessage());
+            $this->logger->error($survosPackage->getPhpVersionString() . " ($versionString) " . $exception->getMessage());
             return [];
 //            dd($exception, $survosPackage->getPhpVersionString());
         }

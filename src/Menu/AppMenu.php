@@ -52,7 +52,9 @@ final class AppMenu implements KnpMenuHelperInterface
         $menu = $event->getMenu();
         $options = $event->getOptions();
         $nestedMenu = $this->addSubmenu($menu, 'Credits');
-        $this->add($menu, 'survos_riccox');
+        $this->add($menu, 'app_homepage');
+        $this->add($menu, 'riccox_meili_admin');
+        $this->add($menu, 'survos_workflows');
 
         foreach (['bundles', 'javascript'] as $type) {
             $this->addMenuItem($nestedMenu, ['uri' => "#$type", 'label' => ucfirst($type)]);

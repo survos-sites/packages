@@ -39,8 +39,32 @@ final class BundleWorkflow implements BundleWorkflowInterface
     // This name is used for injecting the workflow into a controller!
     const WORKFLOW_NAME = 'BundleWorkflow';
 
+    /**
+     * Handle binary checking of Symfony
+     *
+     * @param GuardEvent $event
+     * @return void
+     */
     #[AsGuardListener(self::WORKFLOW_NAME)]
-    public function onGuard(GuardEvent $event): void
+    public function onGuardSymfony(GuardEvent $event): void
+    {
+        $transitionName = $event->getTransition()->getName();
+        /** @var Package $package */
+        $package = $event->getSubject();
+        $validVersionCount = count($package->getSymfonyVersions());
+        if (!in_array($transitionName, [self::TRANSITION_SYMFONY_OKAY, self::TRANSITION_OUTDATED])) {
+            return;
+        }
+        match($transitionName) {
+            self::TRANSITION_SYMFONY_OKAY => $event->setBlocked($validVersionCount===0, 'block if no valid versions'),
+            self::TRANSITION_OUTDATED => $event->setBlocked($validVersionCount > 0, 'block if we have valid versions')
+        };
+//        dd($transitionName,$package->getSymfonyVersions(), $package->getPhpVersions(), $package->getPhpVersionString(), $event->getTransitionBlockerList());
+    }
+
+
+    #[AsGuardListener(self::WORKFLOW_NAME)]
+    public function onGuardPhp(GuardEvent $event): void
     {
         $composer = $this->getComposer($package = $this->getPackage($event));
         $transition = $event->getTransition();
@@ -60,17 +84,23 @@ final class BundleWorkflow implements BundleWorkflowInterface
             }
         }
 
-        $validPhpVersion = count($this->packageService->validPhpVersions($package));
+        if (!in_array($transitionName, [self::TRANSITION_PHP_OKAY, self::TRANSITION_PHP_TOO_OLD])) {
+            return;
+        }
+
+
+        $validPhpVersions = $this->packageService->validPhpVersions($package);
+        $package->setPhpVersions($validPhpVersions);
         switch ($event->getTransition()->getName()) {
             case self::TRANSITION_PHP_TOO_OLD:
-                if ($validPhpVersion) {
+                if (count($validPhpVersions) > 0) {
                     // block the PHP_TOO_OLD transition
-                    $event->setBlocked(true, 'Valid PHP versions.');
+                    $event->setBlocked(true, 'block too old, because Valid PHP versions.');
                 }
                 break;
             case self::TRANSITION_PHP_OKAY:
-                if (!$validPhpVersion) {
-                    $event->setBlocked(true, 'No Valid PHP versions.');
+                if (count($validPhpVersions)===0) {
+                    $event->setBlocked(true, 'block okay, because No Valid PHP versions.');
                 }
         }
     }
@@ -105,9 +135,9 @@ final class BundleWorkflow implements BundleWorkflowInterface
         try {
             $composer = $this->packagistClient->getComposer($packageName);
         } catch (\Exception $exception) {
-            $this->logger->error($exception->getMessage() . "\n" . $packageName);
+            $this->logger->error($packageName . ' ' . $exception->getMessage() );
+            return; // @todo: not_found state/
             throw $exception;
-            dd($exception);
         }
 
         /**

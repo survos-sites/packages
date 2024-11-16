@@ -3,34 +3,43 @@
 {% block title %}Bundle Browser{% endblock %}
 
 {% block body %}
-    'name',
-    'shortName',
-    {name: 'keywords', title: 'keywords', block: 'list'},
-    {# because twig twig within this component is compiled to javascript, we need to pass the icons #}
-    {% component api_grid with {
-        class: packageClass,
-        apiRoute: apiRoute,
-        caller: _self,
-        globals: {
-            packagistIcon: ux_icon('simple-icons:packagist'),
-            iconMap: {
-                new:  ux_icon('clarity:new-line'),
-                composer_loaded: ux_icon('logos:composer'),
-                php_too_old:  ux_icon('icon-park-outline:invalid-files', {class: 'bg-danger text-white'}),
-            }
-        },
-        columns: [
-            {name: 'id'},
-            {name: 'vendor', browsable: true},
-            {name: 'shortName'},
-            {name: 'description', searchable: true},
-            {name: 'symfonyVersions', title: 'symfony', block: 'list'},
-            {name: 'phpVersions', title: 'php', block: 'list'},
-            'marking'
-        ]
+
+    {% set facet_columns = [
+        {name: 'vendor', browsable: true, order: 1},
+        {name: 'marking', browsable: true},
+        {name: 'symfonyVersions', browsable: true, title: 'symfony', block: 'list', order: 3},
+        {name: 'phpVersions', browsable: true, title: 'php', block: 'list'},
+    ] %}
+
+    {% set columns = [
+        'id',
+        {name: 'shortName'},
+        {name: 'vendor', browsable: true},
+        {name: 'marking', browsable: true},
+        {name: 'description', searchable: true},
+        {name: 'symfonyVersions', browsable: true, title: 'symfony', block: 'list', order: 3},
+        {name: 'keywords', title: 'keywords', block: 'list'},
+        {name: 'phpVersions', browsable: true, title: 'php', block: 'list'},
+    ] %}
+
+    {% set globals = {
+        packagistIcon: ux_icon('simple-icons:packagist'),
+        iconMap: {
+            new:  ux_icon('clarity:new-line'),
+            composer_loaded: ux_icon('logos:composer'),
+            php_too_old:  ux_icon('icon-park-outline:invalid-files', {class: 'bg-danger text-white'}),
+        }
     } %}
 
-        <twig:block name="id">
+<twig:api_grid
+        :class="packageClass"
+        :caller="_self"
+        :columns="columns"
+        :facet_columns="facet_columns"
+        :apiRoute="apiRoute"
+        :globals="globals"
+>
+    <twig:block name="id">
                         <span>
             <a target="_blank" href="{{ path('package_show', row.rp) }}">
                 {{ row.id }}
@@ -38,67 +47,66 @@
             </span>
 
 
-        </twig:block>
-        <twig:block name="vendor">
+    </twig:block>
+    <twig:block name="vendor">
             <span class="xline-limit-2 xtext-wrap" style="max-width: 200px">
                 {{ row.vendor }}
             </span>
-        </twig:block>
-        <twig:block name="xxshortName">
-            <a target="_blank" href="{{ path('package_show', row.rp) }}">
-                {{ row.shortName|default('??') }}
+    </twig:block>
+    <twig:block name="xxshortName">
+        <a target="_blank" href="{{ path('package_show', row.rp) }}">
+            {{ row.shortName|default('??') }}
+        </a>
+
+        <b><a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
+                (packagist)
             </a>
+        </b>
 
-            <b><a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
-                    (packagist)
-                </a>
-            </b>
-
-        </twig:block>
-        <twig:block name="marking">
-            {% set icon = globals.iconMap[row.marking]|default(false) %}
-            {% if icon %}
-                <span title="{{ row.marking }}">
+    </twig:block>
+    <twig:block name="marking">
+        {% set icon = globals.iconMap[row.marking]|default(false) %}
+        {% if icon %}
+            <span title="{{ row.marking }}">
                 {{ icon }}
 
                 </span>
-            {% else %}
-                {{ row.marking }}
-            {% endif %}
-        </twig:block>
-        <twig:block name="description">
+        {% else %}
+            {{ row.marking }}
+        {% endif %}
+    </twig:block>
+    <twig:block name="description">
             <span class="line-limit-1" style="max-width: 600px">
                 {{ row.description }}
             </span>
-        </twig:block>
+    </twig:block>
 
-        <twig:block name="list">
-            {% set items = attribute(row, field_name) %}
-            {% set max = 3 %}
-            <ul class="list-unstyled">
+    <twig:block name="list">
+        {% set items = attribute(row, field_name) %}
+        {% set max = 3 %}
+        <ul class="list-unstyled">
             {% for item in items|slice(0, 3) %}
                 <li class="list-inline-item">{{ item }}
                     {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
                 </li>
             {% endfor %}
-            </ul>
-{#            <b>!{{ field_name }}</b>#}
-{#            {{ attribute(row, field_name)|json_encode }}#}
-{#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }}#}
-        </twig:block>
-        <twig:block name="shortName">
-{#            <span>#}
-{#            <a target="_blank" href="{{ path('package_show', row.rp) }}">#}
-{#                Show#}
-{#            </a>#}
-{#            </span>#}
-            <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
-                {{ globals.packagistIcon }}
-{#                <span class="bi bi-github"></span> #}
-                {{ row.shortName }}
-            </a>
-        </twig:block>
-
-    {% endcomponent %}
+        </ul>
+        {#            <b>!{{ field_name }}</b>#}
+        {#            {{ attribute(row, field_name)|json_encode }}#}
+        {#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }}#}
+    </twig:block>
+    <twig:block name="shortName">
+        {#            <span>#}
+        {#            <a target="_blank" href="{{ path('package_show', row.rp) }}">#}
+        {#                Show#}
+        {#            </a>#}
+        {#            </span>#}
+        <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
+            {{ globals.packagistIcon }}
+            {#                <span class="bi bi-github"></span> #}
+            {{ row.shortName }}
+        </a>
+    </twig:block>
+</twig:api_grid>
 
 {% endblock %}

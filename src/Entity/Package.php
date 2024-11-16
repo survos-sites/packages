@@ -30,7 +30,7 @@ use Survos\ApiGrid\Api\Filter\MultiFieldSearchFilter;
 use Survos\WorkflowBundle\Attribute\Transition;
 use Survos\WorkflowBundle\Traits\MarkingInterface;
 use Survos\WorkflowBundle\Traits\MarkingTrait;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
 #[ApiResource(
@@ -57,11 +57,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
     properties: ['name', 'description'],
     arguments: ["searchParameterName" => "search"]
 )]
-//#[Groups(['package.read'])] // NO! The data is too big
+//#[Groups(['package.read'])] // NO! The embedded json data is too big
 class Package implements RouteParametersInterface, MarkingInterface, BundleWorkflowInterface, \Stringable
 {
     use RouteParametersTrait;
     use MarkingTrait;
+    public const array UNIQUE_PARAMETERS = ['packageId' => 'id'];
+//    #[Groups(['rp'])]
+//    public function getUniqueIdentifiers(): array
+//    {
+//        return ['packageId' => $this->getId()];
+//    }
 
 
     #[ORM\Id]
@@ -136,12 +142,6 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         $this->name = $name;
 
         return $this;
-    }
-
-    #[Groups(['rp'])]
-    public function getUniqueIdentifiers(): array
-    {
-        return ['packageId' => $this->getId()];
     }
 
     public function getData(): array|object|null

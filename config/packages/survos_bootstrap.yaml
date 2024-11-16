@@ -4,7 +4,7 @@ survos_bootstrap:
     logout: app_logout
     register: app_register
   options:
-    theme: bootswatch
+    theme: tabler
     allow_login: true
   app:
     code: bundles
