@@ -24,6 +24,7 @@
 
     {% set globals = {
         packagistIcon: ux_icon('simple-icons:packagist'),
+        githubIcon: ux_icon('tabler:brand-github'),
         iconMap: {
             new:  ux_icon('clarity:new-line'),
             composer_loaded: ux_icon('logos:composer'),
@@ -101,6 +102,10 @@
         {#                Show#}
         {#            </a>#}
         {#            </span>#}
+
+        <a href="{{ row.repo }}" target="_blank" title="{{ row.repo }}">
+            {{- globals.githubIcon -}}
+        </a>
         <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
             {{ globals.packagistIcon }}
             {#                <span class="bi bi-github"></span> #}

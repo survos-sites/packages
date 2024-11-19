@@ -14,6 +14,7 @@ interface BundleWorkflowInterface
     final const PLACE_OUTDATED_PHP = 'php_is_too_old';
     final const PLACE_PHP_OKAY = 'php_ok';
     final const PLACE_ABANDONED = 'abandoned';
+    final const PLACE_NOT_FOUND = 'not_found';
     final const PLACE_VALID_REQUIREMENTS = 'valid';
 
     #[Transition([self::PLACE_NEW], self::PLACE_COMPOSER_LOADED)]

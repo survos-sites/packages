@@ -55,6 +55,7 @@ final class AppMenu implements KnpMenuHelperInterface
         $this->add($menu, 'app_homepage');
         $this->add($menu, 'riccox_meili_admin');
         $this->add($menu, 'survos_workflows');
+        $this->add($menu, 'survos_commands', if: $this->isEnv('dev') || $this->isGranted('ROLE_ADMIN'));
 
         foreach (['bundles', 'javascript'] as $type) {
             $this->addMenuItem($nestedMenu, ['uri' => "#$type", 'label' => ucfirst($type)]);

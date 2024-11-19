@@ -3,7 +3,10 @@
 namespace App\Workflow;
 
 use App\Entity\Package;
+use App\Message\FetchComposer;
+use App\Repository\PackageRepository;
 use App\Service\PackageService;
+use Doctrine\ORM\EntityManagerInterface;
 use Packagist\Api\Result\Package as PackagistPackage;
 use App\Message\ProcessPackage;
 use Packagist\Api\Client;
@@ -27,10 +30,12 @@ final class BundleWorkflow implements BundleWorkflowInterface
     public function __construct(
         private MessageBusInterface   $bus,
         private UrlGeneratorInterface $urlGenerator,
-        private SerializerInterface $serializer,
-        private LoggerInterface $logger,
-        private PackageService $packageService,
-        private Client $packagistClient
+        private SerializerInterface   $serializer,
+        private LoggerInterface       $logger,
+        private PackageService        $packageService,
+        private EntityManagerInterface $entityManager,
+        private PackageRepository $packageRepository,
+        private Client                $packagistClient
     )
     {
 
@@ -55,8 +60,8 @@ final class BundleWorkflow implements BundleWorkflowInterface
         if (!in_array($transitionName, [self::TRANSITION_SYMFONY_OKAY, self::TRANSITION_OUTDATED])) {
             return;
         }
-        match($transitionName) {
-            self::TRANSITION_SYMFONY_OKAY => $event->setBlocked($validVersionCount===0, 'block if no valid versions'),
+        match ($transitionName) {
+            self::TRANSITION_SYMFONY_OKAY => $event->setBlocked($validVersionCount === 0, 'block if no valid versions'),
             self::TRANSITION_OUTDATED => $event->setBlocked($validVersionCount > 0, 'block if we have valid versions')
         };
 //        dd($transitionName,$package->getSymfonyVersions(), $package->getPhpVersions(), $package->getPhpVersionString(), $event->getTransitionBlockerList());
@@ -99,7 +104,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
                 }
                 break;
             case self::TRANSITION_PHP_OKAY:
-                if (count($validPhpVersions)===0) {
+                if (count($validPhpVersions) === 0) {
                     $event->setBlocked(true, 'block okay, because No Valid PHP versions.');
                 }
         }
@@ -135,7 +140,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
         try {
             $composer = $this->packagistClient->getComposer($packageName);
         } catch (\Exception $exception) {
-            $this->logger->error($packageName . ' ' . $exception->getMessage() );
+            $this->logger->error($packageName . ' ' . $exception->getMessage());
             return; // @todo: not_found state/
             throw $exception;
         }
@@ -147,23 +152,23 @@ final class BundleWorkflow implements BundleWorkflowInterface
         foreach ($composer as $packageName => $packagistPackage) {
 
             //            dd($packageName, $package);
-        /** @var PackagistPackage\Version $version */
-        foreach ($packagistPackage->getVersions() as $versionCode => $version) {
-            // need a different API call for github stars.
+            /** @var PackagistPackage\Version $version */
+            foreach ($packagistPackage->getVersions() as $versionCode => $version) {
+                // need a different API call for github stars.
 //                if ($package->getFavers() || $package->getGithubStars()) {
 //                    dd($package->getFavers(), $package);
 //                }
 //                dd($composer, $package);
 //                $package->getDescription(); //
 //                assert($package->getDescription() == $version->getDescription(), $package->getDescription() . '<>' . $version->getDescription());
-            $json = $this->serializer->serialize($version, 'json');
-            $package
-                ->setStars($packagistPackage->getFavers())
-                ->setVersion($versionCode)
-                ->setDescription($version->getDescription())
-                ->setData(json_decode($json, true));
-            break; // we're getting the first one only, most recent.  hackish
-        }
+                $json = $this->serializer->serialize($version, 'json');
+                $package
+                    ->setStars($packagistPackage->getFavers())
+                    ->setVersion($versionCode)
+                    ->setDescription($version->getDescription())
+                    ->setData(json_decode($json, true));
+                break; // we're getting the first one only, most recent.  hackish
+            }
         }
 
     }
@@ -181,18 +186,15 @@ final class BundleWorkflow implements BundleWorkflowInterface
     }
 
     #[AsMessageHandler]
-    public function processPackageMessageHandler(ProcessPackage $message): void
+    public function handleFetchComposer(FetchComposer $message): void
     {
-        $package = $this->getPackage($message);
-        // do something with your message
+        $package = $this->packageRepository->findOneBy(['name' => $message->getName()]);
+        assert($package);
+        $this->packageService->addPackage($package);
+        $this->packageService->populateFromComposerData($package);
+//        dd($package->getPhpVersions(), $package->getPhpVersionString());
+        $this->entityManager->flush();
+//        dd($package);
     }
-
-    public function processPackage(Package $package)
-    {
-
-
-    }
-
-
 
 }

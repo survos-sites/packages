@@ -29,6 +29,7 @@ final class ProcessPackageHandler implements BundleWorkflowInterface
     #[AsMessageHandler]
     public function __invoke(ProcessPackage $message): void
     {
+
         $package = $this->packageRepository->findOneBy(['name' => $message->packageName]);
         assert($package);
 

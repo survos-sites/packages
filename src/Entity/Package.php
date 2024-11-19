@@ -122,6 +122,13 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phpVersionString = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['package.read'])]
+    private ?string $repo = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $replacement = null;
+
     public function __construct()
     {
         $this->marking = self::PLACE_NEW;
@@ -239,7 +246,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     #[Groups(['package.read'])]
     public function getKeywords(): array
     {
-        return $this->data['keywords'] ?? [];
+        return $this->keywords;
     }
 
     public function setKeywords(?array $keywords): static
@@ -315,6 +322,30 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public function setPhpVersionString(?string $phpVersionString): static
     {
         $this->phpVersionString = $phpVersionString;
+
+        return $this;
+    }
+
+    public function getRepo(): ?string
+    {
+        return $this->repo;
+    }
+
+    public function setRepo(?string $repo): static
+    {
+        $this->repo = $repo;
+
+        return $this;
+    }
+
+    public function getReplacement(): ?string
+    {
+        return $this->replacement;
+    }
+
+    public function setReplacement(?string $replacement): static
+    {
+        $this->replacement = $replacement;
 
         return $this;
     }

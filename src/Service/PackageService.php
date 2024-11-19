@@ -6,20 +6,26 @@ namespace App\Service;
 
 use App\Entity\Package;
 use App\Entity\Package as SurvosPackage;
+use Packagist\Api\Client;
 use PharIo\Version\Version;
 use PharIo\Version\VersionConstraintParser;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 use Zenstruck\Twig\AsTwigFunction;
 use function Symfony\Component\String\u;
 
 class PackageService
 {
     private VersionConstraintParser $parser;
+    private Client $client;
     public function __construct(
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly SerializerInterface $serializer,
     )
     {
         $this->parser = new VersionConstraintParser();
+        $this->client = new Client();
+
 
     }
 
@@ -40,7 +46,7 @@ class PackageService
             $survosPackage->setMarking(SurvosPackage::PLACE_ABANDONED);
             return;
         }
-        {
+
             foreach ($data['require'] ?? [] as $dependency => $version) {
                 switch ($dependency) {
                     case 'php':
@@ -71,7 +77,7 @@ class PackageService
                                     break;
 //                                    dd($dependency, $version, $exception);
                                 }
-                                foreach (['5.4', '6.4', '7.0','7.1','7.2'] as $x) {
+                                foreach (['5.4', '6.4', '7.1'] as $x) {
                                     $complies = $constraint->complies(new Version($x)); // true
 //                                    $complies = Comparator::greaterThan($version, $x); // 1.25.0 > 1.24.0
 //                                    if (!$complies) dd($complies, $x, $version);
@@ -87,9 +93,6 @@ class PackageService
                         break;
                 }
             }
-        }
-
-
     }
 
 
@@ -136,6 +139,70 @@ class PackageService
     private function getPackagistUrl($name): string
     {
         return sprintf("https://packagist.org/packages/$name");
+    }
+
+    /**
+     * @param Client $client
+     * @param string $name
+     * @param bool $persist
+     * @param SerializerInterface $serializer
+     * @return void
+     */
+    public function addPackage(SurvosPackage $survosPackage): void
+    {
+        // @todo: cache
+        try {
+            $composer = $this->client->getComposer($survosPackage->getName());
+            assert($composer);
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage() . "\n" . $survosPackage->getName());
+            $survosPackage->setMarking(Package::PLACE_NOT_FOUND);
+            return;
+        }
+        assert(count($composer) == 1, "multiple packages: " . join("\n", array_keys($composer)));
+
+        /**
+         * @var string $packageName
+         * @var \Packagist\Api\Result\Package $package
+         */
+        foreach ($composer as $packageName => $package) {
+            // if it's abandoned, don't even add it. Actually, we've already added it. :-(
+            if ($package->isAbandoned()) {
+                $survosPackage->setMarking($survosPackage::PLACE_ABANDONED);
+                continue;
+            }
+            /** @var \Packagist\Api\Result\Package\Version $version */
+            foreach ($package->getVersions() as $versionCode => $version) {
+                if ($version->isAbandoned()) {
+                    $survosPackage->setMarking($survosPackage::PLACE_ABANDONED);
+                    return; // is this true?
+                    continue;
+                }
+                // need a different API call for github stars.
+//                if ($package->getFavers() || $package->getGithubStars()) {
+//                    dd($package->getFavers(), $package);
+//                }
+//                dd($composer, $package);
+//                $package->getDescription(); //
+//                assert($package->getDescription() == $version->getDescription(), $package->getDescription() . '<>' . $version->getDescription());
+                $json = $this->serializer->serialize($version, 'json');
+
+                $survosPackage
+                    ->setStars($package->getFavers())
+                    ->setMarking($survosPackage::PLACE_COMPOSER_LOADED)
+                    ->setVersion($versionCode)
+                    ->setDescription($version->getDescription())
+                    ->setData(json_decode($json, true));
+
+//                        dd($result, $package, $composer, $versionCode, json_decode($json, false));
+                foreach ($version->getRequire() as $key => $require) {
+//                            dump($key, $require);
+                }
+//                dd($survosPackage, $package, $version);
+                return;
+                break; // we're getting the first one only, most recent.  hackish
+            }
+        }
     }
 
 }

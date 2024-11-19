@@ -10,3 +10,8 @@ bin/load-database.sh
 
 It takes a while because of scraping packagist.
 
+
+```bash
+composer config repositories.tacman_packagist_api '{"type": "path", "url": "/home/tac/g/tacman/packagist-api"}' 
+composer req knplabs/packagist-api:*@dev
+```

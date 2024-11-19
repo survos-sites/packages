@@ -17,7 +17,7 @@
         "doctrine/orm": "^2.19.3",
         "inspector-apm/inspector-symfony": "^1.2",
         "knplabs/knp-time-bundle": "^2.2",
-        "knplabs/packagist-api": "^2.1",
+        "knplabs/packagist-api": "*@dev",
         "meilisearch/meilisearch-php": "^1.7",
         "nelmio/cors-bundle": "^2.4",
         "nyholm/psr7": "^1.8.1",
@@ -107,6 +107,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "index": [
+            "php -d memory_limit=512M bin/console grid:index --reset"
         ]
     },
     "conflict": {
@@ -129,5 +132,11 @@
         "symfony/phpunit-bridge": "^7.0.4",
         "symfony/stopwatch": "^7.0.3",
         "symfony/web-profiler-bundle": "^7.0.4"
+    },
+    "repositories": {
+        "tacman_packagist_api": {
+            "type": "path",
+            "url": "/home/tac/g/tacman/packagist-api"
+        }
     }
 }
