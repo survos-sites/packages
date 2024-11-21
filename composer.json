@@ -17,7 +17,7 @@
         "doctrine/orm": "^2.19.3",
         "inspector-apm/inspector-symfony": "^1.2",
         "knplabs/knp-time-bundle": "^2.2",
-        "knplabs/packagist-api": "dev-master",
+        "knplabs/packagist-api": "^2.1",
         "meilisearch/meilisearch-php": "^1.7",
         "nelmio/cors-bundle": "^2.4",
         "nyholm/psr7": "^1.8.1",
@@ -134,9 +134,5 @@
         "symfony/web-profiler-bundle": "^7.0.4"
     },
     "repositories": {
-        "tacman_packagist_api": {
-            "type": "path",
-            "url": "/home/tac/g/tacman/packagist-api"
-        }
     }
 }
