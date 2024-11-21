@@ -1,5 +1,5 @@
 inspector:
-    enabled: false
+    enabled: true
     ingestion_key: '%env(INSPECTOR_INGESTION_KEY)%'
     ignore_routes:
         - '_wdt'
