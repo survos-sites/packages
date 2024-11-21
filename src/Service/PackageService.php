@@ -51,6 +51,10 @@ class PackageService
             switch ($dependency) {
                 case 'phpunit/phpunit':
                     $survosPackage->setPhpUnitVersion($version);
+                    // hack to fix ^9
+                    if (preg_match('/^\d+$/', $version)) {
+                        $version .= ".0";
+                    }
                     try {
                         $constraint = $this->parser->parse($version);
                     } catch (\Exception $exception) {
@@ -64,7 +68,6 @@ class PackageService
 
                     foreach (['6.0', '7.0','8.0', '9.5','10.1','11.1'] as $versionConstraint) {
                         if ($constraint->complies(new Version($versionConstraint))) {
-                            $this->logger->warning("$dependency $version");
                             $survosPackage->addPhpUnitVersion($versionConstraint);
                         }
                     }
@@ -72,7 +75,6 @@ class PackageService
             }
         }
 
-        if (0)
             foreach ($data['require'] ?? [] as $dependency => $version) {
                 switch ($dependency) {
                     case 'php':

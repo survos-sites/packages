@@ -64,6 +64,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         #[Option(description: 'process the json in the database')] bool                       $process = false,
         #[Option(name: 'page-size', description: 'page size')] int                            $pageSize = 100000,
         #[Option(description: 'limit (for testing)')] int                                     $limit = 0,
+        #[Option(description: 'batch size (for flush)')] int                                     $batch = 500,
         #[Option(description: 'filter by marking')] ?string                                     $marking = null,
 
     ): void
@@ -207,7 +208,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
             $this->packageService->populateFromComposerData($survosPackage);
 //            dd($survosPackage->getPhpVersions(), $survosPackage->getSymfonyVersions(), $survosPackage->getPhpVersionString(), $survosPackage->getSymfonyVersions());
 
-            if ((($progressBar->getProgress() % 50) == 1)) {
+            if ((($progressBar->getProgress() % $batch ) == 1)) {
                 $this->logger->warning("Flushing");
                 $this->entityManager->flush();
 //                $this->logger->warning("Flushed!");
