@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Message\FetchComposer;
 use App\Repository\PackageRepository;
+use App\Service\PackageService;
 use App\Workflow\BundleWorkflow;
 use Composer\Semver\Comparator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,6 +46,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         private SerializerInterface        $serializer,
         private LoggerInterface            $logger,
         private MessageBusInterface         $messageBus,
+        private PackageService $packageService,
         #[Target(BundleWorkflow::WORKFLOW_NAME)]
         private readonly WorkflowInterface $workflow,
         string                             $name = null
@@ -141,8 +143,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
             $this->fetch($pageSize, $client);
         }
 
-        if ($process) {
-            $packages = $this->packageRepository->findBy($where, limit: $limit ?: 100000);
+        if (false && $process) {
             $progressBar = new ProgressBar($io, count($packages));
             foreach ($packages as $package) {
                 $progressBar->advance();
@@ -170,6 +171,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
 
 
         if ($process) {
+            $packages = $this->packageRepository->findBy($where, limit: $limit ?: 100000);
             $this->process($pageSize);
         }
 
@@ -185,7 +187,6 @@ final class AppPackagistCommand extends InvokableServiceCommand
      */
     public function process(int $pageSize): void
     {
-        $parser = new VersionConstraintParser();
         $allowed = ['8.1', '8.2', '8.3'];
         foreach ($allowed as $value) {
             $phpVersions[$value] = new Version($value);
@@ -202,10 +203,12 @@ final class AppPackagistCommand extends InvokableServiceCommand
         $progressBar->start();
         $distribution = [];
         foreach ($packages as $survosPackage) {
+            $progressBar->advance();
+            $this->packageService->populateFromComposerData($survosPackage);
+//            dd($survosPackage->getPhpVersions(), $survosPackage->getSymfonyVersions(), $survosPackage->getPhpVersionString(), $survosPackage->getSymfonyVersions());
 
-
-            if ((($progressBar->getProgress() % 500) == 0)) {
-//                $this->logger->warning("Flushing");
+            if ((($progressBar->getProgress() % 50) == 1)) {
+                $this->logger->warning("Flushing");
                 $this->entityManager->flush();
 //                $this->logger->warning("Flushed!");
             }

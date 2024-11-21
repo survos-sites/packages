@@ -12,6 +12,12 @@
             "postdeploy": ""
         }
     },
+    "cron": [
+        {
+            "command": "bin/console mess:consume async  --time-limit 270",
+            "schedule": "*/5 * * * *"
+        }
+    ],
     "env": {
         "SECRET_TOKEN": {
             "description": "A secret key for verifying the integrity of signed cookies.",

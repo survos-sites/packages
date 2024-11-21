@@ -6,6 +6,10 @@
     PHP: {{ package.phpVersionString }}:
     {{ fn_validPhpVersions(package)|join('|') }}
 
+    PHPUnit: {{ package.phpUnitVersion }}:
+    {{ package.phpUnitVersions|default([])|join('|') }}
+    {{ fn_validPhpVersions(package)|join('|') }}
+
         <h3>Admin</h3>
         {#        flowName: 'SubmissionWorkflow',#}
         {{ include('@SurvosWorkflow/_entity_transitions.html.twig', {

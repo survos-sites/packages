@@ -51,7 +51,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiFilter(OrderFilter::class, properties: ['marking','vendor', 'name','stars'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: ["marking" => "exact", 'name' => 'partial'])]
-#[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor','symfonyVersions', 'phpVersions', 'keywords', 'marking'])]
+#[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor','symfonyVersions', 'phpUnitVersions', 'phpVersions', 'keywords', 'marking'])]
 #[ApiFilter(
     MultiFieldSearchFilter::class,
     properties: ['name', 'description'],
@@ -120,6 +120,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['package.read'])]
     private ?string $phpVersionString = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -128,6 +129,14 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $replacement = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['package.read'])]
+    private ?string $phpUnitVersion = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['package.read'])]
+    private null|array $phpUnitVersions = null;
 
     public function __construct()
     {
@@ -229,6 +238,15 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         if (!in_array($version, $versions)) {
             $versions[] = $version;
             $this->setSymfonyVersions(array_unique($versions));
+        }
+        return $this;
+    }
+    public function addPhpUnitVersion(string $version): self
+    {
+        $versions = $this->getPhpUnitVersions()??[];
+        if (!in_array($version, $versions)) {
+            $versions[] = $version;
+            $this->setPhpUnitVersions(array_unique($versions));
         }
         return $this;
     }
@@ -346,6 +364,30 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public function setReplacement(?string $replacement): static
     {
         $this->replacement = $replacement;
+
+        return $this;
+    }
+
+    public function getPhpUnitVersion(): ?string
+    {
+        return $this->phpUnitVersion;
+    }
+
+    public function setPhpUnitVersion(?string $phpUnitVersion): static
+    {
+        $this->phpUnitVersion = $phpUnitVersion;
+
+        return $this;
+    }
+
+    public function getPhpUnitVersions(): ?array
+    {
+        return $this->phpUnitVersions;
+    }
+
+    public function setPhpUnitVersions(?array $phpUnitVersions): static
+    {
+        $this->phpUnitVersions = $phpUnitVersions;
 
         return $this;
     }

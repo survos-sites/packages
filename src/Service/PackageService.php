@@ -47,12 +47,41 @@ class PackageService
             return;
         }
 
+        foreach ($data['requireDev'] ?? [] as $dependency => $version) {
+            switch ($dependency) {
+                case 'phpunit/phpunit':
+                    $survosPackage->setPhpUnitVersion($version);
+                    try {
+                        $constraint = $this->parser->parse($version);
+                    } catch (\Exception $exception) {
+                        $this->logger->warning(sprintf("%s %s\n%s\n%s",
+                            $dependency, $version,
+                            $this->getPackagistUrl($name),
+                            $exception->getMessage()));
+                        break;
+//                                    dd($dependency, $version, $exception);
+                    }
+
+                    foreach (['6.0', '7.0','8.0', '9.5','10.1','11.1'] as $versionConstraint) {
+                        if ($constraint->complies(new Version($versionConstraint))) {
+                            $this->logger->warning("$dependency $version");
+                            $survosPackage->addPhpUnitVersion($versionConstraint);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        if (0)
             foreach ($data['require'] ?? [] as $dependency => $version) {
                 switch ($dependency) {
                     case 'php':
                         $survosPackage->setPhpVersionString($version);
                         break;
                     default:
+                        if (str_contains($dependency, 'phpunit/')) {
+                            $survosPackage->setPhpVersionString($version);
+                        }
                         if (str_contains($dependency, 'symfony/') &&
                             !u($dependency)->startsWith('symfony/ux') &&
                             !in_array($dependency, ['symfony/flex'])) {
@@ -62,6 +91,9 @@ class PackageService
                                     $distribution[$dependency]=0;
                                 }
                                 $distribution[$dependency]++;
+                                if (u($version)->endsWith('^7')) {
+                                    $version .= ".0";
+                                }
                                 // too many false positives with "*" or ">2.0".
                                 if (!preg_match("/\d/", $version)) {
                                     $okay = false;
@@ -70,7 +102,7 @@ class PackageService
                                 try {
                                     $constraint = $this->parser->parse($version);
                                 } catch (\Exception $exception) {
-                                    $this->logger->info(sprintf("%s %s\n%s\n%s",
+                                    $this->logger->warning(sprintf("%s %s\n%s\n%s",
                                         $dependency, $version,
                                         $this->getPackagistUrl($name),
                                         $exception->getMessage()));
