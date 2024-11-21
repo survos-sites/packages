@@ -208,10 +208,9 @@ final class AppPackagistCommand extends InvokableServiceCommand
             $this->packageService->populateFromComposerData($survosPackage);
 //            dd($survosPackage->getPhpVersions(), $survosPackage->getSymfonyVersions(), $survosPackage->getPhpVersionString(), $survosPackage->getSymfonyVersions());
 
-            if ((($progressBar->getProgress() % $batch ) == 1)) {
-                $this->logger->warning("Flushing");
+            if ((($progressBar->getProgress() % $this->io()->getOption('batch') ) == 1)) {
+                $this->logger->info("Flushing");
                 $this->entityManager->flush();
-//                $this->logger->warning("Flushed!");
             }
         }
         $progressBar->finish();

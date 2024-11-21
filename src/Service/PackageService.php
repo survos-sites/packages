@@ -58,7 +58,7 @@ class PackageService
                     try {
                         $constraint = $this->parser->parse($version);
                     } catch (\Exception $exception) {
-                        $this->logger->warning(sprintf("%s %s\n%s\n%s",
+                        $this->logger->info(sprintf("%s %s\n%s\n%s",
                             $dependency, $version,
                             $this->getPackagistUrl($name),
                             $exception->getMessage()));
@@ -104,7 +104,7 @@ class PackageService
                                 try {
                                     $constraint = $this->parser->parse($version);
                                 } catch (\Exception $exception) {
-                                    $this->logger->warning(sprintf("%s %s\n%s\n%s",
+                                    $this->logger->info(sprintf("%s %s\n%s\n%s",
                                         $dependency, $version,
                                         $this->getPackagistUrl($name),
                                         $exception->getMessage()));

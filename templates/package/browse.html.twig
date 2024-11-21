@@ -106,9 +106,11 @@
         {#            </a>#}
         {#            </span>#}
 
+        {% if row.repo %}
         <a href="{{ row.repo }}" target="_blank" title="{{ row.repo }}">
             {{- globals.githubIcon -}}
         </a>
+        {% endif %}
         <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
             {{ globals.packagistIcon }}
             {#                <span class="bi bi-github"></span> #}
