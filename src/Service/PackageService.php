@@ -66,7 +66,7 @@ class PackageService
 //                                    dd($dependency, $version, $exception);
                     }
 
-                    foreach (['6.0', '7.0','8.0', '9.5','10.1','11.1'] as $versionConstraint) {
+                    foreach (['6.0', '7.0','8.0', '9.0','10.0','11.0'] as $versionConstraint) {
                         if ($constraint->complies(new Version($versionConstraint))) {
                             $survosPackage->addPhpUnitVersion($versionConstraint);
                         }
