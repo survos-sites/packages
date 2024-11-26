@@ -4261,48 +4261,48 @@
         },
         {
             "name": "survos/api-grid-bundle",
-            "version": "1.5.390",
+            "version": "1.5.407",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosApiGridBundle.git",
-                "reference": "4f66cd5fd0cda7fd619dbba5b63167b4c1b0c4cb"
+                "reference": "1529b81029766ab5c5a11386370bcf58e8b296ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosApiGridBundle/zipball/4f66cd5fd0cda7fd619dbba5b63167b4c1b0c4cb",
-                "reference": "4f66cd5fd0cda7fd619dbba5b63167b4c1b0c4cb",
+                "url": "https://api.github.com/repos/survos/SurvosApiGridBundle/zipball/1529b81029766ab5c5a11386370bcf58e8b296ad",
+                "reference": "1529b81029766ab5c5a11386370bcf58e8b296ad",
                 "shasum": ""
             },
             "require": {
                 "doctrine/doctrine-bundle": "^2.7",
-                "doctrine/orm": "^2.12 || ^3.0",
+                "doctrine/orm": "^2.12",
                 "doctrine/persistence": "^2.0 || ^3.0",
-                "php": "^8.2",
-                "survos/inspection-bundle": "^1.5.390",
-                "symfony/config": "^6.4 || ^7.0",
-                "symfony/dependency-injection": "^6.4 || ^7.0",
-                "symfony/dom-crawler": "^6.4 || ^7.0",
-                "symfony/http-kernel": "^6.4 || ^7.0",
-                "symfony/options-resolver": "^6.4 || ^7.0",
-                "symfony/ux-twig-component": "^2.13",
-                "twig/twig": "^3.8|^4",
-                "zenstruck/console-extra": "^1.3"
+                "php": "^8.3",
+                "survos/inspection-bundle": "^1.5",
+                "symfony/config": "^6.4 || ^7.1",
+                "symfony/dependency-injection": "^6.4 || ^7.1",
+                "symfony/dom-crawler": "^6.4 || ^7.1",
+                "symfony/http-kernel": "^6.4 || ^7.1",
+                "symfony/options-resolver": "^6.4 || ^7.1",
+                "symfony/ux-twig-component": "^2.8",
+                "twig/twig": "^3.4",
+                "zenstruck/console-extra": "^1.4"
             },
             "require-dev": {
                 "api-platform/symfony": "^3.2||^4.0",
                 "meilisearch/meilisearch-php": "^1.6",
                 "nyholm/psr7": "^1.0",
-                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan": "^2.0",
                 "roave/security-advisories": "dev-latest",
-                "symfony/browser-kit": "^6.4 || ^7.0",
-                "symfony/framework-bundle": "^6.4 || ^7.0",
-                "symfony/http-client": "^7.0",
-                "symfony/intl": "^7.1",
-                "symfony/phpunit-bridge": "^6.4 || ^7.0",
-                "symfony/stopwatch": "^7.1",
-                "symfony/twig-bundle": "^6.4 || ^7.0",
-                "symfony/ux-chartjs": "^2.13",
-                "symfony/var-dumper": "^6.4 || ^7.0"
+                "symfony/browser-kit": "^6.4 || ^7.1",
+                "symfony/framework-bundle": "^6.4 || ^7.1",
+                "symfony/http-client": "^6.4 || ^7.1",
+                "symfony/intl": "^6.4 || ^7.1",
+                "symfony/phpunit-bridge": "^6.4 || ^7.1",
+                "symfony/stopwatch": "^6.4 || ^7.1",
+                "symfony/twig-bundle": "^6.4 || ^7.1",
+                "symfony/ux-chartjs": "^2.21",
+                "symfony/var-dumper": "^6.4 || ^7.1"
             },
             "suggest": {
                 "api-platform/doctrine-common": "doctrine integration",
@@ -4316,7 +4316,7 @@
                     "dev-main": "1.6-dev"
                 },
                 "symfony": {
-                    "require": "^6.4 || ^7.0"
+                    "require": "^6.4 || ^7.1"
                 }
             },
             "autoload": {
@@ -4341,7 +4341,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosApiGridBundle/issues",
-                "source": "https://github.com/survos/SurvosApiGridBundle/tree/1.5.390"
+                "source": "https://github.com/survos/SurvosApiGridBundle/tree/1.5.407"
             },
             "funding": [
                 {
@@ -4349,7 +4349,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-21T13:13:47+00:00"
+            "time": "2024-11-24T14:57:04+00:00"
         },
         {
             "name": "survos/auth-bundle",
@@ -4544,32 +4544,32 @@
         },
         {
             "name": "survos/command-bundle",
-            "version": "1.5.394",
+            "version": "1.5.407",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosCommandBundle.git",
-                "reference": "549a2386d33a42cee903e1a96e6ea96169209dc6"
+                "reference": "b721059c0de96feb1b4e539b682b5383a15f4ae3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosCommandBundle/zipball/549a2386d33a42cee903e1a96e6ea96169209dc6",
-                "reference": "549a2386d33a42cee903e1a96e6ea96169209dc6",
+                "url": "https://api.github.com/repos/survos/SurvosCommandBundle/zipball/b721059c0de96feb1b4e539b682b5383a15f4ae3",
+                "reference": "b721059c0de96feb1b4e539b682b5383a15f4ae3",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.2",
-                "symfony/config": "^6.4 || ^7.0",
-                "symfony/console": "^6.4 || ^7.0",
-                "symfony/dependency-injection": "^6.4 || ^7.0",
-                "symfony/form": "^6.4 || ^7.0",
-                "symfony/framework-bundle": "^6.4 || ^7.0",
-                "symfony/http-kernel": "^6.4 || ^7.0",
-                "twig/twig": "^3.15",
+                "php": "^8.3",
+                "symfony/config": "^6.4 || ^7.1",
+                "symfony/console": "^6.4 || ^7.1",
+                "symfony/dependency-injection": "^6.4 || ^7.1",
+                "symfony/form": "^6.4 || ^7.1",
+                "symfony/framework-bundle": "^6.4 || ^7.1",
+                "symfony/http-kernel": "^6.4 || ^7.1",
+                "twig/twig": "^3.4",
                 "zenstruck/console-extra": "^1.4"
             },
             "require-dev": {
-                "phpstan/phpstan": "2.0",
-                "phpunit/phpunit": "^9.6",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^11.4",
                 "symfony/messenger": "^6.4 || ^7.1",
                 "symfony/test-pack": "^1.0",
                 "symfony/yaml": "^6.4 || ^7.1"
@@ -4592,9 +4592,13 @@
                 }
             ],
             "description": "Run Symfony console commands from a web interface",
+            "keywords": [
+                "cli",
+                "symfony-console"
+            ],
             "support": {
                 "issues": "https://github.com/survos/SurvosCommandBundle/issues",
-                "source": "https://github.com/survos/SurvosCommandBundle/tree/1.5.394"
+                "source": "https://github.com/survos/SurvosCommandBundle/tree/1.5.407"
             },
             "funding": [
                 {
@@ -4602,29 +4606,32 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-21T22:36:21+00:00"
+            "time": "2024-11-24T16:48:52+00:00"
         },
         {
             "name": "survos/core-bundle",
-            "version": "1.5.390",
+            "version": "1.5.407",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosCoreBundle.git",
-                "reference": "dae24e67abab0647c2114dbab5ad094ed0692eb2"
+                "reference": "1b8a8b6cffd12c0a91c2bd2d506b86f3673e5f56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosCoreBundle/zipball/dae24e67abab0647c2114dbab5ad094ed0692eb2",
-                "reference": "dae24e67abab0647c2114dbab5ad094ed0692eb2",
+                "url": "https://api.github.com/repos/survos/SurvosCoreBundle/zipball/1b8a8b6cffd12c0a91c2bd2d506b86f3673e5f56",
+                "reference": "1b8a8b6cffd12c0a91c2bd2d506b86f3673e5f56",
                 "shasum": ""
             },
             "require": {
+                "doctrine/common": "^3.4",
+                "doctrine/orm": "^2.12",
                 "php": "^8.3",
-                "symfony/config": "^7.1",
-                "symfony/dependency-injection": "^7.1",
-                "symfony/http-kernel": "^7.1",
-                "symfony/serializer": "^7.1",
-                "symfony/string": "^7.1",
+                "symfony/config": "^6.4 || ^7.1",
+                "symfony/dependency-injection": "^6.4 || ^7.1",
+                "symfony/http-kernel": "^6.4 || ^7.1",
+                "symfony/property-access": "^6.4 || ^7.1",
+                "symfony/serializer": "^6.4 || ^7.1",
+                "symfony/string": "^6.4 || ^7.1",
                 "twig/twig": "^3.4"
             },
             "conflict": {
@@ -4651,20 +4658,18 @@
                 "survos/workflow-helper-bundle": "<1.2.57"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.10",
-                "symfony/browser-kit": "^7.1",
-                "symfony/framework-bundle": "^7.1",
-                "symfony/phpunit-bridge": "^7.1",
-                "symfony/twig-bundle": "^7.1",
-                "symfony/var-dumper": "^7.1"
+                "phpstan/phpstan": "^2.0",
+                "symfony/asset-mapper": "^6.4 || ^7.1",
+                "symfony/browser-kit": "^6.4 || ^7.1",
+                "symfony/framework-bundle": "^6.4 || ^7.1",
+                "symfony/phpunit-bridge": "^6.4 || ^7.1",
+                "symfony/twig-bundle": "^6.4 || ^7.1",
+                "symfony/var-dumper": "^6.4 || ^7.1"
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-main": "1.6-dev"
-                },
-                "symfony": {
-                    "require": "^7.1"
                 }
             },
             "autoload": {
@@ -4682,7 +4687,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosCoreBundle/issues",
-                "source": "https://github.com/survos/SurvosCoreBundle/tree/1.5.390"
+                "source": "https://github.com/survos/SurvosCoreBundle/tree/1.5.407"
             },
             "funding": [
                 {
@@ -4690,30 +4695,30 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-20T16:20:55+00:00"
+            "time": "2024-11-24T14:35:36+00:00"
         },
         {
             "name": "survos/crawler-bundle",
-            "version": "1.5.394",
+            "version": "1.5.407",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosCrawlerBundle.git",
-                "reference": "1609d7a81521bf0b334164ef6c257bfe9b4245ea"
+                "reference": "af4060491044ae0ffc1ef319cbf2d545fc77f7ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosCrawlerBundle/zipball/1609d7a81521bf0b334164ef6c257bfe9b4245ea",
-                "reference": "1609d7a81521bf0b334164ef6c257bfe9b4245ea",
+                "url": "https://api.github.com/repos/survos/SurvosCrawlerBundle/zipball/af4060491044ae0ffc1ef319cbf2d545fc77f7ee",
+                "reference": "af4060491044ae0ffc1ef319cbf2d545fc77f7ee",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.2",
-                "symfony/config": "^6.4 || ^7.0",
-                "symfony/console": "^7.0",
-                "symfony/dependency-injection": "^6.4 || ^7.0",
-                "symfony/http-kernel": "^6.4 || ^7.0",
-                "symfony/stopwatch": "^6.4 || ^7.0",
-                "symfony/string": "^7.0"
+                "php": "^8.3",
+                "symfony/config": "^6.4 || ^7.1",
+                "symfony/console": "^6.4 || ^7.1",
+                "symfony/dependency-injection": "^6.4 || ^7.1",
+                "symfony/http-kernel": "^6.4 || ^7.1",
+                "symfony/stopwatch": "^6.4 || ^7.1",
+                "symfony/string": "^6.4 || ^7.1"
             },
             "conflict": {
                 "survos/api-grid-bundle": "<1.2.57",
@@ -4739,8 +4744,8 @@
                 "survos/workflow-helper-bundle": "<1.2.57"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^11.0",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^11.4",
                 "zenstruck/browser": "^1.8"
             },
             "type": "symfony-bundle",
@@ -4767,7 +4772,7 @@
             "description": "Provides a way to create tests that crawl a site",
             "support": {
                 "issues": "https://github.com/survos/SurvosCrawlerBundle/issues",
-                "source": "https://github.com/survos/SurvosCrawlerBundle/tree/1.5.394"
+                "source": "https://github.com/survos/SurvosCrawlerBundle/tree/1.5.407"
             },
             "funding": [
                 {
@@ -4775,29 +4780,29 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-18T22:53:29+00:00"
+            "time": "2024-11-24T12:52:29+00:00"
         },
         {
             "name": "survos/inspection-bundle",
-            "version": "1.5.390",
+            "version": "1.5.407",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosInspectionBundle.git",
-                "reference": "96b31b8c289c2f6fb799d216c90da5c3d6a6a289"
+                "reference": "57267cfe6f4602495eb1df4cbcda4f1a9c05b2f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosInspectionBundle/zipball/96b31b8c289c2f6fb799d216c90da5c3d6a6a289",
-                "reference": "96b31b8c289c2f6fb799d216c90da5c3d6a6a289",
+                "url": "https://api.github.com/repos/survos/SurvosInspectionBundle/zipball/57267cfe6f4602495eb1df4cbcda4f1a9c05b2f8",
+                "reference": "57267cfe6f4602495eb1df4cbcda4f1a9c05b2f8",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.2",
-                "survos/core-bundle": "^1.5.390",
-                "symfony/config": "^6.3 || ^7.0",
-                "symfony/dependency-injection": "^6.3 || ^7.0",
-                "symfony/http-kernel": "^6.3 || ^7.0",
-                "symfony/string": "^6.3 || ^7.0 ",
+                "php": "^8.3",
+                "survos/core-bundle": "^1.5",
+                "symfony/config": "^6.4 || ^7.1",
+                "symfony/dependency-injection": "^6.4 || ^7.1",
+                "symfony/http-kernel": "^6.4 || ^7.1",
+                "symfony/string": "^6.4 || ^7.1",
                 "twig/twig": "^3.4"
             },
             "conflict": {
@@ -4824,7 +4829,7 @@
             },
             "require-dev": {
                 "api-platform/core": "^3.2",
-                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan": "^2.0",
                 "roave/security-advisories": "dev-latest"
             },
             "type": "symfony-bundle",
@@ -4833,7 +4838,7 @@
                     "dev-main": "1.6-dev"
                 },
                 "symfony": {
-                    "require": "^6.3 || ^7.0"
+                    "require": "^6.4 || ^7.1"
                 }
             },
             "autoload": {
@@ -4854,7 +4859,7 @@
             "description": "Inspects Doctrine entities with APIPlatform attributes",
             "support": {
                 "issues": "https://github.com/survos/SurvosInspectionBundle/issues",
-                "source": "https://github.com/survos/SurvosInspectionBundle/tree/1.5.390"
+                "source": "https://github.com/survos/SurvosInspectionBundle/tree/1.5.407"
             },
             "funding": [
                 {
@@ -4862,7 +4867,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-21T13:13:53+00:00"
+            "time": "2024-11-24T14:57:08+00:00"
         },
         {
             "name": "survos/meili-admin-bundle",
@@ -4922,23 +4927,23 @@
         },
         {
             "name": "survos/workflow-helper-bundle",
-            "version": "1.5.390",
+            "version": "1.5.407",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosWorkflowHelperBundle.git",
-                "reference": "949a8d9eb65b13ac2cda4215cfa662dc4e08ca6e"
+                "reference": "131ff147247cb054254c87666dcad34a39ab3287"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosWorkflowHelperBundle/zipball/949a8d9eb65b13ac2cda4215cfa662dc4e08ca6e",
-                "reference": "949a8d9eb65b13ac2cda4215cfa662dc4e08ca6e",
+                "url": "https://api.github.com/repos/survos/SurvosWorkflowHelperBundle/zipball/131ff147247cb054254c87666dcad34a39ab3287",
+                "reference": "131ff147247cb054254c87666dcad34a39ab3287",
                 "shasum": ""
             },
             "require": {
                 "doctrine/orm": "^2.12 || ^3.0",
                 "endroid/installer": "*",
                 "php": "^8.3",
-                "survos/core-bundle": "^1.5.390",
+                "survos/core-bundle": "^1.5.391",
                 "symfony/console": "^6.4 || ^7.1",
                 "symfony/http-kernel": "^6.4 || ^7.1",
                 "symfony/messenger": "^6.4 || ^7.1",
@@ -5015,7 +5020,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosWorkflowHelperBundle/issues",
-                "source": "https://github.com/survos/SurvosWorkflowHelperBundle/tree/1.5.390"
+                "source": "https://github.com/survos/SurvosWorkflowHelperBundle/tree/1.5.407"
             },
             "funding": [
                 {
@@ -5023,7 +5028,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-21T13:13:51+00:00"
+            "time": "2024-11-24T16:46:48+00:00"
         },
         {
             "name": "symfony/asset",
@@ -11003,12 +11008,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "a4a11ca90f71d30bb2afc1eb37cf243221468667"
+                "reference": "b08968fecf87540bf8dbbeccc284b69e6377f7be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/a4a11ca90f71d30bb2afc1eb37cf243221468667",
-                "reference": "a4a11ca90f71d30bb2afc1eb37cf243221468667",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b08968fecf87540bf8dbbeccc284b69e6377f7be",
+                "reference": "b08968fecf87540bf8dbbeccc284b69e6377f7be",
                 "shasum": ""
             },
             "require": {
@@ -11076,7 +11081,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-22T10:54:36+00:00"
+            "time": "2024-11-25T16:28:02+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -13280,30 +13285,30 @@
         },
         {
             "name": "survos/maker-bundle",
-            "version": "1.5.394",
+            "version": "1.5.407",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosMakerBundle.git",
-                "reference": "1b0d63f17a47466408e2b8f594bf4f7287ab6b8e"
+                "reference": "f462688c2b800865400d401e6910a69eb0e35250"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosMakerBundle/zipball/1b0d63f17a47466408e2b8f594bf4f7287ab6b8e",
-                "reference": "1b0d63f17a47466408e2b8f594bf4f7287ab6b8e",
+                "url": "https://api.github.com/repos/survos/SurvosMakerBundle/zipball/f462688c2b800865400d401e6910a69eb0e35250",
+                "reference": "f462688c2b800865400d401e6910a69eb0e35250",
                 "shasum": ""
             },
             "require": {
                 "nette/php-generator": "^3.5||^4.1",
-                "php": "^8.2",
-                "roave/better-reflection": "*",
+                "php": "^8.3",
+                "roave/better-reflection": "^6.0",
                 "sebastian/diff": "^4.0||^5.0||^6.0.1",
-                "symfony/config": "^6.4 | ^7.0",
-                "symfony/console": "^6.4 | ^7.0",
-                "symfony/options-resolver": "^6.4 | ^7.0",
-                "symfony/security-http": "^7.1",
-                "symfony/string": "^6.4 | ^7.0",
+                "symfony/config": "^6.4 || ^7.1",
+                "symfony/console": "^6.4 || ^7.1",
+                "symfony/options-resolver": "^6.4 || ^7.1",
+                "symfony/security-http": "^6.4 || ^7.1",
+                "symfony/string": "^6.4 || ^7.1",
                 "twig/twig": "^3.4",
-                "zenstruck/console-extra": "^1.1"
+                "zenstruck/console-extra": "^1.4"
             },
             "conflict": {
                 "survos/api-grid-bundle": "<1.2.57",
@@ -13329,22 +13334,22 @@
                 "survos/workflow-helper-bundle": "<1.2.57"
             },
             "require-dev": {
-                "doctrine/doctrine-bundle": "^2.7|^3.0",
-                "doctrine/orm": "^2.12 || ^3.0",
+                "doctrine/doctrine-bundle": "^2.7",
+                "doctrine/orm": "^2.12",
                 "haydenpierce/class-finder": "^0.4.3",
-                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan": "^2.0",
                 "squizlabs/php_codesniffer": "^3.7",
-                "symfony/form": "^6.4 | ^7.0",
-                "symfony/http-client": "^6.4 | ^7.0",
-                "symfony/maker-bundle": "^1.38",
-                "symfony/phpunit-bridge": "^6.4 | ^7.0",
+                "symfony/form": "^6.4 || ^7.1",
+                "symfony/http-client": "^6.4 || ^7.1",
+                "symfony/maker-bundle": "^1.5",
+                "symfony/phpunit-bridge": "^6.4 || ^7.1",
                 "symfony/polyfill-php80": "^1.16.0",
-                "symfony/process": "^6.4 | ^7.0",
-                "symfony/security-core": "^6.4 | ^7.0",
-                "symfony/security-csrf": "^6.4 | ^7.0",
-                "symfony/twig-bundle": "^6.4 | ^7.0",
-                "symfony/validator": "^6.4 | ^7.0",
-                "symfony/yaml": "^6.4 | ^7.0"
+                "symfony/process": "^6.4 || ^7.1",
+                "symfony/security-core": "^6.4 || ^7.1",
+                "symfony/security-csrf": "^6.4 || ^7.1",
+                "symfony/twig-bundle": "^6.4 || ^7.1",
+                "symfony/validator": "^6.4 || ^7.1",
+                "symfony/yaml": "^6.4 || ^7.1"
             },
             "suggest": {
                 "symfony/workflow": "To generate a workflow from PHP constants",
@@ -13383,7 +13388,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosMakerBundle/issues",
-                "source": "https://github.com/survos/SurvosMakerBundle/tree/1.5.394"
+                "source": "https://github.com/survos/SurvosMakerBundle/tree/1.5.407"
             },
             "funding": [
                 {
@@ -13391,7 +13396,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-14T23:31:22+00:00"
+            "time": "2024-11-24T12:53:21+00:00"
         },
         {
             "name": "symfony/browser-kit",
@@ -13919,6 +13924,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

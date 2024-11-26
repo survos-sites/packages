@@ -109,6 +109,9 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
+        "process": [
+            "php -d memory_limit=512M bin/console app:load-data --fetch --process"
+        ],
         "index": [
             "php -d memory_limit=512M bin/console grid:index --reset"
         ]
