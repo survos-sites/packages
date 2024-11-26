@@ -3,12 +3,20 @@
 {% block body %}
     <h1>{{ package.name }}</h1>
 
-    PHP: {{ package.phpVersionString }}:
-    {{ fn_validPhpVersions(package)|join('|') }}
+    {{ dump(package) }}
+    <ul>
+        <li>
+            Symfony: <code>{{ package.symfonyVersionString }}</code> {{ package.symfonyVersions|join('|') }}
+        </li>
+        <li>
+            PHP: <code>{{ package.phpVersionString }}</code> {{ package.phpVersions|join('|') }}
+        </li>
+        <li>
+            PHPUnit: <code>{{ package.phpUnitVersionString }}</code> {{ package.phpUnitVersions|default([])|join('|') }}
+        </li>
 
-    PHPUnit: {{ package.phpUnitVersion }}:
-    {{ package.phpUnitVersions|default([])|join('|') }}
-    {{ fn_validPhpVersions(package)|join('|') }}
+    </ul>
+
 
         <h3>Admin</h3>
         {#        flowName: 'SubmissionWorkflow',#}

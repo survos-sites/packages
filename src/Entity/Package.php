@@ -132,11 +132,15 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['package.read'])]
-    private ?string $phpUnitVersion = null;
+    private ?string $phpUnitVersionString = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.read'])]
     private null|array $phpUnitVersions = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['package.read'])]
+    private ?string $symfonyVersionString = null;
 
     public function __construct()
     {
@@ -261,7 +265,6 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         return $this;
     }
 
-    #[Groups(['package.read'])]
     public function getKeywords(): array
     {
         return $this->keywords;
@@ -368,14 +371,14 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         return $this;
     }
 
-    public function getPhpUnitVersion(): ?string
+    public function getPhpUnitVersionString(): ?string
     {
-        return $this->phpUnitVersion;
+        return $this->phpUnitVersionString;
     }
 
-    public function setPhpUnitVersion(?string $phpUnitVersion): static
+    public function setPhpUnitVersionString(?string $phpUnitVersionString): static
     {
-        $this->phpUnitVersion = $phpUnitVersion;
+        $this->phpUnitVersionString = $phpUnitVersionString;
 
         return $this;
     }
@@ -388,6 +391,18 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public function setPhpUnitVersions(?array $phpUnitVersions): static
     {
         $this->phpUnitVersions = $phpUnitVersions;
+
+        return $this;
+    }
+
+    public function getSymfonyVersionString(): ?string
+    {
+        return $this->symfonyVersionString;
+    }
+
+    public function setSymfonyVersionString(?string $symfonyVersionString): static
+    {
+        $this->symfonyVersionString = $symfonyVersionString;
 
         return $this;
     }

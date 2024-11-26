@@ -93,9 +93,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
             return;
         }
 
-
-        $validPhpVersions = $this->packageService->validPhpVersions($package);
-        $package->setPhpVersions($validPhpVersions);
+        $validPhpVersions = $package->getPhpVersions();
         switch ($event->getTransition()->getName()) {
             case self::TRANSITION_PHP_TOO_OLD:
                 if (count($validPhpVersions) > 0) {

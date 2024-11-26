@@ -9,6 +9,7 @@ use App\Entity\Package;
 use App\Workflow\BundleWorkflow;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PackageRepository;
+use Nadar\PhpComposerReader\ComposerReader;
 use Survos\WorkflowBundle\Controller\HandleTransitionsInterface;
 use Survos\WorkflowBundle\Traits\HandleTransitionsTrait;
 use Symfony\Component\DependencyInjection\Attribute\Target;
@@ -44,8 +45,13 @@ class PackageController extends AbstractController implements HandleTransitionsI
             $this->entityManager->flush(); // to save the marking
             return $this->redirectToRoute('package_show', $package->getRP());
         }
+
+        $composer = $package->getData();
+        $reader = new ComposerReader($composer);
+//        dd($composer);
         return $this->render('package/show.html.twig', [
             'package' => $package,
+            'composer' => $composer,
         ]);
     }
 

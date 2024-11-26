@@ -6,6 +6,7 @@ use App\Message\FetchComposer;
 use App\Repository\PackageRepository;
 use App\Service\PackageService;
 use App\Workflow\BundleWorkflow;
+use App\Workflow\BundleWorkflowInterface;
 use Composer\Semver\Comparator;
 use Doctrine\ORM\EntityManagerInterface;
 use Packagist\Api\Result\Package;
@@ -66,6 +67,8 @@ final class AppPackagistCommand extends InvokableServiceCommand
         #[Option(description: 'limit (for testing)')] int                                     $limit = 0,
         #[Option(description: 'batch size (for flush)')] int                                     $batch = 500,
         #[Option(description: 'filter by marking')] ?string                                     $marking = null,
+        #[Option(description: 'filter by vendor')] ?string                                     $vendor = null,
+        #[Option(description: 'filter by short name')] ?string                                     $name = null,
 
     ): void
     {
@@ -144,6 +147,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
             $this->fetch($pageSize, $client);
         }
 
+        // interesting, but not working as expected. :-(
         if (false && $process) {
             $progressBar = new ProgressBar($io, count($packages));
             foreach ($packages as $package) {
@@ -172,69 +176,55 @@ final class AppPackagistCommand extends InvokableServiceCommand
 
 
         if ($process) {
-            $packages = $this->packageRepository->findBy($where, limit: $limit ?: 100000);
-            $this->process($pageSize);
-        }
-
-        $io->success('app:packagist success. ' . $this->packageRepository->count([]));
-    }
-
-
-    /**
-     * @param int $pageSize
-     * @param IO $io
-     * @param Client $client
-     * @return void
-     */
-    public function process(int $pageSize): void
-    {
-        $allowed = ['8.1', '8.2', '8.3'];
-        foreach ($allowed as $value) {
-            $phpVersions[$value] = new Version($value);
-        }
-        $packages = $this->packageRepository->findBy(
-            [
-                'marking' =>
-                    [SurvosPackage::PLACE_NEW, SurvosPackage::PLACE_COMPOSER_LOADED]
-            ],
-            limit: $pageSize
-        );
-        /** @var Result $result */
-        $progressBar = new ProgressBar($this->io()->output(), count($packages));
-        $progressBar->start();
-        $distribution = [];
-        foreach ($packages as $survosPackage) {
-            $progressBar->advance();
-            $this->packageService->populateFromComposerData($survosPackage);
-//            dd($survosPackage->getPhpVersions(), $survosPackage->getSymfonyVersions(), $survosPackage->getPhpVersionString(), $survosPackage->getSymfonyVersions());
-
-            if ((($progressBar->getProgress() % $this->io()->getOption('batch') ) == 1)) {
-                $this->logger->info("Flushing");
-                $this->entityManager->flush();
+            if ($vendorFilter = $io->getOption('vendor')) {
+                $where['vendor'] = $vendorFilter;
             }
-        }
-        $progressBar->finish();
-        $table = new Table($this->io());
-        $table->setHeaders(['bundle', 'count']);
-        asort($distribution);
-        foreach ($distribution as $bundle => $count) {
-            $table->addRow([$bundle, $count]);
-        }
-        $table->render();
+            if ($nameFilter = $io->getOption('name')) {
+                $where['shortName'] = $nameFilter;
+            }
+            $packages = $this->packageRepository->findBy($where, ['id' => 'desc'], limit: $limit ?: 100000);
+            $progressBar = new ProgressBar($this->io()->output(), count($packages));
+            $progressBar->start();
+            $distribution = [];
+            foreach ($packages as $survosPackage) {
+                $progressBar->advance();
+                if (!$survosPackage->getData()) {
+                    $this->logger->error("Missing data in " . $survosPackage->getName());
+//                    assert(false, $survosPackage->getName());
+                    continue;
+                }
+                assert($survosPackage->getData(), "missing data! for " . $survosPackage->getId() . ' ' . $survosPackage->getMarking());
+                $this->packageService->populateFromComposerData($survosPackage);
+                assert($survosPackage->getMarking() <> BundleWorkflowInterface::PLACE_COMPOSER_LOADED);
 
-        $this->io()->writeln("total " . count($packages));
+//                dd($survosPackage->getSymfonyVersions(), $survosPackage->getPhpVersionString());
+                $this->logger->info($survosPackage->getName() . " {$survosPackage->getMarking()} " . join('|', $survosPackage->getSymfonyVersions()));
+                if ((($progressBar->getProgress() % $this->io()->getOption('batch') ) == 1)) {
+                    $this->logger->info("Flushing");
+                    $this->entityManager->flush();
+                }
+            }
+            $this->entityManager->flush();
+            $io->success($this->getName() . ' process '  . count($packages));
+        }
+
     }
+
 
     public function fetch(int $pageSize, Client $client): void
     {
 //        $packages = $this->packageRepository->findBy(['vendor' => 'symfony'], limit: $pageSize);
         $packages = $this->packageRepository->findBy(
-            ['marking' => [SurvosPackage::PLACE_NEW]],
+            [
+//                'marking' => [SurvosPackage::PLACE_NEW]
+            ],
             ['name' => 'ASC']
         );
         /** @var Result $result */
         foreach ($packages as $survosPackage) {
-            $this->messageBus->dispatch(new FetchComposer($survosPackage->getName()));
+            if (!$survosPackage->getData()) {
+                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName()));
+            }
         }
     }
 
