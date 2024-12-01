@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PackageRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Survos\WorkflowBundle\Traits\HandleTransitionsTrait;
@@ -26,8 +27,10 @@ class PackageCollectionController extends AbstractController
 
     }
 
-    #[Route(path: '/', name: 'app_homepage', methods: ['GET'])]
-    public function browse(Request $request): Response
+    #[Route(path: '/{style}', name: 'app_homepage', methods: ['GET'])]
+    public function browse(Request                     $request,
+                          string $style = 'normal'
+    ): Response
     {
 // WorkflowInterface $projectStateMachine
         $markingData = []; // $this->workflowHelperService->getMarkingData($projectStateMachine, $class);
@@ -35,8 +38,11 @@ class PackageCollectionController extends AbstractController
 
         return $this->render('package/browse.html.twig', [
             'packageClass' => Package::class,
+            'style' => $style,
             'apiRoute' => $apiRoute,
             'filter' => [],
+
+
 //            'owner' => $owner,
         ]);
     }
