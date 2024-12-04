@@ -4261,7 +4261,7 @@
         },
         {
             "name": "survos/api-grid-bundle",
-            "version": "1.5.409",
+            "version": "1.5.413",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosApiGridBundle.git",
@@ -4341,7 +4341,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosApiGridBundle/issues",
-                "source": "https://github.com/survos/SurvosApiGridBundle/tree/1.5.409"
+                "source": "https://github.com/survos/SurvosApiGridBundle/tree/1.5.413"
             },
             "funding": [
                 {
@@ -4446,32 +4446,32 @@
         },
         {
             "name": "survos/bootstrap-bundle",
-            "version": "1.5.384",
+            "version": "1.5.413",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/BootstrapBundle.git",
-                "reference": "0b2abfbf408597d7fb71415ac576d38139e99005"
+                "reference": "3bf082b6b17398a72c0849b36185e35a1211c632"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/BootstrapBundle/zipball/0b2abfbf408597d7fb71415ac576d38139e99005",
-                "reference": "0b2abfbf408597d7fb71415ac576d38139e99005",
+                "url": "https://api.github.com/repos/survos/BootstrapBundle/zipball/3bf082b6b17398a72c0849b36185e35a1211c632",
+                "reference": "3bf082b6b17398a72c0849b36185e35a1211c632",
                 "shasum": ""
             },
             "require": {
-                "endroid/installer": "^1.4",
                 "knplabs/knp-menu-bundle": "^3.2",
-                "php": "^8.2",
-                "survos/core-bundle": "^1.5.384",
-                "symfony/config": "^7.0",
-                "symfony/dependency-injection": "^7.0",
-                "symfony/http-kernel": "^7.0",
-                "symfony/options-resolver": "^7.0",
-                "symfony/ux-icons": "^2.20",
+                "php": "^8.3",
+                "survos/core-bundle": "^1.5",
+                "survos/installer": "*@dev",
+                "symfony/config": "^6.4 || ^7.1",
+                "symfony/dependency-injection": "^6.4 || ^7.1",
+                "symfony/http-kernel": "^6.4 || ^7.1",
+                "symfony/options-resolver": "^6.4 || ^7.1",
+                "symfony/ux-icons": "^2.21",
                 "symfony/ux-twig-component": "^2.8",
                 "twig/intl-extra": "^3.8",
                 "twig/string-extra": "^3.4",
-                "twig/twig": "^3.14"
+                "twig/twig": "^3.4"
             },
             "conflict": {
                 "survos/api-grid-bundle": "<1.2.57",
@@ -4496,10 +4496,10 @@
                 "survos/workflow-helper-bundle": "<1.2.57"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.10",
-                "survos/auth-bundle": "^1.5.384",
-                "symfony/security-bundle": "^7.0",
-                "symfony/translation": "^7.0"
+                "phpstan/phpstan": "^2.0",
+                "survos/auth-bundle": "^1.5",
+                "symfony/security-bundle": "^6.4 || ^7.1",
+                "symfony/translation": "^6.4 || ^7.1"
             },
             "suggest": {
                 "symfony/security-bundle": "User authentication"
@@ -4532,7 +4532,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/BootstrapBundle/issues",
-                "source": "https://github.com/survos/BootstrapBundle/tree/1.5.384"
+                "source": "https://github.com/survos/BootstrapBundle/tree/1.5.413"
             },
             "funding": [
                 {
@@ -4540,11 +4540,11 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-18T22:53:39+00:00"
+            "time": "2024-12-01T15:35:01+00:00"
         },
         {
             "name": "survos/command-bundle",
-            "version": "1.5.409",
+            "version": "1.5.413",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosCommandBundle.git",
@@ -4598,7 +4598,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosCommandBundle/issues",
-                "source": "https://github.com/survos/SurvosCommandBundle/tree/1.5.409"
+                "source": "https://github.com/survos/SurvosCommandBundle/tree/1.5.413"
             },
             "funding": [
                 {
@@ -4610,7 +4610,7 @@
         },
         {
             "name": "survos/core-bundle",
-            "version": "1.5.409",
+            "version": "1.5.413",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosCoreBundle.git",
@@ -4687,7 +4687,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosCoreBundle/issues",
-                "source": "https://github.com/survos/SurvosCoreBundle/tree/1.5.409"
+                "source": "https://github.com/survos/SurvosCoreBundle/tree/1.5.413"
             },
             "funding": [
                 {
@@ -4699,7 +4699,7 @@
         },
         {
             "name": "survos/crawler-bundle",
-            "version": "1.5.409",
+            "version": "1.5.413",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosCrawlerBundle.git",
@@ -4772,7 +4772,7 @@
             "description": "Provides a way to create tests that crawl a site",
             "support": {
                 "issues": "https://github.com/survos/SurvosCrawlerBundle/issues",
-                "source": "https://github.com/survos/SurvosCrawlerBundle/tree/1.5.409"
+                "source": "https://github.com/survos/SurvosCrawlerBundle/tree/1.5.413"
             },
             "funding": [
                 {
@@ -4784,16 +4784,16 @@
         },
         {
             "name": "survos/inspection-bundle",
-            "version": "1.5.409",
+            "version": "1.5.413",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosInspectionBundle.git",
-                "reference": "57267cfe6f4602495eb1df4cbcda4f1a9c05b2f8"
+                "reference": "a95b29069eb568efabe4ad6f3674a4463b62c7ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosInspectionBundle/zipball/57267cfe6f4602495eb1df4cbcda4f1a9c05b2f8",
-                "reference": "57267cfe6f4602495eb1df4cbcda4f1a9c05b2f8",
+                "url": "https://api.github.com/repos/survos/SurvosInspectionBundle/zipball/a95b29069eb568efabe4ad6f3674a4463b62c7ed",
+                "reference": "a95b29069eb568efabe4ad6f3674a4463b62c7ed",
                 "shasum": ""
             },
             "require": {
@@ -4828,9 +4828,11 @@
                 "survos/workflow-helper-bundle": "<1.2.57"
             },
             "require-dev": {
-                "api-platform/core": "^3.2",
+                "api-platform/core": "^3.2||^4.0",
                 "phpstan/phpstan": "^2.0",
-                "roave/security-advisories": "dev-latest"
+                "roave/security-advisories": "dev-latest",
+                "survos/api-grid-bundle": "^1.5",
+                "symfony/routing": "^7.2"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -4859,7 +4861,7 @@
             "description": "Inspects Doctrine entities with APIPlatform attributes",
             "support": {
                 "issues": "https://github.com/survos/SurvosInspectionBundle/issues",
-                "source": "https://github.com/survos/SurvosInspectionBundle/tree/1.5.409"
+                "source": "https://github.com/survos/SurvosInspectionBundle/tree/1.5.413"
             },
             "funding": [
                 {
@@ -4867,7 +4869,70 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-24T14:57:08+00:00"
+            "time": "2024-12-01T15:35:00+00:00"
+        },
+        {
+            "name": "survos/installer",
+            "version": "2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/survos/installer.git",
+                "reference": "ab932ab424c86755d85ef88fe93a4fed197ee7b0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/survos/installer/zipball/ab932ab424c86755d85ef88fe93a4fed197ee7b0",
+                "reference": "ab932ab424c86755d85ef88fe93a4fed197ee7b0",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0",
+                "endroid/quality": "dev-main"
+            },
+            "suggest": {
+                "roave/security-advisories": "Avoids installation of package versions with vulnerabilities"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Endroid\\Installer\\Installer",
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Endroid\\Installer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen van den Enden",
+                    "email": "info@endroid.nl"
+                },
+                {
+                    "name": "Tac Tacelosky",
+                    "email": "tacman@gmail.com"
+                }
+            ],
+            "description": "Composer plugin for installing configuration files and updating .env and .gitignore",
+            "support": {
+                "source": "https://github.com/survos/installer/tree/2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/endroid",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-11-18T23:39:39+00:00"
         },
         {
             "name": "survos/meili-admin-bundle",
@@ -4927,7 +4992,7 @@
         },
         {
             "name": "survos/workflow-helper-bundle",
-            "version": "1.5.409",
+            "version": "1.5.413",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosWorkflowHelperBundle.git",
@@ -5020,7 +5085,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosWorkflowHelperBundle/issues",
-                "source": "https://github.com/survos/SurvosWorkflowHelperBundle/tree/1.5.409"
+                "source": "https://github.com/survos/SurvosWorkflowHelperBundle/tree/1.5.413"
             },
             "funding": [
                 {
@@ -11002,12 +11067,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "c5ebc12cde6f3f0de033184cc8f4a9efb7fac27f"
+                "reference": "57bf519af2bd60fe181fd632bd268e73daab807f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/c5ebc12cde6f3f0de033184cc8f4a9efb7fac27f",
-                "reference": "c5ebc12cde6f3f0de033184cc8f4a9efb7fac27f",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/57bf519af2bd60fe181fd632bd268e73daab807f",
+                "reference": "57bf519af2bd60fe181fd632bd268e73daab807f",
                 "shasum": ""
             },
             "require": {
@@ -11075,7 +11140,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-30T09:52:06+00:00"
+            "time": "2024-12-02T09:21:10+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -13279,7 +13344,7 @@
         },
         {
             "name": "survos/maker-bundle",
-            "version": "1.5.409",
+            "version": "1.5.413",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosMakerBundle.git",
@@ -13382,7 +13447,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosMakerBundle/issues",
-                "source": "https://github.com/survos/SurvosMakerBundle/tree/1.5.409"
+                "source": "https://github.com/survos/SurvosMakerBundle/tree/1.5.413"
             },
             "funding": [
                 {

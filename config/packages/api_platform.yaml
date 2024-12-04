@@ -1,6 +1,8 @@
 api_platform:
-    title: Hello API Platform
+    title: Bundles API
     version: 1.0.0
+    serializer:
+        hydra_prefix: true
     formats:
         jsonld: ['application/ld+json']
     docs_formats:
@@ -14,3 +16,4 @@ api_platform:
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
+        pagination_client_items_per_page: true
