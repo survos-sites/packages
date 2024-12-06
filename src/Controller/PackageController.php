@@ -25,7 +25,7 @@ class PackageController extends AbstractController implements HandleTransitionsI
     use HandleTransitionsTrait;
 
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager
     )
     {
 
