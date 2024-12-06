@@ -29,7 +29,7 @@ class PackageCollectionController extends AbstractController
 
     #[Route(path: '/{style}', name: 'app_homepage', methods: ['GET'])]
     public function browse(Request                     $request,
-                          string $style = 'normal'
+                          string $style = 'simple' //  'normal'
     ): Response
     {
 // WorkflowInterface $projectStateMachine
