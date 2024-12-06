@@ -47,10 +47,15 @@
 {% set columns = [
     'id',
     'shortName',
-    {name: 'symfonyVersions', browsable: true, title: 'symfony'},
-{name: 'vendor', browsable: true, order: 0},
-{name: 'marking', browsable: true},
+#    {name: 'symfonyVersions', browsable: true, title: 'symfony'},
+# {name: 'vendor', browsable: true, order: 0},
+{name: 'marking'},
 ] %}
+
+{% set facet_columns = [
+    {name: 'marking', browsable: true},
+] %}
+
 <twig:api_grid
         :class="packageClass"
         :caller="_self"
