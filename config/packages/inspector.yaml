@@ -1,19 +1,19 @@
 inspector:
-    enabled: false
     ingestion_key: '%env(INSPECTOR_INGESTION_KEY)%'
+    enabled: true
+    transport: async
     ignore_routes:
-        - '_wdt'
-        - '_profiler'
-        - '_profiler_home'
-        - '_profiler_search'
-        - '_profiler_search_bar'
-        - '_profiler_phpinfo'
-        - '_profiler_search_results'
-        - '_profiler_open_file'
-        - '_profiler_router'
-        - '_profiler_exception'
-        - '_profiler_exception_css'
+        - '/wdt*'
+        - '/profiler*'
     ignore_commands:
+        #        - 'messenger:consume'
+        - 'assets:install'
+        - 'cache:clear'
+        - 'doctrine:migrations:migrate'
+        - 'schedule:run'
+        - 'fos:js-routing:dump'
+
+        # Development commands section
         - 'debug:autowiring'
         - 'debug:config'
         - 'debug:container'
