@@ -11,9 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
-
 
 final class ProcessPackageHandler implements BundleWorkflowInterface
 {
@@ -21,15 +19,13 @@ final class ProcessPackageHandler implements BundleWorkflowInterface
         private readonly EntityManagerInterface $entityManager,
         private readonly PackageRepository $packageRepository,
         private readonly LoggerInterface $logger,
-        #[Target(BundleWorkflow::WORKFLOW_NAME)] private WorkflowInterface $workflow
-    )
-    {
-
+        #[Target(BundleWorkflow::WORKFLOW_NAME)] private WorkflowInterface $workflow,
+    ) {
     }
+
     #[AsMessageHandler]
     public function __invoke(ProcessPackage $message): void
     {
-
         $package = $this->packageRepository->findOneBy(['name' => $message->packageName]);
         assert($package);
 
@@ -42,7 +38,6 @@ final class ProcessPackageHandler implements BundleWorkflowInterface
 
         $composer = $package->getData();
 
-
         // note: we are handling abandoned earlier
         $transitions = [
             BundleWorkflow::TRANSITION_LOAD,
@@ -52,20 +47,18 @@ final class ProcessPackageHandler implements BundleWorkflowInterface
         ];
 
         foreach ($transitions as $transition) {
-
         }
 
         if (!in_array($survosPackage->getMarking(),
             [SurvosPackage::PLACE_OUTDATED_PHP,
                 SurvosPackage::PLACE_ABANDONED])) {
-            if (count($survosPackage->getSymfonyVersions()) == 0) {
-                $this->logger->info("outdated " . $this->getPackagistUrl($name));
+            if (0 == count($survosPackage->getSymfonyVersions())) {
+                $this->logger->info('outdated '.$this->getPackagistUrl($name));
                 $survosPackage->setMarking(SurvosPackage::PLACE_OUTDATED);
             } else {
                 $survosPackage->setMarking(SurvosPackage::PLACE_VALID_REQUIREMENTS);
             }
         }
-
 
         // do something with your message
     }

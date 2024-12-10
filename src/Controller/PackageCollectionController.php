@@ -1,38 +1,32 @@
 <?php
 
-
 // uses Survos Param Converter, from the UniqueIdentifiers method of the entity.
 
 namespace App\Controller;
 
 use App\Entity\Package;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PackageRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Survos\WorkflowBundle\Traits\HandleTransitionsTrait;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Survos\WorkflowBundle\Traits\HandleTransitionsTrait;
 
 #[Route('/')]
 class PackageCollectionController extends AbstractController
 {
-
     use HandleTransitionsTrait;
-
 
     public function __construct(private EntityManagerInterface $entityManager)
     {
-
     }
 
     #[Route(path: '/{style}', name: 'app_homepage', methods: ['GET'])]
-    public function browse(Request                     $request,
-                          string $style = 'simple' //  'normal'
-    ): Response
-    {
-// WorkflowInterface $projectStateMachine
+    public function browse(Request $request,
+        string $style = 'simple', //  'normal'
+    ): Response {
+        // WorkflowInterface $projectStateMachine
         $markingData = []; // $this->workflowHelperService->getMarkingData($projectStateMachine, $class);
         $apiRoute = $request->get('doctrine', false) ? 'doctrine-packages' : 'meili-packages';
 
@@ -42,8 +36,7 @@ class PackageCollectionController extends AbstractController
             'apiRoute' => $apiRoute,
             'filter' => [],
 
-
-//            'owner' => $owner,
+            //            'owner' => $owner,
         ]);
     }
 

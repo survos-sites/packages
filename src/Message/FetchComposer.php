@@ -9,15 +9,13 @@ final class FetchComposer
      * to hold the data for this message class.
      */
 
-     public function __construct(
-         private readonly string $name,
-     ) {
-     }
+    public function __construct(
+        private readonly string $name,
+    ) {
+    }
 
     public function getName(): string
     {
         return $this->name;
     }
-
-
 }

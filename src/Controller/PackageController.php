@@ -1,6 +1,5 @@
 <?php
 
-
 // uses Survos Param Converter, from the UniqueIdentifiers method of the entity.
 
 namespace App\Controller;
@@ -8,15 +7,13 @@ namespace App\Controller;
 use App\Entity\Package;
 use App\Workflow\BundleWorkflow;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\PackageRepository;
 use Nadar\PhpComposerReader\ComposerReader;
 use Survos\WorkflowBundle\Controller\HandleTransitionsInterface;
 use Survos\WorkflowBundle\Traits\HandleTransitionsTrait;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Target;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 #[Route('/package/{packageId}')]
@@ -25,10 +22,8 @@ class PackageController extends AbstractController implements HandleTransitionsI
     use HandleTransitionsTrait;
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
-    )
-    {
-
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     #[Route('/', name: 'package_show', options: ['expose' => true])]
@@ -36,23 +31,23 @@ class PackageController extends AbstractController implements HandleTransitionsI
     public function show(
         Package $package,
         #[Target(BundleWorkflow::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
-        ?string $transition=null
-    ): Response
-    {
+        ?string $transition = null,
+    ): Response {
         if ($flashMessage = $this->handleTransitionButtons($workflow, $transition, $package)) {
             // this could be done in a .leave listener too.
             $this->addFlash('info', $flashMessage);
             $this->entityManager->flush(); // to save the marking
+
             return $this->redirectToRoute('package_show', $package->getRP());
         }
 
         $composer = $package->getData();
         $reader = new ComposerReader($composer);
-//        dd($composer);
+
+        //        dd($composer);
         return $this->render('package/show.html.twig', [
             'package' => $package,
             'composer' => $composer,
         ]);
     }
-
 }
