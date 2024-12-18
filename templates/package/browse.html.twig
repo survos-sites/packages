@@ -52,8 +52,9 @@
 {% endblock %}
 {% block normal %}
     {% set columns = [
-        {name: 'id', order: 1},
-        {name: 'name'},
+        {name: 'code', order: 1},
+        {name: 'vendor'},
+        {name: 'details'},
         {name: 'symfonyVersionString', title: 'symfony', order: 0},
         {name: 'symfonyVersions', browsable: true, title: 'symfony', order: 0},
 #        {name: 'phpUnitVersionString', title: 'phpunit'},
@@ -76,10 +77,11 @@
         :apiRoute="apiRoute"
         :globals="globals"
 >
-    <twig:block name="id">
+    <twig:block name="code">
         <div>
             <a target="_blank" href="{{ path('package_show', row.rp) }}">
-                {{ row.id }}
+                OPEN
+{#                {{ row.id }}#}
             </a>
         </div>
 
@@ -147,6 +149,9 @@
         {#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }}#}
     </twig:block>
     <twig:block name="name">
+        {{ row.name }} (sortable)
+    </twig:block>
+    <twig:block name="details">
         <div class="line-limit-2 text-wrap" style="max-width: 200px">
             <span class="text-muted">
             {{ row.vendor }}/
