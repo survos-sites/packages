@@ -24,7 +24,7 @@ class PackageCollectionController extends AbstractController
 
     #[Route(path: '/{style}', name: 'app_homepage', methods: ['GET'])]
     public function browse(Request $request,
-        string $style = 'simple', //  'normal'
+        string $style = 'normal', //  'normal'
     ): Response {
         // WorkflowInterface $projectStateMachine
         $markingData = []; // $this->workflowHelperService->getMarkingData($projectStateMachine, $class);
