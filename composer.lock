@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16fa2ee17ac2f3855865164a6a23d3c2",
+    "content-hash": "027209bc9823aa700b4552715d8b7b62",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4209,12 +4209,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosApiGridBundle.git",
-                "reference": "e40e06b77500cbe844328793a67c31dd6c0568eb"
+                "reference": "5c8a08466bec6d6f577ebc57cc2a5c2b61032f93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosApiGridBundle/zipball/e40e06b77500cbe844328793a67c31dd6c0568eb",
-                "reference": "e40e06b77500cbe844328793a67c31dd6c0568eb",
+                "url": "https://api.github.com/repos/survos/SurvosApiGridBundle/zipball/5c8a08466bec6d6f577ebc57cc2a5c2b61032f93",
+                "reference": "5c8a08466bec6d6f577ebc57cc2a5c2b61032f93",
                 "shasum": ""
             },
             "require": {
@@ -4299,7 +4299,7 @@
                     "url": "https://github.com/kbond"
                 }
             ],
-            "time": "2024-12-18T11:22:45+00:00"
+            "time": "2024-12-18T18:46:57+00:00"
         },
         {
             "name": "survos/auth-bundle",
@@ -7993,8 +7993,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -11004,16 +11004,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "3.x-dev",
+            "version": "v3.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "918f52e818f7c56e90ec462ae90b230da244a7ed"
+                "reference": "677ef8da6497a03048192aeeb5aa3018e379ac71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/918f52e818f7c56e90ec462ae90b230da244a7ed",
-                "reference": "918f52e818f7c56e90ec462ae90b230da244a7ed",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/677ef8da6497a03048192aeeb5aa3018e379ac71",
+                "reference": "677ef8da6497a03048192aeeb5aa3018e379ac71",
                 "shasum": ""
             },
             "require": {
@@ -11028,7 +11028,6 @@
                 "psr/container": "^1.0|^2.0",
                 "symfony/phpunit-bridge": "^5.4.9|^6.4|^7.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "files": [
@@ -11069,7 +11068,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/3.x"
+                "source": "https://github.com/twigphp/Twig/tree/v3.17.1"
             },
             "funding": [
                 {
@@ -11081,7 +11080,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-14T19:06:36+00:00"
+            "time": "2024-12-12T09:58:10+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -11807,23 +11806,23 @@
         },
         {
             "name": "jetbrains/phpstorm-stubs",
-            "version": "v2024.2",
+            "version": "v2024.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JetBrains/phpstorm-stubs.git",
-                "reference": "cf7e447ddfa7f0cbab0c1dd38392f0cb05f9881c"
+                "reference": "0e82bdfe850c71857ee4ee3501ed82a9fc5d043c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/cf7e447ddfa7f0cbab0c1dd38392f0cb05f9881c",
-                "reference": "cf7e447ddfa7f0cbab0c1dd38392f0cb05f9881c",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/0e82bdfe850c71857ee4ee3501ed82a9fc5d043c",
+                "reference": "0e82bdfe850c71857ee4ee3501ed82a9fc5d043c",
                 "shasum": ""
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "v3.46.0",
-                "nikic/php-parser": "v5.0.0",
-                "phpdocumentor/reflection-docblock": "5.3.0",
-                "phpunit/phpunit": "10.5.5"
+                "friendsofphp/php-cs-fixer": "v3.64.0",
+                "nikic/php-parser": "v5.3.1",
+                "phpdocumentor/reflection-docblock": "5.6.0",
+                "phpunit/phpunit": "11.4.3"
             },
             "type": "library",
             "autoload": {
@@ -11848,9 +11847,9 @@
                 "type"
             ],
             "support": {
-                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2024.2"
+                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2024.3"
             },
-            "time": "2024-06-17T19:18:18+00:00"
+            "time": "2024-12-14T08:03:12+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -12245,16 +12244,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "46b4d3529b12178112d9008337beda0cc2a1a6b4"
+                "reference": "50d276fc3bf1430ec315f2f109bbde2769821524"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/46b4d3529b12178112d9008337beda0cc2a1a6b4",
-                "reference": "46b4d3529b12178112d9008337beda0cc2a1a6b4",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/50d276fc3bf1430ec315f2f109bbde2769821524",
+                "reference": "50d276fc3bf1430ec315f2f109bbde2769821524",
                 "shasum": ""
             },
             "require": {
@@ -12299,7 +12298,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-28T22:19:37+00:00"
+            "time": "2024-12-17T17:14:01+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -13361,21 +13360,21 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.46.0",
+            "version": "6.48.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "75447b4f722c408f780dc46c4b003389eb7939f3"
+                "reference": "9733d520ae19cdc7c50f6c86fc10e9993a0a89e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/75447b4f722c408f780dc46c4b003389eb7939f3",
-                "reference": "75447b4f722c408f780dc46c4b003389eb7939f3",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/9733d520ae19cdc7c50f6c86fc10e9993a0a89e5",
+                "reference": "9733d520ae19cdc7c50f6c86fc10e9993a0a89e5",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "jetbrains/phpstorm-stubs": "2024.2",
+                "jetbrains/phpstorm-stubs": "2024.3",
                 "nikic/php-parser": "^5.3.1",
                 "php": "~8.2.0 || ~8.3.2 || ~8.4.1"
             },
@@ -13424,9 +13423,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.46.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.48.0"
             },
-            "time": "2024-12-12T10:54:13+00:00"
+            "time": "2024-12-18T13:06:54+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -15036,9 +15035,7 @@
     "minimum-stability": "RC",
     "stability-flags": {
         "knplabs/packagist-api": 20,
-        "rector/rector": 5,
-        "survos/api-grid-bundle": 20,
-        "twig/twig": 20
+        "survos/api-grid-bundle": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

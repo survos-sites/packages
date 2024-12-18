@@ -65,7 +65,7 @@
         "symfony/web-link": "^7.0.3",
         "symfony/yaml": "^7.0.3",
         "twig/extra-bundle": "^3.8",
-        "twig/twig": "^3.x-dev",
+        "twig/twig": "^3.17",
         "zenstruck/twig-service-bundle": "^1.5"
     },
     "config": {
@@ -131,7 +131,7 @@
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^11.4",
         "pierstoval/smoke-testing": "^1.0",
-        "rector/rector": "^2.0@RC",
+        "rector/rector": "^2.0",
         "survos/maker-bundle": "^1.5",
         "symfony/browser-kit": "^7.0.3",
         "symfony/css-selector": "^7.0.3",
