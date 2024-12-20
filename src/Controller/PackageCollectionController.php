@@ -18,13 +18,13 @@ class PackageCollectionController extends AbstractController
 {
     use HandleTransitionsTrait;
 
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
 
-    #[Route(path: '/{style}', name: 'app_homepage', methods: ['GET'])]
+    #[Route(path: '/{style}', name: 'app_homepage', methods: [Request::METHOD_GET])]
     public function browse(Request $request,
-        string $style = 'normal', //  'normal'
+        string $style = 'simple', //  'normal'
     ): Response {
         // WorkflowInterface $projectStateMachine
         $markingData = []; // $this->workflowHelperService->getMarkingData($projectStateMachine, $class);
@@ -40,7 +40,7 @@ class PackageCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/index', name: 'package_index')]
+    #[Route('/index', name: 'package_index', methods: [Request::METHOD_GET])]
     public function index(PackageRepository $packageRepository): Response
     {
         return $this->render('package/index.html.twig', [
@@ -48,7 +48,7 @@ class PackageCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('package/new', name: 'package_new')]
+    #[Route('package/new', name: 'package_new', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function new(Request $request): Response
     {
         $package = new Package();

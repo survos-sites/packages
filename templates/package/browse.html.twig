@@ -4,6 +4,10 @@
 
 {% block body %}
 
+    <div {{ stimulus_controller('hello') }}>
+        hola!!
+    </div>
+
     {% set facet_columns = [
         {name: 'vendor', browsable: true, order: 1},
         {name: 'marking', browsable: true},
@@ -30,6 +34,7 @@
 {% block simple %}
 {% set columns = [
     'id',
+    {name: 'vendor', browsable: true, order: 1},
     'shortName',
 #    {name: 'symfonyVersions', browsable: true, title: 'symfony'},
 # {name: 'vendor', browsable: true, order: 0},

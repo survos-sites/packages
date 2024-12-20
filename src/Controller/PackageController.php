@@ -12,6 +12,7 @@ use Survos\WorkflowBundle\Controller\HandleTransitionsInterface;
 use Survos\WorkflowBundle\Traits\HandleTransitionsTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Target;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -26,8 +27,8 @@ class PackageController extends AbstractController implements HandleTransitionsI
     ) {
     }
 
-    #[Route('/', name: 'package_show', options: ['expose' => true])]
-    #[Route('/transition/{transition}', name: 'package_transition', options: ['expose' => true])]
+    #[Route('/', name: 'package_show', options: ['expose' => true], methods: [Request::METHOD_GET])]
+    #[Route('/transition/{transition}', name: 'package_transition', options: ['expose' => true], methods: [Request::METHOD_GET])]
     public function show(
         Package $package,
         #[Target(BundleWorkflow::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
