@@ -109,6 +109,10 @@ final class AppPackagistCommand extends InvokableServiceCommand
                         ->setName($packageName);
                     $this->entityManager->persist($survosPackage);
                 }
+
+//                https://repo.packagist.org/p/[vendor]/[package].json
+
+
                 $survosPackage
                     ->setRepo($package->repository)
                     ->setVendor($vendor)
@@ -205,11 +209,20 @@ final class AppPackagistCommand extends InvokableServiceCommand
             ],
             ['name' => 'ASC']
         );
+
+        $progressBar = new ProgressBar($this->io()->output(), count($packages));
         /* @var Result $result */
         foreach ($packages as $survosPackage) {
+            $progressBar->advance();
+
+            if (!$survosPackage->getPackagistData()) {
+                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'packagist'));
+            }
+
             if (!$survosPackage->getData()) {
-                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName()));
+                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'composer'));
             }
         }
+        $progressBar->finish();
     }
 }

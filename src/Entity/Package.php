@@ -35,10 +35,10 @@ use Symfony\Component\Serializer\Attribute\Groups;
     uriTemplate: 'meili/packages',
     provider: MeiliSearchStateProvider::class,
     normalizationContext: [
-        'groups' => ['package.read', 'browse', 'tree', 'marking'],
+        'groups' => ['package.read', 'package.facets', 'browse', 'tree', 'marking'],
     ]
 )]
-#[ApiFilter(OrderFilter::class, properties: ['marking', 'vendor', 'name', 'stars'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(OrderFilter::class, properties: ['marking', 'vendor', 'name', 'stars', 'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: ['marking' => 'exact', 'name' => 'partial'])]
 #[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersions', 'phpVersions', 'keywords', 'marking'])]
 #[ApiFilter(
@@ -86,11 +86,11 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     private ?string $shortName = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['package.read'])]
+    #[Groups(['package.facets'])]
     private ?array $symfonyVersions = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['package.read'])]
+    #[Groups(['package.facets'])]
     private ?array $keywords = null;
 
     #[ORM\Column(nullable: true)]
@@ -129,6 +129,9 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['package.read'])]
     private ?string $symfonyVersionString = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $packagistData = null;
 
     public function __construct()
     {
@@ -397,5 +400,28 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         $this->symfonyVersionString = $symfonyVersionString;
 
         return $this;
+    }
+
+    public function getPackagistData(): ?array
+    {
+        return $this->packagistData;
+    }
+
+    public function setPackagistData(?array $packagistData): static
+    {
+        $this->packagistData = $packagistData;
+
+        return $this;
+    }
+
+    #[Groups(['package.read'])]
+    public function getFavers(): ?int
+    {
+        return $this->getPackagistData()['favers'] ?? null;
+    }
+    #[Groups(['package.read'])]
+    public function getDownloads(): ?int
+    {
+        return $this->getPackagistData()['downloads']['total'] ?? null;
     }
 }

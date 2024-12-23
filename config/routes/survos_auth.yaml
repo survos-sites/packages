@@ -1,3 +1,4 @@
 survos_auth:
-  resource: '@SurvosAuthBundle/config/routes.php'
+  resource: '@SurvosAuthBundle/src/Controller/'
   prefix: '/auth'
+  type: attribute

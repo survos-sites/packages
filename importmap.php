@@ -56,7 +56,7 @@ return [
         'version' => '2.0.32',
     ],
     'axios' => [
-        'version' => '1.7.7',
+        'version' => '1.7.9',
     ],
     'fos-routing' => [
         'version' => '0.0.6',

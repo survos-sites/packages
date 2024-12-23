@@ -34,8 +34,10 @@
 {% block simple %}
 {% set columns = [
     'id',
+    'downloads',
     {name: 'vendor', browsable: true, order: 1},
     'shortName',
+    '_rankingScore',
 #    {name: 'symfonyVersions', browsable: true, title: 'symfony'},
 # {name: 'vendor', browsable: true, order: 0},
 {name: 'marking'},
@@ -43,6 +45,7 @@
 
 {% set facet_columns = [
     {name: 'marking', browsable: true},
+    {name: 'vendor', browsable: true},
 ] %}
 
 <twig:api_grid
@@ -53,6 +56,9 @@
         :apiRoute="apiRoute"
         :globals="globals"
 >
+    <twig:block name="_rankingScore">
+        {{ (row._rankingScore * 100)|number_format(0) }}
+    </twig:block>
 </twig:api_grid>
 {% endblock %}
 {% block normal %}

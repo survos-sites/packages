@@ -178,8 +178,15 @@ final class BundleWorkflow implements BundleWorkflowInterface
     {
         $package = $this->packageRepository->findOneBy(['name' => $message->getName()]);
         assert($package);
+        if (!$package->getPackagistData()) {
+            $packagistInfoUrl = sprintf('https://repo.packagist.org/packages/%s.json', $message->getName());
+            $info = json_decode(file_get_contents($packagistInfoUrl), true);
+            $package->setPackagistData($info['package']);
+        }
+        if ($message->getType() === 'composer') {
+            $this->packageService->populateFromComposerData($package);
+        }
         $this->packageService->addPackage($package);
-        $this->packageService->populateFromComposerData($package);
         //        dd($package->getPhpVersions(), $package->getPhpVersionString());
         $this->entityManager->flush();
         //        dd($package);

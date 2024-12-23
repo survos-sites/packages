@@ -11,7 +11,13 @@ final class FetchComposer
 
     public function __construct(
         private readonly string $name,
+        private readonly string $type,
     ) {
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function getName(): string
