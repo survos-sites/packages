@@ -60,8 +60,9 @@
 {% block normal %}
     {% set columns = [
         {name: 'code', order: 1},
-        {name: 'vendor'},
+        '_rankingScore',
         {name: 'downloads', sortable: true},
+        {name: 'vendor'},
         {name: 'details'},
         {name: 'symfonyVersionString', title: 'symfony', order: 0},
         {name: 'symfonyVersions', browsable: true, title: 'symfony', order: 0},
