@@ -18,11 +18,12 @@ class PackageCollectionController extends AbstractController
 {
     use HandleTransitionsTrait;
 
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(
+    )
     {
     }
 
-    #[Route(path: '/{style}', name: 'app_homepage', methods: [Request::METHOD_GET])]
+    #[Route(path: '/{style}', name: 'app_homepage', methods: [Request::METHOD_GET], requirements: ['style' => 'normal|simple'])]
     public function browse(Request $request,
         string $style = 'normal', //  'simple', //  'normal'
     ): Response {
@@ -48,24 +49,4 @@ class PackageCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('package/new', name: 'package_new', methods: [Request::METHOD_GET, Request::METHOD_POST])]
-    public function new(Request $request): Response
-    {
-        $package = new Package();
-        $form = $this->createForm(PackageType::class, $package);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->entityManager;
-            $entityManager->persist($package);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('package_index');
-        }
-
-        return $this->render('package/new.html.twig', [
-            'package' => $package,
-            'form' => $form->createView(),
-        ]);
-    }
 }

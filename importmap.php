@@ -175,4 +175,11 @@ return [
         'version' => '1.0.0-beta21',
         'type' => 'css',
     ],
+    'simple-datatables' => [
+        'version' => '9.2.1',
+    ],
+    'simple-datatables/dist/style.min.css' => [
+        'version' => '9.2.1',
+        'type' => 'css',
+    ],
 ];

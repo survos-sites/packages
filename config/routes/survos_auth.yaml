@@ -1,4 +1,5 @@
-survos_auth:
-  resource: '@SurvosAuthBundle/src/Controller/'
-  prefix: '/auth'
-  type: attribute
+# we don't really use auth in this application
+#survos_auth:
+#  resource: '@SurvosAuthBundle/src/Controller/'
+#  prefix: '/auth'
+#  type: attribute

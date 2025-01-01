@@ -209,6 +209,9 @@
     "survos/meili-admin-bundle": {
         "version": "1.5.370"
     },
+    "survos/simple-datatables-bundle": {
+        "version": "1.5.446"
+    },
     "survos/workflow-helper-bundle": {
         "version": "1.5.156"
     },
