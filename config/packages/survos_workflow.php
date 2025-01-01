@@ -2,24 +2,19 @@
 
 declare(strict_types=1);
 
-use Survos\WorkflowBundle\Service\ConfigureFromAttributesService;
 use Symfony\Config\FrameworkConfig;
+use Survos\WorkflowBundle\Service\ConfigureFromAttributesService;
+use App\Workflow\MusdigObjectWorkflow;
+use App\Workflow\ImageWorkflow;
+use \App\Workflow\MetWorkflow;
 
 return static function (FrameworkConfig $framework) {
-//return static function (ContainerConfigurator $containerConfigurator): void {
 
-    if (class_exists(ConfigureFromAttributesService::class))
-//        $files = glob(__DIR__."/../../src/Workflow/*Workflow.php");
-//        dd($files);
-        $workflowClasses = [
-            \App\Workflow\BundleWorkflow::class
-        ];
-    foreach ($workflowClasses as $workflowClass) {
+    foreach ([
+        // doctrine
+                 \App\Workflow\BundleWorkflow::class,
+             ] as $workflowClass) {
         ConfigureFromAttributesService::configureFramework($workflowClass, $framework, [$workflowClass]);
     }
-//    foreach ($files as $workflowFilename) {
-//        $workflowClass = new ReflectionClass($workflowFilename);
-//        ConfigureFromAttributesService::configureFramework($workflowClass, $framework, [$workflowClass]);
-//    }
 
 };

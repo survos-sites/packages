@@ -133,46 +133,6 @@ class PackageService
         }
     }
 
-    #[AsTwigFunction] // will be available as "fnValidPhpVersions" in twig
-    public function XXXvalidPhpVersions(Package $survosPackage): array
-    {
-        $results = [];
-        $okay = false; // unless we have a valid php version
-        $survosPackage->setPhpVersions([]);
-
-        $allowed = ['8.1', '8.2', '8.3'];
-        foreach ($allowed as $value) {
-            $phpVersions[$value] = new Version($value);
-        }
-
-        if (!$survosPackage->getPhpVersionString()) {
-            return $results;
-        }
-
-        $versionString = $survosPackage->getPhpVersionString();
-        $versionString = str_replace('>=', '^', $versionString);
-        $versionString = str_replace(' ', '', $versionString);
-        if (preg_match('/^\^\d$/', $versionString, $m)) {
-            $versionString .= '.0';
-        }
-
-        try {
-            $constraint = $this->parser->parse($versionString);
-        } catch (\Exception $exception) {
-            $this->logger->error($survosPackage->getPhpVersionString()." ($versionString) ".$exception->getMessage());
-
-            return [];
-            //            dd($exception, $survosPackage->getPhpVersionString());
-        }
-        foreach ($allowed as $value) {
-            if ($complies = $constraint->complies($phpVersion = $phpVersions[$value])) {
-                $results[] = $value;
-            }
-        }
-
-        return $results;
-    }
-
     private function getPackagistUrl($name): string
     {
         return sprintf("https://packagist.org/packages/$name");
