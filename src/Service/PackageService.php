@@ -111,7 +111,10 @@ class PackageService
             }
         }
         if ($symfonyVersionStr) {
-            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['5.4', '6.4', '7.1'], $dependency);
+            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['5.4', '6.4', '7.0'], $dependency);
+            if (count($symfonyVersions)) {
+//                dd($symfonyVersions);
+            }
             $survosPackage
                 ->setSymfonyVersions($symfonyVersions)
                 ->setSymfonyVersionString($symfonyVersionStr." ($dependency)")

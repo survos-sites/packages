@@ -8,9 +8,20 @@ framework:
 
     #esi: true
     #fragments: true
+    router:
+        # ...
+        default_uri: 'https://packages.survos.com/'
+
+when@dev:
+    framework:
+        router:
+            default_uri: 'https://packages.wip/'
 
 when@test:
     framework:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+        router:
+            default_uri: 'https://packages.wip/'
+

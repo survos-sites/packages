@@ -8,3 +8,6 @@ bin/console app:load-data -v --fetch
 
 bin/console dbal:run-sql "delete from package where marking='abandoned'"
 bin/console grid:index --reset
+
+
+bin/console app:load-data -v --setup --fetch

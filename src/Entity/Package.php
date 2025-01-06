@@ -86,7 +86,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     private ?string $shortName = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['package.facets'])]
+    #[Groups(['package.facets','package.read'])]
     private ?array $symfonyVersions = null;
 
     #[ORM\Column(nullable: true)]

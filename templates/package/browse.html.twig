@@ -4,15 +4,6 @@
 
 {% block body %}
 
-    {% set facet_columns = [
-        {name: 'vendor', browsable: true, order: 1},
-        {name: 'marking', browsable: true},
-
-        {name: 'symfonyVersions', browsable: true, title: 'symfony'},
-        {name: 'phpVersions', browsable: true, title: 'php'},
-        {name: 'phpUnitVersions', browsable: true, title: 'phpunit'},
-    ] %}
-
 {% set globals = {
     packagistIcon: ux_icon('simple-icons:packagist'),
     githubIcon: ux_icon('tabler:brand-github'),
@@ -32,6 +23,14 @@
     'id',
     'downloads',
     {name: 'vendor', browsable: true, order: 1},
+    {name: 'marking', browsable: true},
+
+    {name: 'symfonyVersions', browsable: true, title: 'symfony'},
+    {name: 'phpVersions', browsable: true, title: 'php'},
+    {name: 'phpUnitVersions', browsable: true, title: 'phpunit'},
+
+
+{name: 'vendor', browsable: true, order: 1},
     'shortName',
     '_rankingScore',
 #    {name: 'symfonyVersions', browsable: true, title: 'symfony'},
@@ -39,16 +38,11 @@
 {name: 'marking'},
 ] %}
 
-{% set facet_columns = [
-    {name: 'marking', browsable: true},
-    {name: 'vendor', browsable: true},
-] %}
 
 <twig:api_grid
         :class="packageClass"
         :caller="_self"
         :columns="columns"
-        :facet_columns="facet_columns"
         :apiRoute="apiRoute"
         :globals="globals"
 >
@@ -82,7 +76,6 @@
         :class="packageClass"
         :caller="_self"
         :columns="columns"
-        :facet_columns="facet_columns"
         :apiRoute="apiRoute"
         :globals="globals"
 >

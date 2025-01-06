@@ -188,7 +188,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
                 $this->packageService->populateFromComposerData($survosPackage);
                 assert(BundleWorkflowInterface::PLACE_COMPOSER_LOADED != $survosPackage->getMarking());
 
-                //                dd($survosPackage->getSymfonyVersions(), $survosPackage->getPhpVersionString());
+//                dd($survosPackage->getSymfonyVersions(), $survosPackage->getSymfonyVersionString(),  $survosPackage->getPhpVersionString());
                 $this->logger->info($survosPackage->getName()." {$survosPackage->getMarking()} ".join('|', $survosPackage->getSymfonyVersions()));
                 if (($progressBar->getProgress() % $this->io()->getOption('batch')) == 1) {
                     $this->logger->info('Flushing');

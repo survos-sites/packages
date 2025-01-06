@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53b8dad298c3ade787fbd814fb57aec0",
+    "content-hash": "593c9d179246f29f825194e582afbdef",
     "packages": [
         {
             "name": "api-platform/core",
@@ -2960,16 +2960,16 @@
         },
         {
             "name": "nadar/php-composer-reader",
-            "version": "dev-master",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nadar/php-composer-reader.git",
-                "reference": "6c1262fb3eca8c437d913e989aad09d6047ff92d"
+                "reference": "377b8275035608db091f3ff8494716208b35b61a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nadar/php-composer-reader/zipball/6c1262fb3eca8c437d913e989aad09d6047ff92d",
-                "reference": "6c1262fb3eca8c437d913e989aad09d6047ff92d",
+                "url": "https://api.github.com/repos/nadar/php-composer-reader/zipball/377b8275035608db091f3ff8494716208b35b61a",
+                "reference": "377b8275035608db091f3ff8494716208b35b61a",
                 "shasum": ""
             },
             "require": {
@@ -2982,7 +2982,6 @@
                 "phpunit/phpunit": "^9",
                 "rector/rector": "^0.15.23"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -3002,9 +3001,9 @@
             "description": "Read and manipulate composer.json",
             "support": {
                 "issues": "https://github.com/nadar/php-composer-reader/issues",
-                "source": "https://github.com/nadar/php-composer-reader/tree/master"
+                "source": "https://github.com/nadar/php-composer-reader/tree/2.0.0"
             },
-            "time": "2024-11-30T07:51:39+00:00"
+            "time": "2023-04-02T18:34:01+00:00"
         },
         {
             "name": "nelmio/cors-bundle",
@@ -12803,16 +12802,16 @@
         },
         {
             "name": "pierstoval/smoke-testing",
-            "version": "v1.1.0",
+            "version": "dev-dynamic-host-scheme",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Pierstoval/SmokeTesting.git",
-                "reference": "35a42aeebc05f0881ce5e126b626f68513ea2a25"
+                "reference": "d5d218a8dc2afba57f6157df42766aa8e41bdba2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Pierstoval/SmokeTesting/zipball/35a42aeebc05f0881ce5e126b626f68513ea2a25",
-                "reference": "35a42aeebc05f0881ce5e126b626f68513ea2a25",
+                "url": "https://api.github.com/repos/Pierstoval/SmokeTesting/zipball/d5d218a8dc2afba57f6157df42766aa8e41bdba2",
+                "reference": "d5d218a8dc2afba57f6157df42766aa8e41bdba2",
                 "shasum": ""
             },
             "require": {
@@ -12842,9 +12841,9 @@
             "description": "Smoke testing automator for Symfony applications",
             "support": {
                 "issues": "https://github.com/Pierstoval/SmokeTesting/issues",
-                "source": "https://github.com/Pierstoval/SmokeTesting/tree/v1.1.0"
+                "source": "https://github.com/Pierstoval/SmokeTesting/tree/dynamic-host-scheme"
             },
-            "time": "2024-12-30T21:04:36+00:00"
+            "time": "2025-01-02T12:29:05+00:00"
         },
         {
             "name": "react/cache",
@@ -15112,7 +15111,7 @@
     "minimum-stability": "RC",
     "stability-flags": {
         "knplabs/packagist-api": 20,
-        "nadar/php-composer-reader": 20,
+        "pierstoval/smoke-testing": 20,
         "survos/api-grid-bundle": 20
     },
     "prefer-stable": true,
