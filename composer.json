@@ -15,7 +15,7 @@
         "composer/semver": "^3.4",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^2.19.3",
+        "doctrine/orm": "^2.19.3 || ^3.3",
         "inspector-apm/inspector-symfony": "^1.2",
         "knplabs/knp-time-bundle": "^2.2",
         "knplabs/packagist-api": "dev-master",
