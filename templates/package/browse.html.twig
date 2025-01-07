@@ -4,183 +4,165 @@
 
 {% block body %}
 
-{% set globals = {
-    packagistIcon: ux_icon('simple-icons:packagist'),
-    githubIcon: ux_icon('tabler:brand-github'),
-    iconMap: {
-        new:  ux_icon('clarity:new-line'),
-        composer_loaded: ux_icon('logos:composer'),
-        php_too_old:  ux_icon('icon-park-outline:invalid-files', {class: 'bg-danger text-white'}),
-    }
-} %}
+    {% set globals = {
+        packagistIcon: ux_icon('simple-icons:packagist'),
+        githubIcon: ux_icon('tabler:brand-github'),
+        iconMap: {
+            new:  ux_icon('clarity:new-line'),
+            composer_loaded: ux_icon('logos:composer'),
+            php_too_old:  ux_icon('icon-park-outline:invalid-files', {class: 'bg-danger text-white'}),
+        }
+    } %}
 
-{{ block(style) }}
+    {{ block(style) }}
 
 {% endblock %}
 
 {% block simple %}
-{% set columns = [
-    'id',
-    'downloads',
-    {name: 'vendor', browsable: true, order: 1},
-    {name: 'marking', browsable: true},
-
-    {name: 'symfonyVersions', browsable: true, title: 'symfony'},
-    {name: 'phpVersions', browsable: true, title: 'php'},
-    {name: 'phpUnitVersions', browsable: true, title: 'phpunit'},
+    {% set columns = [
+    ] %}
 
 
-{name: 'vendor', browsable: true, order: 1},
-    'shortName',
-    '_rankingScore',
-#    {name: 'symfonyVersions', browsable: true, title: 'symfony'},
-# {name: 'vendor', browsable: true, order: 0},
-{name: 'marking'},
-] %}
-
-
-<twig:api_grid
-        :class="packageClass"
-        :caller="_self"
-        :columns="columns"
-        :apiRoute="apiRoute"
-        :globals="globals"
->
-    <twig:block name="_rankingScore">
-        {{ (row._rankingScore * 100)|number_format(0) }}
-    </twig:block>
-</twig:api_grid>
+    <twig:api_grid
+            :class="packageClass"
+            :caller="_self"
+            :columns="columns"
+            :apiRoute="apiRoute"
+            :globals="globals"
+    >
+        <twig:block name="_rankingScore">
+            {{ (row._rankingScore * 100)|number_format(0) }}
+        </twig:block>
+    </twig:api_grid>
 {% endblock %}
 {% block normal %}
     {% set columns = [
-        {name: 'code', order: 1},
-        '_rankingScore',
+        {name: 'vendor', browsable: true, order: 1},
+        {name: 'marking', browsable: true},
+
+        {name: 'phpVersions', browsable: true, title: 'php', order: 0},
+        col('_rankingScore', condition: is_granted('ROLE_ADMIN')),
+
+        {name: 'code', order: 1, condition:  is_granted('ROLE_ADMIN')},
         {name: 'downloads', sortable: true},
-        {name: 'vendor'},
         {name: 'details'},
         {name: 'symfonyVersionString', title: 'symfony', order: 0},
         {name: 'symfonyVersions', browsable: true, title: 'symfony', order: 0},
-#        {name: 'phpUnitVersionString', title: 'phpunit'},
-{name: 'phpVersionString', title: 'php/phpunit'},
-{name: 'vendor', browsable: true, order: 0},
-#        {name: 'phpUnitVersion', browsable: true, title: 'phpunitStr'},
-{name: 'marking', browsable: true},
-{name: 'description', searchable: true},
-#        {name: 'keywords', title: 'keywords', block: 'list'},
-{name: 'phpVersions', browsable: true, title: 'php', order: 0},
-{name: 'phpUnitVersions', browsable: true, title: 'phpunit', order: 0},
-] %}
+
+        {name: 'phpVersionString', title: 'php/phpunit'},
+        {name: 'description', searchable: true},
+    ] %}
 
 
-<twig:api_grid
-        :class="packageClass"
-        :caller="_self"
-        :columns="columns"
-        :apiRoute="apiRoute"
-        :globals="globals"
->
-    <twig:block name="code">
-        <div>
-            <a target="_blank" href="{{ path('package_show', row.rp) }}">
-                OPEN
-{#                {{ row.id }}#}
-            </a>
-        </div>
+    <twig:api_grid
+            :class="packageClass"
+            :caller="_self"
+            :columns="columns"
+            :apiRoute="apiRoute"
+            :globals="globals"
+    >
+        <twig:block name="code">
+            <div>
+                <a target="_blank" href="{{ path('package_show', row.rp) }}">
+                    OPEN
+                    {#                {{ row.id }} #}
+                </a>
+            </div>
 
 
-    </twig:block>
-    <twig:block name="basic_name">
+        </twig:block>
+        <twig:block name="basic_name">
             <span class="line-limit-2 text-wrap" style="max-width: 200px">
                 {{ row.shortName }}
                 <br/>
                 {{ row.vendor }}
             </span>
-    </twig:block>
-    <twig:block name="marking">
-        {% set icon = globals.iconMap[row.marking]|default(false) %}
-        {% if icon %}
-        <span title="{{ row.marking }}">
+        </twig:block>
+        <twig:block name="marking">
+            {% set icon = globals.iconMap[row.marking]|default(false) %}
+            {% if icon %}
+                <span title="{{ row.marking }}">
                 {{ icon }}
                 </span>
-        {% else %}
-        {% endif %}
-        {{ row.marking }}
-    </twig:block>
-    <twig:block name="description">
+            {% else %}
+            {% endif %}
+            {{ row.marking }}
+        </twig:block>
+        <twig:block name="description">
             <span class="line-limit-1" style="max-width: 600px">
                 {{ row.description }}
             </span>
-    </twig:block>
+        </twig:block>
 
-    <twig:block name="phpVersionString">
+        <twig:block name="phpVersionString">
         <span title="{{ row.phpVersionString }}">
         {{ row.phpVersions|length
-            ? row.phpVersions|join('|')
-            : "<code>%s</code>"|format(row.phpVersionString)}}
+        ? row.phpVersions|join('|')
+        : "<code>%s</code>"|format(row.phpVersionString) }}
         </span>
-        <br/>
-        <span title="{{ row.phpUnitVersionString }}">
+            <br/>
+            <span title="{{ row.phpUnitVersionString }}">
         {{ row.phpUnitVersions|length ? row.phpUnitVersions|join('|') :
-            (row.phpUnitVersionString ? "<code>%s</code>"|format(row.phpUnitVersionString)) }}
+        (row.phpUnitVersionString ? "<code>%s</code>"|format(row.phpUnitVersionString)) }}
         </span>
 
-    </twig:block>
-    <twig:block name="symfonyVersionString">
-        {% set max = 3 %}
-        <ul class="list-inline" title="{{ row.symfonyVersionString }}">
-            {% for item in row.symfonyVersions %}
-            <li class="list-inline-item">{{ item }}
-                {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
-            </li>
-            {% endfor %}
-        </ul>
+        </twig:block>
+        <twig:block name="symfonyVersionString">
+            {% set max = 3 %}
+            <ul class="list-inline" title="{{ row.symfonyVersionString }}">
+                {% for item in row.symfonyVersions %}
+                    <li class="list-inline-item">{{ item }}
+                        {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
+                    </li>
+                {% endfor %}
+            </ul>
 
-    </twig:block>
-    <twig:block name="list">
-        {% set items = attribute(row, field_name) %}
-        {% set max = 3 %}
-        <ul class="list-inline">
-            {% for item in items|slice(0, 3) %}
-            <li class="list-inline-item">{{ item }}
-                {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
-            </li>
-            {% endfor %}
-        </ul>
-        {#            <b>!{{ field_name }}</b>#}
-        {#            {{ attribute(row, field_name)|json_encode }}#}
-        {#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }}#}
-    </twig:block>
-    <twig:block name="name">
-        {{ row.name }} (sortable)
-    </twig:block>
-    <twig:block name="details">
-        <div class="line-limit-2 text-wrap" style="max-width: 200px">
+        </twig:block>
+        <twig:block name="list">
+            {% set items = attribute(row, field_name) %}
+            {% set max = 3 %}
+            <ul class="list-inline">
+                {% for item in items|slice(0, 3) %}
+                    <li class="list-inline-item">{{ item }}
+                        {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
+                    </li>
+                {% endfor %}
+            </ul>
+            {#            <b>!{{ field_name }}</b> #}
+            {#            {{ attribute(row, field_name)|json_encode }} #}
+            {#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }} #}
+        </twig:block>
+        <twig:block name="name">
+            {{ row.name }} (sortable)
+        </twig:block>
+        <twig:block name="details">
+            <div class="line-limit-2 text-wrap" style="max-width: 200px">
             <span class="text-muted">
             {{ row.vendor }}/
             </span>
-            {% if row.repo %}
-            <a href="{{ row.repo }}" target="_blank" title="{{ row.repo }}">
-                {{- globals.githubIcon -}}
-            </a>
-            {% endif %}
-            <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
-                {{ globals.packagistIcon }}
-                {#                <span class="bi bi-github"></span> #}
-            </a>
-            <br/>
+                {% if row.repo %}
+                    <a href="{{ row.repo }}" target="_blank" title="{{ row.repo }}">
+                        {{- globals.githubIcon -}}
+                    </a>
+                {% endif %}
+                <a href="https://packagist.org/packages/{{ row.name }}" target="_blank">
+                    {{ globals.packagistIcon }}
+                    {#                <span class="bi bi-github"></span> #}
+                </a>
+                <br/>
 
-            {#            <span>#}
-            {#            <a target="_blank" href="{{ path('package_show', row.rp) }}">#}
-            {#                Show#}
-            {#            </a>#}
-            {#            </span>#}
+                {#            <span> #}
+                {#            <a target="_blank" href="{{ path('package_show', row.rp) }}"> #}
+                {#                Show #}
+                {#            </a> #}
+                {#            </span> #}
 
-            <a target="_blank" href="{{ path('package_show', row.rp) }}">
-                {{ row.shortName|default('??') }}
-            </a>
+                <a target="_blank" href="{{ path('package_show', row.rp) }}">
+                    {{ row.shortName|default('??') }}
+                </a>
 
-        </div>
-    </twig:block>
-</twig:api_grid>
+            </div>
+        </twig:block>
+    </twig:api_grid>
 
 {% endblock %}

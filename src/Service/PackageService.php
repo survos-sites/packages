@@ -104,8 +104,9 @@ class PackageService
         $survosPackage->setKeywords($data['keywords'] ?? []); // could also get this from the json directly!
         //        dd($data['keywords'], $survosPackage->getKeywords());
 
-        // find the first package that matches and use it for the symfony version
-        foreach (['symfony/http-kernel', 'symfony/dependency-injection', 'symfony/framework-bundle', 'symfony/http-client', 'symfony/console'] as $dependency) {
+        // find the first package that matches and use it for the symfony version.  This isn't very good.
+        foreach (['symfony/config', 'symfony/http-kernel', 'symfony/dependency-injection',
+                     'symfony/framework-bundle', 'symfony/http-client', 'symfony/console'] as $dependency) {
             if ($symfonyVersionStr = $data['require'][$dependency] ?? false) {
                 break;
             }
