@@ -111,11 +111,11 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "fetch": [
-            "php -d memory_limit=4048M bin/console app:load-data --fetch "
-        ],
         "setup": [
             "php -d memory_limit=4048M bin/console app:load-data --setup"
+        ],
+        "fetch": [
+            "php -d memory_limit=4048M bin/console app:load-data --fetch --refresh"
         ],
         "process": [
             "php -d memory_limit=4048M bin/console app:load-data --process && php -d memory_limit=4512M bin/console grid:index"

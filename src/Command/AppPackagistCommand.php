@@ -51,6 +51,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         #[Argument(description: 'search query for packages, e.g.type=symfony-bundle')] string $q = 'type=symfony-bundle',
         //        #[Option(description: 'scrape the package details')] bool                             $details = false,
         #[Option(description: 'load the bundle names and vendors')] bool $setup = true,
+        #[Option(description: 'fetch the latest version json')] bool $refresh = true,
         #[Option(description: 'fetch the latest version json')] bool $fetch = true,
         #[Option(description: 'process the json in the database')] bool $process = false,
         #[Option(name: 'page-size', description: 'page size')] int $pageSize = 100000,
@@ -136,7 +137,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         }
 
         if ($fetch) {
-            $this->fetch($pageSize, $client);
+            $this->fetch($pageSize, $client, $refresh);
         }
 
         // interesting, but not working as expected. :-(
@@ -200,7 +201,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
         }
     }
 
-    public function fetch(int $pageSize, Client $client): void
+    public function fetch(int $pageSize, Client $client, bool $refresh): void
     {
         //        $packages = $this->packageRepository->findBy(['vendor' => 'symfony'], limit: $pageSize);
         $packages = $this->packageRepository->findBy(
@@ -215,11 +216,11 @@ final class AppPackagistCommand extends InvokableServiceCommand
         foreach ($packages as $survosPackage) {
             $progressBar->advance();
 
-            if (!$survosPackage->getPackagistData()) {
+            if (!$survosPackage->getPackagistData() || $refresh) {
                 $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'packagist'));
             }
 
-            if (!$survosPackage->getData()) {
+            if (!$survosPackage->getData() || $refresh) {
                 $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'composer'));
             }
         }

@@ -1,6 +1,6 @@
 inspector:
     ingestion_key: '%env(INSPECTOR_INGESTION_KEY)%'
-    enabled: true
+    enabled: false
     transport: async
     ignore_routes:
         - '/_wdt*'
