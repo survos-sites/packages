@@ -16,15 +16,15 @@
     {% set columns = [
         {name: 'id', order: 1},
         {name: 'shortName'},
-        {name: 'symfonyVersionString', title: 'symfony'},
-        {name: 'phpUnitVersionString', title: 'phpunit'},
-        {name: 'phpVersionString', title: 'php'},
+        {name: 'symfonyVersionString', title: 'symfony', order: 0},
+        {name: 'phpUnitVersionString', title: 'phpunit', order: 0},
+        {name: 'phpVersionString', title: 'php', order: 0},
         {name: 'vendor', browsable: true, order: 0},
-#        {name: 'phpUnitVersion', browsable: true, title: 'phpunitStr'},
+        {name: 'phpUnitVersion', browsable: true, title: 'phpunitStr', order: 0},
         {name: 'marking', browsable: true},
-        {name: 'description', searchable: true},
+#        {name: 'description', searchable: true},
         {name: 'symfonyVersions', browsable: true, title: 'symfony', order: 0},
-        {name: 'keywords', title: 'keywords', block: 'list'},
+        {name: 'keywords', title: 'keywords', block: 'list', order: 0},
 #        {name: 'phpVersions', browsable: true, title: 'php', block: 'list'},
     ] %}
 
@@ -69,24 +69,26 @@
                 {{ icon }}
                 </span>
         {% else %}
+            {{ row.marking }}
         {% endif %}
-        {{ row.marking }}
     </twig:block>
     <twig:block name="description">
-            <span class="line-limit-1" style="max-width: 600px">
+            <span class="line-limit-2" style="max-width: 600px">
                 {{ row.description }}
             </span>
     </twig:block>
 
     <twig:block name="phpVersionString">
-        <code>{{ row.phpVersionString }}</code>
-        <br />
-        {{ row.phpVersions|join('|') }}
+        <div class="line-limit-2">
+            <code>{{ row.phpVersionString }}</code>
+            <br />
+{#            {{ row.phpVersions|join('|') }}#}
+        </div>
     </twig:block>
     <twig:block name="symfonyVersionString">
-        <code>{{ row.symfonyVersionString }}</code>
+        <code>{{ row.symfonyVersionString|slice(0, 10) }}</code>
         {% set max = 3 %}
-        <ul class="list-unstyled">
+        <ul class="list-inline">
             {% for item in row.symfonyVersions %}
             <li class="list-inline-item">{{ item }}
                 {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
@@ -96,15 +98,17 @@
 
     </twig:block>
     <twig:block name="list">
-        {% set items = attribute(row, field_name) %}
-        {% set max = 3 %}
-        <ul class="list-unstyled">
-            {% for item in items|slice(0, 3) %}
+        <div class="line-limit-2">
+            {% set items = attribute(row, field_name) %}
+            {% set max = 2 %}
+            <ul class="list-inline">
+                {% for item in items|slice(0, max) %}
                 <li class="list-inline-item">{{ item }}
                     {{ loop.last and (items|length > max) ? '+%d'|format(items|length - max) }}
                 </li>
-            {% endfor %}
-        </ul>
+                {% endfor %}
+            </ul>
+        </div>
         {#            <b>!{{ field_name }}</b>#}
         {#            {{ attribute(row, field_name)|json_encode }}#}
         {#            {{ attribute(row, field_name)|map(v  => "<li>#{v}</li>") }}#}
