@@ -7,44 +7,41 @@ namespace App\Service;
 use App\Entity\Package;
 use App\Entity\Package as SurvosPackage;
 use App\Workflow\BundleWorkflowInterface;
-use Composer\Semver\Comparator;
-use Composer\Semver\Constraint\Constraint;
-use Composer\Semver\Semver;
 use Composer\Semver\VersionParser;
 use Packagist\Api\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Zenstruck\Twig\AsTwigFunction;
-use function Symfony\Component\String\u;
 
 class PackageService
 {
     private VersionParser $parser;
     private Client $client;
+
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly SerializerInterface $serializer,
-    )
-    {
+    ) {
         $this->parser = new VersionParser();
         $this->client = new Client();
     }
 
-    public function constraintComplies(string $versionConstraintString, array $versions, string|null $dependency=null): array
+    public function constraintComplies(string $versionConstraintString, array $versions, ?string $dependency = null): array
     {
         // skip php, since >= 8.1 is so common
         if ($dependency && str_contains($dependency, '/')) {
-//            assert(str_contains($dependency, '/'), $dependency);
+            //            assert(str_contains($dependency, '/'), $dependency);
             [$vendor, $shortName] = explode('/', $dependency);
-            if ($vendor === 'symfony') {
+            if ('symfony' === $vendor) {
                 // don't allow >=, too many >= 2.1
                 if (str_starts_with($versionConstraintString, '>')) {
                     // @todo: replace with ^<version>
                     $versionConstraintString = preg_replace('/>=?/', '', $versionConstraintString);
-//                    dd($versionConstraintString);
+                    //                    dd($versionConstraintString);
                 }
-                if ($versionConstraintString === '*') {
-                    $this->logger->warning($dependency . " $versionConstraintString does not comply with packagist.org");
+                if ('*' === $versionConstraintString) {
+                    $this->logger->warning($dependency." $versionConstraintString does not comply with packagist.org");
+
                     return [];
                 }
             }
@@ -59,10 +56,9 @@ class PackageService
                 $matches[] = $version;
             }
         }
-        $this->logger->info("setting $dependency $versionConstraintString to " . join('||', $matches));
+        $this->logger->info("setting $dependency $versionConstraintString to ".join('||', $matches));
+
         return $matches;
-
-
     }
 
     public function populateFromComposerData(Package $survosPackage)
@@ -76,106 +72,69 @@ class PackageService
             ->setPhpVersions([])
             ->setPhpUnitVersions([])
             ->setPhpUnitVersionString(null)
-            ;
+        ;
         $data = $survosPackage->getData();
         if (!$data) {
             return;
         }
 
-        if ($data['abandoned'] || (count($data['require'] ?? []) == 0)) {
+        if ($data['abandoned'] || (0 == count($data['require'] ?? []))) {
             $survosPackage->setMarking(BundleWorkflowInterface::PLACE_ABANDONED);
+
             return;
         }
 
-
-        if ($phpVersionStr = $data['require']['php']??false) {
+        if ($phpVersionStr = $data['require']['php'] ?? false) {
             $matches = $this->constraintComplies($phpVersionStr, ['8.2', '8.3', '8.4']);
             $survosPackage
                 ->setPhpVersionString($phpVersionStr)
                 ->setPhpVersions($matches)
-                ->setMarking(count($matches) ? BundleWorkflowInterface::PLACE_PHP_OKAY: BundleWorkflowInterface::PLACE_OUTDATED_PHP);
+                ->setMarking(count($matches) ? BundleWorkflowInterface::PLACE_PHP_OKAY : BundleWorkflowInterface::PLACE_OUTDATED_PHP);
         } else {
             // missing PHP, this is usually bad.
             $survosPackage
                 ->setMarking(BundleWorkflowInterface::PLACE_OUTDATED_PHP);
         }
 
-        if (count($survosPackage->getPhpVersions()) === 0) {
+        if (0 === count($survosPackage->getPhpVersions())) {
             return;
         }
 
         $distribution = []; // for tracking bundle counts ??? should be elsewhere.
         $survosPackage->setKeywords($data['keywords'] ?? []); // could also get this from the json directly!
-//        dd($data['keywords'], $survosPackage->getKeywords());
+        //        dd($data['keywords'], $survosPackage->getKeywords());
 
-
-        // find the first package that matches and use it for the symfony version
-        foreach (['symfony/http-kernel','symfony/dependency-injection','symfony/framework-bundle','symfony/http-client','symfony/console'] as $dependency) {
-            if ($symfonyVersionStr = $data['require'][$dependency]??false) {
+        // find the first package that matches and use it for the symfony version.  This isn't very good.
+        foreach (['symfony/config', 'symfony/http-kernel', 'symfony/dependency-injection',
+                     'symfony/framework-bundle', 'symfony/http-client', 'symfony/console'] as $dependency) {
+            if ($symfonyVersionStr = $data['require'][$dependency] ?? false) {
                 break;
             }
         }
         if ($symfonyVersionStr) {
-            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['5.4','6.4','7.1'], $dependency);
+            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['5.4', '6.4', '7.0'], $dependency);
+            if (count($symfonyVersions)) {
+//                dd($symfonyVersions);
+            }
             $survosPackage
                 ->setSymfonyVersions($symfonyVersions)
-                ->setSymfonyVersionString($symfonyVersionStr . " ($dependency)")
+                ->setSymfonyVersionString($symfonyVersionStr." ($dependency)")
                 ->setMarking(count($symfonyVersions) ? BundleWorkflowInterface::PLACE_SYMFONY_OKAY : BundleWorkflowInterface::PLACE_SYMFONY_OUTDATED);
         } else {
             // no valid symfony, warn?
 
             $survosPackage->setMarking(SurvosPackage::PLACE_SYMFONY_OUTDATED);
-            return; //
-            dd($survosPackage->getName(), $data??[]);
+
+            return;
+            dd($survosPackage->getName(), $data ?? []);
         }
 
-        if ($phpUnitVersionStr = $data['requireDev']['phpunit/phpunit']??null) {
-            $matches = $this->constraintComplies($phpUnitVersionStr, ['8.4', '9.4', '10.3','11.4'], 'phpunit/phpunit');
+        if ($phpUnitVersionStr = $data['requireDev']['phpunit/phpunit'] ?? null) {
+            $matches = $this->constraintComplies($phpUnitVersionStr, ['8.4', '9.4', '10.3', '11.4'], 'phpunit/phpunit');
             $survosPackage
                 ->setPhpUnitVersions($matches)
                 ->setPhpUnitVersionString($phpUnitVersionStr);
         }
-    }
-
-
-    #[AsTwigFunction] // will be available as "fnValidPhpVersions" in twig
-    public function XXXvalidPhpVersions(Package $survosPackage): array
-    {
-        $results = [];
-        $okay = false; // unless we have a valid php version
-        $survosPackage->setPhpVersions([]);
-
-        $allowed = ['8.1','8.2','8.3'];
-        foreach ($allowed as $value) {
-            $phpVersions[$value] = new Version($value);
-        }
-
-        if (!$survosPackage->getPhpVersionString()) {
-            return $results;
-        }
-
-        $versionString = $survosPackage->getPhpVersionString();
-        $versionString = str_replace('>=', '^', $versionString);
-        $versionString = str_replace(' ', '', $versionString);
-        if (preg_match('/^\^\d$/', $versionString, $m)) {
-            $versionString .= '.0';
-        }
-
-        try {
-            $constraint = $this->parser->parse($versionString);
-        } catch (\Exception $exception) {
-            $this->logger->error($survosPackage->getPhpVersionString() . " ($versionString) " . $exception->getMessage());
-            return [];
-//            dd($exception, $survosPackage->getPhpVersionString());
-        }
-        foreach ($allowed as $value) {
-            if ($complies = $constraint->complies($phpVersion = $phpVersions[$value])) {
-                $results[] = $value;
-            }
-        }
-        return $results;
-
-
     }
 
     private function getPackagistUrl($name): string
@@ -183,13 +142,6 @@ class PackageService
         return sprintf("https://packagist.org/packages/$name");
     }
 
-    /**
-     * @param Client $client
-     * @param string $name
-     * @param bool $persist
-     * @param SerializerInterface $serializer
-     * @return void
-     */
     public function addPackage(SurvosPackage $survosPackage): void
     {
         // @todo: cache
@@ -197,14 +149,15 @@ class PackageService
             $composer = $this->client->getComposer($survosPackage->getName());
             assert($composer);
         } catch (\Exception $exception) {
-            $this->logger->error($exception->getMessage() . "\n" . $survosPackage->getName());
+            $this->logger->error($exception->getMessage()."\n".$survosPackage->getName());
             $survosPackage->setMarking(Package::PLACE_NOT_FOUND);
+
             return;
         }
-        assert(count($composer) == 1, "multiple packages: " . join("\n", array_keys($composer)));
+        assert(1 == count($composer), 'multiple packages: '.join("\n", array_keys($composer)));
 
         /**
-         * @var string $packageName
+         * @var string                        $packageName
          * @var \Packagist\Api\Result\Package $package
          */
         foreach ($composer as $packageName => $package) {
@@ -217,16 +170,17 @@ class PackageService
             foreach ($package->getVersions() as $versionCode => $version) {
                 if ($version->isAbandoned()) {
                     $survosPackage->setMarking($survosPackage::PLACE_ABANDONED);
+
                     return; // is this true?
                     continue;
                 }
                 // need a different API call for github stars.
-//                if ($package->getFavers() || $package->getGithubStars()) {
-//                    dd($package->getFavers(), $package);
-//                }
-//                dd($composer, $package);
-//                $package->getDescription(); //
-//                assert($package->getDescription() == $version->getDescription(), $package->getDescription() . '<>' . $version->getDescription());
+                //                if ($package->getFavers() || $package->getGithubStars()) {
+                //                    dd($package->getFavers(), $package);
+                //                }
+                //                dd($composer, $package);
+                //                $package->getDescription(); //
+                //                assert($package->getDescription() == $version->getDescription(), $package->getDescription() . '<>' . $version->getDescription());
                 $json = $this->serializer->serialize($version, 'json');
 
                 $survosPackage
@@ -236,15 +190,15 @@ class PackageService
                     ->setDescription($version->getDescription())
                     ->setData(json_decode($json, true));
 
-//                        dd($result, $package, $composer, $versionCode, json_decode($json, false));
+                //                        dd($result, $package, $composer, $versionCode, json_decode($json, false));
                 foreach ($version->getRequire() as $key => $require) {
-//                            dump($key, $require);
+                    //                            dump($key, $require);
                 }
-//                dd($survosPackage, $package, $version);
+
+                //                dd($survosPackage, $package, $version);
                 return;
                 break; // we're getting the first one only, most recent.  hackish
             }
         }
     }
-
 }

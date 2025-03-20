@@ -3,7 +3,8 @@
 {% block body %}
     <h1>{{ package.name }}</h1>
 
-    {{ dump(package) }}
+    Starred: {{ package.favers }}
+    <br />Downloads: {{ package.downloads }}
     <ul>
         <li>
             Symfony: <code>{{ package.symfonyVersionString }}</code> {{ package.symfonyVersions|join('|') }}
@@ -16,7 +17,6 @@
         </li>
 
     </ul>
-
 
         <h3>Admin</h3>
         {#        flowName: 'SubmissionWorkflow',#}

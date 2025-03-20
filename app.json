@@ -1,6 +1,6 @@
 {
     "name": "packages",
-    "description": "PWA/datatables showing Symfony bundles",
+    "description": "Find Symfony bundles with a powerful search tool",
     "keywords": [
         "php",
         "symfony"

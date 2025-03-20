@@ -28,7 +28,7 @@ final class AppMenu implements KnpMenuHelperInterface
         #[Autowire('%kernel.environment%')] protected string $env,
         private MenuService $menuService,
         private Security $security,
-        private ?AuthorizationCheckerInterface $authorizationChecker = null
+        private ?AuthorizationCheckerInterface $authorizationChecker = null,
     ) {
     }
 
@@ -42,8 +42,7 @@ final class AppMenu implements KnpMenuHelperInterface
     public function footer(KnpMenuEvent $event): void
     {
         $menu = $event->getMenu();
-        $this->add($menu, uri: 'https://github.com/survos-sites/packages', label: "Github");
-
+        $this->add($menu, uri: 'https://github.com/survos-sites/packages', label: 'Github');
     }
 
     #[AsEventListener(event: KnpMenuEvent::NAVBAR_MENU)]

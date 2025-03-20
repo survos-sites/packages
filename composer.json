@@ -15,24 +15,24 @@
         "composer/semver": "^3.4",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^2.19.3",
+        "doctrine/orm": "^2.19.3 || ^3.3",
         "inspector-apm/inspector-symfony": "^1.2",
         "knplabs/knp-time-bundle": "^2.2",
-        "knplabs/packagist-api": "^2.1",
+        "knplabs/packagist-api": "dev-master",
         "meilisearch/meilisearch-php": "^1.7",
         "nadar/php-composer-reader": "^2.0",
         "nelmio/cors-bundle": "^2.4",
         "nyholm/psr7": "^1.8.1",
         "openconext/monitor-bundle": "^4.1",
         "phpdocumentor/reflection-docblock": "^5.3",
-        "phpstan/phpdoc-parser": "^1.27",
         "sentry/sentry-symfony": "^5.0.1",
-        "survos/api-grid-bundle": "^1.5",
+        "survos/api-grid-bundle": "dev-main",
         "survos/auth-bundle": "^1.5",
         "survos/bootstrap-bundle": "*",
         "survos/command-bundle": "*",
         "survos/crawler-bundle": "^1.5.196",
         "survos/meili-admin-bundle": "^1.5",
+        "survos/simple-datatables-bundle": "^1.5",
         "survos/workflow-helper-bundle": "*",
         "symfony/asset": "^7.0.3",
         "symfony/asset-mapper": "^7.0.5",
@@ -65,7 +65,7 @@
         "symfony/web-link": "^7.0.3",
         "symfony/yaml": "^7.0.3",
         "twig/extra-bundle": "^3.8",
-        "twig/twig": "^3.x-dev",
+        "twig/twig": "^3.17",
         "zenstruck/twig-service-bundle": "^1.5"
     },
     "config": {
@@ -110,11 +110,17 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
+        "setup": [
+            "php -d memory_limit=4048M bin/console app:load-data --setup"
+        ],
+        "fetch": [
+            "php -d memory_limit=4048M bin/console app:load-data --fetch --refresh"
+        ],
         "process": [
-            "php -d memory_limit=512M bin/console app:load-data --fetch --process"
+            "php -d memory_limit=4048M bin/console app:load-data --process && php -d memory_limit=4512M bin/console grid:index"
         ],
         "index": [
-            "php -d memory_limit=512M bin/console grid:index --reset"
+            "php -d memory_limit=2048M bin/console grid:index --reset"
         ]
     },
     "conflict": {
@@ -127,8 +133,11 @@
         }
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.65",
+        "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^11.4",
-        "pierstoval/smoke-testing": "^1.0",
+        "pierstoval/smoke-testing": "dev-dynamic-host-scheme",
+        "rector/rector": "^2.0",
         "survos/maker-bundle": "^1.5",
         "symfony/browser-kit": "^7.0.3",
         "symfony/css-selector": "^7.0.3",
@@ -139,5 +148,9 @@
         "symfony/web-profiler-bundle": "^7.0.4"
     },
     "repositories": {
+        "survos_base_bundle": {
+            "type": "vcs",
+            "url": "git@github.com:survos/SurvosApiGridBundle.git"
+        }
     }
 }

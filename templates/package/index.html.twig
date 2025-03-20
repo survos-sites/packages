@@ -4,9 +4,9 @@
 
 
 {% block body %}
-    <h1>Package index</h1>
+    Note: only {{ packages|length }} packages loaded
+    <twig:simple_datatables :data="packages" :columns="['id','name','description']">
 
-    {% include "package/_table.html.twig" %}
+    </twig:simple_datatables>
 
-    <a class="btn btn-primary" href="{{ path('package_new') }}"><span class="fas fa-plus"></span>New  Package</a>
 {% endblock %}

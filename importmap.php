@@ -56,7 +56,7 @@ return [
         'version' => '2.0.32',
     ],
     'axios' => [
-        'version' => '1.7.7',
+        'version' => '1.7.9',
     ],
     'fos-routing' => [
         'version' => '0.0.6',
@@ -173,6 +173,13 @@ return [
     ],
     '@tabler/core/dist/css/tabler.min.css' => [
         'version' => '1.0.0-beta21',
+        'type' => 'css',
+    ],
+    'simple-datatables' => [
+        'version' => '9.2.1',
+    ],
+    'simple-datatables/dist/style.min.css' => [
+        'version' => '9.2.1',
         'type' => 'css',
     ],
 ];
