@@ -17,10 +17,9 @@ public function onLoadComposer(TransitionEvent $event): void
         $this->loadLatestVersionData($package);
     }
     $this->packageService->populateFromComposerData($package);
-    //        dd($package);
 }
 ```
-blob/main/src/Workflow/BundleWorkflow.php#L143-152
+blob/main/src/Workflow/BundleWorkflow.php#L143-151
         
 
 
