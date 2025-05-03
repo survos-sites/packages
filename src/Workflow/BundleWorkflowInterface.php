@@ -36,18 +36,23 @@ interface BundleWorkflowInterface
     ]
     final public const TRANSITION_VALID = 'valid';
 
-    #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_OUTDATED_PHP, guard: "!subject.hasValidPhpVersion()")]
+    #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_OUTDATED_PHP,
+        info: "PHP < 8.1?",
+        guard: "!subject.hasValidPhpVersion()")]
     final public const TRANSITION_PHP_TOO_OLD = 'php_too_old';
 
     #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_PHP_OKAY,
+        info: "PHP >= 8.1?",
         guard: "subject.hasValidPhpVersion()")]
     final public const TRANSITION_PHP_OKAY = 'php_okay';
 
     #[Transition([self::PLACE_PHP_OKAY], self::PLACE_SYMFONY_OUTDATED,
+        info: "Symfony < 5.4?",
         guard: "!subject.hasValidSymfonyVersion()")]
     final public const TRANSITION_OUTDATED = 'symfony_outdated';
 
     #[Transition([self::PLACE_PHP_OKAY], self::PLACE_SYMFONY_OKAY,
+        info: "Symfony > 5.4",
         guard: "subject.hasValidSymfonyVersion()")]
     final public const TRANSITION_SYMFONY_OKAY = 'symfony_okay';
 

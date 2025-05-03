@@ -111,8 +111,9 @@
 <g id="node13" class="node">
 <title>transition_4</title>
 <polygon fill="none" stroke="#333333" points="461.69,-176.63 384.69,-176.63 384.69,-140.63 461.69,-140.63 461.69,-176.63"/>
-<text text-anchor="start" x="397.19" y="-161.23" font-family="Arial" font-weight="bold" font-size="8.00">php_too_old</text>
-<text text-anchor="start" x="392.69" y="-153.23" font-family="Arial" text-decoration="underline" font-size="8.00">!ValidPhpVersion</text>
+<text text-anchor="start" x="397.19" y="-165.23" font-family="Arial" font-weight="bold" font-size="8.00">php_too_old</text>
+<text text-anchor="start" x="392.69" y="-157.23" font-family="Arial" text-decoration="underline" font-size="8.00">!ValidPhpVersion</text>
+<text text-anchor="start" x="402.19" y="-149.23" font-family="Arial" font-style="italic" font-size="8.00">PHP &lt; 8.1?</text>
 </g>
 <!-- place_composer_loaded&#45;&gt;transition_4 -->
 <!-- composer_loaded -->
@@ -125,8 +126,9 @@
 <g id="node14" class="node">
 <title>transition_5</title>
 <polygon fill="none" stroke="#333333" points="460.19,-122.63 386.19,-122.63 386.19,-86.63 460.19,-86.63 460.19,-122.63"/>
-<text text-anchor="start" x="403.19" y="-107.23" font-family="Arial" font-weight="bold" font-size="8.00">php_okay</text>
-<text text-anchor="start" x="394.19" y="-99.23" font-family="Arial" text-decoration="underline" font-size="8.00">ValidPhpVersion</text>
+<text text-anchor="start" x="403.19" y="-111.23" font-family="Arial" font-weight="bold" font-size="8.00">php_okay</text>
+<text text-anchor="start" x="394.19" y="-103.23" font-family="Arial" text-decoration="underline" font-size="8.00">ValidPhpVersion</text>
+<text text-anchor="start" x="400.19" y="-95.23" font-family="Arial" font-style="italic" font-size="8.00">PHP &gt;= 8.1?</text>
 </g>
 <!-- place_composer_loaded&#45;&gt;transition_5 -->
 <!-- composer_loaded -->
@@ -151,8 +153,9 @@
 <g id="node15" class="node">
 <title>transition_6</title>
 <polygon fill="none" stroke="#333333" points="716.31,-178.63 623.31,-178.63 623.31,-142.63 716.31,-142.63 716.31,-178.63"/>
-<text text-anchor="start" x="632.31" y="-163.23" font-family="Arial" font-weight="bold" font-size="8.00">symfony_outdated</text>
-<text text-anchor="start" x="631.31" y="-155.23" font-family="Arial" text-decoration="underline" font-size="8.00">!ValidSymfonyVersion</text>
+<text text-anchor="start" x="632.31" y="-167.23" font-family="Arial" font-weight="bold" font-size="8.00">symfony_outdated</text>
+<text text-anchor="start" x="631.31" y="-159.23" font-family="Arial" text-decoration="underline" font-size="8.00">!ValidSymfonyVersion</text>
+<text text-anchor="start" x="641.81" y="-151.23" font-family="Arial" font-style="italic" font-size="8.00">Symfony &lt; 5.4?</text>
 </g>
 <!-- place_php_ok&#45;&gt;transition_6 -->
 <!-- php_ok -->
@@ -165,8 +168,9 @@
 <g id="node16" class="node">
 <title>transition_7</title>
 <polygon fill="none" stroke="#333333" points="715.31,-122.63 624.31,-122.63 624.31,-86.63 715.31,-86.63 715.31,-122.63"/>
-<text text-anchor="start" x="640.81" y="-107.23" font-family="Arial" font-weight="bold" font-size="8.00">symfony_okay</text>
-<text text-anchor="start" x="632.31" y="-99.23" font-family="Arial" text-decoration="underline" font-size="8.00">ValidSymfonyVersion</text>
+<text text-anchor="start" x="640.81" y="-111.23" font-family="Arial" font-weight="bold" font-size="8.00">symfony_okay</text>
+<text text-anchor="start" x="632.31" y="-103.23" font-family="Arial" text-decoration="underline" font-size="8.00">ValidSymfonyVersion</text>
+<text text-anchor="start" x="643.81" y="-95.23" font-family="Arial" font-style="italic" font-size="8.00">Symfony &gt; 5.4</text>
 </g>
 <!-- place_php_ok&#45;&gt;transition_7 -->
 <!-- php_ok -->
