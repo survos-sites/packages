@@ -19,3 +19,12 @@ composer config repositories.survos_api_grid_bundle '{"type": "vcs", "url": "git
 composer req survos/api-grid-bundle:dev-main
 
 ```
+
+## Notes
+
+Purge messages:
+
+```bin
+bin/console dbal:run-sql "delete from messenger_messages where queue_name='failed'" 
+bin/console dbal:run-sql "delete from messenger_messages" 
+```

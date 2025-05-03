@@ -40,7 +40,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 )]
 #[ApiFilter(OrderFilter::class, properties: ['marking', 'vendor', 'name', 'stars', 'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: ['marking' => 'exact', 'name' => 'partial'])]
-#[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersions', 'phpVersions', 'keywords', 'marking'])]
+#[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'keywords', 'marking'])]
 #[ApiFilter(
     MultiFieldSearchFilter::class,
     properties: ['name', 'description'],
@@ -59,10 +59,10 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     //    }
 
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\GeneratedValue()]
     #[ORM\Column(type: 'integer')]
     #[Groups(['browse'])]
-    private $id;
+    private int $id;
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['browse'])]
     private $name;
@@ -423,5 +423,15 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public function getDownloads(): ?int
     {
         return $this->getPackagistData()['downloads']['total'] ?? null;
+    }
+
+    public function hasValidSymfonyVersion(): bool
+    {
+        return count($this->getSymfonyVersions())>0;
+    }
+
+    public function hasValidPhpVersion(): bool
+    {
+        return count($this->getPhpVersions())>0;
     }
 }

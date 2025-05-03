@@ -12,15 +12,20 @@ use Packagist\Api\Result\Package as PackagistPackage;
 use Psr\Log\LoggerInterface;
 use Survos\WorkflowBundle\Attribute\Transition;
 use Survos\WorkflowBundle\Attribute\Workflow;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Workflow\Attribute\AsCompletedListener;
 use Symfony\Component\Workflow\Attribute\AsGuardListener;
 use Symfony\Component\Workflow\Attribute\AsTransitionListener;
+use Symfony\Component\Workflow\Event\CompletedEvent;
+use Symfony\Component\Workflow\Event\Event;
 use Symfony\Component\Workflow\Event\GuardEvent;
 use Symfony\Component\Workflow\Event\TransitionEvent;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 #[Workflow(supports: [Package::class], name: self::WORKFLOW_NAME)]
 final class BundleWorkflow implements BundleWorkflowInterface
@@ -34,6 +39,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
         private EntityManagerInterface $entityManager,
         private PackageRepository $packageRepository,
         private Client $packagistClient,
+        #[Target(self::WORKFLOW_NAME)] private WorkflowInterface $workflow,
     ) {
     }
 
@@ -43,7 +49,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
     /**
      * Handle binary checking of Symfony.
      */
-    #[AsGuardListener(self::WORKFLOW_NAME)]
+//    #[AsGuardListener(self::WORKFLOW_NAME)]
     public function onGuardSymfony(GuardEvent $event): void
     {
         $transitionName = $event->getTransition()->getName();
@@ -60,7 +66,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
         //        dd($transitionName,$package->getSymfonyVersions(), $package->getPhpVersions(), $package->getPhpVersionString(), $event->getTransitionBlockerList());
     }
 
-    #[AsGuardListener(self::WORKFLOW_NAME)]
+//    #[AsGuardListener(self::WORKFLOW_NAME)]
     public function onGuardPhp(GuardEvent $event): void
     {
         $composer = $this->getComposer($package = $this->getPackage($event));
@@ -100,7 +106,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
         }
     }
 
-    private function getPackage(TransitionEvent|GuardEvent $event): Package
+    private function getPackage(Event $event): Package
     {
         /* @var Package */
         return $event->getSubject();
@@ -109,6 +115,28 @@ final class BundleWorkflow implements BundleWorkflowInterface
     private function getComposer(Package $package): ?array
     {
         return $package->getData();
+    }
+
+    #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
+    public function onLoadCompleted(CompletedEvent $event): void
+    {
+        $package = $this->getPackage($event);
+        foreach ([self::TRANSITION_PHP_TOO_OLD, self::TRANSITION_PHP_OKAY] as $transitionName) {
+            if ($this->workflow->can($package, $transitionName)) {
+                $this->workflow->apply($package, $transitionName);
+            }
+        }
+    }
+
+    #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_PHP_OKAY)]
+    public function onPhpOkayCompleted(CompletedEvent $event): void
+    {
+        $package = $this->getPackage($event);
+        foreach ([self::TRANSITION_OUTDATED, self::TRANSITION_SYMFONY_OKAY] as $transitionName) {
+            if ($this->workflow->can($package, $transitionName)) {
+                $this->workflow->apply($package, $transitionName);
+            }
+        }
     }
 
     #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
@@ -162,24 +190,13 @@ final class BundleWorkflow implements BundleWorkflowInterface
         }
     }
 
-    #[AsTransitionListener(self::WORKFLOW_NAME)]
-    public function onTransition(TransitionEvent $event): void
-    {
-        switch ($event->getTransition()->getName()) {
-            case self::TRANSITION_PHP_TOO_OLD:
-                break;
-        }
-        //        dd($event, $event->getTransition(), $event->getSubject());
-        // ...
-    }
-
     #[AsMessageHandler]
     public function handleFetchComposer(FetchComposer $message): void
     {
         $package = $this->packageRepository->findOneBy(['name' => $message->getName()]);
         assert($package);
         if (!$package->getPackagistData()) {
-            $packagistInfoUrl = sprintf('https://repo.packagist.org/packages/%s.json', $message->getName());
+            $packagistInfoUrl = sprintf('https://packagist.org/packages/%s.json', $message->getName());
             $info = json_decode(file_get_contents($packagistInfoUrl), true);
             $package->setPackagistData($info['package']);
         }

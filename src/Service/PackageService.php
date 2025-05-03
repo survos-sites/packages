@@ -105,7 +105,7 @@ class PackageService
         //        dd($data['keywords'], $survosPackage->getKeywords());
 
         // find the first package that matches and use it for the symfony version.  This isn't very good.
-        foreach (['symfony/config', 'symfony/http-kernel', 'symfony/dependency-injection',
+        foreach (['symfony/runtime', 'symfony/config', 'symfony/http-kernel', 'symfony/dependency-injection',
                      'symfony/framework-bundle', 'symfony/http-client', 'symfony/console'] as $dependency) {
             if ($symfonyVersionStr = $data['require'][$dependency] ?? false) {
                 break;
@@ -123,7 +123,8 @@ class PackageService
         } else {
             // no valid symfony, warn?
 
-            $survosPackage->setMarking(SurvosPackage::PLACE_SYMFONY_OUTDATED);
+            // no! Do this in the workflow
+//            $survosPackage->setMarking(SurvosPackage::PLACE_SYMFONY_OUTDATED);
 
             return;
             dd($survosPackage->getName(), $data ?? []);

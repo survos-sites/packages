@@ -12,47 +12,50 @@ use Doctrine\ORM\EntityManagerInterface;
 use Packagist\Api\Client;
 use Packagist\Api\Result\Package;
 use Packagist\Api\Result\Result;
+use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\CacheItem;
+use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\Option;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
-use Zenstruck\Console\Attribute\Argument;
-use Zenstruck\Console\Attribute\Option;
-use Zenstruck\Console\InvokableServiceCommand;
-use Zenstruck\Console\IO;
-use Zenstruck\Console\RunsCommands;
-use Zenstruck\Console\RunsProcesses;
+use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsCommand('app:load-data', 'Search and Load repos from packagist')]
-final class AppPackagistCommand extends InvokableServiceCommand
+final class AppPackagistCommand
 {
-    use RunsCommands;
-    use RunsProcesses;
+    private SymfonyStyle $io;
 
     public function __construct(
-        private PackageRepository $packageRepository,
-        private EntityManagerInterface $entityManager,
-        private SerializerInterface $serializer,
-        private LoggerInterface $logger,
-        private MessageBusInterface $messageBus,
-        private PackageService $packageService,
+        private PackageRepository          $packageRepository,
+        private EntityManagerInterface     $entityManager,
+        private SerializerInterface        $serializer,
+        private LoggerInterface            $logger,
+        private MessageBusInterface        $messageBus,
+        private PackageService             $packageService,
         #[Target(BundleWorkflow::WORKFLOW_NAME)]
         private readonly WorkflowInterface $workflow,
-        ?string $name = null,
+        private CacheInterface             $cache,
+        ?string                            $name = null,
     ) {
-        parent::__construct($name);
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function __invoke(
-        IO $io,
+        SymfonyStyle $io,
         #[Argument(description: 'search query for packages, e.g.type=symfony-bundle')] string $q = 'type=symfony-bundle',
         //        #[Option(description: 'scrape the package details')] bool                             $details = false,
         #[Option(description: 'load the bundle names and vendors')] bool $setup = true,
-        #[Option(description: 'fetch the latest version json')] bool $refresh = true,
-        #[Option(description: 'fetch the latest version json')] bool $fetch = true,
+        #[Option(description: 'refresh the data')] bool $refresh = true,
+        #[Option(description: 'fetch the latest version json')] bool $fetch = false,
         #[Option(description: 'process the json in the database')] bool $process = false,
         #[Option(name: 'page-size', description: 'page size')] int $pageSize = 100000,
         #[Option(description: 'limit (for testing)')] int $limit = 0,
@@ -60,23 +63,28 @@ final class AppPackagistCommand extends InvokableServiceCommand
         #[Option(description: 'filter by marking')] ?string $marking = null,
         #[Option(description: 'filter by vendor')] ?string $vendor = null,
         #[Option(description: 'filter by short name')] ?string $name = null,
-    ): void {
+    ): int {
         //        // note: we are handling abandoned earlier
         $transitions = [
-            BundleWorkflow::TRANSITION_LOAD,
+            BundleWorkflowInterface::TRANSITION_LOAD,
             BundleWorkflow::TRANSITION_PHP_TOO_OLD,
             BundleWorkflow::TRANSITION_PHP_OKAY,
             BundleWorkflow::TRANSITION_OUTDATED,
             BundleWorkflow::TRANSITION_VALID,
         ];
 
+        $this->io = $io;
         $client = new Client();
         //        'fields' => ['abandoned','repository','type'],
 
         if ($setup) {
             $idx = 0;
-            $json = file_get_contents('https://packagist.org/packages/list.json?type=symfony-bundle&fields[]=abandoned&fields[]=type&fields[]=repository');
-            $packages = json_decode($json)->packages;
+            $packages = $this->cache->get('json', function (CacheItem $cacheItem) {
+                $cacheItem->expiresAfter(3600);
+                $json = file_get_contents('https://packagist.org/packages/list.json?type=symfony-bundle&fields[]=abandoned&fields[]=type&fields[]=repository');
+                return json_decode($json)->packages;
+            });
+
             foreach ($packages as $packageName => $package) {
                 if (true === $package->abandoned) {
                     continue; // no replacement
@@ -110,7 +118,6 @@ final class AppPackagistCommand extends InvokableServiceCommand
                         ->setName($packageName);
                     $this->entityManager->persist($survosPackage);
                 }
-
 //                https://repo.packagist.org/p/[vendor]/[package].json
 
 
@@ -120,7 +127,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
                     ->setShortName($shortName);
                 if (($idx++ % 100) == 1) {
                     $this->entityManager->flush();
-                    $io->writeln("flushing $idx");
+                    $this->io->writeln("flushing $idx");
                 }
 
                 if ($limit && ($idx >= $limit)) {
@@ -128,7 +135,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
                 }
             }
             $this->entityManager->flush();
-            $this->io()->writeln('bundled loaded: '.$this->packageRepository->count([]));
+            $io->writeln('bundled loaded: '.$this->packageRepository->count([]));
         }
 
         $where = [];
@@ -175,7 +182,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
                 $where['shortName'] = $nameFilter;
             }
             $packages = $this->packageRepository->findBy($where, ['id' => 'desc'], limit: $limit ?: 100000);
-            $progressBar = new ProgressBar($this->io()->output(), count($packages));
+            $progressBar = new ProgressBar($io, count($packages));
             $progressBar->start();
             $distribution = [];
             foreach ($packages as $survosPackage) {
@@ -197,8 +204,9 @@ final class AppPackagistCommand extends InvokableServiceCommand
                 }
             }
             $this->entityManager->flush();
-            $io->success($this->getName().' process '.count($packages));
+            $io->success(__CLASS__ . '.process '.count($packages));
         }
+        return Command::SUCCESS;
     }
 
     public function fetch(int $pageSize, Client $client, bool $refresh): void
@@ -211,7 +219,7 @@ final class AppPackagistCommand extends InvokableServiceCommand
             ['name' => 'ASC']
         );
 
-        $progressBar = new ProgressBar($this->io()->output(), count($packages));
+        $progressBar = new ProgressBar($this->io, count($packages));
         /* @var Result $result */
         foreach ($packages as $survosPackage) {
             $progressBar->advance();
