@@ -33,7 +33,7 @@
         "survos/crawler-bundle": "^1.5.196",
         "survos/meili-admin-bundle": "^1.5",
         "survos/simple-datatables-bundle": "^1.5",
-        "survos/workflow-helper-bundle": "*",
+        "survos/workflow-helper-bundle": "dev-main",
         "symfony/asset": "^7.0.3",
         "symfony/asset-mapper": "^7.0.5",
         "symfony/console": "^7.0.4",
@@ -135,7 +135,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.65",
         "phpstan/phpstan": "^2.0",
-        "phpunit/phpunit": "^11.4",
+        "phpunit/phpunit": "^12.1",
         "pierstoval/smoke-testing": "*",
         "rector/rector": "^2.0",
         "survos/maker-bundle": "^1.5",
@@ -146,11 +146,5 @@
         "symfony/phpunit-bridge": "^7.0.4",
         "symfony/stopwatch": "^7.0.3",
         "symfony/web-profiler-bundle": "^7.0.4"
-    },
-    "repositories": {
-        "survos_base_bundle": {
-            "type": "vcs",
-            "url": "git@github.com:survos/SurvosApiGridBundle.git"
-        }
     }
 }
