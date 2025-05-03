@@ -50,14 +50,22 @@ final class AppMenu implements KnpMenuHelperInterface
     {
         $menu = $event->getMenu();
         $options = $event->getOptions();
-        $nestedMenu = $this->addSubmenu($menu, 'Credits');
-        $this->add($menu, 'app_homepage');
-        $this->add($menu, 'riccox_meili_admin');
-        $this->add($menu, 'survos_workflows');
-        $this->add($menu, 'survos_commands', if: $this->isEnv('dev') || $this->isGranted('ROLE_ADMIN'));
 
-        foreach (['bundles', 'javascript'] as $type) {
-            $this->addMenuItem($nestedMenu, ['uri' => "#$type", 'label' => ucfirst($type)]);
+        $this->add($menu, 'app_homepage');
+        $this->add($menu, uri: 'https://github.com/survos-sites/packages', label: 'Github');
+        $this->add($menu, uri: 'https://packagist.org/', label: 'Packagist.org');
+//        $this->add($menu, 'app_homepage', ['symfonyVersions'=>'7.0'], label: "Symfony 7");
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $nestedMenu = $this->addSubmenu($menu, 'Credits');
+            $this->add($menu, 'app_homepage');
+            $this->add($menu, 'riccox_meili_admin');
+            $this->add($menu, 'survos_workflows');
+            $this->add($menu, 'survos_commands', if: $this->isEnv('dev') || $this->isGranted('ROLE_ADMIN'));
+
+            foreach (['bundles', 'javascript'] as $type) {
+                $this->addMenuItem($nestedMenu, ['uri' => "#$type", 'label' => ucfirst($type)]);
+            }
         }
     }
 }

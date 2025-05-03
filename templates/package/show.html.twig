@@ -1,10 +1,18 @@
 {% extends "package/base.html.twig" %}
 
+{% block title package.name  %}
 {% block body %}
     <h1>{{ package.name }}</h1>
 
-    Starred: {{ package.favers }}
+{#    {{ dump(package) }}#}
+{#    Starred: {{ package.favers }}#}
+
+    <div class="blockquote">
+        {{ package.description }}
+    </div>
     <br />Downloads: {{ package.downloads }}
+    Github: <a target="_blank" href="https://github.com/{{ package.name }}">{{ package.name }}</a>
+
     <ul>
         <li>
             Symfony: <code>{{ package.symfonyVersionString }}</code> {{ package.symfonyVersions|join('|') }}
@@ -18,12 +26,12 @@
 
     </ul>
 
+    {% if is_granted('ROLE_ADMIN') %}
         <h3>Admin</h3>
         {#        flowName: 'SubmissionWorkflow',#}
         {{ include('@SurvosWorkflow/_entity_transitions.html.twig', {
             transition_path: 'package_transition', entity: package
         }) }}
-    {% if is_granted('ROLE_ADMIN') %}
     {% endif %}
 
     {% if package.data %}
@@ -32,12 +40,12 @@
 {% endblock %}
 
 {% block content %}
-    {{ package.stars }}
-    {{ package.data.time|time_diff }}
+{#    Stars: {{ package.stars }}<br />#}
+    Updated: {{ package.data.time|time_diff }}
 
-    <twig:item_grid
-        :data="package.data.require">
-    </twig:item_grid>
+{#    <twig:item_grid#}
+{#        :data="package.data.require">#}
+{#    </twig:item_grid>#}
 
     <twig:item_grid
             :data="package.data">

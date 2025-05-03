@@ -10,19 +10,19 @@
 
         {name: 'symfonyVersions', browsable: true, title: 'symfony'},
         {name: 'phpVersions', browsable: true, title: 'php'},
-        {name: 'phpUnitVersions', browsable: true, title: 'phpunit'},
+#        {name: 'phpUnitVersions', browsable: true, title: 'phpunit'},
     ] %}
 
     {% set columns = [
         {name: 'id', order: 1},
         {name: 'shortName'},
         {name: 'symfonyVersionString', title: 'symfony', order: 0},
-        {name: 'phpUnitVersionString', title: 'phpunit', order: 0},
+ #       {name: 'phpUnitVersionString', title: 'phpunit', order: 0},
         {name: 'phpVersionString', title: 'php', order: 0},
         {name: 'vendor', browsable: true, order: 0},
-        {name: 'phpUnitVersion', browsable: true, title: 'phpunitStr', order: 0},
+#        {name: 'phpUnitVersion', browsable: true, title: 'phpunitStr', order: 0},
         {name: 'marking', browsable: true},
-#        {name: 'description', searchable: true},
+        {name: 'description', searchable: true},
         {name: 'symfonyVersions', browsable: true, title: 'symfony', order: 0},
         {name: 'keywords', title: 'keywords', block: 'list', order: 0},
 #        {name: 'phpVersions', browsable: true, title: 'php', block: 'list'},
