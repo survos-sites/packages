@@ -148,7 +148,6 @@ final class BundleWorkflow implements BundleWorkflowInterface
             $this->loadLatestVersionData($package);
         }
         $this->packageService->populateFromComposerData($package);
-        //        dd($package);
     }
 
     //    #[Cache('1 day')]
