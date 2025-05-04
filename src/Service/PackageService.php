@@ -101,7 +101,8 @@ class PackageService
         }
 
         $distribution = []; // for tracking bundle counts ??? should be elsewhere.
-        $survosPackage->setKeywords($data['keywords'] ?? []); // could also get this from the json directly!
+//        dd($data['keywords']);
+//        $survosPackage->setKeywords($data['keywords']); // could also get this from the json directly!
         //        dd($data['keywords'], $survosPackage->getKeywords());
 
         // find the first package that matches and use it for the symfony version.  This isn't very good.
@@ -136,6 +137,8 @@ class PackageService
                 ->setPhpUnitVersions($matches)
                 ->setPhpUnitVersionString($phpUnitVersionStr);
         }
+//        $survosPackage->setKeywords($data['keywords']);
+//        assert(count($survosPackage->getKeywords()), "no keywords");
     }
 
     private function getPackagistUrl($name): string

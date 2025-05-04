@@ -23,7 +23,7 @@ interface BundleWorkflowInterface
     #[Place(info: "usable!")]
     final public const PLACE_VALID_REQUIREMENTS = 'valid';
 
-    #[Transition([self::PLACE_NEW, self::PLACE_VALID_REQUIREMENTS], self::PLACE_COMPOSER_LOADED)]
+    #[Transition([self::PLACE_NEW, self::PLACE_SYMFONY_OKAY, self::PLACE_VALID_REQUIREMENTS], self::PLACE_COMPOSER_LOADED)]
     final public const TRANSITION_LOAD = 'load';
 
     #[Transition([self::PLACE_NEW], self::PLACE_ABANDONED, guard: 'subject.abandoned')]
