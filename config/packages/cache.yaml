@@ -17,3 +17,7 @@ framework:
         # Namespaced pools use the above "app" backend by default
         #pools:
             #my.dedicated.cache: null
+        # creates a "my_cache_pool" service
+        # autowireable via "CacheInterface $myCachePool"
+#        my_cache_pool:
+#            adapter: cache.adapter.filesystem

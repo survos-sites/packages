@@ -28,7 +28,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsCommand('app:load-data', 'Search and Load repos from packagist')]
-final class AppPackagistCommand
+final class LoadDataCommand
 {
     private SymfonyStyle $io;
 
@@ -57,6 +57,7 @@ final class AppPackagistCommand
         #[Option(description: 'refresh the data')] bool $refresh = true,
         #[Option(description: 'fetch the latest version json')] bool $fetch = false,
         #[Option(description: 'process the json in the database')] bool $process = false,
+        #[Option(description: 'reset (purge) the database first')] bool $reset = false,
         #[Option(name: 'page-size', description: 'page size')] int $pageSize = 100000,
         #[Option(description: 'limit (for testing)')] int $limit = 0,
         #[Option(description: 'batch size (for flush)')] int $batch = 500,
@@ -74,12 +75,18 @@ final class AppPackagistCommand
             BundleWorkflow::TRANSITION_VALID,
         ];
 
+        if ($reset) {
+            $this->entityManager->createQuery('DELETE FROM App\Entity\Package p')->execute();
+            $this->entityManager->flush();
+        }
         $this->io = $io;
         $client = new Client();
         //        'fields' => ['abandoned','repository','type'],
 
         if ($setup) {
             $idx = 0;
+            // alternative:
+
             $packages = $this->cache->get('json', function (CacheItem $cacheItem) {
                 $cacheItem->expiresAfter(3600);
                 $json = file_get_contents('https://packagist.org/packages/list.json?type=symfony-bundle&fields[]=abandoned&fields[]=type&fields[]=repository');
@@ -105,12 +112,11 @@ final class AppPackagistCommand
                 }
 //                https://repo.packagist.org/p/[vendor]/[package].json
 
-
                 $survosPackage
                     ->setRepo($package->repository)
                     ->setVendor($vendor)
                     ->setShortName($shortName);
-                if (($idx++ % 100) == 1) {
+                if ((++$idx % $batch) == 0) {
                     $this->entityManager->flush();
                     $this->io->writeln("flushing $idx");
                 }
@@ -120,7 +126,7 @@ final class AppPackagistCommand
                 }
             }
             $this->entityManager->flush();
-            $io->writeln('bundled loaded: '.$this->packageRepository->count([]));
+            $io->writeln('total bundles in database: '.$this->packageRepository->count([]));
         }
 
         $where = [];
@@ -159,65 +165,65 @@ final class AppPackagistCommand
             $progressBar->finish();
         }
 
-        if ($process)
-        {
-            if ($vendorFilter = $io->getOption('vendor')) {
-                $where['vendor'] = $vendorFilter;
-            }
-            if ($nameFilter = $io->getOption('name')) {
-                $where['shortName'] = $nameFilter;
-            }
-            $packages = $this->packageRepository->findBy($where, ['id' => 'desc'], limit: $limit ?: 100000);
-            $progressBar = new ProgressBar($io, count($packages));
-            $progressBar->start();
-            $distribution = [];
-            foreach ($packages as $survosPackage) {
-                $progressBar->advance();
-                if (!$survosPackage->getData()) {
-                    $this->logger->error('Missing data in '.$survosPackage->getName());
-                    //                    assert(false, $survosPackage->getName());
-                    continue;
-                }
-                assert($survosPackage->getData(), 'missing data! for '.$survosPackage->getId().' '.$survosPackage->getMarking());
-                $this->packageService->populateFromComposerData($survosPackage);
-                assert(BundleWorkflowInterface::PLACE_COMPOSER_LOADED != $survosPackage->getMarking());
-
-//                dd($survosPackage->getSymfonyVersions(), $survosPackage->getSymfonyVersionString(),  $survosPackage->getPhpVersionString());
-                $this->logger->info($survosPackage->getName()." {$survosPackage->getMarking()} ".join('|', $survosPackage->getSymfonyVersions()));
-                if (($progressBar->getProgress() % $this->io()->getOption('batch')) == 1) {
-                    $this->logger->info('Flushing');
-                    $this->entityManager->flush();
-                }
-            }
-            $this->entityManager->flush();
-            $io->success(__CLASS__ . '.process '.count($packages));
-        }
+//        if ($process)
+//        {
+//            if ($vendorFilter = $io->getOption('vendor')) {
+//                $where['vendor'] = $vendorFilter;
+//            }
+//            if ($nameFilter = $io->getOption('name')) {
+//                $where['shortName'] = $nameFilter;
+//            }
+//            $packages = $this->packageRepository->findBy($where, ['id' => 'desc'], limit: $limit ?: 100000);
+//            $progressBar = new ProgressBar($io, count($packages));
+//            $progressBar->start();
+//            $distribution = [];
+//            foreach ($packages as $survosPackage) {
+//                $progressBar->advance();
+//                if (!$survosPackage->getData()) {
+//                    $this->logger->error('Missing data in '.$survosPackage->getName());
+//                    //                    assert(false, $survosPackage->getName());
+//                    continue;
+//                }
+//                assert($survosPackage->getData(), 'missing data! for '.$survosPackage->getId().' '.$survosPackage->getMarking());
+//                $this->packageService->populateFromComposerData($survosPackage);
+//                assert(BundleWorkflowInterface::PLACE_COMPOSER_LOADED != $survosPackage->getMarking());
+//
+////                dd($survosPackage->getSymfonyVersions(), $survosPackage->getSymfonyVersionString(),  $survosPackage->getPhpVersionString());
+//                $this->logger->info($survosPackage->getName()." {$survosPackage->getMarking()} ".join('|', $survosPackage->getSymfonyVersions()));
+//                if (($progressBar->getProgress() % $this->io()->getOption('batch')) == 1) {
+//                    $this->logger->info('Flushing');
+//                    $this->entityManager->flush();
+//                }
+//            }
+//            $this->entityManager->flush();
+//            $io->success(__CLASS__ . '.process '.count($packages));
+//        }
         return Command::SUCCESS;
     }
 
-    public function fetch(int $pageSize, Client $client, bool $refresh): void
-    {
-        //        $packages = $this->packageRepository->findBy(['vendor' => 'symfony'], limit: $pageSize);
-        $packages = $this->packageRepository->findBy(
-            [
-                //                'marking' => [SurvosPackage::PLACE_NEW]
-            ],
-            ['name' => 'ASC']
-        );
-
-        $progressBar = new ProgressBar($this->io, count($packages));
-        /* @var Result $result */
-        foreach ($packages as $survosPackage) {
-            $progressBar->advance();
-
-            if (!$survosPackage->getPackagistData() || $refresh) {
-                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'packagist'));
-            }
-
-            if (!$survosPackage->getData() || $refresh) {
-                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'composer'));
-            }
-        }
-        $progressBar->finish();
-    }
+//    public function fetch(int $pageSize, Client $client, bool $refresh): void
+//    {
+//        //        $packages = $this->packageRepository->findBy(['vendor' => 'symfony'], limit: $pageSize);
+//        $packages = $this->packageRepository->findBy(
+//            [
+//                //                'marking' => [SurvosPackage::PLACE_NEW]
+//            ],
+//            ['name' => 'ASC']
+//        );
+//
+//        $progressBar = new ProgressBar($this->io, count($packages));
+//        /* @var Result $result */
+//        foreach ($packages as $survosPackage) {
+//            $progressBar->advance();
+//
+//            if (!$survosPackage->getPackagistData() || $refresh) {
+//                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'packagist'));
+//            }
+//
+//            if (!$survosPackage->getData() || $refresh) {
+//                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'composer'));
+//            }
+//        }
+//        $progressBar->finish();
+//    }
 }

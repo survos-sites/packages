@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34901b4f9c7355419987f4f674ee0113",
+    "content-hash": "4539920b29c04137231120268e126c3a",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4815,17 +4815,11 @@
         },
         {
             "name": "survos/installer",
-            "version": "2.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/installer.git",
-                "reference": "3e1711d22cfb993bb9ceea65af9fa3459f54dcd1"
-            },
+            "version": "dev-main",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/installer/zipball/3e1711d22cfb993bb9ceea65af9fa3459f54dcd1",
-                "reference": "3e1711d22cfb993bb9ceea65af9fa3459f54dcd1",
-                "shasum": ""
+                "type": "path",
+                "url": "../installer",
+                "reference": "3e1711d22cfb993bb9ceea65af9fa3459f54dcd1"
             },
             "require": {
                 "composer-plugin-api": "^2.0",
@@ -4841,17 +4835,16 @@
             },
             "type": "composer-plugin",
             "extra": {
-                "class": "Survos\\Installer\\Installer",
                 "branch-alias": {
                     "dev-main": "1.x-dev"
-                }
+                },
+                "class": "Survos\\Installer\\Installer"
             },
             "autoload": {
                 "psr-4": {
                     "Survos\\Installer\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4862,16 +4855,9 @@
                 }
             ],
             "description": "Composer plugin for installing configuration files and updating .env and .gitignore, based on survos/installer",
-            "support": {
-                "source": "https://github.com/survos/installer/tree/2.0.4"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2025-05-11T12:47:43+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "survos/meili-admin-bundle",
@@ -15343,6 +15329,7 @@
         "api-platform/core": 20,
         "knplabs/packagist-api": 20,
         "survos/api-grid-bundle": 20,
+        "survos/installer": 20,
         "survos/workflow-helper-bundle": 20
     },
     "prefer-stable": true,

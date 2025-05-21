@@ -194,6 +194,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
     {
         $package = $this->packageRepository->findOneBy(['name' => $message->getName()]);
         assert($package);
+        // @todo: check update time or use a real cache.
         if (!$package->getPackagistData()) {
             $packagistInfoUrl = sprintf('https://packagist.org/packages/%s.json', $message->getName());
             $info = json_decode(file_get_contents($packagistInfoUrl), true);

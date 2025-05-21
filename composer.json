@@ -31,6 +31,7 @@
         "survos/bootstrap-bundle": "^1.5",
         "survos/command-bundle": "^1.5",
         "survos/crawler-bundle": "^1.5.196",
+        "survos/installer": "*@dev",
         "survos/meili-admin-bundle": "^1.5",
         "survos/simple-datatables-bundle": "^1.5",
         "survos/workflow-helper-bundle": "dev-main",
@@ -148,5 +149,11 @@
         "symfony/phpunit-bridge": "^7.0.4",
         "symfony/stopwatch": "^7.0.3",
         "symfony/web-profiler-bundle": "^7.0.4"
+    },
+    "repositories": {
+        "survos_installer": {
+            "type": "path",
+            "url": "../installer"
+        }
     }
 }
