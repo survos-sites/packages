@@ -121,7 +121,9 @@
         ],
         "index": [
             "php -d memory_limit=2048M bin/console grid:index --reset"
-        ]
+        ],
+        "coverage": "php -d xpcov.enabled=1 vendor/bin/phpunit --coverage-html coverage"
+
     },
     "conflict": {
         "symfony/symfony": "*"

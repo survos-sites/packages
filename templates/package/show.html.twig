@@ -4,12 +4,17 @@
 {% block body %}
     <h1>{{ package.name }}</h1>
 
+    <code>{{ package.marking }}</code>
 {#    {{ dump(package) }}#}
 {#    Starred: {{ package.favers }}#}
 
     <div class="blockquote">
         {{ package.description }}
     </div>
+    <h3>{{ package.keywords|length }} Keywords</h3>
+    {% for keyword in package.keywords %}
+        <li>{{ keyword }}</li>
+    {% endfor %}
     <br />Downloads: {{ package.downloads }}
     Github: <a target="_blank" href="https://github.com/{{ package.name }}">{{ package.name }}</a>
 

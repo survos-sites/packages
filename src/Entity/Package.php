@@ -89,9 +89,8 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     #[Groups(['package.facets','package.read'])]
     private ?array $symfonyVersions = null;
 
-    #[ORM\Column(nullable: true)]
-    #[Groups(['package.facets'])]
-    private ?array $keywords = null;
+//    #[ORM\Column(nullable: true)]
+//    private ?array $keywords = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.read'])]
@@ -260,17 +259,18 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         return $this;
     }
 
+    #[Groups(['package.facets','package.read'])]
     public function getKeywords(): array
     {
-        return $this->keywords;
+        return $this->data['keywords']??[];
     }
 
-    public function setKeywords(?array $keywords): static
-    {
-        $this->keywords = $keywords;
-
-        return $this;
-    }
+//    public function setKeywords(?array $keywords): static
+//    {
+//        $this->keywords = $keywords;
+//
+//        return $this;
+//    }
 
     public function getStars(): ?int
     {
