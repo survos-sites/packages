@@ -60,9 +60,10 @@ final class AppPackagistCommand
         #[Option(name: 'page-size', description: 'page size')] int $pageSize = 100000,
         #[Option(description: 'limit (for testing)')] int $limit = 0,
         #[Option(description: 'batch size (for flush)')] int $batch = 500,
-        #[Option(description: 'filter by marking')] ?string $marking = null,
-        #[Option(description: 'filter by vendor')] ?string $vendor = null,
-        #[Option(description: 'filter by short name')] ?string $name = null,
+        #[Option(description: 'filter by marking')] ?string $marking = '',
+        #[Option(description: 'filter by vendor')] ?string $vendor = '',
+        #[Option(description: 'filter by short name')] ?string $name = '',
+//        #[Option(description: 'Dispatch a load transition for new packages')] ?bool $dispatch = null,
     ): int {
         //        // note: we are handling abandoned earlier
         $transitions = [
@@ -93,22 +94,6 @@ final class AppPackagistCommand
                 if (is_string($package->abandoned)) {
                     continue; // no replacement
                 }
-
-                //                dd($packageName, $package);
-                //            // packagist api is buggy, e.g.
-                //            // https://packagist.org/packages/list.json?vendor=zenstruck&type=symfony-bundle doesn't work
-                //                $all = $client->all([
-                // //                    'vendor' => 'zenstruck',
-                //                    'fields'=> ['type','repository','abandoned'],
-                //                    'type' => 'symfony-bundle']);
-                // //                $all = $client->search('zenstruck/cache-bundle', [
-                // //                    'per_page' => 3,
-                // //                    'fields' => ['abandoned'],
-                // //                    'type' => 'symfony-bundle'
-                // //                ], 4) as $idx => $packageName
-                //            foreach ($packages as $idx => $package) {
-                //                dd($idx, $package);
-                //
 
                 [$vendor, $shortName] = explode('/', $packageName);
 
@@ -174,7 +159,8 @@ final class AppPackagistCommand
             $progressBar->finish();
         }
 
-        if ($process) {
+        if ($process)
+        {
             if ($vendorFilter = $io->getOption('vendor')) {
                 $where['vendor'] = $vendorFilter;
             }

@@ -1,0 +1,4 @@
+# config/packages/ux_icons.yaml
+ux_icons:
+  default_icon_attributes:
+    width: 30px
