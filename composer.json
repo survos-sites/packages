@@ -32,6 +32,7 @@
         "survos/command-bundle": "^1.5",
         "survos/crawler-bundle": "^1.5.196",
         "survos/installer": "*@dev",
+        "survos/js-twig-bundle": "^1.6",
         "survos/meili-admin-bundle": "^1.5",
         "survos/simple-datatables-bundle": "^1.5",
         "survos/workflow-helper-bundle": "dev-main",

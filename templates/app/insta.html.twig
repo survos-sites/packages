@@ -1,19 +1,55 @@
 {% extends "base.html.twig" %}
 
-{% block stylesheets %}
-{{ parent() }}
-{#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@meilisearch/instant-meilisearch/templates/basic_search.css" />#}
-{% endblock %}
 {% block body %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@8/themes/algolia.min.css">
+
 <h1>Insta</h1>
 <div data-controller="insta"
      data-insta-server-url-value="{{ server }}"
      data-insta-server-api-key-value="{{ apiKey }}"
 >
     <div data-insta-target="searchBox"></div>
-    <div data-insta-target="hits"></div>
-    <div data-insta-target="pagination"></div>
+    <div id="pagination" data-insta-target="pagination"></div>
+    <div data-insta-target="hits">
+
+    </div>
     <div data-insta-target="genres"></div>
+{#    <twig:jsTwig#}
+{#        :caller="_self"#}
+{#        id="test"#}
+{#    >#}
+{#    </twig:jsTwig>#}
+    <template id="hit-template" data-insta-target="template">
+        {% verbatim %}
+
+        <h3>
+        <a href="{{ hit.repo }}" target="_blank">
+        {{ hit.name }}
+</a>
+        </h3>
+        <div>
+            {{ hit.description }}
+        </div>
+        {% for v in hit.symfonyVersions %}
+            <span class="badge badge-primary">{{ v }}</span>
+        {% endfor %}
+
+        {% for v in hit.phpVersions %}
+        <b>{{v}}</b>
+<!--            <sspan class="badge badge-primary">{{ v }}</sspan>-->
+        {% endfor %}
+        <div>
+
+        {{ description }}
+</div>
+        {% endverbatim %}
+    </template>
+{#    <twig:jsTwig#}
+{#        :caller="_self"#}
+{#        id="test"#}
+{#    >#}
+
+{#    </twig:jsTwig>#}
 </div>
 
 {% endblock %}

@@ -224,6 +224,9 @@
     "survos/inspection-bundle": {
         "version": "1.5.156"
     },
+    "survos/js-twig-bundle": {
+        "version": "1.6.0"
+    },
     "survos/maker-bundle": {
         "version": "1.5.198"
     },

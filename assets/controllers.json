@@ -40,6 +40,18 @@
                 "autoimport": []
             }
         },
+        "@survos/js-twig-bundle": {
+            "dexie": {
+                "enabled": true,
+                "fetch": "lazy",
+                "autoimport": []
+            },
+            "jstwig": {
+                "enabled": true,
+                "fetch": "lazy",
+                "autoimport": []
+            }
+        },
         "@survos/simple-datatables-bundle": {
             "table": {
                 "enabled": true,

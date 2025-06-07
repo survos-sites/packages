@@ -5,6 +5,8 @@ import instantsearch from 'instantsearch.js'
 import { searchBox, hits, pagination, refinementList } from 'instantsearch.js/es/widgets'
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch'
 import '@meilisearch/instant-meilisearch/templates/basic_search.css';
+
+import Twig from 'twig';
 /*
 * The following line makes this controller "lazy": it won't be downloaded until needed
 * See https://symfony.com/bundles/StimulusBundle/current/index.html#lazy-stimulus-controllers
@@ -12,7 +14,7 @@ import '@meilisearch/instant-meilisearch/templates/basic_search.css';
 
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
-    static targets = ['searchBox', 'hits', 'pagination', 'genres']
+    static targets = ['searchBox', 'hits', 'template', 'pagination', 'genres']
     static values = {
         serverUrl: String,
         serverApiKey: String,
@@ -29,6 +31,9 @@ export default class extends Controller {
     }
 
     connect() {
+        const self = this; // or use: const that = this;
+        this.template = Twig.twig({data: this.templateTarget.innerHTML});
+
         // Called every time the controller is connected to the DOM
         // (on page load, when it's added to the DOM, moved in the DOM, etc.)
 
@@ -38,6 +43,7 @@ export default class extends Controller {
 
         console.log(this.serverUrlValue);
         this.search();
+        // console.log(this.templateTarget.innerHTML);
     }
 
     search() {
@@ -51,17 +57,18 @@ export default class extends Controller {
             searchClient,
         })
 
+
         search.addWidgets([
             searchBox({
                 container: this.searchBoxTarget,
-                placeholder: 'Search movies...',
+                placeholder: 'Search...',
             }),
             hits({
                 container: this.hitsTarget,
                 templates: {
-                    item(hit) {
+                    item: (hit) => {
                         console.log(hit);
-                        return `<div><strong>${hit.repo}</strong><p>${hit.description || ''}</p></div>`
+                        return this.template.render({hit: hit});
                     },
                 },
             }),

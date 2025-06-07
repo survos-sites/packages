@@ -237,4 +237,7 @@ return [
         'version' => '0.26.0',
         'type' => 'css',
     ],
+    'dexie' => [
+        'version' => '4.0.11',
+    ],
 ];

@@ -37,4 +37,5 @@ return [
     Inspector\Symfony\Bundle\InspectorBundle::class => ['all' => true],
     Survos\SimpleDatatables\SurvosSimpleDatatablesBundle::class => ['all' => true],
     EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle::class => ['all' => true],
+    Survos\JsTwigBundle\SurvosJsTwigBundle::class => ['all' => true],
 ];

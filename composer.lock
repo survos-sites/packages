@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "978a5664fb9752fc2f6220fd0b6f1d2f",
+    "content-hash": "7914a58c0ba477ed464dd9a4373c0c49",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4858,6 +4858,64 @@
             "transport-options": {
                 "relative": true
             }
+        },
+        {
+            "name": "survos/js-twig-bundle",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/survos/JsTwigBundle.git",
+                "reference": "a7151ae70d97f284ea7b4944b3ac0804ba17ba87"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/survos/JsTwigBundle/zipball/a7151ae70d97f284ea7b4944b3ac0804ba17ba87",
+                "reference": "a7151ae70d97f284ea7b4944b3ac0804ba17ba87",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.3",
+                "survos/core-bundle": "^1.5",
+                "symfony/config": "^6.4 || ^7.1",
+                "symfony/dependency-injection": "^6.4 || ^7.1",
+                "symfony/dom-crawler": "^6.4 || ^7.1",
+                "symfony/http-kernel": "^6.4 || ^7.1",
+                "symfony/ux-twig-component": "^2.8",
+                "twig/twig": "^3.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.0",
+                "symfony/browser-kit": "^6.4 || ^7.1",
+                "symfony/framework-bundle": "^6.4 || ^7.1",
+                "symfony/phpunit-bridge": "^6.4 || ^7.1",
+                "symfony/twig-bundle": "^6.4 || ^7.1",
+                "symfony/var-dumper": "^6.4 || ^7.1"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Survos\\JsTwigBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "wrap the jstwig library in a Symfony UX component",
+            "keywords": [
+                "symfony-ux"
+            ],
+            "support": {
+                "issues": "https://github.com/survos/JsTwigBundle/issues",
+                "source": "https://github.com/survos/JsTwigBundle/tree/1.6.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kbond",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-03-27T11:50:13+00:00"
         },
         {
             "name": "survos/meili-admin-bundle",
