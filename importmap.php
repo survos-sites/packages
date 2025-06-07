@@ -182,4 +182,59 @@ return [
         'version' => '9.2.1',
         'type' => 'css',
     ],
+    'instantsearch.js' => [
+        'version' => '4.78.3',
+    ],
+    '@algolia/events' => [
+        'version' => '4.0.1',
+    ],
+    'algoliasearch-helper' => [
+        'version' => '3.25.0',
+    ],
+    'qs' => [
+        'version' => '6.9.7',
+    ],
+    'algoliasearch-helper/types/algoliasearch.js' => [
+        'version' => '3.25.0',
+    ],
+    '@meilisearch/instant-meilisearch' => [
+        'version' => '0.26.0',
+    ],
+    'meilisearch' => [
+        'version' => '0.50.0',
+    ],
+    'instantsearch.js/es/widgets' => [
+        'version' => '4.78.3',
+    ],
+    'instantsearch-ui-components' => [
+        'version' => '0.11.1',
+    ],
+    'preact' => [
+        'version' => '10.26.5',
+    ],
+    'hogan.js' => [
+        'version' => '3.0.2',
+    ],
+    'htm/preact' => [
+        'version' => '3.1.1',
+    ],
+    'preact/hooks' => [
+        'version' => '10.26.5',
+    ],
+    '@babel/runtime/helpers/extends' => [
+        'version' => '7.26.0',
+    ],
+    '@babel/runtime/helpers/defineProperty' => [
+        'version' => '7.26.0',
+    ],
+    '@babel/runtime/helpers/objectWithoutProperties' => [
+        'version' => '7.26.0',
+    ],
+    'htm' => [
+        'version' => '3.1.1',
+    ],
+    '@meilisearch/instant-meilisearch/templates/basic_search.css' => [
+        'version' => '0.26.0',
+        'type' => 'css',
+    ],
 ];
