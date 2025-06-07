@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+{{ parent() }}
+{#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@meilisearch/instant-meilisearch/templates/basic_search.css" />#}
+{% endblock %}
+{% block body %}
+<h1>Insta</h1>
+<div data-controller="insta"
+     data-insta-server-url-value="{{ server }}"
+     data-insta-server-api-key-value="{{ apiKey }}"
+>
+    <div data-insta-target="searchBox"></div>
+    <div data-insta-target="hits"></div>
+    <div data-insta-target="pagination"></div>
+    <div data-insta-target="genres"></div>
+</div>
+
+{% endblock %}
