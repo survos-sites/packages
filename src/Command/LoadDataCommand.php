@@ -61,9 +61,9 @@ final class LoadDataCommand
         #[Option(name: 'page-size', description: 'page size')] int $pageSize = 100000,
         #[Option(description: 'limit (for testing)')] int $limit = 0,
         #[Option(description: 'batch size (for flush)')] int $batch = 500,
-        #[Option(description: 'filter by marking')] ?string $marking = '',
-        #[Option(description: 'filter by vendor')] ?string $vendor = '',
-        #[Option(description: 'filter by short name')] ?string $name = '',
+        #[Option(description: 'filter by marking')] ?string $marking = null,
+        #[Option(description: 'filter by vendor')] ?string $vendor = null,
+        #[Option(description: 'filter by short name')] ?string $name = null,
 //        #[Option(description: 'Dispatch a load transition for new packages')] ?bool $dispatch = null,
     ): int {
         //        // note: we are handling abandoned earlier

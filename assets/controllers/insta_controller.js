@@ -1,6 +1,23 @@
 import {Controller} from '@hotwired/stimulus';
 
+
+import Routing from "fos-routing";
+import RoutingData from "/js/fos_js_routes.js";
+Routing.setData(RoutingData);
+
 import Twig from 'twig';
+Twig.extend(function (Twig) {
+    Twig._function.extend("path", (route, routeParams = {}) => {
+        // console.error(routeParams);
+        if ("_keys" in routeParams) {
+            // if(routeParams.hasOwnProperty('_keys')){
+            delete routeParams._keys; // seems to be added by twigjs
+        }
+        let path = Routing.generate(route, routeParams);
+        return path;
+    });
+});
+
 import instantsearch from 'instantsearch.js'
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
 import { searchBox, hits, pagination, refinementList } from 'instantsearch.js/es/widgets'

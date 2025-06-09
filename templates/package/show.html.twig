@@ -16,7 +16,7 @@
         <li>{{ keyword }}</li>
     {% endfor %}
     <br />Downloads: {{ package.downloads }}
-    Github: <a target="_blank" href="https://github.com/{{ package.name }}">{{ package.name }}</a>
+    {{ package.sourceType }}: <a target="_blank" href="{{ package.sourceUrl }}">{{ package.sourceUrl     }}</a>
 
     <ul>
         <li>

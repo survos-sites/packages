@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Adbar\Dot;
 use App\Entity\Package;
 use App\Entity\Package as SurvosPackage;
 use App\Workflow\BundleWorkflowInterface;
@@ -65,7 +66,7 @@ class PackageService
     {
         // given the composer data, populate the php and other relevant values
         $survosPackage
-            ->setMarking(BundleWorkflowInterface::PLACE_NEW)
+            ->setMarking(BundleWorkflowInterface::PLACE_NEW) // ??
             ->setSymfonyVersionString(null)
             ->setSymfonyVersions([])
             ->setPhpVersionString(null)
@@ -74,6 +75,13 @@ class PackageService
             ->setPhpUnitVersionString(null)
         ;
         $data = $survosPackage->getData();
+        $dot = new Dot($data);
+
+        // https://github.com/adbario/php-dot-notation?tab=readme-ov-file#get
+        $survosPackage
+            ->setSourceType($dot->get('source.type'))
+            ->setSourceUrl($dot->get('source.url'))
+            ;
         if (!$data) {
             return;
         }

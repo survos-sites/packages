@@ -10,12 +10,14 @@
         "php": ">=8.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "adbario/php-dot-notation": "*",
         "api-platform/core": "^4.1",
         "composer/semver": "^3.4",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.3",
         "easycorp/easyadmin-bundle": "^4.24",
+        "friendsofsymfony/jsrouting-bundle": "^3.5",
         "inspector-apm/inspector-symfony": "^1.2",
         "knplabs/knp-time-bundle": "^2.2",
         "knplabs/packagist-api": "dev-master",
@@ -33,7 +35,7 @@
         "survos/crawler-bundle": "^1.5.196",
         "survos/installer": "dev-main",
         "survos/js-twig-bundle": "^1.6",
-        "survos/meili-admin-bundle": "^1.5",
+        "survos/meili-admin-bundle": "dev-main",
         "survos/simple-datatables-bundle": "^1.5",
         "survos/workflow-helper-bundle": "dev-main",
         "symfony/asset": "^7.0.3",
@@ -104,7 +106,8 @@
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd"
+            "importmap:install": "symfony-cmd",
+            "fos:js-routing:dump --format=js --target=public/js/fos_js_routes.js --callback=\"export default  \"": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"

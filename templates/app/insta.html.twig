@@ -31,11 +31,13 @@
 
         <h3>
         <a href="{{ hit.repo }}" target="_blank">
-        {{ hit.name }}
+<!--        {{ hit.name }}-->
+        {{ hit._highlightResult.name.value }}
 </a>
         </h3>
+        <code>{{ hit.marking }}</code>
         <div>
-            {{ hit.description }}
+        {{ hit._highlightResult.description.value }}
         </div>
         {% for v in hit.symfonyVersions %}
             <span class="badge badge-primary">{{ v }}</span>
@@ -47,10 +49,10 @@
         {% endfor %}
         <div>
 
-{{ hit._highlightResult.name.value }}
-        {{ description }}
-        @todo: jsRouting, helpers.highlight
-        <a href="/package/{{ hit.id }}">
+<!--        {{ description }}-->
+<!--        URL:         {{ path('package_show', hit.rp) }}-->
+
+        <a href="{{ path('package_show', hit.rp) }}">
         SHOW
         </a>
 </a>

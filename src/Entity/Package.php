@@ -40,7 +40,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 )]
 #[ApiFilter(OrderFilter::class, properties: ['marking', 'vendor', 'name', 'stars', 'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: ['marking' => 'exact', 'name' => 'partial'])]
-#[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'keywords', 'marking'])]
+#[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'sourceType', 'keywords', 'marking'])]
 #[ApiFilter(
     MultiFieldSearchFilter::class,
     properties: ['name', 'description'],
@@ -131,6 +131,14 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     #[ORM\Column(nullable: true)]
     private ?array $packagistData = null;
+
+    #[ORM\Column(length: 8, nullable: true)]
+    #[Groups('package.read')]
+    private ?string $sourceType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('package.read')]
+    private ?string $sourceUrl = null;
 
     public function __construct()
     {
@@ -433,5 +441,29 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public function hasValidPhpVersion(): bool
     {
         return count($this->getPhpVersions())>0;
+    }
+
+    public function getSourceType(): ?string
+    {
+        return $this->sourceType;
+    }
+
+    public function setSourceType(string $sourceType): static
+    {
+        $this->sourceType = $sourceType;
+
+        return $this;
+    }
+
+    public function getSourceUrl(): ?string
+    {
+        return $this->sourceUrl;
+    }
+
+    public function setSourceUrl(string $sourceUrl): static
+    {
+        $this->sourceUrl = $sourceUrl;
+
+        return $this;
     }
 }
