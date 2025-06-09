@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use Meilisearch\Client;
+use Meilisearch\Meilisearch;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,5 +24,16 @@ final class AppController extends AbstractController
             'server' => $this->meiliServer,
             'apiKey' => $this->apiKey
         ]);
+    }
+
+    #[Route('/detail/{id}', name: 'app_detail')]
+    #[Template('app/detail.html.twig')]
+    public function details(string $id): Response|array
+    {
+        $client = new Client($this->meiliServer, $this->apiKey);
+
+        $index = $client->getIndex('movies');
+        return ['hit' => $index->getDocument($id)];
+
     }
 }

@@ -4,11 +4,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@8/themes/algolia.min.css">
 
 <h1>Insta</h1>
-<div data-controller="insta"
-     data-insta-server-url-value="{{ server }}"
-     data-insta-server-api-key-value="{{ apiKey }}"
+    {% set _sc = 'insta' %}
+<div
+    {{ stimulus_controller(_sc, {
+        serverUrl: server,
+        apiKey: apiKey
+    }) }}
+{#    data-controller="insta"#}
+{#     data-insta-server-url-value="{{ server }}"#}
+{#     data-insta-server-api-key-value="{{ apiKey }}"#}
 >
-    <div data-insta-target="searchBox"></div>
+    <div {{ stimulus_target(_sc, 'searchBox') }}></div>
+{#    <div data-insta-target="searchBox"></div>#}
     <div id="pagination" data-insta-target="pagination"></div>
     <div data-insta-target="hits">
 
@@ -40,7 +47,13 @@
         {% endfor %}
         <div>
 
+{{ hit._highlightResult.name.value }}
         {{ description }}
+        @todo: jsRouting, helpers.highlight
+        <a href="/package/{{ hit.id }}">
+        SHOW
+        </a>
+</a>
 </div>
         {% endverbatim %}
     </template>

@@ -1,12 +1,12 @@
 import {Controller} from '@hotwired/stimulus';
 
-import meiliSearch from 'meilisearch';
+import Twig from 'twig';
 import instantsearch from 'instantsearch.js'
+import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
 import { searchBox, hits, pagination, refinementList } from 'instantsearch.js/es/widgets'
-import { instantMeiliSearch } from '@meilisearch/instant-meilisearch'
+
 import '@meilisearch/instant-meilisearch/templates/basic_search.css';
 
-import Twig from 'twig';
 /*
 * The following line makes this controller "lazy": it won't be downloaded until needed
 * See https://symfony.com/bundles/StimulusBundle/current/index.html#lazy-stimulus-controllers
@@ -42,8 +42,12 @@ export default class extends Controller {
         // this.fooTarget.addEventListener('click', this._fooBar)
 
         console.log(this.serverUrlValue);
-        this.search();
-        // console.log(this.templateTarget.innerHTML);
+        try {
+            this.search();
+        } catch (e) {
+            this.hitsTarget.innerHTML = "URL: " + this.serverUrlValue + " " + e.message;
+        }
+
     }
 
     search() {
@@ -66,9 +70,15 @@ export default class extends Controller {
             hits({
                 container: this.hitsTarget,
                 templates: {
-                    item: (hit) => {
+                    // banner: (b) => { console.log(b); return '' },
+                    item: (hit, html, index) => {
                         console.log(hit);
-                        return this.template.render({hit: hit});
+                        //     <div class="hit-name">
+                        //       {{#helpers.highlight}}{ "attribute": "name" }{{/helpers.highlight}}
+                        //     </div>
+                        return this.template.render({
+
+                            hit: hit});
                     },
                 },
             }),
