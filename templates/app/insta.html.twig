@@ -8,7 +8,7 @@
 <div
     {{ stimulus_controller(_sc, {
         serverUrl: server,
-        apiKey: apiKey
+        serverApiKey: apiKey
     }) }}
 {#    data-controller="insta"#}
 {#     data-insta-server-url-value="{{ server }}"#}
@@ -17,16 +17,9 @@
     <div {{ stimulus_target(_sc, 'searchBox') }}></div>
 {#    <div data-insta-target="searchBox"></div>#}
     <div id="pagination" data-insta-target="pagination"></div>
-    <div data-insta-target="hits">
-
-    </div>
-    <div data-insta-target="genres"></div>
-{#    <twig:jsTwig#}
-{#        :caller="_self"#}
-{#        id="test"#}
-{#    >#}
-{#    </twig:jsTwig>#}
-    <template id="hit-template" data-insta-target="template">
+    <div {{ stimulus_target(_sc, 'hits') }}></div>
+    <div {{ stimulus_target(_sc, 'genres') }}></div>
+    <template {{ stimulus_target(_sc, 'template') }}>
         {% verbatim %}
 
         <h3>

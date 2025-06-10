@@ -14,16 +14,18 @@ final class AppController extends AbstractController
 {
     public function __construct(
         #[Autowire('%env(MEILI_SERVER)%')] private string $meiliServer,
-        #[Autowire('%env(MEILI_API_KEY)%')] private string $apiKey,
+        #[Autowire('%env(MEILI_SEARCH_KEY)%')] private string $apiKey,
     ) {}
 
     #[Route('/insta', name: 'app_insta')]
-    public function index(): Response
+    #[Template('app/insta.html.twig')]
+    public function index(): Response|array
     {
-        return $this->render('app/insta.html.twig', [
+        $params = [
             'server' => $this->meiliServer,
             'apiKey' => $this->apiKey
-        ]);
+        ];
+        return $params;
     }
 
     #[Route('/detail/{id}', name: 'app_detail')]

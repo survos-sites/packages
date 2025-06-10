@@ -1638,16 +1638,16 @@
         },
         {
             "name": "easycorp/easyadmin-bundle",
-            "version": "v4.24.7",
+            "version": "v4.24.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EasyCorp/EasyAdminBundle.git",
-                "reference": "b61cd46c454d853438ded3ca21eac1ad537589aa"
+                "reference": "89534a8753b7535ec7a70fd3a1755ad019bc37c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/b61cd46c454d853438ded3ca21eac1ad537589aa",
-                "reference": "b61cd46c454d853438ded3ca21eac1ad537589aa",
+                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/89534a8753b7535ec7a70fd3a1755ad019bc37c2",
+                "reference": "89534a8753b7535ec7a70fd3a1755ad019bc37c2",
                 "shasum": ""
             },
             "require": {
@@ -1728,7 +1728,7 @@
             ],
             "support": {
                 "issues": "https://github.com/EasyCorp/EasyAdminBundle/issues",
-                "source": "https://github.com/EasyCorp/EasyAdminBundle/tree/v4.24.7"
+                "source": "https://github.com/EasyCorp/EasyAdminBundle/tree/v4.24.8"
             },
             "funding": [
                 {
@@ -1736,7 +1736,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-05-14T17:55:05+00:00"
+            "time": "2025-06-09T20:14:41+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -2900,16 +2900,16 @@
         },
         {
             "name": "meilisearch/meilisearch-php",
-            "version": "v1.14.0",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/meilisearch/meilisearch-php.git",
-                "reference": "860c6f81e81abb5040c50031512b21ae59a26a97"
+                "reference": "94930b9e4b8a6c1ad841eed1395a58a73d0db313"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/860c6f81e81abb5040c50031512b21ae59a26a97",
-                "reference": "860c6f81e81abb5040c50031512b21ae59a26a97",
+                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/94930b9e4b8a6c1ad841eed1395a58a73d0db313",
+                "reference": "94930b9e4b8a6c1ad841eed1395a58a73d0db313",
                 "shasum": ""
             },
             "require": {
@@ -2922,7 +2922,6 @@
                 "guzzlehttp/guzzle": "^7.8.1",
                 "http-interop/http-factory-guzzle": "^1.2.0",
                 "php-cs-fixer/shim": "^3.59.3",
-                "phpstan/extension-installer": "^1.4.1",
                 "phpstan/phpstan": "^2.0",
                 "phpstan/phpstan-deprecation-rules": "^2.0",
                 "phpstan/phpstan-phpunit": "^2.0",
@@ -2961,9 +2960,9 @@
             ],
             "support": {
                 "issues": "https://github.com/meilisearch/meilisearch-php/issues",
-                "source": "https://github.com/meilisearch/meilisearch-php/tree/v1.14.0"
+                "source": "https://github.com/meilisearch/meilisearch-php/tree/v1.15.0"
             },
-            "time": "2025-04-14T12:32:57+00:00"
+            "time": "2025-06-10T04:33:15+00:00"
         },
         {
             "name": "monolog/monolog",
