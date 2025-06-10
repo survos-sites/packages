@@ -3,9 +3,11 @@ import {Controller} from '@hotwired/stimulus';
 
 import Routing from "fos-routing";
 import RoutingData from "/js/fos_js_routes.js";
+
 Routing.setData(RoutingData);
 
 import Twig from 'twig';
+
 Twig.extend(function (Twig) {
     Twig._function.extend("path", (route, routeParams = {}) => {
         // console.error(routeParams);
@@ -19,8 +21,8 @@ Twig.extend(function (Twig) {
 });
 
 import instantsearch from 'instantsearch.js'
-import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
-import { searchBox, hits, pagination, refinementList } from 'instantsearch.js/es/widgets'
+import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
+import {searchBox, hits, pagination, refinementList} from 'instantsearch.js/es/widgets'
 
 import '@meilisearch/instant-meilisearch/templates/basic_search.css';
 
@@ -31,7 +33,7 @@ import '@meilisearch/instant-meilisearch/templates/basic_search.css';
 
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
-    static targets = ['searchBox', 'hits', 'template', 'pagination', 'genres']
+    static targets = ['searchBox', 'hits', 'template', 'pagination', 'refinementList', 'marking']
     static values = {
         serverUrl: String,
         serverApiKey: String,
@@ -89,56 +91,95 @@ export default class extends Controller {
                 templates: {
                     // banner: (b) => { console.log(b); return '' },
                     item: (hit, html, index) => {
-                        console.log(hit);
                         //     <div class="hit-name">
                         //       {{#helpers.highlight}}{ "attribute": "name" }{{/helpers.highlight}}
                         //     </div>
                         return this.template.render({
 
-                            hit: hit});
+                            hit: hit
+                        });
                     },
                 },
             }),
             pagination({
                 container: this.paginationTarget
             }),
-            // refinementList({
-            //     container: this.genresTarget,
-            //     attribute: 'genre',
-            // }),
-        ])
+            refinementList(
+                {
+                    container: this.markingTarget,
+                    attribute: 'marking',
+                    showMore: true,
+                    // transformItems(items, { results }) {
+                    //
+                    //     const brandsMap = results.hits.reduce((map, hit) => {
+                    //         map[hit.brand_id] = hit.brand_name; // adjust fields accordingly
+                    //         return map;
+                    //     }, {});
+                    //     return items.map(item => ({
+                    //         ...item,
+                    //         label: brandsMap[item.value] || item.value
+                    //     }));
+                    // },
+                },
+            ),
+            // refinementList(
+            //     {
+            //         container: this.symfonyTarget,
+            //         attribute: 'symfonyVersions',
+            //     },
+            // ),
+        ]);
 
-      //   search.addWidgets([
-      //       instantsearch.widgets.searchBox({
-      //           container: '#searchbox',
-      //       }),
-      //       instantsearch.widgets.hits({
-      //           container: '#hits',
-      //           templates: {
-      //               item: `
-      //   <div>
-      //     <div class="hit-name">
-      //       {{#helpers.highlight}}{ "attribute": "name" }{{/helpers.highlight}}
-      //     </div>
-      //   </div>
-      // `,
-      //           },
-      //       }),
-      //   ])
+        const attributeDivs = this.refinementListTarget.querySelectorAll('[data-attribute]')
+
+        attributeDivs.forEach(div => {
+            const attribute = div.getAttribute("data-attribute")
+            let x = search.addWidgets([
+                refinementList({
+                    container: div,
+                    attribute: attribute
+                    }
+                )]);
+            console.log(`Found div with data-attribute="${attribute}"`, div);
+            console.log(x);
+
+            // You can now do something with each div individually
+            // e.g., populate, modify, attach event listeners, etc.
+        })
+
+
+        // @todo: get the list of refinements.
+
+        //   search.addWidgets([
+        //       instantsearch.widgets.searchBox({
+        //           container: '#searchbox',
+        //       }),
+        //       instantsearch.widgets.hits({
+        //           container: '#hits',
+        //           templates: {
+        //               item: `
+        //   <div>
+        //     <div class="hit-name">
+        //       {{#helpers.highlight}}{ "attribute": "name" }{{/helpers.highlight}}
+        //     </div>
+        //   </div>
+        // `,
+        //           },
+        //       }),
+        //   ])
 
         search.start()
 
     }
 
-        // Add custom controller actions here
-        // fooBar() { this.fooTarget.classList.toggle(this.bazClass) }
+    // Add custom controller actions here
+    // fooBar() { this.fooTarget.classList.toggle(this.bazClass) }
 
-        disconnect()
-        {
-            // Called anytime its element is disconnected from the DOM
-            // (on page change, when it's removed from or moved in the DOM, etc.)
+    disconnect() {
+        // Called anytime its element is disconnected from the DOM
+        // (on page change, when it's removed from or moved in the DOM, etc.)
 
-            // Here you should remove all event listeners added in "connect()"
-            // this.fooTarget.removeEventListener('click', this._fooBar)
-        }
+        // Here you should remove all event listeners added in "connect()"
+        // this.fooTarget.removeEventListener('click', this._fooBar)
     }
+}

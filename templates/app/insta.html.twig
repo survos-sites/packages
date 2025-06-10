@@ -3,24 +3,57 @@
 {% block body %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@8/themes/algolia.min.css">
 
-<h1>Insta</h1>
+    <h1>Insta</h1>
     {% set _sc = 'insta' %}
-<div
-    {{ stimulus_controller(_sc, {
-        serverUrl: server,
-        serverApiKey: apiKey
-    }) }}
-{#    data-controller="insta"#}
-{#     data-insta-server-url-value="{{ server }}"#}
-{#     data-insta-server-api-key-value="{{ apiKey }}"#}
->
-    <div {{ stimulus_target(_sc, 'searchBox') }}></div>
-{#    <div data-insta-target="searchBox"></div>#}
-    <div id="pagination" data-insta-target="pagination"></div>
-    <div {{ stimulus_target(_sc, 'hits') }}></div>
-    <div {{ stimulus_target(_sc, 'genres') }}></div>
-    <template {{ stimulus_target(_sc, 'template') }}>
-        {% verbatim %}
+    <div
+        {{ stimulus_controller(_sc, {
+            serverUrl: server,
+            serverApiKey: apiKey
+        }) }}
+        {#    data-controller="insta" #}
+        {#     data-insta-server-url-value="{{ server }}" #}
+        {#     data-insta-server-api-key-value="{{ apiKey }}" #}
+    >
+        <div {{ stimulus_target(_sc, 'searchBox') }}></div>
+        <div class="row">
+            <div class="col-md-3 float-start">
+
+                <div {{ stimulus_target(_sc, 'marking') }}>
+                    marking options here.
+                </div>
+                <div {{ stimulus_target(_sc, 'symfony') }}>
+                    Symfony versions go here, from the facets
+                </div>
+            </div>
+
+
+            {#    <div data-insta-target="searchBox"></div> #}
+            <div {{ stimulus_target(_sc, 'refinementList') }}>
+                {% for attr in ['marking','phpVersions','symfonyVersions'] %}
+                    <h3>{{ attr }}</h3>
+                    <div data-attribute="{{ attr }}">
+                        {#                {{ attr }} options here. #}
+                        <!-- content here -->
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-9 float-end">
+
+                <div {{ stimulus_target(_sc, 'hits') }}></div>
+                <div {{ stimulus_target(_sc, 'pagination') }}></div>
+
+            </div>
+        </div>
+
+        {#    <twig:jsTwig #}
+        {#        :caller="_self" #}
+        {#        id="test" #}
+        {#    > #}
+
+        {#    </twig:jsTwig> #}
+        <template {{ stimulus_target(_sc, 'template') }}>
+            {% verbatim %}
 
         <h3>
         <a href="{{ hit.repo }}" target="_blank">
@@ -51,13 +84,8 @@
 </a>
 </div>
         {% endverbatim %}
-    </template>
-{#    <twig:jsTwig#}
-{#        :caller="_self"#}
-{#        id="test"#}
-{#    >#}
+        </template>
 
-{#    </twig:jsTwig>#}
-</div>
+    </div>
 
 {% endblock %}
