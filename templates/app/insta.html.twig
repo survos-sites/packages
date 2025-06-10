@@ -68,9 +68,7 @@
                     {{ hit._highlightResult.name.value }}
                   </a>
                 </h3>
-                {{ hit|keys|join(' ') }}
-                {{ hit.__hitIndex }}
-                {{ hit.__position }}
+                #{{ hit.__hitIndex }} ({{ hit.__position }})
                 <code>{{ hit.marking }}</code>
                 <p>{{ hit._highlightResult.description.value }}</p>
 
