@@ -70,11 +70,18 @@ export default class extends Controller {
     }
 
     search() {
-        const {searchClient} = instantMeiliSearch(
+        const { searchClient, setMeiliSearchParams } = instantMeiliSearch(
+        // const {searchClient} = instantMeiliSearch(
             this.serverUrlValue,
             this.serverApiKeyValue,
+            {
+                // placeholderSearch: false, // default: true.
+                // primaryKey: 'id', // default: undefined
+                keepZeroFacets: true,
+                showRankingScore: true,
+                showRankingScoreDetails: true
+            }
         );
-
         const search = instantsearch({
             indexName: 'packagesPackage',
             searchClient,
@@ -94,6 +101,7 @@ export default class extends Controller {
                         //     <div class="hit-name">
                         //       {{#helpers.highlight}}{ "attribute": "name" }{{/helpers.highlight}}
                         //     </div>
+                        console.log(hit);
                         return this.template.render({
                             hit: hit
                         });
