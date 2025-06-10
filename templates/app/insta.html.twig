@@ -1,91 +1,91 @@
 {% extends "base.html.twig" %}
+{#{% extends "@SurvosBootstrap/tabler/base.html.twig" %}#}
 
-{% block body %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@8/themes/algolia.min.css">
+{#{% block javascripts %}#}
+{#    {% block importmap %}{{ importmap('app') }}{% endblock %}#}
+{#{% endblock %}#}
 
-    <h1>Insta</h1>
+{% block stylesheets %}
+    {{ parent() }}
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/instantsearch.css@8/themes/algolia.min.css"
+    >
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 1rem;
+        }
+        aside {
+            min-height: 100vh;
+            justify-content: space-between;
+            flex-direction: column;
+            border-right: 1px solid red;
+        }
+    </style>
+{% endblock %}
+
+{% block raw_body %}
     {% set _sc = 'insta' %}
     <div
+        class="container py-4"
         {{ stimulus_controller(_sc, {
             serverUrl: server,
             serverApiKey: apiKey
         }) }}
-        {#    data-controller="insta" #}
-        {#     data-insta-server-url-value="{{ server }}" #}
-        {#     data-insta-server-api-key-value="{{ apiKey }}" #}
     >
-        <div {{ stimulus_target(_sc, 'searchBox') }}></div>
-        <div class="row">
-            <div class="col-md-3 float-start">
+        <h1 class="mb-4">Insta</h1>
 
-                <div {{ stimulus_target(_sc, 'marking') }}>
-                    marking options here.
-                </div>
-                <div {{ stimulus_target(_sc, 'symfony') }}>
-                    Symfony versions go here, from the facets
-                </div>
-            </div>
+            {# Sidebar: search + filters #}
+        <div class="mb-3" {{ stimulus_target(_sc, 'searchBox') }}></div>
 
-
-            {#    <div data-insta-target="searchBox"></div> #}
-            <div {{ stimulus_target(_sc, 'refinementList') }}>
-                {% for attr in ['marking','phpVersions','symfonyVersions'] %}
-                    <h3>{{ attr }}</h3>
-                    <div data-attribute="{{ attr }}">
-                        {#                {{ attr }} options here. #}
-                        <!-- content here -->
+            <aside class="col-12 col-md-3 mb-4"
+                {{ stimulus_target(_sc, 'refinementList') }}
+            >
+                {% for attr in ['marking', 'phpVersions', 'symfonyVersions'] %}
+                    <div class="mb-4">
+                        <h5 class="mb-2">{{ attr|capitalize }}</h5>
+                        <div
+                            data-attribute="{{ attr }}"
+                        ></div>
                     </div>
                 {% endfor %}
-            </div>
+            </aside>
 
-            <div class="col-md-9 float-end">
+            {# Main: hits + pagination #}
+            <main>
+                <div {{ stimulus_target('insta', 'hits') }}></div>
+                <div class="mt-4" {{ stimulus_target('insta', 'pagination') }}></div>
 
-                <div {{ stimulus_target(_sc, 'hits') }}></div>
-                <div {{ stimulus_target(_sc, 'pagination') }}></div>
+                {# Your hit template (we keep it verbatim) #}
+            </main>
 
-            </div>
-        </div>
-
-        {#    <twig:jsTwig #}
-        {#        :caller="_self" #}
-        {#        id="test" #}
-        {#    > #}
-
-        {#    </twig:jsTwig> #}
-        <template {{ stimulus_target(_sc, 'template') }}>
+        <template {{ stimulus_target('insta', 'template') }}>
             {% verbatim %}
+                <h3>
+                  <a href="{{ hit.repo }}?tab=readme-ov-file" target="_blank">
+                    {{ hit._highlightResult.name.value }}
+                  </a>
+                </h3>
+                <code>{{ hit.marking }}</code>
+                <p>{{ hit._highlightResult.description.value }}</p>
 
-        <h3>
-        <a href="{{ hit.repo }}" target="_blank">
-<!--        {{ hit.name }}-->
-        {{ hit._highlightResult.name.value }}
-</a>
-        </h3>
-        <code>{{ hit.marking }}</code>
-        <div>
-        {{ hit._highlightResult.description.value }}
-        </div>
-        {% for v in hit.symfonyVersions %}
-            <span class="badge badge-primary">{{ v }}</span>
-        {% endfor %}
+                {% for v in hit.symfonyVersions %}
+                  <span class="badge bg-primary me-1">{{ v }}</span>
+                {% endfor %}
 
-        {% for v in hit.phpVersions %}
-        <b>{{v}}</b>
-<!--            <sspan class="badge badge-primary">{{ v }}</sspan>-->
-        {% endfor %}
-        <div>
+                {% for v in hit.phpVersions %}
+                  <span class="badge bg-secondary me-1">{{ v }}</span>
+                {% endfor %}
 
-<!--        {{ description }}-->
-<!--        URL:         {{ path('package_show', hit.rp) }}-->
-
-        <a href="{{ path('package_show', hit.rp) }}">
-        SHOW
-        </a>
-</a>
-</div>
-        {% endverbatim %}
+                <div class="mt-2">
+                  <a href="{{ path('package_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
+                    Show details
+                  </a>
+                </div>
+                {% endverbatim %}
         </template>
 
     </div>
-
 {% endblock %}

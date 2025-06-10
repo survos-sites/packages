@@ -95,7 +95,6 @@ export default class extends Controller {
                         //       {{#helpers.highlight}}{ "attribute": "name" }{{/helpers.highlight}}
                         //     </div>
                         return this.template.render({
-
                             hit: hit
                         });
                     },
@@ -104,30 +103,6 @@ export default class extends Controller {
             pagination({
                 container: this.paginationTarget
             }),
-            refinementList(
-                {
-                    container: this.markingTarget,
-                    attribute: 'marking',
-                    showMore: true,
-                    // transformItems(items, { results }) {
-                    //
-                    //     const brandsMap = results.hits.reduce((map, hit) => {
-                    //         map[hit.brand_id] = hit.brand_name; // adjust fields accordingly
-                    //         return map;
-                    //     }, {});
-                    //     return items.map(item => ({
-                    //         ...item,
-                    //         label: brandsMap[item.value] || item.value
-                    //     }));
-                    // },
-                },
-            ),
-            // refinementList(
-            //     {
-            //         container: this.symfonyTarget,
-            //         attribute: 'symfonyVersions',
-            //     },
-            // ),
         ]);
 
         const attributeDivs = this.refinementListTarget.querySelectorAll('[data-attribute]')
