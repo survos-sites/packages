@@ -1,0 +1,27 @@
+<h3>
+    <a href="{{ hit.repo }}?tab=readme-ov-file" target="_blank">
+        {{ hit._highlightResult.name.value }}
+    </a>
+</h3>
+#{{ hit.__hitIndex }} ({{ hit.__position }})
+<code>{{ hit.marking }}</code>
+<p>{{ hit._highlightResult.description.value }}</p>
+@todo: popup? expander?
+<pre>
+{{ json_pretty(hit) }}
+</pre>
+
+{% for v in hit.symfonyVersions %}
+    <span class="badge bg-primary me-1">{{ v }}</span>
+{% endfor %}
+
+                {% for v in hit.phpVersions %}
+                    <span class="badge bg-secondary me-1">{{ v }}</span>
+                {% endfor %}
+
+<div class="mt-2">
+    <a href="{{ path('package_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
+        Show details
+    </a>
+</div>
+

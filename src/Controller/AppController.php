@@ -19,6 +19,16 @@ final class AppController extends AbstractController
         private MeiliService $meiliService,
     ) {}
 
+    #[Route('/template/{indexName}', name: 'app_template')]
+//    #[Template('app/insta.html.twig')]
+    public function jsTemplate(string $indexName): Response|array
+    {
+        $jsTwigTemplate = __DIR__ . '/../../templates/js/' . $indexName . '.html.twig';
+        assert(file_exists($jsTwigTemplate), "missing $jsTwigTemplate");
+        $template = file_get_contents($jsTwigTemplate);
+        return new Response($template);
+    }
+
     #[Route('/insta/{indexName}', name: 'app_insta')]
     #[Template('app/insta.html.twig')]
     public function index(string $indexName = 'packagesPackage'): Response|array

@@ -240,4 +240,15 @@ return [
     'dexie' => [
         'version' => '4.0.11',
     ],
+    'instantsearch.css/themes/algolia.min.css' => [
+        'version' => '8.5.1',
+        'type' => 'css',
+    ],
+    'pretty-print-json' => [
+        'version' => '3.0.4',
+    ],
+    'pretty-print-json/dist/css/pretty-print-json.min.css' => [
+        'version' => '3.0.4',
+        'type' => 'css',
+    ],
 ];

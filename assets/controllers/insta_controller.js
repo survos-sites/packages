@@ -3,12 +3,28 @@ import {Controller} from '@hotwired/stimulus';
 
 import Routing from "fos-routing";
 import RoutingData from "/js/fos_js_routes.js";
+import {prettyPrintJson} from 'pretty-print-json';
+import Twig from 'twig';
+import instantsearch from 'instantsearch.js'
+import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
+import {hits, pagination, refinementList, searchBox} from 'instantsearch.js/es/widgets'
 
+import 'pretty-print-json/dist/css/pretty-print-json.min.css';
+// this import makes the pretty-json really ugly
+// import '@meilisearch/instant-meilisearch/templates/basic_search.css';
+import 'instantsearch.css/themes/algolia.min.css';
 Routing.setData(RoutingData);
 
-import Twig from 'twig';
-
 Twig.extend(function (Twig) {
+    // Twig.setFilter('json_pretty', function(data, options={}) {
+    //     return prettyPrintJson.toHtml(data, options);
+    // });
+
+    Twig._function.extend("json_pretty", (data, options={}) => {
+        const html = prettyPrintJson.toHtml(data, options);
+        return html;
+    })
+
     Twig._function.extend("path", (route, routeParams = {}) => {
         // console.error(routeParams);
         if ("_keys" in routeParams) {
@@ -19,12 +35,6 @@ Twig.extend(function (Twig) {
         return path;
     });
 });
-
-import instantsearch from 'instantsearch.js'
-import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
-import {searchBox, hits, pagination, refinementList} from 'instantsearch.js/es/widgets'
-
-import '@meilisearch/instant-meilisearch/templates/basic_search.css';
 
 /*
 * The following line makes this controller "lazy": it won't be downloaded until needed
@@ -37,7 +47,8 @@ export default class extends Controller {
     static values = {
         serverUrl: String,
         serverApiKey: String,
-        indexName: String
+        indexName: String,
+        templateUrl: String,
     }
 
     initialize() {
@@ -52,7 +63,6 @@ export default class extends Controller {
 
     connect() {
         const self = this; // or use: const that = this;
-        this.template = Twig.twig({data: this.templateTarget.innerHTML});
 
         // Called every time the controller is connected to the DOM
         // (on page load, when it's added to the DOM, moved in the DOM, etc.)
@@ -62,11 +72,15 @@ export default class extends Controller {
         // this.fooTarget.addEventListener('click', this._fooBar)
 
         console.log(this.serverUrlValue);
-        try {
-            this.search();
-        } catch (e) {
-            this.hitsTarget.innerHTML = "URL: " + this.serverUrlValue + " " + e.message;
+        console.log(this.templateUrlValue);
+        this.fetchFile().then(() => {
+                try {
+                    this.search();
+                } catch (e) {
+                    this.hitsTarget.innerHTML = "URL: " + this.serverUrlValue + " " + e.message;
+                }
         }
+        )
 
     }
 
@@ -83,6 +97,10 @@ export default class extends Controller {
                 showRankingScoreDetails: true
             }
         );
+        setMeiliSearchParams({
+            showRankingScore: true,
+            showRankingScoreDetails: true
+        });
         const search = instantsearch({
             indexName: this.indexNameValue,
             searchClient,
@@ -102,7 +120,10 @@ export default class extends Controller {
                         //     <div class="hit-name">
                         //       {{#helpers.highlight}}{ "attribute": "name" }{{/helpers.highlight}}
                         //     </div>
-                        console.log(hit);
+                        if (hit.__position === 1)
+                        {
+                            console.log(hit);
+                        }
                         return this.template.render({
                             hit: hit
                         });
@@ -133,8 +154,8 @@ export default class extends Controller {
                       },
                     }
                 )]);
-            console.log(`Found div with data-attribute="${attribute}"`, div);
-            console.log(x);
+            // console.log(`Found div with data-attribute="${attribute}"`, div);
+            // console.log(x);
 
             // You can now do something with each div individually
             // e.g., populate, modify, attach event listeners, etc.
@@ -174,5 +195,30 @@ export default class extends Controller {
 
         // Here you should remove all event listeners added in "connect()"
         // this.fooTarget.removeEventListener('click', this._fooBar)
+    }
+
+    async fetchFile() {
+        try {
+            const response = await fetch(this.templateUrlValue)
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status} – ${response.statusText}`)
+            }
+
+            // Decide how to read it (JSON vs. text)
+            const contentType = response.headers.get("content-type") || ""
+            let data
+            if (contentType.includes("application/json")) {
+                data = await response.json()
+            } else {
+                data = await response.text()
+            }
+            this.template = Twig.twig({data: data});
+
+        } catch (error) {
+            console.error("File fetch failed:", error)
+            if (this.hasOutputTarget) {
+                this.outputTarget.textContent = `Error loading file: ${error.message}`
+            }
+        }
     }
 }

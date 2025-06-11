@@ -1,0 +1,25 @@
+{% set official = hit %}
+{% set name = hit.name %}
+
+<h2>{{ hit['name.official_full'] }}
+    ({{ hit['currentParty'] }} - {{ official.state }})</h2>
+<h3>
+    {{ official.imageCount }} Image(s)
+</h3>
+<ul>
+
+    {{ hit.imageCodes|json_encode }}
+    {% for code, imageData in hit.imageCodes %}
+        {% for filter, size in imageData %}
+            {{ imageData|json_encode }}
+{#            <div class="item">#}
+{#                <a href="{{ thumb }}" target="_blank">#}
+{#                    <img src="{{ thumb }}" title="{{ thumb }}" alt="{{ thumb }}" class="img-{{ filter }}" />#}
+{#                </a>#}
+{#                <br />{{ filter }} {{ (size/1024)|number_format(1) }}kb#}
+{#            </div>#}
+        {% endfor %}
+    {% endfor %}
+
+
+</ul>
