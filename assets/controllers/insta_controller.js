@@ -121,6 +121,10 @@ export default class extends Controller {
             let x = search.addWidgets([
                 refinementList({
                     container: div,
+                    limit: 5,
+                    showMoreLimit: 10,
+                    showMore: true,
+                    searchable: true,
                     attribute: attribute
                     }
                 )]);
