@@ -21,7 +21,6 @@
             min-height: 100vh;
             justify-content: space-between;
             flex-direction: column;
-            border-right: 1px solid red;
         }
     </style>
 {% endblock %}
@@ -29,65 +28,83 @@
 {% block body %}
     {% set _sc = 'insta' %}
     <div
-        class="container py-4"
+        class="container-fluid py-4"
         {{ stimulus_controller(_sc, {
             serverUrl: server,
             serverApiKey: apiKey,
             indexName: indexName,
         }) }}
     >
-        <h1 class="mb-4">Insta</h1>
-
-            {# Sidebar: search + filters #}
-        <div class="mb-3" {{ stimulus_target(_sc, 'searchBox') }}></div>
-
-            <aside class="col-12 col-md-12 mb-4"
-                {{ stimulus_target(_sc, 'refinementList') }}
-            >
-                {% for attr in facets %}
-                    <div class="mb-4">
-                        <h5 class="mb-2">{{ attr|capitalize }}</h5>
-                        <div
-                            data-attribute="{{ attr }}"
-                        ></div>
+    <div class="w-100">
+        <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="card insta-side-panel">
+                <div class="p-3">
+                    <div class="d-flex align-items-center mb-4">
+                        <h4 class="card-title fs-5 flex-grow-1 fw-bold mb-0">Insta</h4>
+                        <a href="#!" class="flex-shrink-0">Reset All</a>
                     </div>
-                {% endfor %}
-            </aside>
-
-            {# Main: hits + pagination #}
-            <main>
-                <div {{ stimulus_target('insta', 'hits') }}></div>
-                <div class="mt-4" {{ stimulus_target('insta', 'pagination') }}></div>
-
-                {# Your hit template (we keep it verbatim) #}
-            </main>
-
-        <template {{ stimulus_target('insta', 'template') }}>
-            {% verbatim %}
-                <h3>
-                  <a href="{{ hit.repo }}?tab=readme-ov-file" target="_blank">
-                    {{ hit._highlightResult.name.value }}
-                  </a>
-                </h3>
-                #{{ hit.__hitIndex }} ({{ hit.__position }})
-                <code>{{ hit.marking }}</code>
-                <p>{{ hit._highlightResult.description.value }}</p>
-
-                {% for v in hit.symfonyVersions %}
-                  <span class="badge bg-primary me-1">{{ v }}</span>
-                {% endfor %}
-
-                {% for v in hit.phpVersions %}
-                  <span class="badge bg-secondary me-1">{{ v }}</span>
-                {% endfor %}
-
-                <div class="mt-2">
-                  <a href="{{ path('package_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
-                    Show details
-                  </a>
+                    <aside class="col-12 col-md-12 mb-4"
+                        {{ stimulus_target(_sc, 'refinementList') }}
+                    >
+                        {% for attr in facets %}
+                            <div class="mb-4">
+                                <h5 class="sub-title mb-2 fw-medium">{{ attr|capitalize }}</h5>
+                                <div
+                                    data-attribute="{{ attr }}"
+                                ></div>
+                            </div>
+                        {% endfor %}
+                    </aside>
                 </div>
-                {% endverbatim %}
-        </template>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="insta-list">
+                {# Sidebar: search + filters #}
+            <div class="mb-3" {{ stimulus_target(_sc, 'searchBox') }}></div>
+            {# Main: hits + pagination #}
+                <main>
+                    <div {{ stimulus_target('insta', 'hits') }}></div>
+                    <div class="mt-4" {{ stimulus_target('insta', 'pagination') }}></div>
+
+                    {# Your hit template (we keep it verbatim) #}
+                </main>
+
+            <template {{ stimulus_target('insta', 'template') }}>
+                {% verbatim %}
+                    <h4>
+                    <a href="{{ hit.repo }}?tab=readme-ov-file" target="_blank">
+                        {{ hit._highlightResult.name.value }}
+                    </a>
+                    </h4>
+                    #{{ hit.__hitIndex }} ({{ hit.__position }})
+                    <code>{{ hit.marking }}</code>
+                    <p>{{ hit._highlightResult.description.value }}</p>
+
+                    {% for v in hit.symfonyVersions %}
+                    <span class="badge bg-primary me-1">{{ v }}</span>
+                    {% endfor %}
+
+                    {% for v in hit.phpVersions %}
+                        <span class="badge bg-dark bg-opacity-10 text-muted me-1">{{ v }}</span>
+                        {% endfor %}
+
+                        <div class="mt-2">
+                        <a href="{{ path('package_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
+                            Show details
+                        </a>
+                        </div>
+                        {% endverbatim %}
+                </template>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+            
 
     </div>
 {% endblock %}

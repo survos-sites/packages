@@ -125,7 +125,12 @@ export default class extends Controller {
                     showMoreLimit: 10,
                     showMore: true,
                     searchable: true,
-                    attribute: attribute
+                    attribute: attribute,
+                    templates: {
+                        showMoreText(data, { html }) {
+                          return html`<span class="btn btn-sm btn-primary">${data.isShowingMore ? 'Show less' : 'Show more'}</span>`;
+                        },
+                      },
                     }
                 )]);
             console.log(`Found div with data-attribute="${attribute}"`, div);
