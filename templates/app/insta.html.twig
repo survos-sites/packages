@@ -32,7 +32,8 @@
         class="container py-4"
         {{ stimulus_controller(_sc, {
             serverUrl: server,
-            serverApiKey: apiKey
+            serverApiKey: apiKey,
+            indexName: indexName,
         }) }}
     >
         <h1 class="mb-4">Insta</h1>
@@ -43,7 +44,7 @@
             <aside class="col-12 col-md-3 mb-4"
                 {{ stimulus_target(_sc, 'refinementList') }}
             >
-                {% for attr in ['marking', 'phpVersions', 'symfonyVersions'] %}
+                {% for attr in facets %}
                     <div class="mb-4">
                         <h5 class="mb-2">{{ attr|capitalize }}</h5>
                         <div

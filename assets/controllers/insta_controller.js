@@ -37,6 +37,7 @@ export default class extends Controller {
     static values = {
         serverUrl: String,
         serverApiKey: String,
+        indexName: String
     }
 
     initialize() {
@@ -83,7 +84,7 @@ export default class extends Controller {
             }
         );
         const search = instantsearch({
-            indexName: 'packagesPackage',
+            indexName: this.indexNameValue,
             searchClient,
         })
 

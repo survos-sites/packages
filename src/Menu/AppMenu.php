@@ -52,6 +52,7 @@ final class AppMenu implements KnpMenuHelperInterface
         $options = $event->getOptions();
 
         $this->add($menu, 'app_homepage');
+        $this->add($menu, 'app_insta', ['indexName' => 'packagesPackage']);
         $this->add($menu, uri: 'https://github.com/survos-sites/packages', label: 'Github');
         $this->add($menu, uri: 'https://packagist.org/', label: 'Packagist.org');
 //        $this->add($menu, 'app_homepage', ['symfonyVersions'=>'7.0'], label: "Symfony 7");

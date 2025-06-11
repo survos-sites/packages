@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Meilisearch\Client;
 use Meilisearch\Meilisearch;
+use Survos\MeiliAdminBundle\Service\MeiliService;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -15,15 +16,20 @@ final class AppController extends AbstractController
     public function __construct(
         #[Autowire('%env(MEILI_SERVER)%')] private string $meiliServer,
         #[Autowire('%env(MEILI_SEARCH_KEY)%')] private string $apiKey,
+        private MeiliService $meiliService,
     ) {}
 
-    #[Route('/insta', name: 'app_insta')]
+    #[Route('/insta/{indexName}', name: 'app_insta')]
     #[Template('app/insta.html.twig')]
-    public function index(): Response|array
+    public function index(string $indexName = 'packagesPackage'): Response|array
     {
+        $index = $this->meiliService->getIndexEndpoint($indexName);
+        $settings = $index->getSettings();
         $params = [
             'server' => $this->meiliServer,
-            'apiKey' => $this->apiKey
+            'apiKey' => $this->apiKey,
+            'indexName' => $indexName,
+            'facets' => $settings['filterableAttributes'],
         ];
         return $params;
     }
