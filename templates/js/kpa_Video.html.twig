@@ -1,0 +1,9 @@
+{% set video = hit %}
+<img src="{{ hit.thumbnailUrl }}" />
+{#<object width="420" height="315"#}
+{#        data="https://www.youtube.com/embed/{{ video.youtubeId }}">#}
+{#</object>#}
+
+<h2>{{ hit.title }}</h2>
+Year: {{ hit.year }}
+<p>{{ hit._highlightResult.description.value }}</p>
