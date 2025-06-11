@@ -1,0 +1,25 @@
+
+{# example of search at
+
+https://collections.museumsvictoria.com.au/search?query=statue&view=list
+
+#}
+{% set obj = hit %}
+
+<img src="{{ hit.thumbnail }}" />
+<h4>
+    {{ hit.t.en.label }}
+</h4>
+<div>
+    <a href="{{ hit.citation }}" target="_blank">
+        {{ hit.credit|default(hit.citation) }}
+    </a>
+</div>
+<div>
+    {{ hit.t.en.description }}
+</div>
+
+{#{{ hit.pixie_key }}#}
+{#{{ hit.date_modified }}#}
+{{ hit.keywords|slice(0,2)|join(' ') }}
+{#{{ obj|keys|join(" ") }}#}

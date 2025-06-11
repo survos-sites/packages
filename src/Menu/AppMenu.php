@@ -56,6 +56,7 @@ final class AppMenu implements KnpMenuHelperInterface
         foreach (['packagesPackage', 'dtdemoOfficial',
 //                     'kpa_Song',
                      'kpa_Video',
+                     'm_px_victoria_obj',
                      'dummy_products'] as $indexName) {
             $this->add($sub, 'app_insta', ['indexName' => $indexName], label: $indexName);
 

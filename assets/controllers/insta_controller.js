@@ -156,7 +156,6 @@ export default class extends Controller {
                         if (hit.__position === 1)
                         {
                             console.log(hit);
-                            console.log(this.globals);
                         }
                         return this.template.render({
                             hit: hit,
