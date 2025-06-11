@@ -251,4 +251,10 @@ return [
         'version' => '3.0.4',
         'type' => 'css',
     ],
+    'stimulus-attributes' => [
+        'version' => '1.0.1',
+    ],
+    'escape-html' => [
+        'version' => '1.0.3',
+    ],
 ];

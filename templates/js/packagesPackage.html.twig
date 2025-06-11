@@ -1,15 +1,26 @@
 <h3>
     <a href="{{ hit.repo }}?tab=readme-ov-file" target="_blank">
-        {{ hit._highlightResult.name.value }}
+
+{#        {{ hit._highlightResult.name.value }}#}
+        <span class="fs-6">
+            {{ hit._highlightResult.vendor.value }}/
+        </span>
+        <span class="fs-3">
+            {{ hit._highlightResult.shortName.value }}
+        </span>
     </a>
 </h3>
-#{{ hit.__hitIndex }} ({{ hit.__position }})
 <code>{{ hit.marking }}</code>
+PHP: {{ hit.phpVersionString }}
 <p>{{ hit._highlightResult.description.value }}</p>
-@todo: popup? expander?
-<pre>
-{{ json_pretty(hit) }}
-</pre>
+{% set _sc_modal = 'modal' %}
+{% if globals.debug|default(false) %}
+#{{ hit.__hitIndex }} ({{ hit.__position }})
+<button
+    data-hit-id="{{ hit.id }}"
+    data-hit-json="{{ hit|json_encode|escape }}"
+    {{ stimulus_action(_sc_modal, 'debug') }}>{{ hit.id }}</button>
+{% endif %}
 
 {% for v in hit.symfonyVersions %}
     <span class="badge bg-primary me-1">{{ v }}</span>
@@ -20,7 +31,7 @@
                 {% endfor %}
 
 <div class="mt-2">
-    <a href="{{ path('package_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
+    <a target="_blank" href="{{ path('package_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
         Show details
     </a>
 </div>

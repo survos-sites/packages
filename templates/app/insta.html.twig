@@ -24,14 +24,20 @@
 
 {% block body %}
     {% set _sc = 'insta' %}
-    <div
-        class="container-fluid py-4"
-        {{ stimulus_controller(_sc, {
+    {% set _sc_modal = 'modal' %}
+    {#        {{ stimulus_controller(_sc_modal) }}#}
+    {% set globals = {
+        debug: app.request.get('debug', false)
+    } %}
+
+    <div {{ stimulus_controller(_sc, {
             serverUrl: server,
             serverApiKey: apiKey,
             indexName: indexName,
+            globalsJson: globals|json_encode,
             templateUrl: path('app_template', {indexName: indexName})
         }) }}
+        class="container-fluid py-4"
     >
         <div class="w-100">
             <div class="row g-4">
@@ -62,13 +68,21 @@
                         {# Sidebar: search + filters #}
                         <div class="mb-3" {{ stimulus_target(_sc, 'searchBox') }}></div>
                         {# Main: hits + pagination #}
-                        <main>
-                            <div {{ stimulus_target('insta', 'hits') }}></div>
-                            <div class="mt-4" {{ stimulus_target('insta', 'pagination') }}></div>
+                        <main
+                            {{ stimulus_controller(_sc_modal, {
+                                indexName: indexName,
+                                globalsJson: globals|json_encode,
+                            }) }}
+                        >
+                            <div {{ stimulus_target(_sc, 'hits') }}></div>
+                            <div class="mt-4" {{ stimulus_target(_sc, 'pagination') }}></div>
 
-                            {# Your hit template (we keep it verbatim) #}
+                            <div {{ stimulus_target(_sc_modal, 'modal') }}
+                                class="modal fade"
+                            >
+                                {{ include('_modal.html.twig') }}
+                            </div>
                         </main>
-
                     </div>
                 </div>
             </div>

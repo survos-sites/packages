@@ -8,11 +8,13 @@ import Twig from 'twig';
 import instantsearch from 'instantsearch.js'
 import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
 import {hits, pagination, refinementList, searchBox} from 'instantsearch.js/es/widgets'
+import {stimulus_action, stimulus_controller, stimulus_target,} from "stimulus-attributes";
 
 import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 // this import makes the pretty-json really ugly
 // import '@meilisearch/instant-meilisearch/templates/basic_search.css';
 import 'instantsearch.css/themes/algolia.min.css';
+
 Routing.setData(RoutingData);
 
 Twig.extend(function (Twig) {
@@ -34,6 +36,31 @@ Twig.extend(function (Twig) {
         let path = Routing.generate(route, routeParams);
         return path;
     });
+
+    Twig._function.extend(
+        "stimulus_controller",
+        (
+            controllerName,
+            controllerValues = {},
+            controllerClasses = {},
+            controllerOutlets = ({} = {})
+        ) =>
+            stimulus_controller(
+                controllerName,
+                controllerValues,
+                controllerClasses,
+                controllerOutlets
+            )
+    );
+    Twig._function.extend("stimulus_target", (controllerName, r = null) =>
+        stimulus_target(controllerName, r)
+    );
+    Twig._function.extend(
+        "stimulus_action",
+        (controllerName, r, n = null, a = {}) =>
+            stimulus_action(controllerName, r, n, a)
+    );
+
 });
 
 /*
@@ -49,6 +76,10 @@ export default class extends Controller {
         serverApiKey: String,
         indexName: String,
         templateUrl: String,
+        globalsJson: {
+                type: String,
+                default: '{}'
+            },
     }
 
     initialize() {
@@ -57,6 +88,8 @@ export default class extends Controller {
         // Here you can initialize variables, create scoped callables for event
         // listeners, instantiate external libraries, etc.
         // this._fooBar = this.fooBar.bind(this)
+        this.globals = JSON.parse(this.globalsJsonValue);
+        console.log(this.globals);
 
 
     }
@@ -123,9 +156,11 @@ export default class extends Controller {
                         if (hit.__position === 1)
                         {
                             console.log(hit);
+                            console.log(this.globals);
                         }
                         return this.template.render({
-                            hit: hit
+                            hit: hit,
+                            globals: this.globals
                         });
                     },
                 },
