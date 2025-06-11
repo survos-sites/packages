@@ -9,6 +9,7 @@ import instantsearch from 'instantsearch.js'
 import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
 import {hits, pagination, refinementList, searchBox} from 'instantsearch.js/es/widgets'
 import {stimulus_action, stimulus_controller, stimulus_target,} from "stimulus-attributes";
+import { Meilisearch } from "meilisearch";
 
 import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 // this import makes the pretty-json really ugly
@@ -106,6 +107,7 @@ export default class extends Controller {
 
         console.log(this.serverUrlValue);
         console.log(this.templateUrlValue);
+        this._self = this;
         this.fetchFile().then(() => {
                 try {
                     this.search();
@@ -117,7 +119,7 @@ export default class extends Controller {
 
     }
 
-    search() {
+    async search() {
         const { searchClient, setMeiliSearchParams } = instantMeiliSearch(
         // const {searchClient} = instantMeiliSearch(
             this.serverUrlValue,
@@ -134,10 +136,28 @@ export default class extends Controller {
             showRankingScore: true,
             showRankingScoreDetails: true
         });
+
         const search = instantsearch({
             indexName: this.indexNameValue,
             searchClient,
         })
+
+
+        // An index is where the documents are stored.
+        // let client = searchClient.index;
+        this.rawMeiliSearch = new Meilisearch( {
+                host: this.serverUrlValue,
+                apiKey: this.serverApiKeyValue
+            });
+
+
+        // searchClient.search = async function(query, params) {
+        //     console.log(query);
+        //     console.log(params);
+        //     return await searchClient.search(query, params);
+        // }
+        // let results = s('doll');
+        // console.log(results);
 
 
         search.addWidgets([
@@ -181,6 +201,27 @@ export default class extends Controller {
                     showMore: true,
                     searchable: true,
                     attribute: attribute,
+                    transformItems(items, { results }) {
+                        console.log(items, attribute);
+                        let related = this.indexNameValue.replace(/_obj$/, "_type");
+                        let index = this.rawMeiliSearch.index(related);
+
+                        let yy = index.search('');
+                        yy.then(x => {
+                            console.log(x);
+                        })
+
+                        // The 'results' parameter contains the full results data
+                        const x = items.map(item => {
+                            console.log(item);
+                            return {
+                                ...item,
+                                // highlighted: 'x'
+                            };
+                        });
+                        console.error(x);
+                        return x;
+                    },
                     templates: {
                         showMoreText(data, { html }) {
                           return html`<span class="btn btn-sm btn-primary">${data.isShowingMore ? 'Show less' : 'Show more'}</span>`;
