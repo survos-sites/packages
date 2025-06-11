@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2dd0dd9d6c59955758e0f4dc53fc05a6",
+    "content-hash": "baaa75942c6ea84dcd6f20e03ed7677e",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -4122,16 +4122,16 @@
         },
         {
             "name": "sentry/sentry",
-            "version": "4.12.0",
+            "version": "4.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "0173702ffcbe36ce7638f07f090271294866a7a0"
+                "reference": "b54a0eaedfc27fc2da587e64455a66cd29cd3c4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/0173702ffcbe36ce7638f07f090271294866a7a0",
-                "reference": "0173702ffcbe36ce7638f07f090271294866a7a0",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/b54a0eaedfc27fc2da587e64455a66cd29cd3c4d",
+                "reference": "b54a0eaedfc27fc2da587e64455a66cd29cd3c4d",
                 "shasum": ""
             },
             "require": {
@@ -4195,7 +4195,7 @@
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-php/issues",
-                "source": "https://github.com/getsentry/sentry-php/tree/4.12.0"
+                "source": "https://github.com/getsentry/sentry-php/tree/4.13.0"
             },
             "funding": [
                 {
@@ -4207,7 +4207,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-06-07T08:37:56+00:00"
+            "time": "2025-06-10T15:39:27+00:00"
         },
         {
             "name": "sentry/sentry-symfony",
@@ -5055,18 +5055,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosMeiliAdminBundle.git",
-                "reference": "50f7e97ac9a521b394096d6f201c7f57380612ac"
+                "reference": "5e3d6fe98988051ee83716738087031b13e6a7a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosMeiliAdminBundle/zipball/50f7e97ac9a521b394096d6f201c7f57380612ac",
-                "reference": "50f7e97ac9a521b394096d6f201c7f57380612ac",
+                "url": "https://api.github.com/repos/survos/SurvosMeiliAdminBundle/zipball/5e3d6fe98988051ee83716738087031b13e6a7a2",
+                "reference": "5e3d6fe98988051ee83716738087031b13e6a7a2",
                 "shasum": ""
             },
             "require": {
+                "meilisearch/meilisearch-php": "^1.14",
                 "php": "^8.3",
                 "survos/installer": "^1.5 || ^2.0",
                 "symfony/config": "^6.4 || ^7.1",
+                "symfony/console": "^7.3",
                 "symfony/dependency-injection": "^6.4 || ^7.1",
                 "symfony/http-kernel": "^6.4 || ^7.1",
                 "symfony/property-access": "^7.2",
@@ -5074,11 +5076,13 @@
             },
             "require-dev": {
                 "phpstan/phpstan": "^2.0",
-                "rector/rector": "dev-main",
+                "rector/rector": "^2.0",
                 "symfony/browser-kit": "^6.4 || ^7.1",
                 "symfony/framework-bundle": "^6.4 || ^7.1",
+                "symfony/http-client": "^7.2",
                 "symfony/phpunit-bridge": "^6.4 || ^7.1",
                 "symfony/twig-bundle": "^6.4 || ^7.1",
+                "symfony/ux-chartjs": "^2.23",
                 "symfony/var-dumper": "^6.4 || ^7.1"
             },
             "default-branch": true,
@@ -5092,13 +5096,13 @@
             "license": [
                 "MIT"
             ],
+            "description": "Utilies for managing a meilisearch server",
             "keywords": [
-                "symfony-ux",
-                "symfony6"
+                "symfony-ux"
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosMeiliAdminBundle/issues",
-                "source": "https://github.com/survos/SurvosMeiliAdminBundle/tree/1.5.529"
+                "source": "https://github.com/survos/SurvosMeiliAdminBundle/tree/main"
             },
             "funding": [
                 {
@@ -5106,7 +5110,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-06T23:04:58+00:00"
+            "time": "2025-06-11T10:00:46+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
@@ -15586,7 +15590,8 @@
     "platform": {
         "php": ">=8.3",
         "ext-ctype": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-intl": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
