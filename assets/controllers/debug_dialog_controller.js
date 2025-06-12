@@ -83,7 +83,8 @@ export default class extends Dialog {
 // → { b: 2, c: { e: 5 } }
                 const html = prettyPrintJson.toHtml(clean);
                 // this.modalTarget.innerHTML = '<pre>' + html + '</pre>';
-                this.contentTarget.innerHTML = '<pre>' + html + '</pre>';
+                this.contentTarget.innerHTML = '<pre class="json-container">' + html + '</pre>';
+                // this.contentTarget.innerHTML = html;
                 // this.openModal();
                 super.open();
             }
