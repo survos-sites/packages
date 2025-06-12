@@ -76,7 +76,12 @@ export default class extends Dialog {
 
         this.index.getDocument(this.idValue).then(
             hit => {
-                const html = prettyPrintJson.toHtml(hit);
+                // const obj = { a: null, b: 2, c: { d: null, e: 5 } };
+
+                const clean = this.cleanObject(hit);
+                console.log(clean);
+// → { b: 2, c: { e: 5 } }
+                const html = prettyPrintJson.toHtml(clean);
                 // this.modalTarget.innerHTML = '<pre>' + html + '</pre>';
                 this.contentTarget.innerHTML = '<pre>' + html + '</pre>';
                 // this.openModal();
@@ -95,4 +100,27 @@ export default class extends Dialog {
     backdropClose() {
         super.backdropClose();
     }
+
+    cleanObject(obj) {
+        Object.entries(obj).forEach(([key, value]) => {
+            if (value && typeof value === 'object') {
+                // Recurse into objects and arrays
+                this.cleanObject(value);
+            }
+
+            const isNull = value === null;
+            const isEmptyArray = Array.isArray(value) && value.length === 0;
+            const isEmptyObject =
+                value &&
+                typeof value === 'object' &&
+                !Array.isArray(value) &&
+                Object.keys(value).length === 0;
+
+            if (isNull || isEmptyArray || isEmptyObject) {
+                delete obj[key];
+            }
+        });
+        return obj;
+    }
+
 }
