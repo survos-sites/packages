@@ -71,12 +71,12 @@ export default class extends Dialog {
 
     // Function to override on open.
     open() {
-        this.titleTarget.innerHTML = 'x';
         // this.contentTarget.innerHTML = this.idValue;
 
         this.index.getDocument(this.idValue).then(
             hit => {
                 // const obj = { a: null, b: 2, c: { d: null, e: 5 } };
+                // this.titleTarget.innerHTML = hit.name; // @todo: generalize!
 
                 const clean = this.cleanObject(hit);
                 console.log(clean);

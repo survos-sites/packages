@@ -162,12 +162,15 @@ final class BundleWorkflow implements BundleWorkflowInterface
             return; // @todo: not_found state/
             throw $exception;
         }
+        // slower, but more data
+        $packagistPackage = $this->packagistClient->get($packageName);
 
         /**
          * @var string           $packageName
-         * @var PackagistPackage $package
+         * @var PackagistPackage $packagistPackage
          */
-        foreach ($composer as $packageName => $packagistPackage) {
+
+//            dump($packageName, $packagistPackage);
             //            dd($packageName, $package);
             /** @var PackagistPackage\Version $version */
             foreach ($packagistPackage->getVersions() as $versionCode => $version) {
@@ -180,13 +183,13 @@ final class BundleWorkflow implements BundleWorkflowInterface
                 //                assert($package->getDescription() == $version->getDescription(), $package->getDescription() . '<>' . $version->getDescription());
                 $json = $this->serializer->serialize($version, 'json');
                 $package
+                    ->setDownloads($packagistPackage->getDownloads()->getTotal())
                     ->setStars($packagistPackage->getFavers())
                     ->setVersion($versionCode)
                     ->setDescription($version->getDescription())
                     ->setData(json_decode($json, true));
                 break; // we're getting the first one only, most recent.  hackish
             }
-        }
     }
 
     #[AsMessageHandler]

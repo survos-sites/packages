@@ -140,6 +140,9 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     #[Groups('package.read')]
     private ?string $sourceUrl = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $downloads = null;
+
     public function __construct()
     {
         $this->marking = self::PLACE_NEW;
@@ -463,6 +466,13 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public function setSourceUrl(string $sourceUrl): static
     {
         $this->sourceUrl = $sourceUrl;
+
+        return $this;
+    }
+
+    public function setDownloads(?int $downloads): static
+    {
+        $this->downloads = $downloads;
 
         return $this;
     }

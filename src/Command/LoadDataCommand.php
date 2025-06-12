@@ -62,7 +62,7 @@ final class LoadDataCommand
         #[Option(description: 'limit (for testing)')] int $limit = 0,
         #[Option(description: 'batch size (for flush)')] int $batch = 500,
         #[Option(description: 'filter by marking')] ?string $marking = null,
-        #[Option(description: 'filter by vendor')] ?string $vendor = null,
+        #[Option(name: 'vendor', description: 'filter by vendor')] ?string $vendorFilter = null,
         #[Option(description: 'filter by short name')] ?string $name = null,
 //        #[Option(description: 'Dispatch a load transition for new packages')] ?bool $dispatch = null,
     ): int {
@@ -90,6 +90,7 @@ final class LoadDataCommand
             $packages = $this->cache->get('json', function (CacheItem $cacheItem) {
                 $cacheItem->expiresAfter(3600);
                 $json = file_get_contents('https://packagist.org/packages/list.json?type=symfony-bundle&fields[]=abandoned&fields[]=type&fields[]=repository');
+//                file_put_contents('packages.json', $json);
                 return json_decode($json)->packages;
             });
 
@@ -103,7 +104,9 @@ final class LoadDataCommand
                 }
 
                 [$vendor, $shortName] = explode('/', $packageName);
-
+                if ($vendorFilter && ($vendor !== $vendorFilter)) {
+                    continue;
+                }
                 if (!$survosPackage = $this->packageRepository->findOneBy(['name' => $packageName])) {
                     $survosPackage = new SurvosPackage();
                     $survosPackage

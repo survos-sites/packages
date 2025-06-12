@@ -119,7 +119,7 @@
             "@auto-scripts"
         ],
         "setup": [
-            "php -d memory_limit=4048M bin/console app:load-data --setup"
+            "php -d memory_limit=4048M bin/console app:load-data"
         ],
         "fetch": [
             "php -d memory_limit=4048M bin/console app:load-data --fetch --refresh"

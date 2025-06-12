@@ -25,12 +25,12 @@ PHP: {{ hit.phpVersionString }}
     {{ stimulus_action(_sc, 'backdropClose') }}
 >
 
-    <div {{ stimulus_target(_sc, 'title') }}>
-        title
-    </div>
 
     <dialog {{ stimulus_target(_sc, 'dialog')}}
         data-dialog-target="dialog">
+        <h3 {{ stimulus_target(_sc, 'title') }}>
+            title
+        </h3>
 
         <div {{ stimulus_target(_sc, 'content')}}>
             content
@@ -44,7 +44,8 @@ PHP: {{ hit.phpVersionString }}
     <button type="button"
             {{ stimulus_action(_sc, 'open') }}
     >
-        Open {{ hit.id }}</button>
+        {{ icons.json|raw }}
+         {{ hit.id }}</button>
 </div>
 
 
@@ -54,8 +55,13 @@ PHP: {{ hit.phpVersionString }}
 <button
     data-hit-id="{{ hit.id }}"
     data-hit-json="{{ hit|json_encode|escape }}"
-    {{ stimulus_action(_sc_modal, 'debug') }}>{{ hit.id }}</button>
+    {{ stimulus_action(_sc_modal, 'debug') }}>
+
+    {{ hit.id }}
+</button>
+
 {% endif %}
+
 
 {% for v in hit.symfonyVersions %}
     <span class="badge bg-primary me-1">{{ v }}</span>

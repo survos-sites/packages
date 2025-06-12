@@ -34,12 +34,17 @@
         indexName: indexName,
         debug: app.request.get('debug', false)
     } %}
+    {% set icons = {
+        json: ux_icon('si:json-duotone'),
+        bug: ux_icon('tabler:bug'),
+    } %}
 
     <div {{ stimulus_controller(_sc, {
             serverUrl: server,
             serverApiKey: apiKey,
             indexName: indexName,
             globalsJson: globals|json_encode,
+            iconsJson: icons|json_encode,
             templateUrl: path('app_template', {indexName: indexName})
         }) }}
         class="container-fluid py-4"

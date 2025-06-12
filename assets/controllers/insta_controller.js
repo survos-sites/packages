@@ -77,10 +77,8 @@ export default class extends Controller {
         serverApiKey: String,
         indexName: String,
         templateUrl: String,
-        globalsJson: {
-                type: String,
-                default: '{}'
-            },
+        globalsJson: {type: String, default: '{}'},
+        iconsJson: {type: String, default: '{}'},
     }
 
     initialize() {
@@ -90,7 +88,8 @@ export default class extends Controller {
         // listeners, instantiate external libraries, etc.
         // this._fooBar = this.fooBar.bind(this)
         this.globals = JSON.parse(this.globalsJsonValue);
-        console.log(this.globals);
+        this.icons = JSON.parse(this.iconsJsonValue);
+        console.log(this.icons);
 
 
     }
@@ -181,6 +180,7 @@ export default class extends Controller {
                         }
                         return this.template.render({
                             hit: hit,
+                            icons: this.icons,
                             globals: this.globals
                         });
                     },
