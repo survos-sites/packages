@@ -203,7 +203,7 @@ export default class extends Controller {
                     showMore: true,
                     searchable: true,
                     attribute: attribute,
-                    transformItems: (items, { results }) => {
+                    transformItemsXX: (items, { results }) => {
                         console.log(items, attribute);
                         let related = this.indexNameValue.replace(/obj$/, attribute);
                         // let related = 'm_px_victoria_type';
@@ -211,7 +211,7 @@ export default class extends Controller {
                         // let index = this.searchClient.index(related);
                         let yy = index.search('');
                         yy.then(x => {
-                            console.log(attribute, related, x);
+                            // console.log(attribute, related, x);
                         })
 
                         // The 'results' parameter contains the full results data

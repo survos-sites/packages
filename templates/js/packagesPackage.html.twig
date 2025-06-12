@@ -14,9 +14,11 @@
 PHP: {{ hit.phpVersionString }}
 <p>{{ hit._highlightResult.description.value }}</p>
 
-{{ globals.indexName }}
 {% set _sc = 'debug_dialog' %}
+{# this could also be an action if the controller were outside the loop #}
 <div {{ stimulus_controller(_sc, {
+    serverUrl: globals.serverUrl,
+    serverApiKey: globals.serverApiKey,
     indexName: globals.indexName,
     id: hit.id
 }) }}

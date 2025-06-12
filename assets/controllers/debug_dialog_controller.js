@@ -15,6 +15,9 @@ import { Meilisearch } from "meilisearch";
 export default class extends Dialog {
     static targets = ['content', 'title']
     static values = {
+        serverUrl: String,
+        serverApiKey: String,
+
         indexName: String,
         id: String,
         data: {
@@ -26,15 +29,19 @@ export default class extends Dialog {
 
     connect() {
         super.connect()
-        console.log("Do what you want here.", this.dataValue);
+        // console.log(this.serverUrlValue, this.serverApiKeyValue);
         // this.data = JSON.parse(this.dataValue);
         // console.log(this.data);
-
-        const client = new Meilisearch({
-            host: "http://127.0.0.1:7700",
-            apiKey: "masterKey",
-        });
-        this.index = client.index(this.indexNameValue);
+        try {
+            const client = new Meilisearch({
+                host: this.serverUrlValue,
+                apiKey: this.serverApiKeyValue,
+            });
+            this.index = client.index(this.indexNameValue);
+        } catch (e) {
+            console.error(this.serverUrlValue, this.serverApiKeyValue);
+            console.error(e);
+        }
 
     }
 

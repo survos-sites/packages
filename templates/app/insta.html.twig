@@ -29,6 +29,8 @@
     {% set _sc_modal = 'modal' %}
     {#        {{ stimulus_controller(_sc_modal) }}#}
     {% set globals = {
+        serverUrl: server,
+        serverApiKey: apiKey,
         indexName: indexName,
         debug: app.request.get('debug', false)
     } %}
