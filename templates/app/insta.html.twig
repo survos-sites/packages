@@ -23,10 +23,13 @@
 {% endblock %}
 
 {% block body %}
+
+
     {% set _sc = 'insta' %}
     {% set _sc_modal = 'modal' %}
     {#        {{ stimulus_controller(_sc_modal) }}#}
     {% set globals = {
+        indexName: indexName,
         debug: app.request.get('debug', false)
     } %}
 

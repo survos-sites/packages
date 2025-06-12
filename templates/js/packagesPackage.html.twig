@@ -13,6 +13,39 @@
 <code>{{ hit.marking }}</code>
 PHP: {{ hit.phpVersionString }}
 <p>{{ hit._highlightResult.description.value }}</p>
+
+{{ globals.indexName }}
+{% set _sc = 'debug_dialog' %}
+<div {{ stimulus_controller(_sc, {
+    indexName: globals.indexName,
+    id: hit.id
+}) }}
+    {{ stimulus_action(_sc, 'backdropClose') }}
+>
+
+    <div {{ stimulus_target(_sc, 'title') }}>
+        title
+    </div>
+
+    <dialog {{ stimulus_target(_sc, 'dialog')}}
+        data-dialog-target="dialog">
+
+        <div {{ stimulus_target(_sc, 'content')}}>
+            content
+        </div>
+        <button type="button"
+                {{ stimulus_action(_sc, 'close') }}
+                autofocus>Cancel</button>
+    </dialog>
+
+
+    <button type="button"
+            {{ stimulus_action(_sc, 'open') }}
+    >
+        Open {{ hit.id }}</button>
+</div>
+
+
 {% set _sc_modal = 'modal' %}
 {% if globals.debug|default(false) %}
 #{{ hit.__hitIndex }} ({{ hit.__position }})

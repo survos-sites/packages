@@ -201,7 +201,7 @@ return [
         'version' => '0.26.0',
     ],
     'meilisearch' => [
-        'version' => '0.50.0',
+        'version' => '0.51.0',
     ],
     'instantsearch.js/es/widgets' => [
         'version' => '4.78.3',
@@ -256,5 +256,8 @@ return [
     ],
     'escape-html' => [
         'version' => '1.0.3',
+    ],
+    '@stimulus-components/dialog' => [
+        'version' => '1.0.1',
     ],
 ];
