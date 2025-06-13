@@ -33,15 +33,41 @@ final class AppController extends AbstractController
     #[Template('app/insta.html.twig')]
     public function index(string $indexName = 'packagesPackage'): Response|array
     {
+        $locale = 'en'; // @todo
         $index = $this->meiliService->getIndexEndpoint($indexName);
         $settings = $index->getSettings();
+        $facets = $settings['filterableAttributes'];
+        // this is specific to our way of handling related, translated messages
+        $related = $this->getRelated($facets, $indexName, $locale);
         $params = [
             'server' => $this->meiliServer,
             'apiKey' => $this->apiKey,
             'indexName' => $indexName,
-            'facets' => $settings['filterableAttributes'],
+            'facets' => $facets,
+            'related' => $related, // the facet lookups
         ];
         return $params;
+    }
+
+    private function getRelated(array $facets, string $indexName, string $locale): array
+    {
+        $lookups = [];
+        if (str_ends_with($indexName, '_obj'))
+        {
+            foreach ($facets as $facet) {
+                if (!in_array($facet, ['type','cla','cat'])) {
+                    continue;
+                }
+                $related = str_replace('_obj', '_' . $facet, $indexName);
+                $index = $this->meiliService->getIndexEndpoint($related);
+                $docs = $index->getDocuments();
+                foreach ($docs as $doc) {
+                    $lookups[$facet][$doc['id']] = $doc['t'][$locale]['label'];
+                }
+            }
+        }
+        return $lookups;
+
     }
 
     #[Route('/detail/{id}', name: 'app_detail')]

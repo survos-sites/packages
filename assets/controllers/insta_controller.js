@@ -9,10 +9,7 @@ import instantsearch from 'instantsearch.js'
 import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
 import {hits, pagination, refinementList, searchBox} from 'instantsearch.js/es/widgets'
 import {stimulus_action, stimulus_controller, stimulus_target,} from "stimulus-attributes";
-import { Meilisearch } from "meilisearch";
-import $clamp from 'clamp-js';
-
-
+import {Meilisearch} from "meilisearch";
 
 import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 // this import makes the pretty-json really ugly
@@ -27,14 +24,7 @@ Twig.extend(function (Twig) {
     // });
 
     Twig._function.extend("json_pretty", (data, options={}) => {
-        const html = prettyPrintJson.toHtml(data, options);
-        return html;
-    })
-
-    Twig._function.extend("clamp", (data, options={}) => {
-        const html = $clamp(data, { clamp: 3 });
-        console.log(data, html);
-        return html;
+        return prettyPrintJson.toHtml(data, options);
     })
 
     Twig._function.extend("path", (route, routeParams = {}) => {
@@ -43,8 +33,7 @@ Twig.extend(function (Twig) {
             // if(routeParams.hasOwnProperty('_keys')){
             delete routeParams._keys; // seems to be added by twigjs
         }
-        let path = Routing.generate(route, routeParams);
-        return path;
+        return Routing.generate(route, routeParams);
     });
 
     Twig._function.extend(
@@ -204,6 +193,8 @@ export default class extends Controller {
 
         attributeDivs.forEach(div => {
             const attribute = div.getAttribute("data-attribute")
+            const lookup = JSON.parse(div.getAttribute('data-lookup'));
+            console.warn(lookup);
             let x = search.addWidgets([
                 refinementList({
                     container: div,
@@ -212,27 +203,28 @@ export default class extends Controller {
                     showMore: true,
                     searchable: true,
                     attribute: attribute,
-                    transformItemsXX: (items, { results }) => {
-                        console.log(items, attribute);
-                        let related = this.indexNameValue.replace(/obj$/, attribute);
+                    transformItems: (items, { results }) => {
+                        if (Object.keys(lookup).length === 0) {
+                            return items;
+                        }
+                        // let related = this.indexNameValue.replace(/obj$/, attribute);
                         // let related = 'm_px_victoria_type';
-                        let index = this.rawMeiliSearch.index(related);
+                        // let index = this.rawMeiliSearch.index(related);
                         // let index = this.searchClient.index(related);
-                        let yy = index.search('');
-                        yy.then(x => {
-                            // console.log(attribute, related, x);
-                        })
+                        // let yy = index.search('');
+                        // yy.then(x => {
+                        //     // console.log(attribute, related, x);
+                        // })
 
                         // The 'results' parameter contains the full results data
-                        const x = items.map(item => {
-                            console.log(item);
+                        return items.map(item => {
+                            item.label = lookup[item.value];
+                            // item.value = lookup[item.value];
                             return {
                                 ...item,
-                                // highlighted: 'x'
+                                highlighted: lookup[item.value]
                             };
                         });
-                        console.error(x);
-                        return x;
                     },
                     templates: {
                         showMoreText(data, { html }) {

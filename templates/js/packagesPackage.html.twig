@@ -55,8 +55,7 @@ PHP: {{ hit.phpVersionString }}
 <button
     data-hit-id="{{ hit.id }}"
     data-hit-json="{{ hit|json_encode|escape }}"
-    {{ stimulus_action(_sc_modal, 'debug') }}>
-
+    {{ stimulus_action(_sc, 'debug') }}>
     {{ hit.id }}
 </button>
 
