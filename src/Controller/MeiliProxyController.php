@@ -46,11 +46,11 @@ class MeiliProxyController
 
         // rebuild headers
         $headers = $request->headers->all();
-        $headers = [];
+//        $headers = [];
 //        dump($headers);
         $headers['Authorization'] = $auth;
 //        dd($headers, $uri);
-        $headers['Accept-Encoding'] = 'identity';
+//        $headers['Accept-Encoding'] = 'identity';
 
         if ($method === 'GET') {
 //            return $this->fetchAndCache($uri, $request, $auth, $headers);
@@ -61,10 +61,10 @@ class MeiliProxyController
         $response = $this->client->request($method, $uri, [
             'body'    => $request->getContent(),
             'query'   => $request->query->all(),
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->defaultApiKey,
-            ],
-//            'headers' => $headers,
+//            'headers' => [
+//                'Authorization' => 'Bearer '.$this->defaultApiKey,
+//            ],
+            'headers' => $headers,
         ]);
 //        dd($headers, $response->getStatusCode(), $method, $uri);
 //        dd($response, $response->getContent());
@@ -85,12 +85,12 @@ class MeiliProxyController
         });
         $stream->headers->set('Content-Type', $contentType);
 
-//        if (!empty($meiliHeaders['content-encoding'][0])) {
-//            $stream->headers->set(
-//                'Content-Encoding',
-//                $meiliHeaders['content-encoding'][0]
-//            );
-//        }
+        if (!empty($meiliHeaders['content-encoding'][0])) {
+            $stream->headers->set(
+                'Content-Encoding',
+                $meiliHeaders['content-encoding'][0]
+            );
+        }
 
         if (!empty($meiliHeaders['x-meilisearch-request-id'][0])) {
             $stream->headers->set(
