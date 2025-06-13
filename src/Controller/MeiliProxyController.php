@@ -36,18 +36,26 @@ class MeiliProxyController
     public function proxy(Request $request, string $path='/'): StreamedResponse
     {
         $method = $request->getMethod();
+        if (str_starts_with($path, 'facet-search')) {
+            // make a call to search the related table labels!
+            // since meili doesn't do partial word searches, we have to go to the
+            // database for this, but return the same formatted response :-(
+            // OR we get it from the javascript, since we have the map already.
+
+//            $method = 'POST';
+        }
         // this is the actual server, e.g. ms.survos.com
         $uri    = "{$this->meiliBaseUri}/{$path}";
 
         // prefer incoming Auth header, else fall back
         $incoming = $request->headers->get('Authorization');
-        $auth     = $incoming ?: "Bearer {$this->defaultApiKey}";
+//        $auth     = $incoming ?: "Bearer {$this->defaultApiKey}";
         $auth     = "Bearer {$this->defaultApiKey}";
 
         // rebuild headers
         $headers = $request->headers->all();
+        unset($headers['host']);
 //        $headers = [];
-//        dump($headers);
         $headers['Authorization'] = $auth;
 //        dd($headers, $uri);
 //        $headers['Accept-Encoding'] = 'identity';
@@ -62,10 +70,16 @@ class MeiliProxyController
             'body'    => $request->getContent(),
             'query'   => $request->query->all(),
 //            'headers' => [
-//                'Authorization' => 'Bearer '.$this->defaultApiKey,
+//                'Authorization' => 'Bearer '.$auth
 //            ],
             'headers' => $headers,
         ]);
+        if ($response->getStatusCode() == 200) {
+//            dump($response->getContent());
+        } else {
+            dd($headers, $response, $response->getStatusCode());
+        }
+        $this->logger->error(json_encode($headers['Authorization']));
 //        dd($headers, $response->getStatusCode(), $method, $uri);
 //        dd($response, $response->getContent());
 

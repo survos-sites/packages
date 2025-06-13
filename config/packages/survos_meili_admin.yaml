@@ -1,3 +1,15 @@
+# Default configuration for extension with alias: "survos_meili_admin"
 survos_meili_admin:
-  core_name: 'table'
+
+    # a key when diverse types share an index, e.g. table or core
+    core_name:            core
+    enabled:              true
+#    meiliHost:            '%env(MEILI_SERVER)%'
+    meiliKey:             '%env(MEILI_API_KEY)%'
+    meiliPrefix:          '%env(MEILI_PREFIX)%'
+    passLocale:           false
+
+
+    # https://www.meilisearch.com/docs/reference/api/settings#faceting-object
+    maxValuesPerFacet:    1000
 

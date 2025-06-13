@@ -4,10 +4,10 @@
     "name": "survos-sites/packages",
     "description": "Symfony application showing Symfony bundles",
     "keywords": ["symfony","pwa","datatables"],
-    "minimum-stability": "RC",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.3",
+        "php": "^8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
@@ -30,7 +30,7 @@
         "openconext/monitor-bundle": "^4.1",
         "phpdocumentor/reflection-docblock": "^5.3",
         "sentry/sentry-symfony": "^5.0.1",
-        "survos/api-grid-bundle": "dev-main",
+        "survos/api-grid-bundle": "*",
         "survos/auth-bundle": "^1.5",
         "survos/bootstrap-bundle": "^1.5",
         "survos/command-bundle": "^1.5",
@@ -138,8 +138,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": true,
-            "require": "^7.3"
+            "allow-contrib": true
         }
     },
     "require-dev": {

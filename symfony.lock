@@ -199,7 +199,7 @@
         ]
     },
     "survos/api-grid-bundle": {
-        "version": "1.5.156"
+        "version": "1.5.600"
     },
     "survos/auth-bundle": {
         "version": "1.5.255"
@@ -237,7 +237,7 @@
         ]
     },
     "survos/inspection-bundle": {
-        "version": "1.5.156"
+        "version": "1.5.529"
     },
     "survos/js-twig-bundle": {
         "version": "1.6.0"

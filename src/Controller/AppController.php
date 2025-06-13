@@ -31,7 +31,7 @@ final class AppController extends AbstractController
         return new Response($template);
     }
 
-    #[Route('/insta/{indexName}', name: 'app_insta')]
+    #[Route('/{indexName}', name: 'app_insta')]
     #[Template('app/insta.html.twig')]
     public function index(string $indexName = 'packagesPackage'): Response|array
     {
@@ -74,14 +74,4 @@ final class AppController extends AbstractController
 
     }
 
-    #[Route('/detail/{id}', name: 'app_detail')]
-    #[Template('app/detail.html.twig')]
-    public function details(string $id): Response|array
-    {
-        $client = new Client($this->meiliServer, $this->apiKey);
-
-        $index = $client->getIndex('movies');
-        return ['hit' => $index->getDocument($id)];
-
-    }
 }

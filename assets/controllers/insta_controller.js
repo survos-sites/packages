@@ -195,6 +195,7 @@ export default class extends Controller {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
             console.warn(lookup);
+
             let x = search.addWidgets([
                 refinementList({
                     container: div,
