@@ -10,14 +10,50 @@ https://collections.museumsvictoria.com.au/search?query=statue&view=list
 <h4>
     {{ hit.t.en.label }}
 </h4>
+
+<!-- Flex container so badges wrap neatly -->
+<div class="d-flex flex-wrap gap-2">
+    <!-- Loop over your tags: replace this with your template syntax -->
+    <!-- Example in plain HTML: -->
+{#    <span class="badge rounded-pill bg-primary">New</span>#}
+{#    <span class="badge rounded-pill bg-success">Sale</span>#}
+{#    <span class="badge rounded-pill bg-warning text-dark">Limited</span>#}
+  {% for tag in hit.keywords %}
+    <span class="badge rounded-pill bg-success">{{ tag }}</span>
+  {% endfor %}
+</div>
+
+
 <div>
     <a href="{{ hit.citation }}" target="_blank">
         {{ hit.credit|default(hit.citation) }}
     </a>
 </div>
 <div>
-    {{ hit.t.en.description }}
+
 </div>
+
+<div
+    data-controller="collapse"
+    data-collapse-lines-value="3"
+    data-collapse-more-text-value="Read more"
+    data-collapse-less-text-value="Show less"
+    class="mb-4"
+>
+    <p data-collapse-target="text" class="line-clamp">
+        {{ hit.t.en.description }}
+    </p>
+
+    <button
+        data-collapse-target="button"
+        data-action="click->collapse#toggle"
+        class="btn btn-sm btn-link p-0"
+        aria-expanded="false"
+    >
+        Read more
+    </button>
+</div>
+
 
 {#{{ hit.pixie_key }}#}
 {#{{ hit.date_modified }}#}

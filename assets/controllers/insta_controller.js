@@ -10,6 +10,9 @@ import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
 import {hits, pagination, refinementList, searchBox} from 'instantsearch.js/es/widgets'
 import {stimulus_action, stimulus_controller, stimulus_target,} from "stimulus-attributes";
 import { Meilisearch } from "meilisearch";
+import $clamp from 'clamp-js';
+
+
 
 import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 // this import makes the pretty-json really ugly
@@ -25,6 +28,12 @@ Twig.extend(function (Twig) {
 
     Twig._function.extend("json_pretty", (data, options={}) => {
         const html = prettyPrintJson.toHtml(data, options);
+        return html;
+    })
+
+    Twig._function.extend("clamp", (data, options={}) => {
+        const html = $clamp(data, { clamp: 3 });
+        console.log(data, html);
         return html;
     })
 

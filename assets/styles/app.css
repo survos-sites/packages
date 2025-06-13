@@ -21,7 +21,7 @@ body {
     overflow: hidden;
 }
 
-/* 
+/*
 input.ais-SearchBox-input {
     display: block;
     width: 100%;
@@ -167,4 +167,10 @@ input.ais-SearchBox-input {
 .insta-side-panel .ais-RefinementList-showMore {
     background: none;
     padding: 0;
+}
+
+.line-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

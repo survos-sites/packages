@@ -260,4 +260,7 @@ return [
     '@stimulus-components/dialog' => [
         'version' => '1.0.1',
     ],
+    'clamp-js' => [
+        'version' => '0.7.0',
+    ],
 ];
