@@ -63,6 +63,7 @@ final class AppMenu implements KnpMenuHelperInterface
         }
         $this->add($menu, uri: 'https://github.com/survos-sites/packages', label: 'Github');
         $this->add($menu, uri: 'https://packagist.org/', label: 'Packagist.org');
+        $this->add($menu, 'meili_proxy');
 //        $this->add($menu, 'app_homepage', ['symfonyVersions'=>'7.0'], label: "Symfony 7");
 
         if ($this->isGranted('ROLE_ADMIN')) {

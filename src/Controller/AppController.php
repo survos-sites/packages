@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class AppController extends AbstractController
 {
@@ -17,6 +18,7 @@ final class AppController extends AbstractController
         #[Autowire('%env(MEILI_SERVER)%')] private string $meiliServer,
         #[Autowire('%env(MEILI_SEARCH_KEY)%')] private string $apiKey,
         private MeiliService $meiliService,
+        private UrlGeneratorInterface $router,
     ) {}
 
     #[Route('/template/{indexName}', name: 'app_template')]
@@ -40,7 +42,9 @@ final class AppController extends AbstractController
         // this is specific to our way of handling related, translated messages
         $related = $this->getRelated($facets, $indexName, $locale);
         $params = [
+//            'server' => $this->router->generate('meili_proxy', [], UrlGeneratorInterface::ABSOLUTE_URL), // $this->meiliServer,
             'server' => $this->meiliServer,
+
             'apiKey' => $this->apiKey,
             'indexName' => $indexName,
             'facets' => $facets,
