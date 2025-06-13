@@ -219,11 +219,11 @@ export default class extends Controller {
 
                         // The 'results' parameter contains the full results data
                         return items.map(item => {
-                            item.label = lookup[item.value];
+                            item.label = lookup[item.value] || item.value;
                             // item.value = lookup[item.value];
                             return {
                                 ...item,
-                                highlighted: lookup[item.value]
+                                highlighted: lookup[item.value] || item.value
                             };
                         });
                     },

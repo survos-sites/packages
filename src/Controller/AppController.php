@@ -40,7 +40,7 @@ final class AppController extends AbstractController
         $settings = $index->getSettings();
         $facets = $settings['filterableAttributes'];
         // this is specific to our way of handling related, translated messages
-        $related = $this->getRelated($facets, $indexName, $locale);
+        $related = $this->meiliService->getRelated($facets, $indexName, $locale);
         $params = [
             'server' => $this->router->generate('meili_proxy', [], UrlGeneratorInterface::ABSOLUTE_URL), // $this->meiliServer,
 //            'server' => $this->meiliServer,
@@ -53,25 +53,5 @@ final class AppController extends AbstractController
         return $params;
     }
 
-    private function getRelated(array $facets, string $indexName, string $locale): array
-    {
-        $lookups = [];
-        if (str_ends_with($indexName, '_obj'))
-        {
-            foreach ($facets as $facet) {
-                if (!in_array($facet, ['type','cla','cat'])) {
-                    continue;
-                }
-                $related = str_replace('_obj', '_' . $facet, $indexName);
-                $index = $this->meiliService->getIndexEndpoint($related);
-                $docs = $index->getDocuments();
-                foreach ($docs as $doc) {
-                    $lookups[$facet][$doc['id']] = $doc['t'][$locale]['label'];
-                }
-            }
-        }
-        return $lookups;
-
-    }
 
 }

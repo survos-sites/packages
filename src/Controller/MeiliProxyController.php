@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Survos\MeiliAdminBundle\Service\MeiliService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -12,12 +15,13 @@ use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-class MeiliProxyController
+class MeiliProxyController extends AbstractController
 {
     public function __construct(
         private HttpClientInterface $client,
         private CacheInterface      $cache,
         private LoggerInterface $logger,
+        private MeiliService $meiliService,
         #[Autowire('%env(MEILI_SERVER)%')]
         private string              $meiliBaseUri,
         #[Autowire('%env(MEILI_SEARCH_KEY)%')]
@@ -33,10 +37,31 @@ class MeiliProxyController
         requirements: ['path' => '.+'],
         methods: ['GET','POST','PUT','DELETE','PATCH']
     )]
-    public function proxy(Request $request, string $path='/'): StreamedResponse
+    public function proxy(Request $request, string $path='/'): StreamedResponse|Response
     {
         $method = $request->getMethod();
-        if (str_starts_with($path, 'facet-search')) {
+        if (str_ends_with($path, 'facet-search')) {
+            $data = json_decode($request->getContent(), true);
+            $q = $data['facetQuery'];
+            // @todo: get facet distribution instead.
+            $related = $this->meiliService->getRelated($data['facets'], 'm_px_victoria_obj', 'en' );
+            if (array_key_exists($data['facetName'], $related)) {
+                $x=[];
+                foreach ($related[$data['facetName']] as $facet) {
+                    if (str_contains($facet, $q)) {
+                        $x[] = [
+                            'value' => $facet,
+                            'count' => 5,
+                        ];
+                    }
+                }
+                return $this->json([
+                    'processingTimeMs' => 3,
+                    'facetQuery' => $data['facetQuery'],
+                    'facetHits' => $x,
+                ]);
+                $this->logger->warning(json_encode($request->request->all()));
+            }
             // make a call to search the related table labels!
             // since meili doesn't do partial word searches, we have to go to the
             // database for this, but return the same formatted response :-(
