@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "058898b7f821fedc52a042d3e5603afb",
+    "content-hash": "7d72897c09cb3a23b199003b1cf6b93f",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -4679,16 +4679,16 @@
         },
         {
             "name": "survos/api-grid-bundle",
-            "version": "1.5.600",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosApiGridBundle.git",
-                "reference": "cbd337b1542d9edccdb46b7ffe4710966428bb97"
+                "reference": "d46a3c13a3c10f051611ca37152acac075368a0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosApiGridBundle/zipball/cbd337b1542d9edccdb46b7ffe4710966428bb97",
-                "reference": "cbd337b1542d9edccdb46b7ffe4710966428bb97",
+                "url": "https://api.github.com/repos/survos/SurvosApiGridBundle/zipball/d46a3c13a3c10f051611ca37152acac075368a0f",
+                "reference": "d46a3c13a3c10f051611ca37152acac075368a0f",
                 "shasum": ""
             },
             "require": {
@@ -4731,6 +4731,7 @@
                 "friendsofsymfony/jsrouting-bundle": "use path() in javascript grid rendering",
                 "monolog/monolog": "Allows more advanced logging of the application flow"
             },
+            "default-branch": true,
             "type": "symfony-bundle",
             "extra": {
                 "symfony": {
@@ -4763,7 +4764,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosApiGridBundle/issues",
-                "source": "https://github.com/survos/SurvosApiGridBundle/tree/1.5.600"
+                "source": "https://github.com/survos/SurvosApiGridBundle/tree/main"
             },
             "funding": [
                 {
@@ -4771,7 +4772,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-05-11T16:19:35+00:00"
+            "time": "2025-06-15T17:02:48+00:00"
         },
         {
             "name": "survos/auth-bundle",
@@ -16016,6 +16017,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "knplabs/packagist-api": 20,
+        "survos/api-grid-bundle": 20,
         "survos/core-bundle": 20,
         "survos/installer": 20,
         "survos/meili-admin-bundle": 20,
