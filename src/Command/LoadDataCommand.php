@@ -43,37 +43,31 @@ final class LoadDataCommand
         private readonly WorkflowInterface $workflow,
         private CacheInterface             $cache,
         ?string                            $name = null,
-    ) {
+    )
+    {
     }
 
     /**
      * @throws InvalidArgumentException
      */
     public function __invoke(
-        SymfonyStyle $io,
-        #[Argument(description: 'search query for packages, e.g.type=symfony-bundle')] string $q = 'type=symfony-bundle',
-        //        #[Option(description: 'scrape the package details')] bool                             $details = false,
-        #[Option(description: 'load the bundle names and vendors')] bool $setup = true,
-        #[Option(description: 'refresh the data')] bool $refresh = true,
-        #[Option(description: 'fetch the latest version json')] bool $fetch = false,
-        #[Option(description: 'process the json in the database')] bool $process = false,
-        #[Option(description: 'reset (purge) the database first')] bool $reset = false,
-        #[Option(name: 'page-size', description: 'page size')] int $pageSize = 100000,
-        #[Option(description: 'limit (for testing)')] int $limit = 0,
-        #[Option(description: 'batch size (for flush)')] int $batch = 500,
-        #[Option(description: 'filter by marking')] ?string $marking = null,
-        #[Option(name: 'vendor', description: 'filter by vendor')] ?string $vendorFilter = null,
-        #[Option(description: 'filter by short name')] ?string $name = null,
-//        #[Option(description: 'Dispatch a load transition for new packages')] ?bool $dispatch = null,
-    ): int {
+        SymfonyStyle                                                             $io,
+        #[Argument('search query for packages, e.g.type=symfony-bundle')] string $q = 'type=symfony-bundle',
+        #[Option('load the bundle names and vendors')] bool                      $setup = true,
+        #[Option('refresh the data')] bool                                       $refresh = true,
+        #[Option('fetch the latest version json')] bool                          $fetch = false,
+        #[Option('process the json in the database')] bool                       $process = false,
+        #[Option('reset (purge) the database first')] bool                       $reset = false,
+        #[Option('page size')] int                                               $pageSize = 100000,
+        #[Option('limit (for testing)')] int                                     $limit = 0,
+        #[Option('batch size (for flush)')] int                                  $batch = 500,
+        #[Option('filter by marking')] ?string                                   $marking = null,
+        #[Option('filter by vendor', name: 'vendor')] ?string                    $vendorFilter = null,
+        #[Option('filter by short name')] ?string                                $name = null,
+//        #[Option('Dispatch a load transition for new packages')] ?bool $dispatch = null,
+    ): int
+    {
         //        // note: we are handling abandoned earlier
-        $transitions = [
-            BundleWorkflowInterface::TRANSITION_LOAD,
-            BundleWorkflow::TRANSITION_PHP_TOO_OLD,
-            BundleWorkflow::TRANSITION_PHP_OKAY,
-            BundleWorkflow::TRANSITION_OUTDATED,
-            BundleWorkflow::TRANSITION_VALID,
-        ];
 
         if ($reset) {
             $this->entityManager->createQuery('DELETE FROM App\Entity\Package p')->execute();
@@ -126,7 +120,7 @@ final class LoadDataCommand
                 }
             }
             $this->entityManager->flush();
-            $io->writeln('total bundles in database: '.$this->packageRepository->count([]));
+            $io->writeln('total bundles in database: ' . $this->packageRepository->count([]));
         }
 
         $where = [];
@@ -134,96 +128,7 @@ final class LoadDataCommand
             $where['marking'] = $marking;
         }
 
-        if ($fetch) {
-            $this->fetch($pageSize, $client, $refresh);
-        }
-
-        // interesting, but not working as expected. :-(
-        if (false && $process) {
-            $progressBar = new ProgressBar($io, count($packages));
-            foreach ($packages as $package) {
-                $progressBar->advance();
-                //                    $transitions = $this->workflow->getEnabledTransitions($package);
-                foreach ($transitions as $transitionName) {
-                    //                        $transitionName = $t->getName();
-                    $original = $package->getMarking();
-                    if ($this->workflow->can($package, $transitionName)) {
-                        $this->workflow->apply($package, $transitionName);
-                        $this->entityManager->flush();
-                        $this->logger->info($package->getName()." @$original ==>".$transitionName.'->'.$package->getMarking());
-                    //                        dd($package, $transition);
-                    } else {
-                        //                            $this->logger->info("Skipping " . $package->getName() . " @$original ==>" . $transitionName);
-                        //                            $reasons = $this->workflow->buildTransitionBlockerList($package, $transitionName);
-                        //                    dd($reasons);
-                    }
-                }
-                //                    if (count($transitions) === 0) {
-                //                        $this->logger->info(sprintf("Skipping %s at %s no transitions", $package->getName(), $package->getMarking()));
-                //                    }
-            }
-            $progressBar->finish();
-        }
-
-//        if ($process)
-//        {
-//            if ($vendorFilter = $io->getOption('vendor')) {
-//                $where['vendor'] = $vendorFilter;
-//            }
-//            if ($nameFilter = $io->getOption('name')) {
-//                $where['shortName'] = $nameFilter;
-//            }
-//            $packages = $this->packageRepository->findBy($where, ['id' => 'desc'], limit: $limit ?: 100000);
-//            $progressBar = new ProgressBar($io, count($packages));
-//            $progressBar->start();
-//            $distribution = [];
-//            foreach ($packages as $survosPackage) {
-//                $progressBar->advance();
-//                if (!$survosPackage->getData()) {
-//                    $this->logger->error('Missing data in '.$survosPackage->getName());
-//                    //                    assert(false, $survosPackage->getName());
-//                    continue;
-//                }
-//                assert($survosPackage->getData(), 'missing data! for '.$survosPackage->getId().' '.$survosPackage->getMarking());
-//                $this->packageService->populateFromComposerData($survosPackage);
-//                assert(BundleWorkflowInterface::PLACE_COMPOSER_LOADED != $survosPackage->getMarking());
-//
-////                dd($survosPackage->getSymfonyVersions(), $survosPackage->getSymfonyVersionString(),  $survosPackage->getPhpVersionString());
-//                $this->logger->info($survosPackage->getName()." {$survosPackage->getMarking()} ".join('|', $survosPackage->getSymfonyVersions()));
-//                if (($progressBar->getProgress() % $this->io()->getOption('batch')) == 1) {
-//                    $this->logger->info('Flushing');
-//                    $this->entityManager->flush();
-//                }
-//            }
-//            $this->entityManager->flush();
-//            $io->success(__CLASS__ . '.process '.count($packages));
-//        }
         return Command::SUCCESS;
     }
 
-//    public function fetch(int $pageSize, Client $client, bool $refresh): void
-//    {
-//        //        $packages = $this->packageRepository->findBy(['vendor' => 'symfony'], limit: $pageSize);
-//        $packages = $this->packageRepository->findBy(
-//            [
-//                //                'marking' => [SurvosPackage::PLACE_NEW]
-//            ],
-//            ['name' => 'ASC']
-//        );
-//
-//        $progressBar = new ProgressBar($this->io, count($packages));
-//        /* @var Result $result */
-//        foreach ($packages as $survosPackage) {
-//            $progressBar->advance();
-//
-//            if (!$survosPackage->getPackagistData() || $refresh) {
-//                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'packagist'));
-//            }
-//
-//            if (!$survosPackage->getData() || $refresh) {
-//                $this->messageBus->dispatch(new FetchComposer($survosPackage->getName(), 'composer'));
-//            }
-//        }
-//        $progressBar->finish();
-//    }
 }

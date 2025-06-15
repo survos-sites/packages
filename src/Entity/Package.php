@@ -96,7 +96,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.read'])]
-    private ?array $phpVersions = null;
+    public ?array $phpVersions = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastModifiedTime = null;
@@ -106,11 +106,11 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['package.read'])]
-    private ?string $phpVersionString = null;
+    public ?string $phpVersionString = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['package.read'])]
-    private ?string $repo = null;
+    public ?string $repo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $replacement = null;
@@ -132,11 +132,11 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     #[ORM\Column(length: 8, nullable: true)]
     #[Groups('package.read')]
-    private ?string $sourceType = null;
+    public ?string $sourceType = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups('package.read')]
-    private ?string $sourceUrl = null;
+    public ?string $sourceUrl = null;
 
     #[ORM\Column(nullable: true)]
     /** $downloads Stored in the database */
@@ -192,16 +192,16 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         return $this;
     }
 
-    public function addPhpVersion(string $version): self
-    {
-        $versions = $this->getPhpVersions();
-        if (!in_array($version, $versions)) {
-            $versions[] = $version;
-            $this->setPhpVersions(array_unique($versions));
-        }
-
-        return $this;
-    }
+//    public function addPhpVersion(string $version): self
+//    {
+//        $versions = $this->getPhpVersions();
+//        if (!in_array($version, $versions)) {
+//            $versions[] = $version;
+//            $this->setPhpVersions(array_unique($versions));
+//        }
+//
+//        return $this;
+//    }
 
     #[Groups(['package.facets', 'package.read'])]
     public function getKeywords(): array
@@ -227,18 +227,6 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 //
 //        return $this;
 //    }
-
-    public function getPhpVersions(): ?array
-    {
-        return $this->phpVersions;
-    }
-
-    public function setPhpVersions(?array $phpVersions): static
-    {
-        $this->phpVersions = $phpVersions;
-
-        return $this;
-    }
 
     public function getLastModifiedTime(): ?\DateTimeInterface
     {
@@ -380,7 +368,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     public function hasValidPhpVersion(): bool
     {
-        return count($this->getPhpVersions()) > 0;
+        return count($this->phpVersions) > 0;
     }
 
     public function getSourceType(): ?string
@@ -395,22 +383,5 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         return $this;
     }
 
-    public function getSourceUrl(): ?string
-    {
-        return $this->sourceUrl;
-    }
 
-    public function setSourceUrl(string $sourceUrl): static
-    {
-        $this->sourceUrl = $sourceUrl;
-
-        return $this;
-    }
-
-    public function setDownloads(?int $downloads): static
-    {
-        $this->downloads = $downloads;
-
-        return $this;
-    }
 }

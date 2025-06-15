@@ -66,25 +66,22 @@ class PackageService
     public function populateFromComposerData(Package $survosPackage)
     {
         // given the composer data, populate the php and other relevant values
+        $survosPackage->phpVersionString = null;
         $survosPackage
             ->setMarking(BundleWorkflowInterface::PLACE_NEW) // ??
             ->setSymfonyVersionString(null)
             ->setSymfonyVersions([])
-            ->setPhpVersionString(null)
             ->setPhpVersions([])
             ->setPhpUnitVersions([])
-            ->setPhpUnitVersionString(null)
         ;
 
         $data = new Dot($survosPackage->data);
 
         // https://github.com/adbario/php-dot-notation?tab=readme-ov-file#get
-        $survosPackage
-            ->setSourceType($data->get('source.type'))
-            ->setSourceUrl($data->get('source.url'))
-            ;
-
-        if ($data['abandoned'] || (0 == count($data['require'] ?? []))) {
+        $survosPackage->sourceUrl = $data->get('source.url');
+        $survosPackage->sourceType = $data->get('source.type');
+        $requires = $data->get('require', []);
+        if ($data['abandoned'] || (0 == count($requires))) {
             $survosPackage->setMarking(BundleWorkflowInterface::PLACE_ABANDONED);
             dd($data);
             return;
@@ -92,9 +89,10 @@ class PackageService
 
         if ($phpVersionStr = $data['require.php'] ?? false) {
             $matches = $this->constraintComplies($phpVersionStr, ['8.2', '8.3', '8.4']);
+
+            $survosPackage->phpVersionString = $phpVersionStr;
+            $survosPackage->phpVersions = $phpVersionStr;
             $survosPackage
-                ->setPhpVersionString($phpVersionStr)
-                ->setPhpVersions($matches)
                 ->setMarking(count($matches) ? BundleWorkflowInterface::PLACE_PHP_OKAY : BundleWorkflowInterface::PLACE_OUTDATED_PHP);
         } else {
             // missing PHP, this is usually bad.
@@ -102,7 +100,7 @@ class PackageService
                 ->setMarking(BundleWorkflowInterface::PLACE_OUTDATED_PHP);
         }
 
-        if (0 === count($survosPackage->getPhpVersions())) {
+        if (0 === count($survosPackage->phpVersions)) {
             return;
         }
 
@@ -159,8 +157,6 @@ class PackageService
             assert($composer);
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage()."\n".$survosPackage->name);
-            $survosPackage->setMarking(Package::PLACE_NOT_FOUND);
-
             return;
         }
         assert(1 == count($composer), 'multiple packages: '.join("\n", array_keys($composer)));

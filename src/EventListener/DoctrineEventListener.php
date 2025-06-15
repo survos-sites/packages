@@ -3,9 +3,7 @@
 
 namespace App\EventListener;
 
-use App\Entity\Owner;
 use App\Entity\Package;
-use App\Service\AppService;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostPersistEventArgs;
@@ -110,13 +108,10 @@ class DoctrineEventListener
 
     public function preRemove(PreRemoveEventArgs $args): void
     {
-        // won't work with domain!  We probably need a unique meilil key in the object, then we'll have an interface, etc.
+        // won't work with domain!  We probably need a unique meili key in the object, then we'll have an interface, etc.
         $object = $args->getObject();
-        if (!in_array($object::class, array_keys($this->appService->getSystemClasses()))) {
-            return;
-        }
         $task = $this->getMeiliIndex($args->getObject()::class)->deleteDocument($object->getId());
-        $this->meiliService->waitForTask($task);
+//        $this->meiliService->waitForTask($task);
     }
 
 }
