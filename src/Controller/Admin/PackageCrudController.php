@@ -8,6 +8,7 @@ use App\Workflow\BundleWorkflow;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -33,6 +34,8 @@ class PackageCrudController extends AbstractCrudController
     {
 
         yield IdField::new('id')->hideOnForm();
+        yield ArrayField::new('symfonyVersions')->hideOnForm();
+        yield ArrayField::new('keywords')->hideOnForm();
         yield ChoiceField::new('marking')->setChoices(
             $this->workflow->getDefinition()->getPlaces()
         );
@@ -43,6 +46,7 @@ class PackageCrudController extends AbstractCrudController
             $easyadminField = match ($propertyName) {
                 'marking' => null,
                 'id' => null,
+                'version' => null,
 //                'fetchStatusCode' => $field->setLabel('Fetch Status'),
 
                 default => $field,

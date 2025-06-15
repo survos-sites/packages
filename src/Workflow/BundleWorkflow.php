@@ -53,9 +53,8 @@ final class BundleWorkflow implements BundleWorkflowInterface
     public function onGuardSymfony(GuardEvent $event): void
     {
         $transitionName = $event->getTransition()->getName();
-        /** @var Package $package */
-        $package = $event->getSubject();
-        $validVersionCount = count($package->getSymfonyVersions());
+        $package = $this->getPackage($event);
+        $validVersionCount = !empty($package->symfonyVersions);
         if (!in_array($transitionName, [self::TRANSITION_SYMFONY_OKAY, self::TRANSITION_OUTDATED])) {
             return;
         }

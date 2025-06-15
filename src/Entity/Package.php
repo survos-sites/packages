@@ -87,17 +87,13 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     #[Groups(['package.facets', 'package.read'])]
     public ?array $symfonyVersions = null;
 
-    public bool $hasValidPhpVersion {
-        get => count($this->phpVersions);
-    }
-
-    public bool $hasValidSymfonyVersion { get => count($this->symfonyVersions); }
+    #[Groups(['package.read'])]
+    public bool $hasValidSymfonyVersion { get => !empty($this->symfonyVersions); }
+    #[Groups(['package.read'])]
+    public bool $hasValidPhpVersion { get => !empty($this->phpVersions); }
 
     #[Groups(['package.facets', 'package.read'])]
     public array $keywords { get => $this->data['keywords'] ?? []; }
-
-//    #[ORM\Column(nullable: true)]
-//    private ?array $keywords = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.read'])]
@@ -150,7 +146,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public ?int $downloads = null;
 
     public function __construct(
-        #[ORM\Column(type: 'string', length: 255)]
+        #[ORM\Column(type: Types::STRING, length: 255)]
         #[Groups(['browse'])]
         private(set) readonly ?string $name=null
     )
@@ -168,36 +164,6 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public function getSymfonyVersions(): array
     {
         return $this->symfonyVersions ?? [];
-    }
-
-    public function setSymfonyVersions(?array $symfonyVersions): static
-    {
-        $this->symfonyVersions = $symfonyVersions;
-
-        return $this;
-    }
-
-    public function addSymfonyVersion(string $version): self
-    {
-        $versions = $this->getSymfonyVersions();
-        if (!in_array($version, $versions)) {
-            $versions[] = $version;
-            $this->setSymfonyVersions(array_unique($versions));
-        }
-
-        return $this;
-    }
-
-    public function getLastModifiedTime(): ?\DateTimeInterface
-    {
-        return $this->lastModifiedTime;
-    }
-
-    public function setLastModifiedTime(?\DateTimeInterface $lastModifiedTime): static
-    {
-        $this->lastModifiedTime = $lastModifiedTime;
-
-        return $this;
     }
 
     public function getFlowCode(): string

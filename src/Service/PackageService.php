@@ -99,7 +99,7 @@ class PackageService
                 ->setMarking(BundleWorkflowInterface::PLACE_OUTDATED_PHP);
         }
 
-        if (0 === count($survosPackage->phpVersions)) {
+        if (empty($survosPackage->phpVersions)) {
             return;
         }
 
