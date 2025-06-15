@@ -91,7 +91,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
             return;
         }
 
-        $validPhpVersions = $package->getPhpVersions();
+        $validPhpVersions = $package->phpVersions;
         switch ($event->getTransition()->getName()) {
             case self::TRANSITION_PHP_TOO_OLD:
                 if (count($validPhpVersions) > 0) {
@@ -114,7 +114,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
 
     private function getComposer(Package $package): ?array
     {
-        return $package->getData();
+        return $package->data;
     }
 
     #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
@@ -144,7 +144,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
     {
         $package = $this->getPackage($event);
         // @todo: check updatedAt
-        if (true || !$data = $package->getData()) {
+        if (true || !$data = $package->data) {
             $this->loadLatestVersionData($package);
         }
         $this->packageService->populateFromComposerData($package);
@@ -163,16 +163,14 @@ final class BundleWorkflow implements BundleWorkflowInterface
             throw $exception;
         }
         // slower, but more data
+        /**
+         * @var PackagistPackage $packagistPackage
+         */
         $packagistPackage = $this->packagistClient->get($packageName);
 
         /**
-         * @var string           $packageName
-         * @var PackagistPackage $packagistPackage
-         */
-
-//            dump($packageName, $packagistPackage);
-            //            dd($packageName, $package);
-            /** @var PackagistPackage\Version $version */
+         * @var PackagistPackage\Version $version
+        */
             foreach ($packagistPackage->getVersions() as $versionCode => $version) {
                 // need a different API call for github stars.
                 //                if ($package->getFavers() || $package->getGithubStars()) {
@@ -198,10 +196,10 @@ final class BundleWorkflow implements BundleWorkflowInterface
         $package = $this->packageRepository->findOneBy(['name' => $message->getName()]);
         assert($package);
         // @todo: check update time or use a real cache.
-        if (!$package->getPackagistData()) {
+        if (!$package->packagistData) {
             $packagistInfoUrl = sprintf('https://packagist.org/packages/%s.json', $message->getName());
             $info = json_decode(file_get_contents($packagistInfoUrl), true);
-            $package->setPackagistData($info['package']);
+            $package->packagistData = $info['package'];
         }
         if ($message->getType() === 'composer') {
             $this->packageService->populateFromComposerData($package);

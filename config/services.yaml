@@ -18,3 +18,21 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+#    test_dto.search_filter:
+#        parent: 'api_platform.doctrine.orm.search_filter'
+#        autowire: true
+#        arguments:
+#            $managerRegistry: '@doctrine'
+#            $logger: '@logger'
+##        tags: ['api_platform.filter']
+
+#    test_dto.search_filter:
+#        parent: 'api_platform.doctrine.orm.search_filter'
+#        autowire: false
+##        arguments:
+##            $managerRegistry: '@doctrine'
+##            $logger: '@logger'
+#        tags:
+#            - { name: 'api_platform.filter', id: 'test_dto.search_filter' }

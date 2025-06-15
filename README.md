@@ -32,3 +32,19 @@ Purge messages:
 bin/console dbal:run-sql "delete from messenger_messages where queue_name='failed'"
 bin/console dbal:run-sql "delete from messenger_messages"
 ```
+
+
+curl \
+-X PUT 'https://127.0.0.1:8001/meili/indexes/dtdemoOfficial/settings/dictionary' \
+-H 'Content-Type: application/json' \
+--data-binary '[
+"J. R. R.",
+"W. E. B."
+]'
+
+curl \
+-X PUT 'https://127.0.0.1:8001/meili/indexes/dtdemoOfficial/settings/synonyms' \
+-H 'Content-Type: application/json' \
+--data-binary '{
+"great": ["fantastic"], "fantastic": ["great"]
+}'

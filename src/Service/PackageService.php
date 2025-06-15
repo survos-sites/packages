@@ -67,12 +67,11 @@ class PackageService
     {
         // given the composer data, populate the php and other relevant values
         $survosPackage->phpVersionString = null;
+        $survosPackage->symfonyVersionString = null;
+        $survosPackage->symfonyVersions = [];
+        $survosPackage->phpUnitVersions = [];
         $survosPackage
             ->setMarking(BundleWorkflowInterface::PLACE_NEW) // ??
-            ->setSymfonyVersionString(null)
-            ->setSymfonyVersions([])
-            ->setPhpVersions([])
-            ->setPhpUnitVersions([])
         ;
 
         $data = new Dot($survosPackage->data);
@@ -91,7 +90,7 @@ class PackageService
             $matches = $this->constraintComplies($phpVersionStr, ['8.2', '8.3', '8.4']);
 
             $survosPackage->phpVersionString = $phpVersionStr;
-            $survosPackage->phpVersions = $phpVersionStr;
+            $survosPackage->phpVersions = $matches;
             $survosPackage
                 ->setMarking(count($matches) ? BundleWorkflowInterface::PLACE_PHP_OKAY : BundleWorkflowInterface::PLACE_OUTDATED_PHP);
         } else {
@@ -121,9 +120,9 @@ class PackageService
             if (count($symfonyVersions)) {
 //                dd($symfonyVersions, $symfonyVersionStr);
             }
+            $survosPackage->symfonyVersions = $symfonyVersions;
+            $survosPackage->symfonyVersionString = $symfonyVersionStr." ($dependency)";
             $survosPackage
-                ->setSymfonyVersions($symfonyVersions)
-                ->setSymfonyVersionString($symfonyVersionStr." ($dependency)")
                 ->setMarking(count($symfonyVersions) ? BundleWorkflowInterface::PLACE_SYMFONY_OKAY : BundleWorkflowInterface::PLACE_SYMFONY_OUTDATED);
         } else {
             // no valid symfony, warn?
@@ -134,14 +133,12 @@ class PackageService
             return;
         }
 
-        if ($phpUnitVersionStr = $data['requireDev']['phpunit/phpunit'] ?? null) {
-            $matches = $this->constraintComplies($phpUnitVersionStr, ['8.4', '9.4', '10.3', '11.4'], 'phpunit/phpunit');
-            $survosPackage
-                ->setPhpUnitVersions($matches)
-                ->setPhpUnitVersionString($phpUnitVersionStr);
+        if ($phpUnitVersionStr = $data['requireDev.phpunit/phpunit'] ?? null) {
+            $matches = $this->constraintComplies($phpUnitVersionStr, ['8.4', '9.4', '10.3', '11.4', '12.0'],
+                'phpunit/phpunit');
+            $survosPackage->phpUnitVersions = $matches;
+            $survosPackage->phpUnitVersionString = $phpUnitVersionStr;
         }
-//        $survosPackage->setKeywords($data['keywords']);
-//        assert(count($survosPackage->getKeywords()), "no keywords");
     }
 
     private function getPackagistUrl($name): string

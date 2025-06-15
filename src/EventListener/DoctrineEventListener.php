@@ -14,6 +14,7 @@ use Doctrine\ORM\Events;
 use Meilisearch\Endpoints\Indexes;
 use Psr\Log\LoggerInterface;
 use Survos\ApiGrid\Service\MeiliService;
+use Survos\CoreBundle\Service\SurvosUtils;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -89,6 +90,7 @@ class DoctrineEventListener
 
 
         $data = $this->normalizer->normalize($object, 'array', ['groups' => $groups]);
+        $data = SurvosUtils::removeNullsAndEmptyArrays($data);
         $this->objectsByClass[$object::class][] = $data;
 //        dd($data, $object->getId());
 //        $this->meiliService->waitUntilFinished($meiliIndex);

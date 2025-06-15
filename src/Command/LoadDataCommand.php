@@ -35,14 +35,14 @@ final class LoadDataCommand
     public function __construct(
         private PackageRepository          $packageRepository,
         private EntityManagerInterface     $entityManager,
+        private CacheInterface             $cache,
+
         private SerializerInterface        $serializer,
         private LoggerInterface            $logger,
         private MessageBusInterface        $messageBus,
         private PackageService             $packageService,
         #[Target(BundleWorkflow::WORKFLOW_NAME)]
         private readonly WorkflowInterface $workflow,
-        private CacheInterface             $cache,
-        ?string                            $name = null,
     )
     {
     }
@@ -101,6 +101,9 @@ final class LoadDataCommand
                 if ($vendorFilter && ($vendor !== $vendorFilter)) {
                     continue;
                 }
+                if ($name && ($shortName !== $name)) {
+                    continue;
+                }
                 if (!$survosPackage = $this->packageRepository->findOneBy(['name' => $packageName])) {
                     $survosPackage = new SurvosPackage($packageName);
 
@@ -108,8 +111,7 @@ final class LoadDataCommand
                 }
 //                https://repo.packagist.org/p/[vendor]/[package].json
 
-                $survosPackage
-                    ->setRepo($package->repository);
+                $survosPackage->repo = $package->repository;
                 if ((++$idx % $batch) == 0) {
                     $this->entityManager->flush();
                     $this->io->writeln("flushing $idx");

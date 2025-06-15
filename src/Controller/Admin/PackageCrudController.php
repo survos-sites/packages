@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Odm\Filter\BooleanFilter;
 use App\Entity\Package;
 use App\Workflow\BundleWorkflow;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -36,7 +37,7 @@ class PackageCrudController extends AbstractCrudController
             $this->workflow->getDefinition()->getPlaces()
         );
 
-        /** @var Field $field */
+        /** @var FieldInterface $field */
         foreach (parent::configureFields($pageName) as $field) {
             $propertyName = $field->getAsDto()->getPropertyNameWithSuffix();
             $easyadminField = match ($propertyName) {

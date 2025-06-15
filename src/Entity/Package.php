@@ -85,7 +85,16 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.facets', 'package.read'])]
-    private ?array $symfonyVersions = null;
+    public ?array $symfonyVersions = null;
+
+    public bool $hasValidPhpVersion {
+        get => count($this->phpVersions);
+    }
+
+    public bool $hasValidSymfonyVersion { get => count($this->symfonyVersions); }
+
+    #[Groups(['package.facets', 'package.read'])]
+    public array $keywords { get => $this->data['keywords'] ?? []; }
 
 //    #[ORM\Column(nullable: true)]
 //    private ?array $keywords = null;
@@ -99,10 +108,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public ?array $phpVersions = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $lastModifiedTime = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
+    public ?\DateTimeInterface $lastModifiedTime = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['package.read'])]
@@ -113,22 +119,22 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public ?string $repo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $replacement = null;
+    public ?string $replacement = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['package.read'])]
-    private ?string $phpUnitVersionString = null;
+    public ?string $phpUnitVersionString = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.read'])]
-    private ?array $phpUnitVersions = null;
+    public ?array $phpUnitVersions = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['package.read'])]
-    private ?string $symfonyVersionString = null;
+    public ?string $symfonyVersionString = null;
 
     #[ORM\Column(nullable: true)]
-    private ?array $packagistData = null;
+    public ?array $packagistData = null;
 
     #[ORM\Column(length: 8, nullable: true)]
     #[Groups('package.read')]
@@ -139,7 +145,8 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public ?string $sourceUrl = null;
 
     #[ORM\Column(nullable: true)]
-    /** $downloads Stored in the database */
+    #[Groups(['package.read'])]
+    /** $downloads now Stored in the database */
     public ?int $downloads = null;
 
     public function __construct(
@@ -181,53 +188,6 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         return $this;
     }
 
-    public function addPhpUnitVersion(string $version): self
-    {
-        $versions = $this->getPhpUnitVersions() ?? [];
-        if (!in_array($version, $versions)) {
-            $versions[] = $version;
-            $this->setPhpUnitVersions(array_unique($versions));
-        }
-
-        return $this;
-    }
-
-//    public function addPhpVersion(string $version): self
-//    {
-//        $versions = $this->getPhpVersions();
-//        if (!in_array($version, $versions)) {
-//            $versions[] = $version;
-//            $this->setPhpVersions(array_unique($versions));
-//        }
-//
-//        return $this;
-//    }
-
-    #[Groups(['package.facets', 'package.read'])]
-    public function getKeywords(): array
-    {
-        return $this->data['keywords'] ?? [];
-    }
-
-//    public function setKeywords(?array $keywords): static
-//    {
-//        $this->keywords = $keywords;
-//
-//        return $this;
-//    }
-
-//    public function getStars(): ?int
-//    {
-//        return $this->stars;
-//    }
-//
-//    public function setStars(?int $stars): static
-//    {
-//        $this->stars = $stars;
-//
-//        return $this;
-//    }
-
     public function getLastModifiedTime(): ?\DateTimeInterface
     {
         return $this->lastModifiedTime;
@@ -249,139 +209,5 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     {
         return $this->name;
     }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getPhpVersionString(): ?string
-    {
-        return $this->phpVersionString;
-    }
-
-    public function setPhpVersionString(?string $phpVersionString): static
-    {
-        $this->phpVersionString = $phpVersionString;
-
-        return $this;
-    }
-
-    public function getRepo(): ?string
-    {
-        return $this->repo;
-    }
-
-    public function setRepo(?string $repo): static
-    {
-        $this->repo = $repo;
-
-        return $this;
-    }
-
-    public function getReplacement(): ?string
-    {
-        return $this->replacement;
-    }
-
-    public function setReplacement(?string $replacement): static
-    {
-        $this->replacement = $replacement;
-
-        return $this;
-    }
-
-    public function getPhpUnitVersionString(): ?string
-    {
-        return $this->phpUnitVersionString;
-    }
-
-    public function setPhpUnitVersionString(?string $phpUnitVersionString): static
-    {
-        $this->phpUnitVersionString = $phpUnitVersionString;
-
-        return $this;
-    }
-
-    public function getPhpUnitVersions(): ?array
-    {
-        return $this->phpUnitVersions;
-    }
-
-    public function setPhpUnitVersions(?array $phpUnitVersions): static
-    {
-        $this->phpUnitVersions = $phpUnitVersions;
-
-        return $this;
-    }
-
-    public function getSymfonyVersionString(): ?string
-    {
-        return $this->symfonyVersionString;
-    }
-
-    public function setSymfonyVersionString(?string $symfonyVersionString): static
-    {
-        $this->symfonyVersionString = $symfonyVersionString;
-
-        return $this;
-    }
-
-    public function getPackagistData(): ?array
-    {
-        return $this->packagistData;
-    }
-
-    public function setPackagistData(?array $packagistData): static
-    {
-        $this->packagistData = $packagistData;
-
-        return $this;
-    }
-
-    #[Groups(['package.read'])]
-    /**
-     *   We get this right from the metadata rather than storing it.  We can sort it in meili though.
-     */
-    public function getFavers(): ?int
-    {
-        return $this->getPackagistData()['favers'] ?? null;
-    }
-
-    #[Groups(['package.read'])]
-    public function getDownloads(): ?int
-    {
-        return $this->downloads;
-    }
-
-    public function hasValidSymfonyVersion(): bool
-    {
-        return count($this->getSymfonyVersions()) > 0;
-    }
-
-    public function hasValidPhpVersion(): bool
-    {
-        return count($this->phpVersions) > 0;
-    }
-
-    public function getSourceType(): ?string
-    {
-        return $this->sourceType;
-    }
-
-    public function setSourceType(string $sourceType): static
-    {
-        $this->sourceType = $sourceType;
-
-        return $this;
-    }
-
 
 }

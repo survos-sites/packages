@@ -17,3 +17,7 @@ api_platform:
             standard_put: true
             rfc_7807_compliant_errors: true
         pagination_client_items_per_page: true
+    mapping:
+        paths:
+            - '%kernel.project_dir%/src/Entity'
+            - '%kernel.project_dir%/src/Dto'

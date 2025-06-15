@@ -152,7 +152,6 @@ class MeiliProxyController extends AbstractController
     public function fetchAndCache(string $uri, Request $request, string $auth, array $headers): StreamedResponse
     {
         $cacheKey = 'meili_' . md5($uri . serialize($request->query->all()) . $auth);
-
         $json = $this->cache->get($cacheKey, function (ItemInterface $item) use ($uri, $request, $headers) {
             $item->expiresAfter(3600);
             $response = $this->client->request('GET', $uri, [
@@ -168,6 +167,7 @@ class MeiliProxyController extends AbstractController
             dd($response->getContent(), $response->toArray(), $response->getStatusCode(), $response->getInfo(), $headers, $response);
             return $response->getContent();
         });
+        dd($json);
 
         return new StreamedResponse(fn() => print($json), 200, [
             'Content-Type' => 'application/json',
