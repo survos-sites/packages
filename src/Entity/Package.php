@@ -51,6 +51,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 {
     use RouteParametersTrait;
     use MarkingTrait;
+
     public const array UNIQUE_PARAMETERS = ['packageId' => 'id'];
     //    #[Groups(['rp'])]
     //    public function getUniqueIdentifiers(): array
@@ -63,30 +64,27 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     #[ORM\Column(type: 'integer')]
     #[Groups(['browse'])]
     private int $id;
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['browse'])]
-    private $name;
 
     #[ORM\Column(nullable: true)]
-    private ?array $data = null;
+    public ?array $data = null;
 
     #[ORM\Column(length: 255)]
     #[Groups('package.read')]
-    private ?string $vendor = null;
+    private(set) ?string $vendor = null;
 
     #[ORM\Column(type: Types::TEXT, length: 255, nullable: true)]
     #[Groups(['package.read'])]
-    private ?string $description = null;
+    public ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $version = null;
+    public ?string $version = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['package.read'])]
-    private ?string $shortName = null;
+    private(set) ?string $shortName = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['package.facets','package.read'])]
+    #[Groups(['package.facets', 'package.read'])]
     private ?array $symfonyVersions = null;
 
 //    #[ORM\Column(nullable: true)]
@@ -94,7 +92,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.read'])]
-    private ?int $stars = null;
+    public ?int $stars = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.read'])]
@@ -141,10 +139,16 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     private ?string $sourceUrl = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $downloads = null;
+    /** $downloads Stored in the database */
+    public ?int $downloads = null;
 
-    public function __construct()
+    public function __construct(
+        #[ORM\Column(type: 'string', length: 255)]
+        #[Groups(['browse'])]
+        private(set) readonly ?string $name=null
+    )
     {
+        [$this->vendor, $this->shortName] = explode('/', $this->name);
         $this->marking = self::PLACE_NEW;
     }
 
@@ -153,77 +157,6 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getData(): array|object|null
-    {
-        return $this->data;
-    }
-
-    public function setData(array|object|null $data): self
-    {
-        $this->data = $data;
-
-        return $this;
-    }
-
-    public function getVendor(): ?string
-    {
-        return $this->vendor;
-    }
-
-    public function setVendor(string $vendor): static
-    {
-        $this->vendor = $vendor;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getVersion(): ?string
-    {
-        return $this->version;
-    }
-
-    public function setVersion(?string $version): static
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    public function getShortName(): ?string
-    {
-        return $this->shortName;
-    }
-
-    public function setShortName(string $shortName): static
-    {
-        $this->shortName = $shortName;
-
-        return $this;
-    }
 
     public function getSymfonyVersions(): array
     {
@@ -270,10 +203,10 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
         return $this;
     }
 
-    #[Groups(['package.facets','package.read'])]
+    #[Groups(['package.facets', 'package.read'])]
     public function getKeywords(): array
     {
-        return $this->data['keywords']??[];
+        return $this->data['keywords'] ?? [];
     }
 
 //    public function setKeywords(?array $keywords): static
@@ -283,17 +216,17 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 //        return $this;
 //    }
 
-    public function getStars(): ?int
-    {
-        return $this->stars;
-    }
-
-    public function setStars(?int $stars): static
-    {
-        $this->stars = $stars;
-
-        return $this;
-    }
+//    public function getStars(): ?int
+//    {
+//        return $this->stars;
+//    }
+//
+//    public function setStars(?int $stars): static
+//    {
+//        $this->stars = $stars;
+//
+//        return $this;
+//    }
 
     public function getPhpVersions(): ?array
     {
@@ -326,7 +259,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
 
     public function __toString(): string
     {
-        return $this->getName();
+        return $this->name;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
@@ -426,24 +359,28 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     }
 
     #[Groups(['package.read'])]
+    /**
+     *   We get this right from the metadata rather than storing it.  We can sort it in meili though.
+     */
     public function getFavers(): ?int
     {
         return $this->getPackagistData()['favers'] ?? null;
     }
+
     #[Groups(['package.read'])]
     public function getDownloads(): ?int
     {
-        return $this->getPackagistData()['downloads']['total'] ?? null;
+        return $this->downloads;
     }
 
     public function hasValidSymfonyVersion(): bool
     {
-        return count($this->getSymfonyVersions())>0;
+        return count($this->getSymfonyVersions()) > 0;
     }
 
     public function hasValidPhpVersion(): bool
     {
-        return count($this->getPhpVersions())>0;
+        return count($this->getPhpVersions()) > 0;
     }
 
     public function getSourceType(): ?string

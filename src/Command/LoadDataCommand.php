@@ -108,17 +108,14 @@ final class LoadDataCommand
                     continue;
                 }
                 if (!$survosPackage = $this->packageRepository->findOneBy(['name' => $packageName])) {
-                    $survosPackage = new SurvosPackage();
-                    $survosPackage
-                        ->setName($packageName);
+                    $survosPackage = new SurvosPackage($packageName);
+
                     $this->entityManager->persist($survosPackage);
                 }
 //                https://repo.packagist.org/p/[vendor]/[package].json
 
                 $survosPackage
-                    ->setRepo($package->repository)
-                    ->setVendor($vendor)
-                    ->setShortName($shortName);
+                    ->setRepo($package->repository);
                 if ((++$idx % $batch) == 0) {
                     $this->entityManager->flush();
                     $this->io->writeln("flushing $idx");

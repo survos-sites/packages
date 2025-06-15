@@ -31,7 +31,14 @@ final class AppController extends AbstractController
         return new Response($template);
     }
 
-    #[Route('/{indexName}', name: 'app_insta')]
+    #[Route('/', name: 'app_homepage')]
+    #[Template('app/homepage.html.twig')]
+    public function home(): Response|array
+    {
+        return [];
+    }
+
+    #[Route('/index/{indexName}', name: 'app_insta')]
     #[Template('app/insta.html.twig')]
     public function index(string $indexName = 'packagesPackage'): Response|array
     {

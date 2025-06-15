@@ -153,7 +153,7 @@ final class BundleWorkflow implements BundleWorkflowInterface
     //    #[Cache('1 day')]
     private function loadLatestVersionData(Package $package)
     {
-        $packageName = $package->getName();
+        $packageName = $package->name;
         try {
             $composer = $this->packagistClient->getComposer($packageName);
         } catch (\Exception $exception) {
@@ -182,12 +182,12 @@ final class BundleWorkflow implements BundleWorkflowInterface
                 //                $package->getDescription(); //
                 //                assert($package->getDescription() == $version->getDescription(), $package->getDescription() . '<>' . $version->getDescription());
                 $json = $this->serializer->serialize($version, 'json');
-                $package
-                    ->setDownloads($packagistPackage->getDownloads()->getTotal())
-                    ->setStars($packagistPackage->getFavers())
-                    ->setVersion($versionCode)
-                    ->setDescription($version->getDescription())
-                    ->setData(json_decode($json, true));
+
+                $package->stars = $packagistPackage->getFavers();
+                $package->downloads = $packagistPackage->getDownloads()->getTotal();
+                $package->version = $versionCode;
+                $package->description = $version->getDescription();
+                $package->data = json_decode($json, true);
                 break; // we're getting the first one only, most recent.  hackish
             }
     }

@@ -58,6 +58,7 @@ class PackageService
             }
         }
         $this->logger->info("setting $dependency $versionConstraintString to ".join('||', $matches));
+//        if ($dependency && str_contains($dependency, 'symfony')) dump($matches, $versionConstraintString, $versions);
 
         return $matches;
     }
@@ -74,25 +75,22 @@ class PackageService
             ->setPhpUnitVersions([])
             ->setPhpUnitVersionString(null)
         ;
-        $data = $survosPackage->getData();
-        $dot = new Dot($data);
+
+        $data = new Dot($survosPackage->data);
 
         // https://github.com/adbario/php-dot-notation?tab=readme-ov-file#get
         $survosPackage
-            ->setSourceType($dot->get('source.type'))
-            ->setSourceUrl($dot->get('source.url'))
+            ->setSourceType($data->get('source.type'))
+            ->setSourceUrl($data->get('source.url'))
             ;
-        if (!$data) {
-            return;
-        }
 
         if ($data['abandoned'] || (0 == count($data['require'] ?? []))) {
             $survosPackage->setMarking(BundleWorkflowInterface::PLACE_ABANDONED);
-
+            dd($data);
             return;
         }
 
-        if ($phpVersionStr = $data['require']['php'] ?? false) {
+        if ($phpVersionStr = $data['require.php'] ?? false) {
             $matches = $this->constraintComplies($phpVersionStr, ['8.2', '8.3', '8.4']);
             $survosPackage
                 ->setPhpVersionString($phpVersionStr)
@@ -116,14 +114,14 @@ class PackageService
         // find the first package that matches and use it for the symfony version.  This isn't very good.
         foreach (['symfony/runtime', 'symfony/config', 'symfony/http-kernel', 'symfony/dependency-injection',
                      'symfony/framework-bundle', 'symfony/http-client', 'symfony/console'] as $dependency) {
-            if ($symfonyVersionStr = $data['require'][$dependency] ?? false) {
+            if ($symfonyVersionStr = $data['require.' . $dependency] ?? false) {
                 break;
             }
         }
         if ($symfonyVersionStr) {
-            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['5.4', '6.4', '7.0'], $dependency);
+            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['5.4', '6.4', '7.3'], $dependency);
             if (count($symfonyVersions)) {
-//                dd($symfonyVersions);
+//                dd($symfonyVersions, $symfonyVersionStr);
             }
             $survosPackage
                 ->setSymfonyVersions($symfonyVersions)
@@ -136,7 +134,6 @@ class PackageService
 //            $survosPackage->setMarking(SurvosPackage::PLACE_SYMFONY_OUTDATED);
 
             return;
-            dd($survosPackage->getName(), $data ?? []);
         }
 
         if ($phpUnitVersionStr = $data['requireDev']['phpunit/phpunit'] ?? null) {
@@ -158,10 +155,10 @@ class PackageService
     {
         // @todo: cache
         try {
-            $composer = $this->client->getComposer($survosPackage->getName());
+            $composer = $this->client->getComposer($survosPackage->name);
             assert($composer);
         } catch (\Exception $exception) {
-            $this->logger->error($exception->getMessage()."\n".$survosPackage->getName());
+            $this->logger->error($exception->getMessage()."\n".$survosPackage->name);
             $survosPackage->setMarking(Package::PLACE_NOT_FOUND);
 
             return;
@@ -195,19 +192,9 @@ class PackageService
                 //                assert($package->getDescription() == $version->getDescription(), $package->getDescription() . '<>' . $version->getDescription());
                 $json = $this->serializer->serialize($version, 'json');
 
-                $survosPackage
-                    ->setStars($package->getFavers())
-//                    ->setMarking($survosPackage::PLACE_COMPOSER_LOADED)
-//                    ->setPhpVersionString($versionCode)
-                    ->setDescription($version->getDescription())
-                    ->setData(json_decode($json, true));
-
-                //                        dd($result, $package, $composer, $versionCode, json_decode($json, false));
-                foreach ($version->getRequire() as $key => $require) {
-                    //                            dump($key, $require);
-                }
-
-                //                dd($survosPackage, $package, $version);
+                $survosPackage->stars = $package->getFavers();
+                $survosPackage->description = $version->getDescription();
+                $survosPackage->data = json_decode($json, true);
                 return;
                 break; // we're getting the first one only, most recent.  hackish
             }

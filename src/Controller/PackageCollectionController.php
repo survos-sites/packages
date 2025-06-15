@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/')]
+#[Route('/packages')]
 class PackageCollectionController extends AbstractController
 {
     use HandleTransitionsTrait;
@@ -23,7 +23,7 @@ class PackageCollectionController extends AbstractController
     {
     }
 
-    #[Route(path: '/api-grid/{style}', name: 'app_homepage', methods: [Request::METHOD_GET], requirements: ['style' => 'normal|simple'])]
+    #[Route(path: '/{style}', name: 'package_browse', methods: [Request::METHOD_GET], requirements: ['style' => 'normal|simple'])]
     public function browse(Request $request,
         string $style = 'normal', //  'simple', //  'normal'
     ): Response {
