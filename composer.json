@@ -34,6 +34,7 @@
         "survos/auth-bundle": "^1.5",
         "survos/bootstrap-bundle": "^1.5",
         "survos/command-bundle": "^1.5",
+        "survos/core-bundle": "dev-main",
         "survos/crawler-bundle": "^1.5.196",
         "survos/installer": "dev-main",
         "survos/js-twig-bundle": "^1.6",
