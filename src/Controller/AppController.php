@@ -52,6 +52,7 @@ final class AppController extends AbstractController
         $facets = $settings['filterableAttributes'];
         // this is specific to our way of handling related, translated messages
         $related = $this->meiliService->getRelated($facets, $indexName, $locale);
+        //gotta fix this
         $params = [
             'server' =>
                 $useProxy
