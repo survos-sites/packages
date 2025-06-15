@@ -5422,12 +5422,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosMeiliAdminBundle.git",
-                "reference": "5e3d6fe98988051ee83716738087031b13e6a7a2"
+                "reference": "46df87a80bf2a3077bb0cce1972a45a5c4a91a66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosMeiliAdminBundle/zipball/5e3d6fe98988051ee83716738087031b13e6a7a2",
-                "reference": "5e3d6fe98988051ee83716738087031b13e6a7a2",
+                "url": "https://api.github.com/repos/survos/SurvosMeiliAdminBundle/zipball/46df87a80bf2a3077bb0cce1972a45a5c4a91a66",
+                "reference": "46df87a80bf2a3077bb0cce1972a45a5c4a91a66",
                 "shasum": ""
             },
             "require": {
@@ -5477,7 +5477,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-06-11T10:00:46+00:00"
+            "time": "2025-06-15T16:28:02+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
