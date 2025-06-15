@@ -49,8 +49,8 @@ final class AppController extends AbstractController
         // this is specific to our way of handling related, translated messages
         $related = $this->meiliService->getRelated($facets, $indexName, $locale);
         $params = [
-            'server' => $this->router->generate('meili_proxy', [], UrlGeneratorInterface::ABSOLUTE_URL), // $this->meiliServer,
-//            'server' => $this->meiliServer,
+//            'server' => $this->router->generate('meili_proxy', [], UrlGeneratorInterface::ABSOLUTE_URL), // $this->meiliServer,
+            'server' => $this->meiliServer,
 
             'apiKey' => $this->apiKey,
             'indexName' => $indexName,
