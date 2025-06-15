@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    There are over 13,000 packages on packagist.org with the tag 'symfony-bundle'.
+
+    This tool help you browse them.
+    {% for route, label in {
+        package_browse: 'Browse using Datatables (Meilisearch)',
+        admin_package_index: 'Browse using Easy Admin',
+        app_insta: 'instant search',
+    } %}
+        <li>
+            <a href="{{ path(route) }}">
+                <code>{{ route }}</code>
+                {{ label }}</a>
+
+        </li>
+
+    {% endfor %}
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+
