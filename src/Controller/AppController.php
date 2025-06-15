@@ -9,6 +9,7 @@ use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -40,7 +41,10 @@ final class AppController extends AbstractController
 
     #[Route('/index/{indexName}', name: 'app_insta')]
     #[Template('app/insta.html.twig')]
-    public function index(string $indexName = 'packagesPackage'): Response|array
+    public function index(
+        string $indexName = 'packagesPackage',
+        #[MapQueryParameter] bool $useProxy = false
+    ): Response|array
     {
         $locale = 'en'; // @todo
         $index = $this->meiliService->getIndexEndpoint($indexName);
@@ -49,8 +53,11 @@ final class AppController extends AbstractController
         // this is specific to our way of handling related, translated messages
         $related = $this->meiliService->getRelated($facets, $indexName, $locale);
         $params = [
-//            'server' => $this->router->generate('meili_proxy', [], UrlGeneratorInterface::ABSOLUTE_URL), // $this->meiliServer,
-            'server' => $this->meiliServer,
+            'server' =>
+                $useProxy
+                    ? $this->router->generate('meili_proxy', [],
+                    UrlGeneratorInterface::ABSOLUTE_URL)
+                    : $this->meiliServer,
 
             'apiKey' => $this->apiKey,
             'indexName' => $indexName,

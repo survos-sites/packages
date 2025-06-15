@@ -122,8 +122,8 @@
         "setup": [
             "php -d memory_limit=4048M bin/console app:load-data"
         ],
-        "fetch": [
-            "php -d memory_limit=4048M bin/console app:load-data --fetch --refresh"
+        "load": [
+            "php -d memory_limit=4048M bin/console workflow:iterate App\\Entity\\Package --marking=new --transition=load"
         ],
         "process": [
             "php -d memory_limit=4048M bin/console app:load-data --process && php -d memory_limit=4512M bin/console grid:index"

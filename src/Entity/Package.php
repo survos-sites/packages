@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -88,9 +89,15 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public ?array $symfonyVersions = null;
 
     #[Groups(['package.read'])]
-    public bool $hasValidSymfonyVersion { get => !empty($this->symfonyVersions); }
+    #[ApiProperty("null if unknown (e.g. marking=new), other boolean")]
+    public ?bool $hasValidSymfonyVersion {
+        get => is_null($this->symfonyVersions) ? null : !empty($this->symfonyVersions);
+    }
     #[Groups(['package.read'])]
-    public bool $hasValidPhpVersion { get => !empty($this->phpVersions); }
+    #[ApiProperty("null if unknown (e.g. marking=new), other boolean")]
+    public ?bool $hasValidPhpVersion {
+        get => is_null($this->phpVersions) ? null : !empty($this->phpVersions);
+    }
 
     #[Groups(['package.facets', 'package.read'])]
     public array $keywords { get => $this->data['keywords'] ?? []; }
