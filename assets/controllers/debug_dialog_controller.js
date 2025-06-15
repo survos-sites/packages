@@ -78,10 +78,10 @@ export default class extends Dialog {
                 // const obj = { a: null, b: 2, c: { d: null, e: 5 } };
                 // this.titleTarget.innerHTML = hit.name; // @todo: generalize!
 
-                const clean = this.cleanObject(hit);
-                console.log(clean);
+                // const clean = this.cleanObject(hit);
+                // console.log(clean);
 // → { b: 2, c: { e: 5 } }
-                const html = prettyPrintJson.toHtml(clean);
+                const html = prettyPrintJson.toHtml(hit);
                 // this.modalTarget.innerHTML = '<pre>' + html + '</pre>';
                 this.contentTarget.innerHTML = '<pre class="json-container">' + html + '</pre>';
                 // this.contentTarget.innerHTML = html;
