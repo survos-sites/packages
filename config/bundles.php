@@ -40,5 +40,5 @@ return [
     Jwage\PhpAmqpLibMessengerBundle\PhpAmqpLibMessengerBundle::class => ['all' => true],
     Survos\InspectionBundle\SurvosInspectionBundle::class => ['all' => true],
     Survos\ApiGrid\SurvosApiGridBundle::class => ['all' => true],
-//    Survos\ApiGridBundle\SurvosApiGridBundle::class => ['all' => true],
+    Ecourty\McpServerBundle\McpServerBundle::class => ['all' => true],
 ];
