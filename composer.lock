@@ -62,16 +62,16 @@
         },
         {
             "name": "api-platform/core",
-            "version": "v4.1.16",
+            "version": "v4.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "64ff50f9b7206e7ac324ea221537f753194889b3"
+                "reference": "e1191ca86e548d7610251bba2d8498b440cfd631"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/64ff50f9b7206e7ac324ea221537f753194889b3",
-                "reference": "64ff50f9b7206e7ac324ea221537f753194889b3",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/e1191ca86e548d7610251bba2d8498b440cfd631",
+                "reference": "e1191ca86e548d7610251bba2d8498b440cfd631",
                 "shasum": ""
             },
             "require": {
@@ -272,9 +272,9 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v4.1.16"
+                "source": "https://github.com/api-platform/core/tree/v4.1.17"
             },
-            "time": "2025-06-13T13:00:13+00:00"
+            "time": "2025-06-19T10:14:20+00:00"
         },
         {
             "name": "cebe/php-openapi",
@@ -1809,16 +1809,16 @@
         },
         {
             "name": "ecourty/mcp-server-bundle",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdouardCourty/mcp-server-bundle.git",
-                "reference": "83e9dc3426a9d3d2ca2986182a46d8bb1e91fec2"
+                "reference": "46059bb1bd06dfeb9b3430a41ee47a0a6617e7e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdouardCourty/mcp-server-bundle/zipball/83e9dc3426a9d3d2ca2986182a46d8bb1e91fec2",
-                "reference": "83e9dc3426a9d3d2ca2986182a46d8bb1e91fec2",
+                "url": "https://api.github.com/repos/EdouardCourty/mcp-server-bundle/zipball/46059bb1bd06dfeb9b3430a41ee47a0a6617e7e6",
+                "reference": "46059bb1bd06dfeb9b3430a41ee47a0a6617e7e6",
                 "shasum": ""
             },
             "require": {
@@ -1865,9 +1865,9 @@
             ],
             "support": {
                 "issues": "https://github.com/EdouardCourty/mcp-server-bundle/issues",
-                "source": "https://github.com/EdouardCourty/mcp-server-bundle/tree/1.0.2"
+                "source": "https://github.com/EdouardCourty/mcp-server-bundle/tree/1.1.0"
             },
-            "time": "2025-06-17T21:49:31+00:00"
+            "time": "2025-06-18T22:08:30+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -2389,16 +2389,16 @@
         },
         {
             "name": "inspector-apm/inspector-php",
-            "version": "3.15.5",
+            "version": "3.15.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/inspector-apm/inspector-php.git",
-                "reference": "87abf8ed1218757370c31f91c127eb23492ee2df"
+                "reference": "9f563eeded9ef5686c4a2e76ff5ba6cd50df98a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inspector-apm/inspector-php/zipball/87abf8ed1218757370c31f91c127eb23492ee2df",
-                "reference": "87abf8ed1218757370c31f91c127eb23492ee2df",
+                "url": "https://api.github.com/repos/inspector-apm/inspector-php/zipball/9f563eeded9ef5686c4a2e76ff5ba6cd50df98a2",
+                "reference": "9f563eeded9ef5686c4a2e76ff5ba6cd50df98a2",
                 "shasum": ""
             },
             "require": {
@@ -2437,9 +2437,9 @@
             ],
             "support": {
                 "issues": "https://github.com/inspector-apm/inspector-php/issues",
-                "source": "https://github.com/inspector-apm/inspector-php/tree/3.15.5"
+                "source": "https://github.com/inspector-apm/inspector-php/tree/3.15.8"
             },
-            "time": "2025-06-18T09:11:12+00:00"
+            "time": "2025-06-19T12:13:16+00:00"
         },
         {
             "name": "inspector-apm/inspector-symfony",
