@@ -19,7 +19,7 @@ PHP: {{ hit.phpVersionString }}
 {#{% set _sc = 'debug_dialog' %}#}
 
 <button data-hit-id="{{ hit.id }}"
-    {{ stimulus_action(_sc_modal, 'test') }}
+    {{ stimulus_action(_sc_modal, 'modal') }}
     class="btn btn-sm btn-outline-primary">
     Debug {{ _sc_modal }} {{ hit.id }}
 </button>

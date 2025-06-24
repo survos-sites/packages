@@ -195,6 +195,7 @@ export default class extends Controller {
                         }
                         // idea: extend the language to have a
                         // generic debug: https://github.com/twigjs/twig.js/wiki/Extending-twig.js-With-Custom-Tags
+                        // this _does_ work, with includes!
                         let x= tpl.render({hit: hit, title: 'const tpl'});
                         return this.template.render({
                             x: x,

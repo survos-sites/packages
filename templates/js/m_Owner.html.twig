@@ -17,40 +17,17 @@ rendered X: {{ x }}
 
 {# need to load this correctly, can't use include in an inline template #}
 {#{% include 'detail.twig' with {'hit': hit} only %}#}
-{% set _sc = 'debug_dialog' %}
+{% set _sc_modal = 'debug_dialog' %}
 {#https://github.com/twigjs/twig.js/wiki#ajax-templates#}
 {# this could also be an action if the controller were outside the loop #}
 
-<div {{ stimulus_controller(_sc, {
-    serverUrl: globals.serverUrl,
-    serverApiKey: globals.serverApiKey,
-    indexName: globals.indexName,
-    id: hit.id
-}) }}
-    {{ stimulus_action(_sc, 'backdropClose') }}
->
-    <dialog
-        {{ stimulus_target(_sc, 'dialog')}}
-    >
-        <h3 {{ stimulus_target(_sc, 'title') }}>
-            {{ _sc }} title
-        </h3>
 
-        <div {{ stimulus_target(_sc, 'content')}}>
-            {{ _sc }} content
-        </div>
-        <button type="button"
-            {{ stimulus_action(_sc, 'close') }}
-                autofocus>Cancel/Close</button>
-    </dialog>
-
-
-    <button type="button"
-        {{ stimulus_action(_sc, 'open') }}
-    >
-        {{ icons.json|raw }}
-        {{ hit.id }}</button>
-</div>
+<button
+    {{ stimulus_action(_sc_modal, 'modal') }}
+        data-hit-id="{{ hit.id }}"
+        class="btn btn-sm btn-outline-primary">
+    {{ icons.json }}
+</button>
 
 
 <!-- Flex container so badges wrap neatly -->

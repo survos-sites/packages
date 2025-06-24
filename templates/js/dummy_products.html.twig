@@ -1,4 +1,11 @@
 #{{ hit.__hitIndex }} ({{ hit.__position }})
 <code>{{ hit.marking }}</code>
+<img src="{{ hit.thumbnail }}" alt="image" />
 <p>{{ hit._highlightResult.description.value }}</p>
 
+<button
+    {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
+    data-hit-id="{{ hit.id }}"
+    class="btn btn-sm btn-outline-primary">
+    {{ icons.json }}
+</button>

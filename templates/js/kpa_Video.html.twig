@@ -6,4 +6,12 @@
 
 <h2>{{ hit.title }}</h2>
 Year: {{ hit.year }}
+
+<button
+    {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
+    data-hit-id="{{ hit.id }}"
+    class="btn btn-sm btn-outline-primary">
+    {{ icons.json }}
+</button>
+
 <p>{{ hit._highlightResult.description.value }}</p>

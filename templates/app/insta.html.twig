@@ -40,7 +40,6 @@
         bug: ux_icon('tabler:bug'),
     } %}
 
-    <h1>{{ server }}</h1>
     <div {{ stimulus_controller(_sc, {
             serverUrl: server,
             serverApiKey: apiKey,
@@ -92,13 +91,7 @@
                             }) }}
                         >
 
-                            <div {{ stimulus_target(_sc_modal, 'title') }}>
-                                @{{ _sc_modal }} here
-
-                            </div>
-
                             <div {{ stimulus_target(_sc_modal, 'modal') }}
-{#                                class="modal fade"#}
                             >
                                 {# all them templates use this modal #}
                                 {{ include('_modal.html.twig', {_sc_modal: _sc_modal}) }}

@@ -1,14 +1,19 @@
 {% set official = hit %}
 {% set name = hit.name %}
 
-<h2>{{ hit['name.official_full'] }}
-    ({{ hit['currentParty'] }} - {{ official.state }})</h2>
-<h3>
+<h4>{{ hit['name.official_full'] }}
+    ({{ hit['currentParty'] }} - {{ official.state }})</h4>
+<b>
     {{ official.imageCount }} Image(s)
-</h3>
-<ul>
+</b>
+<button
+    {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
+    data-hit-id="{{ official.id }}"
+    class="btn btn-sm btn-outline-primary">
+    {{ icons.json }}
+</button>
 
-    {{ hit.imageCodes|json_encode }}
+<ul>
     {% for code, imageData in hit.imageCodes %}
         {% for filter, size in imageData %}
             {{ imageData|json_encode }}

@@ -1,4 +1,3 @@
-import { Controller } from '@hotwired/stimulus';
 import {prettyPrintJson} from 'pretty-print-json';
 import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 
@@ -6,11 +5,9 @@ import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 * The following line makes this controller "lazy": it won't be downloaded until needed
 * See https://symfony.com/bundles/StimulusBundle/current/index.html#lazy-stimulus-controllers
 */
-
 /* stimulusFetch: 'lazy' */
-
 import Dialog from "@stimulus-components/dialog"
-import { Meilisearch } from "meilisearch";
+import {Meilisearch} from "meilisearch";
 
 export default class extends Dialog {
     static targets = ['content', 'title', 'body']
@@ -36,9 +33,7 @@ export default class extends Dialog {
     }
 
     setIndex() {
-        console.log(this.index);
         if (!this.index) {
-            console.log(this.index);
             try {
                 const client = new Meilisearch({
                     host: this.serverUrlValue,
@@ -77,19 +72,15 @@ export default class extends Dialog {
         // this.fooTarget.removeEventListener('click', this._fooBar)
     }
 
-    test(e) {
-        let hitId = e.target.dataset.hitId;
-        this.titleTarget.innerHTML = hitId;
-        this.hitId = hitId;
+    modal(e) {
+        // we could move the index logic here, so we have have a title
+        this.hitId = e.currentTarget.dataset.hitId;
         this.open();
     }
 
 
     // Function to override on open.
     open(e) {
-
-        console.error(e);
-
         // this.contentTarget.innerHTML = this.idValue;
         this.setIndex(); // if it hasn't been set yet.
         // we could skip this if it's lazy-loaded?
@@ -99,10 +90,10 @@ export default class extends Dialog {
                 // const obj = { a: null, b: 2, c: { d: null, e: 5 } };
                 // this.titleTarget.innerHTML = hit.name; // @todo: generalize!
 
-                // const clean = this.cleanObject(hit);
+                const clean = this.cleanObject(hit);
                 // console.log(clean);
 // → { b: 2, c: { e: 5 } }
-                const html = prettyPrintJson.toHtml(hit);
+                const html = prettyPrintJson.toHtml(clean);
                 console.log(hit);
                 // this.userStatusOutlets.forEach(outlet => {
                 //     console.log(outlet);
@@ -118,6 +109,7 @@ export default class extends Dialog {
                 // window.dispatchEvent(trigger);
 
                 this.contentTarget.innerHTML = '<pre class="json-container">' + html + '</pre>';
+                this.titleTarget.innerHTML = '@todo: title';
                 // this.contentTarget.innerHTML = html;
                 super.open();
             }
