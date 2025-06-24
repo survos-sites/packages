@@ -34,8 +34,11 @@ class PackageCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+
         // completely disable the "delete" action on all pages
-        return $actions->disable(Action::DELETE);
+        return $actions
+            ->disable(Action::BATCH_DELETE)
+            ->disable(Action::DELETE);
     }
 
     public function configureFields(string $pageName): iterable
