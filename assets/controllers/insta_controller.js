@@ -18,6 +18,7 @@ import 'instantsearch.css/themes/algolia.min.css';
 
 Routing.setData(RoutingData);
 
+
 Twig.extend(function (Twig) {
     // Twig.setFilter('json_pretty', function(data, options={}) {
     //     return prettyPrintJson.toHtml(data, options);
@@ -62,6 +63,24 @@ Twig.extend(function (Twig) {
 
 });
 
+const defaults = {
+    base: '/templates',    // ← folder where .twig files live
+};
+
+// 2) Load a template file via AJAX
+const tpl = Twig.twig({
+    ...defaults,
+    // base: '/templatesXX',
+    href: '/index/detail.twig',  // ← path relative to `base`
+    load: true,                 // ← fetch it via XHR
+    async: false                // ← block until loaded
+});
+
+// 3) Render it immediately
+// const html = tpl.render({ title: 'Loaded via Twig.js!' });
+// console.error(html);
+// document.body.innerHTML = html;
+
 /*
 * The following line makes this controller "lazy": it won't be downloaded until needed
 * See https://symfony.com/bundles/StimulusBundle/current/index.html#lazy-stimulus-controllers
@@ -69,7 +88,9 @@ Twig.extend(function (Twig) {
 
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
-    static targets = ['searchBox', 'hits', 'template', 'pagination', 'refinementList', 'marking']
+    static targets = ['searchBox', 'hits',
+        'template', 'pagination',
+        'refinementList', 'marking']
     static values = {
         serverUrl: String,
         serverApiKey: String,
@@ -87,8 +108,6 @@ export default class extends Controller {
         // this._fooBar = this.fooBar.bind(this)
         this.globals = JSON.parse(this.globalsJsonValue);
         this.icons = JSON.parse(this.iconsJsonValue);
-        console.log(this.icons);
-
 
     }
 
@@ -102,8 +121,6 @@ export default class extends Controller {
         // add or remove classes, attributes, dispatch custom events, etc.
         // this.fooTarget.addEventListener('click', this._fooBar)
 
-        console.log(this.serverUrlValue);
-        console.log(this.templateUrlValue);
         this._self = this;
         this.fetchFile().then(() => {
                 try {
@@ -176,7 +193,11 @@ export default class extends Controller {
                         {
                             console.log(hit);
                         }
+                        // idea: extend the language to have a
+                        // generic debug: https://github.com/twigjs/twig.js/wiki/Extending-twig.js-With-Custom-Tags
+                        let x= tpl.render({hit: hit, title: 'const tpl'});
                         return this.template.render({
+                            x: x,
                             hit: hit,
                             icons: this.icons,
                             globals: this.globals
@@ -194,8 +215,6 @@ export default class extends Controller {
         attributeDivs.forEach(div => {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
-            console.warn(lookup);
-
             let x = search.addWidgets([
                 refinementList({
                     container: div,
@@ -292,7 +311,9 @@ export default class extends Controller {
             } else {
                 data = await response.text()
             }
+            // this is inline loading
             this.template = Twig.twig({data: data});
+            // this.template = tpl;
 
         } catch (error) {
             console.error("File fetch failed:", error)

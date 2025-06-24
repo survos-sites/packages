@@ -11,10 +11,9 @@
         app_insta: 'instant search',
     } %}
         <li>
-            <a href="{{ path(route) }}">
+            <a href="{{ path(route, {indexName: 'packagesPackage'}) }}">
                 <code>{{ route }}</code>
                 {{ label }}</a>
-
         </li>
 
     {% endfor %}

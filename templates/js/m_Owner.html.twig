@@ -11,7 +11,46 @@ https://collections.museumsvictoria.com.au/search?query=statue&view=list
 <h4>
     {{ hit.t.en.label }}
 </h4>
+rendered X: {{ x }}
 
+{#  this section is repeated, move it to debug_button.html.twig #}
+
+{# need to load this correctly, can't use include in an inline template #}
+{#{% include 'detail.twig' with {'hit': hit} only %}#}
+{% set _sc = 'debug_dialog' %}
+{#https://github.com/twigjs/twig.js/wiki#ajax-templates#}
+{# this could also be an action if the controller were outside the loop #}
+
+<div {{ stimulus_controller(_sc, {
+    serverUrl: globals.serverUrl,
+    serverApiKey: globals.serverApiKey,
+    indexName: globals.indexName,
+    id: hit.id
+}) }}
+    {{ stimulus_action(_sc, 'backdropClose') }}
+>
+    <dialog
+        {{ stimulus_target(_sc, 'dialog')}}
+    >
+        <h3 {{ stimulus_target(_sc, 'title') }}>
+            {{ _sc }} title
+        </h3>
+
+        <div {{ stimulus_target(_sc, 'content')}}>
+            {{ _sc }} content
+        </div>
+        <button type="button"
+            {{ stimulus_action(_sc, 'close') }}
+                autofocus>Cancel/Close</button>
+    </dialog>
+
+
+    <button type="button"
+        {{ stimulus_action(_sc, 'open') }}
+    >
+        {{ icons.json|raw }}
+        {{ hit.id }}</button>
+</div>
 
 
 <!-- Flex container so badges wrap neatly -->
@@ -24,6 +63,12 @@ https://collections.museumsvictoria.com.au/search?query=statue&view=list
   {% for tag in hit.keywords %}
     <span class="badge rounded-pill bg-success">{{ tag }}</span>
   {% endfor %}
+
+    Flags:
+    {% for locale in hit.targetLocales %}
+        <span class="badge rounded-pill bg-warning">{{ locale }}</span>
+    {% endfor %}
+
 </div>
 
 

@@ -14,52 +14,45 @@
 PHP: {{ hit.phpVersionString }}
 <p>{{ hit._highlightResult.description.value }}</p>
 
-{% set _sc = 'debug_dialog' %}
-{# this could also be an action if the controller were outside the loop #}
-<div {{ stimulus_controller(_sc, {
-    serverUrl: globals.serverUrl,
-    serverApiKey: globals.serverApiKey,
-    indexName: globals.indexName,
-    id: hit.id
-}) }}
-    {{ stimulus_action(_sc, 'backdropClose') }}
->
 
+{% set _sc_modal = 'debug_dialog' %}
+{#{% set _sc = 'debug_dialog' %}#}
 
-    <dialog {{ stimulus_target(_sc, 'dialog')}}
-        data-dialog-target="dialog">
-        <h3 {{ stimulus_target(_sc, 'title') }}>
-            title
-        </h3>
-
-        <div {{ stimulus_target(_sc, 'content')}}>
-            content
-        </div>
-        <button type="button"
-                {{ stimulus_action(_sc, 'close') }}
-                autofocus>Cancel</button>
-    </dialog>
-
-
-    <button type="button"
-            {{ stimulus_action(_sc, 'open') }}
-    >
-        {{ icons.json|raw }}
-         {{ hit.id }}</button>
-</div>
-
-
-{% set _sc_modal = 'modal' %}
-{% if globals.debug|default(false) %}
-#{{ hit.__hitIndex }} ({{ hit.__position }})
-<button
-    data-hit-id="{{ hit.id }}"
-    data-hit-json="{{ hit|json_encode|escape }}"
-    {{ stimulus_action(_sc, 'debug') }}>
-    {{ hit.id }}
+<button data-hit-id="{{ hit.id }}"
+    {{ stimulus_action(_sc_modal, 'test') }}
+    class="btn btn-sm btn-outline-primary">
+    Debug {{ _sc_modal }} {{ hit.id }}
 </button>
 
-{% endif %}
+
+{#{{ custom_render({hit: hit}) }}#}
+{# this renders the modal button!  Could be a hacky custom tag #}
+{#<div {{ stimulus_controller(_sc, {id: hit.id,#}
+{#    serverUrl: globals.serverUrl,#}
+{#    serverApiKey: globals.serverApiKey,#}
+{#    indexName: globals.indexName,#}
+
+{#}) }}#}
+{#    {{ stimulus_action(_sc, 'backdropClose') }}#}
+{#>#}
+{#    <button type="button" {{ stimulus_action(_sc, 'open') }}>#}
+{#        {{ icons.json|raw }}#}
+{#         {{ hit.id }}</button>#}
+{#</div>#}
+
+
+{#{% set _sc_modal = 'modal' %}#}
+{#{% if globals.debug|default(false) %}#}
+{##{{ hit.__hitIndex }} ({{ hit.__position }})#}
+{#<button#}
+{#    data-hit-id="{{ hit.id }}"#}
+{#    data-hit-json="{{ hit|json_encode|escape }}"#}
+{#    {{ stimulus_action(_sc, 'debug') }}>#}
+{#    {{ hit.id }}#}
+{#    MODAL#}
+{#</button>#}
+
+{#{% endif %}#}
 
 
 {% for v in hit.symfonyVersions %}

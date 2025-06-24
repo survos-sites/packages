@@ -13,7 +13,7 @@ import Dialog from "@stimulus-components/dialog"
 import { Meilisearch } from "meilisearch";
 
 export default class extends Dialog {
-    static targets = ['content', 'title']
+    static targets = ['content', 'title', 'body']
     static values = {
         serverUrl: String,
         serverApiKey: String,
@@ -28,20 +28,29 @@ export default class extends Dialog {
 
 
     connect() {
-        super.connect()
-        // console.log(this.serverUrlValue, this.serverApiKeyValue);
+        super.connect();
+        this.index = false;
+        console.log(this.serverUrlValue, this.serverApiKeyValue);
         // this.data = JSON.parse(this.dataValue);
         // console.log(this.data);
-        try {
-            const client = new Meilisearch({
-                host: this.serverUrlValue,
-                apiKey: this.serverApiKeyValue,
-            });
-            this.index = client.index(this.indexNameValue);
-        } catch (e) {
-            console.error(this.serverUrlValue, this.serverApiKeyValue);
-            console.error(e);
+    }
+
+    setIndex() {
+        console.log(this.index);
+        if (!this.index) {
+            console.log(this.index);
+            try {
+                const client = new Meilisearch({
+                    host: this.serverUrlValue,
+                    apiKey: this.serverApiKeyValue,
+                });
+                this.index = client.index(this.indexNameValue);
+            } catch (e) {
+                console.error(e);
+                console.error(this.serverUrlValue, this.serverApiKeyValue);
+            }
         }
+        console.assert(this.index, "index not set");
 
     }
 
@@ -68,12 +77,24 @@ export default class extends Dialog {
         // this.fooTarget.removeEventListener('click', this._fooBar)
     }
 
+    test(e) {
+        let hitId = e.target.dataset.hitId;
+        this.titleTarget.innerHTML = hitId;
+        this.hitId = hitId;
+        this.open();
+    }
+
 
     // Function to override on open.
-    open() {
-        // this.contentTarget.innerHTML = this.idValue;
+    open(e) {
 
-        this.index.getDocument(this.idValue).then(
+        console.error(e);
+
+        // this.contentTarget.innerHTML = this.idValue;
+        this.setIndex(); // if it hasn't been set yet.
+        // we could skip this if it's lazy-loaded?
+
+        this.index.getDocument(this.hitId).then(
             hit => {
                 // const obj = { a: null, b: 2, c: { d: null, e: 5 } };
                 // this.titleTarget.innerHTML = hit.name; // @todo: generalize!
@@ -82,13 +103,26 @@ export default class extends Dialog {
                 // console.log(clean);
 // → { b: 2, c: { e: 5 } }
                 const html = prettyPrintJson.toHtml(hit);
+                console.log(hit);
+                // this.userStatusOutlets.forEach(outlet => {
+                //     console.log(outlet);
+                // })
                 // this.modalTarget.innerHTML = '<pre>' + html + '</pre>';
+                // probably better..
+                // https://stimulus.hotwired.dev/reference/controllers#cross-controller-coordination-with-events
+
+                // const trigger = new CustomEvent("update-modal", {
+                //     detail: {
+                //         content: hit
+                //     }});
+                // window.dispatchEvent(trigger);
+
                 this.contentTarget.innerHTML = '<pre class="json-container">' + html + '</pre>';
                 // this.contentTarget.innerHTML = html;
-                // this.openModal();
                 super.open();
             }
-        )
+        );
+
 
     }
 
@@ -103,6 +137,8 @@ export default class extends Dialog {
     }
 
     cleanObject(obj) {
+        // not necessary if the object has been cleaned before sending to meili
+
         Object.entries(obj).forEach(([key, value]) => {
             if (value && typeof value === 'object') {
                 // Recurse into objects and arrays

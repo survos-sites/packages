@@ -42,7 +42,7 @@ final class AppController extends AbstractController
     #[Route('/index/{indexName}', name: 'app_insta')]
     #[Template('app/insta.html.twig')]
     public function index(
-        string $indexName = 'packagesPackage',
+        string $indexName, //  = 'packagesPackage',
         #[MapQueryParameter] bool $useProxy = false
     ): Response|array
     {

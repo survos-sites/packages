@@ -25,13 +25,14 @@
 {% block body %}
 
 
-    {% set _sc = 'insta' %}
-    {% set _sc_modal = 'modal' %}
+    {% set _sc = 'insta' %} {#  for loading hits #}
+    {% set _sc_modal = 'debug_dialog' %} {#  for the debugger #}
     {#        {{ stimulus_controller(_sc_modal) }}#}
     {% set globals = {
         serverUrl: server,
         serverApiKey: apiKey,
         indexName: indexName,
+        _sc_modal: _sc_modal,
         debug: app.request.get('debug', false)
     } %}
     {% set icons = {
@@ -78,23 +79,36 @@
                 </div>
                 <div class="col-lg-9">
                     <div class="insta-list">
+                        {{ server }}
                         {# Sidebar: search + filters #}
                         <div class="mb-3" {{ stimulus_target(_sc, 'searchBox') }}></div>
                         {# Main: hits + pagination #}
                         <main
                             {{ stimulus_controller(_sc_modal, {
+                                serverUrl: server,
+                                serverApiKey: apiKey,
                                 indexName: indexName,
                                 globalsJson: globals|json_encode,
                             }) }}
                         >
-                            <div {{ stimulus_target(_sc, 'hits') }}></div>
-                            <div class="mt-4" {{ stimulus_target(_sc, 'pagination') }}></div>
+
+                            <div {{ stimulus_target(_sc_modal, 'title') }}>
+                                @{{ _sc_modal }} here
+
+                            </div>
 
                             <div {{ stimulus_target(_sc_modal, 'modal') }}
-                                class="modal fade"
+{#                                class="modal fade"#}
                             >
-                                {{ include('_modal.html.twig') }}
+                                {# all them templates use this modal #}
+                                {{ include('_modal.html.twig', {_sc_modal: _sc_modal}) }}
                             </div>
+
+                            <div {{ stimulus_target(_sc, 'hits') }}>
+
+                            </div>
+                            <div class="mt-4" {{ stimulus_target(_sc, 'pagination') }}></div>
+
                         </main>
                     </div>
                 </div>
