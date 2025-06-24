@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use ApiPlatform\Doctrine\Odm\Filter\BooleanFilter;
 use App\Entity\Package;
 use App\Workflow\BundleWorkflow;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -28,6 +30,12 @@ class PackageCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Package::class;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        // completely disable the "delete" action on all pages
+        return $actions->disable(Action::DELETE);
     }
 
     public function configureFields(string $pageName): iterable
