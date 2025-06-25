@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use cebe\openapi\Reader;
 use Meilisearch\Client;
 use Meilisearch\Meilisearch;
 use Survos\MeiliAdminBundle\Service\MeiliService;
@@ -46,13 +47,25 @@ final class AppController extends AbstractController
         #[MapQueryParameter] bool $useProxy = false
     ): Response|array
     {
+
+        $dummyServer = 'https://dummy.survos.com/api/docs.jsonopenapi';
+// realpath is needed for resolving references with relative Paths or URLs
+        $openapi = Reader::readFromJsonFile($dummyServer);
+        $openapi->resolveReferences();
+
+        // Entity, then _list_ of groups separated by _
+//        dd($openapi->components->schemas['Product.jsonld-product.read_product.details']);
+
+
+//        dd($openapi);
+
         $locale = 'en'; // @todo
         $index = $this->meiliService->getIndexEndpoint($indexName);
         $settings = $index->getSettings();
         $facets = $settings['filterableAttributes'];
         // this is specific to our way of handling related, translated messages
         $related = $this->meiliService->getRelated($facets, $indexName, $locale);
-        //gotta fix this
+        // use proxy for translations or hidden
         $params = [
             'server' =>
                 $useProxy

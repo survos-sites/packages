@@ -1,11 +1,16 @@
 {% set official = hit %}
 {% set name = hit.name %}
 
-<h4>{{ hit['name.official_full'] }}
-    ({{ hit['currentParty'] }} - {{ official.state }})</h4>
-<b>
+<b>{{ hit['name.official_full'] }}
+    ({{ hit['currentParty'] }} - {{ official.state }})</b>
+
+<div>
+    {{ hit.wikiData.description|default('') }}
+</div>
+<i>
     {{ official.imageCount }} Image(s)
-</b>
+</i>
+<code>{{ hit.marking }}</code>
 <button
     {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
     data-hit-id="{{ official.id }}"

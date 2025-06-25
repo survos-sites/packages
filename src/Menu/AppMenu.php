@@ -2,6 +2,7 @@
 
 namespace App\Menu;
 
+use Survos\ApiGrid\Service\MeiliService;
 use Survos\BootstrapBundle\Event\KnpMenuEvent;
 use Survos\BootstrapBundle\Service\MenuService;
 use Survos\BootstrapBundle\Traits\KnpMenuHelperInterface;
@@ -26,9 +27,9 @@ final class AppMenu implements KnpMenuHelperInterface
 
     public function __construct(
         #[Autowire('%kernel.environment%')] protected string $env,
-        private MenuService $menuService,
-        private Security $security,
-        private ?AuthorizationCheckerInterface $authorizationChecker = null,
+        private MenuService                                  $menuService,
+        private Security                                     $security, private readonly MeiliService $meiliService,
+        private ?AuthorizationCheckerInterface               $authorizationChecker = null,
     ) {
     }
 
@@ -53,12 +54,18 @@ final class AppMenu implements KnpMenuHelperInterface
 
         $this->add($menu, 'app_homepage');
         $sub = $this->addSubmenu($menu, 'InstaSearch');
-        foreach (['packagesPackage', 'dtdemoOfficial',
+//        $indexes = $this->meiliService->getMeiliClient()->getIndexes(); dd($indexes);
+        foreach (['packages_Package', 'dtdemo_Official',
 //                     'kpa_Song',
                      'kpa_Video',
                      'm_px_victoria_obj',
                      'm_Owner',
-                     'dummy_products'] as $indexName) {
+                     'dummy_Product'] as $indexName) {
+            try {
+                $index = $this->meiliService->getIndex($indexName);
+            } catch (\Exception $e) {
+                continue;
+            }
             $this->add($sub, 'app_insta', ['indexName' => $indexName], label: $indexName);
 
         }

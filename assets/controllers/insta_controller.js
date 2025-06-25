@@ -7,7 +7,7 @@ import {prettyPrintJson} from 'pretty-print-json';
 import Twig from 'twig';
 import instantsearch from 'instantsearch.js'
 import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
-import {hits, pagination, refinementList, searchBox} from 'instantsearch.js/es/widgets'
+import {hits, pagination, refinementList, rangeSlider, rangeInput, searchBox} from 'instantsearch.js/es/widgets'
 import {stimulus_action, stimulus_controller, stimulus_target,} from "stimulus-attributes";
 import {Meilisearch} from "meilisearch";
 
@@ -216,6 +216,19 @@ export default class extends Controller {
         attributeDivs.forEach(div => {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
+            if (["rating", "price", "stock", "year"].includes(attribute)) {
+                search.addWidgets([
+                    rangeSlider({
+                        container: div,
+                        attribute: attribute,
+                        tooltips: value =>
+                            attribute === 'price'
+                                ? '$' + new Intl.NumberFormat().format(value)
+                                : value,
+                    }),
+                ]);
+                return;
+            }
             let x = search.addWidgets([
                 refinementList({
                     container: div,
@@ -262,6 +275,8 @@ export default class extends Controller {
         })
 
 
+
+
         // @todo: get the list of refinements.
 
         //   search.addWidgets([
@@ -297,6 +312,12 @@ export default class extends Controller {
         // this.fooTarget.removeEventListener('click', this._fooBar)
     }
 
+    /**
+     *
+     * Get the template specific to this index.
+     *
+     * @returns {Promise<void>}
+     */
     async fetchFile() {
         try {
             const response = await fetch(this.templateUrlValue)
