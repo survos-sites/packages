@@ -14,7 +14,8 @@ use App\Workflow\BundleWorkflow;
 use App\Workflow\BundleWorkflowInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Survos\ApiGrid\Api\Filter\FacetsFieldSearchFilter;
+use Survos\MeiliAdminBundle\Api\Filter\FacetsFieldSearchFilter;
+
 use Survos\ApiGrid\Api\Filter\MultiFieldSearchFilter;
 use Survos\ApiGrid\State\MeiliSearchStateProvider;
 use Survos\CoreBundle\Entity\RouteParametersInterface;
