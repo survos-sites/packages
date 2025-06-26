@@ -82,7 +82,6 @@ class PackageService
         $requires = $data->get('require', []);
         if ($data['abandoned'] || (0 == count($requires))) {
             $survosPackage->setMarking(BundleWorkflowInterface::PLACE_ABANDONED);
-            dd($data);
             return;
         }
 
