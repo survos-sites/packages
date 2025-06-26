@@ -235,7 +235,7 @@ export default class extends Controller {
                     limit: 5,
                     showMoreLimit: 10,
                     showMore: true,
-                    searchable: true,
+                    searchable: !['gender','house','currentParty'].includes(attribute),
                     attribute: attribute,
                     transformItems: (items, { results }) => {
                         if (Object.keys(lookup).length === 0) {

@@ -18,6 +18,10 @@
     {{ icons.json }}
 </button>
 
+{% if hit.originalImageUrl %}
+<img class="img-thumbnail" src="{{ hit.originalImageUrl }}" />
+{% endif %}
+
 <ul>
     {% for code, imageData in hit.imageCodes %}
         {% for filter, size in imageData %}
