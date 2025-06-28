@@ -60,6 +60,7 @@ final class AppMenu implements KnpMenuHelperInterface
                      'kpa_Video',
                      'm_px_victoria_obj',
                      'm_Owner',
+                     'dtdemo_Jeopardy',
                      'dummy_Product'] as $indexName) {
             try {
                 $index = $this->meiliService->getIndex($indexName);

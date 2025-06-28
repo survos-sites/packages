@@ -263,4 +263,7 @@ return [
     'clamp-js' => [
         'version' => '0.7.0',
     ],
+    '@stimulus-components/reveal' => [
+        'version' => '5.0.0',
+    ],
 ];
