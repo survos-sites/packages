@@ -1,0 +1,17 @@
+{% set hit = hit|merge(hit.data) %}
+
+#{{ hit.__hitIndex }} ({{ hit.__position }})
+<code>{{ hit.marking }}</code>
+<img src="{{ hit.thumbnail }}" alt="image" />
+Stock: {{ hit.stock }}
+${{ hit.price|number_format(2) }}
+
+<p style="max-lines: 2">{{ hit._highlightResult.data.description.value }}</p>
+
+
+<button
+    {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
+    data-hit-id="{{ hit.sku }}"
+    class="btn btn-sm btn-outline-primary">
+    {{ icons.json }}
+</button>
