@@ -266,4 +266,7 @@ return [
     '@stimulus-components/reveal' => [
         'version' => '5.0.0',
     ],
+    '@andypf/json-viewer' => [
+        'version' => '2.1.10',
+    ],
 ];

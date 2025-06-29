@@ -22,3 +22,5 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //
 // import '@meilisearch/instant-meilisearch/templates/basic_search.css';
 
+
+import "@andypf/json-viewer"

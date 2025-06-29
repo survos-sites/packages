@@ -93,6 +93,7 @@ export default class extends Dialog {
                 const clean = this.cleanObject(hit);
                 // console.log(clean);
 // → { b: 2, c: { e: 5 } }
+
                 const html = prettyPrintJson.toHtml(clean);
                 console.log(hit);
                 // this.userStatusOutlets.forEach(outlet => {
@@ -108,7 +109,29 @@ export default class extends Dialog {
                 //     }});
                 // window.dispatchEvent(trigger);
 
-                this.contentTarget.innerHTML = '<pre class="json-container">' + html + '</pre>';
+                const jsonViewer = document.createElement("andypf-json-viewer")
+                jsonViewer.id = "hit_" + this.hitId
+                jsonViewer.expanded = 1
+                jsonViewer.indent = 3
+                jsonViewer.showDataTypes = false
+                jsonViewer.theme = "monokai"
+                jsonViewer.showToolbar = true
+                jsonViewer.showSize = true
+                jsonViewer.showCopy = true
+                jsonViewer.expandIconType = "square"
+                jsonViewer.data = clean
+
+                this.contentTarget.innerHTML = "";
+                this.contentTarget.appendChild(jsonViewer);
+
+                // get the first div.
+
+                // const oldEl = this.contentTarget.querySelector("div");
+                // this.contentTarget.replaceChild(jsonViewer, oldEl);
+                // this.contentTarget.appendChild(jsonViewer);
+
+                // this.contentTarget.innerHTML = '<pre class="json-container">' + html + '</pre>';
+                // this.contentTarget.innerHTML = '<andypf-json-viewer class="json-container">' + JSON.stringify(clean) + '</andypf-json-viewer>';
                 this.titleTarget.innerHTML = '@todo: title';
                 // this.contentTarget.innerHTML = html;
                 super.open();

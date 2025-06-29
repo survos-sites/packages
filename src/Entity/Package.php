@@ -42,7 +42,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 )]
 #[ApiFilter(OrderFilter::class, properties: ['marking', 'vendor', 'name', 'stars', 'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: ['marking' => 'exact', 'name' => 'partial'])]
-#[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'sourceType', 'keywords', 'marking'])]
+#[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'stars', 'keywords', 'marking'])]
 #[ApiFilter(
     MultiFieldSearchFilter::class,
     properties: ['name', 'description'],
@@ -103,7 +103,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     #[Groups(['package.facets', 'package.read'])]
     public array $keywords { get => $this->data['keywords'] ?? []; }
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true, type: Types::INTEGER)]
     #[Groups(['package.read'])]
     public ?int $stars = null;
 

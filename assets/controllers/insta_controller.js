@@ -216,7 +216,7 @@ export default class extends Controller {
         attributeDivs.forEach(div => {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
-            if (["rating", "price", "stock", "year"].includes(attribute)) {
+            if (["rating", "price", "stock", "year", "value", "show", "starsXX", "airDate"].includes(attribute)) {
                 search.addWidgets([
                     rangeSlider({
                         container: div,
@@ -235,7 +235,7 @@ export default class extends Controller {
                     limit: 5,
                     showMoreLimit: 10,
                     showMore: true,
-                    searchable: !['gender','house','currentParty'].includes(attribute),
+                    searchable: !['gender','house','currentParty','marking'].includes(attribute),
                     attribute: attribute,
                     transformItems: (items, { results }) => {
                         if (Object.keys(lookup).length === 0) {

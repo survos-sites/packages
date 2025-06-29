@@ -15,11 +15,19 @@
             </div>
 
             <div class="card-body">
-                <p class="card-text">{{ hit._highlightResult.question.value|raw }}</p>
+                <div class="blockquote">
+                    {{ hit._highlightResult.question.value|raw }}
+                </div>
+{#                <p class="card-text">#}
+{#                    {{ hit._highlightResult.question.value|raw }}#}
+{#                </p>#}
 
                 {% set _sc = 'reveal' %}
                 <div data-controller="reveal" data-reveal-hidden-class="d-none">
-                    <button {{ stimulus_action(_sc, 'toggle') }} class="btn btn-sm btn-primary mb-2">
+                    {# @todo: disappear when answer show.s #}
+                    <button {{ stimulus_action(_sc, 'toggle') }}
+                        data-reveal-target="item"
+                        class="btn btn-sm btn-primary mb-2">
                         Show Answer
                     </button>
 
@@ -29,11 +37,19 @@
                 </div>
             </div>
 
-            <div class="card-footer d-flex justify-content-end">
+            <div class="card-footer clearfix xxd-flex float-end xjustify-content-end">
+                <div class="float-start">
+                    {{ hit.airDate|slice(0,4) }}
+                </div>
+                <span>
+                    {% if hit._rankingScore != 1 %}
+                    score: {{ hit._rankingScore|number_format(2) }}
+                    {% endif %}
+                </span>
                 <button
                     {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
                     data-hit-id="{{ hit.id }}"
-                    class="btn btn-sm btn-outline-primary">
+                    class="float-end btn btn-sm btn-outline-primary">
                     {{ icons.json }}
                 </button>
             </div>
