@@ -12,6 +12,14 @@
 
 .grid-3 {
     width: calc(33% - 1rem);
+
+    @media (max-width: 1199.98px) {
+        width: calc(50% - 1rem);
+    }
+
+    @media (max-width: 575.98px) {
+        width: calc(100% - 1rem);
+    }
 }
 
 .grid-2 {
