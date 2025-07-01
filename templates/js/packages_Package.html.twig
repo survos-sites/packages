@@ -35,27 +35,29 @@
 
     </div>
 
-    <div class="card-footer clearfix xxd-flex float-end xjustify-content-end">
-        <code>{{ hit.marking }}</code>
-        {% for v in hit.symfonyVersions %}
-            <span class="badge bg-primary">{{ v }}</span>
-        {% endfor %}
+    <div class="card-footer clearfix d-flex float-end xjustify-content-end align-items-center gap-2">
+        <code class="bg-transparent">{{ hit.marking }}</code>
+        <div class="d-flex align-items-center gap-1 flex-grow-1">
+            {% for v in hit.symfonyVersions %}
+                <span class="badge bg-primary">{{ v }}</span>
+            {% endfor %}
+        </div>
 
         <span>
-                    {% if hit._rankingScore != 1 %}
-                        score: {{ hit._rankingScore|number_format(2) }}
-                    {% endif %}
-                </span>
+            {% if hit._rankingScore != 1 %}
+                score: {{ hit._rankingScore|number_format(2) }}
+            {% endif %}
+        </span>
+
+        <a target="_blank" href="{{ path('package_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
+            Details
+        </a>
         <button
             {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
             data-hit-id="{{ hit.id }}"
-            class="float-end btn btn-sm btn-outline-primary">
+            class="btn btn-sm btn-outline-primary">
             {{ icons.json }}
         </button>
-
-            <a target="_blank" href="{{ path('package_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
-                Details
-            </a>
 
     </div>
 </div>

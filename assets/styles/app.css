@@ -181,3 +181,8 @@ input.ais-SearchBox-input {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+[data-action="debug-dialog#modal"] svg {
+    height: 15px;
+    width: 15px;
+}
