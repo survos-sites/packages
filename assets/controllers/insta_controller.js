@@ -14,7 +14,9 @@ import {Meilisearch} from "meilisearch";
 import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 // this import makes the pretty-json really ugly
 // import '@meilisearch/instant-meilisearch/templates/basic_search.css';
-import 'instantsearch.css/themes/algolia.min.css';
+// @todo: custom css AFTER this.  Hack: move to app.css
+// import 'instantsearch.css/themes/algolia.min.css';
+import './../styles/hack.css';
 
 Routing.setData(RoutingData);
 
@@ -96,6 +98,7 @@ export default class extends Controller {
         serverApiKey: String,
         indexName: String,
         templateUrl: String,
+        hitClass: {type: String, default: 'grid-3'},
         globalsJson: {type: String, default: '{}'},
         iconsJson: {type: String, default: '{}'},
     }
@@ -108,6 +111,7 @@ export default class extends Controller {
         // this._fooBar = this.fooBar.bind(this)
         this.globals = JSON.parse(this.globalsJsonValue);
         this.icons = JSON.parse(this.iconsJsonValue);
+        console.error(this.hitClassValue);
 
     }
 
@@ -173,7 +177,17 @@ export default class extends Controller {
         //     return await searchClient.search(query, params);
         // }
         // let results = s('doll');
-        // console.log(results);
+        console.log(this.hitClassValue);
+
+        // helpers to convert back and forth
+        const toIndex = date => date.getFullYear() * 12 + date.getMonth();
+        const fromIndex = i => {
+            const year  = Math.floor(i / 12);
+            const month = i % 12;
+            const d     = new Date(year, month, 1);
+            return d.toLocaleString('default', { year:'numeric', month:'short' });
+        };
+
 
 
         search.addWidgets([
@@ -183,6 +197,11 @@ export default class extends Controller {
             }),
             hits({
                 container: this.hitsTarget,
+                cssClasses: {
+                    root: 'MyCustomHits',
+                    item: this.hitClassValue,
+                    list: ['MyCustomHitsList', 'MyCustomHitsList--subclass'],
+                },
                 templates: {
                     // banner: (b) => { console.log(b); return '' },
                     item: (hit, html, index) => {
@@ -216,11 +235,32 @@ export default class extends Controller {
         attributeDivs.forEach(div => {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
-            if (["rating", "price", "stock", "year", "value", "show", "starsXX", "airDate"].includes(attribute)) {
+
+            const startDate = new Date(2020, 0, 1);      // Jan 2020
+            const endDate   = new Date(2022, 11, 1);     // Dec 2022
+
+            if (["monthIndex"].includes(attribute)) {
+                console.error(attribute);
+                search.addWidgets([
+                    rangeSlider({
+                        container: div,
+                        attribute: attribute, //  numeric field in MeiliSearch
+                        min: toIndex(startDate),           // integer endpoint
+                        max: toIndex(endDate),
+                        step: 1,                            // one‐month granularity
+                        tooltips: {
+                            format: fromIndex                // show “Jan 2020”, “Feb 2020”, etc.
+                        },
+                        pips: false                         // turn off default Rheostat markers
+                    })
+                ]);
+            }
+            if (["rating", "price", "stock", "year", "value", "show", "starsXX"].includes(attribute)) {
                 search.addWidgets([
                     rangeSlider({
                         container: div,
                         attribute: attribute,
+                        pips: false,
                         tooltips: value =>
                             attribute === 'price'
                                 ? '$' + new Intl.NumberFormat().format(value)
@@ -344,4 +384,6 @@ export default class extends Controller {
             }
         }
     }
+
+
 }
