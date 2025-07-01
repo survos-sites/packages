@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "09acdafb7fa731c7d2062d16d292a076",
+    "content-hash": "5c792fea959e27e7f9bd0e0c687ce682",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -15821,113 +15821,60 @@
             "time": "2024-10-20T05:08:20+00:00"
         },
         {
-            "name": "survos/maker-bundle",
-            "version": "1.5.529",
+            "name": "survos/code-bundle",
+            "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/survos/SurvosMakerBundle.git",
-                "reference": "11c0006bbd0a3a45ab7dc7436cb07e4b0e9f6f38"
+                "url": "https://github.com/survos/SurvosCodeBundle.git",
+                "reference": "e62ec8da9ad93a94fbfdab8609441db1126e059c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosMakerBundle/zipball/11c0006bbd0a3a45ab7dc7436cb07e4b0e9f6f38",
-                "reference": "11c0006bbd0a3a45ab7dc7436cb07e4b0e9f6f38",
+                "url": "https://api.github.com/repos/survos/SurvosCodeBundle/zipball/e62ec8da9ad93a94fbfdab8609441db1126e059c",
+                "reference": "e62ec8da9ad93a94fbfdab8609441db1126e059c",
                 "shasum": ""
             },
             "require": {
-                "nette/php-generator": "^3.5||^4.1",
+                "nette/php-generator": "^4.1",
                 "php": "^8.3",
-                "roave/better-reflection": "^6.0",
-                "sebastian/diff": "^5.0||^6.0||^7.0",
-                "symfony/config": "^6.4 || ^7.1",
-                "symfony/console": "^6.4 || ^7.1",
-                "symfony/options-resolver": "^6.4 || ^7.1",
-                "symfony/security-http": "^6.4 || ^7.1",
-                "symfony/string": "^6.4 || ^7.1",
-                "twig/twig": "^3.4",
-                "zenstruck/console-extra": "^1.4"
-            },
-            "conflict": {
-                "survos/api-grid-bundle": "<1.2.57",
-                "survos/auth-bundle": "<1.2.57",
-                "survos/barcode-bundle": "<1.2.57",
-                "survos/bootstrap-bundle": "<1.2.57",
-                "survos/command-bundle": "<1.2.57",
-                "survos/core-bundle": "<1.2.57",
-                "survos/crawler-bundle": "<1.2.57",
-                "survos/doc-bundle": "<1.2.57",
-                "survos/faker-bundle": "<1.2.57",
-                "survos/grid-bundle": "<1.2.57",
-                "survos/grid-group-bundle": "<1.2.57",
-                "survos/html-prettify-bundle": "<1.2.57",
-                "survos/import-bridge": "<1.2.57",
-                "survos/inspection-bundle": "<1.2.57",
-                "survos/location-bundle": "<1.2.57",
-                "survos/providence-bundle": "<1.2.57",
-                "survos/ruler-bundle": "<1.2.57",
-                "survos/stripe-product": "<1.2.57",
-                "survos/tree-bundle": "<1.2.57",
-                "survos/wiki-bundle": "<1.2.57",
-                "survos/workflow-helper-bundle": "<1.2.57"
+                "roave/better-reflection": "^6.57",
+                "symfony/config": "^7.2",
+                "symfony/dependency-injection": "^7.2",
+                "symfony/http-kernel": "^7.2",
+                "twig/twig": "^3.4"
             },
             "require-dev": {
-                "doctrine/doctrine-bundle": "^2.7",
-                "doctrine/orm": "^2.12 || ^3.3",
-                "haydenpierce/class-finder": "^0.4.3",
                 "phpstan/phpstan": "^2.0",
-                "squizlabs/php_codesniffer": "^3.7",
-                "survos/core-bundle": "^1.5",
-                "symfony/form": "^6.4 || ^7.1",
-                "symfony/http-client": "^6.4 || ^7.1",
-                "symfony/maker-bundle": "^1.5",
-                "symfony/phpunit-bridge": "^6.4 || ^7.1",
-                "symfony/polyfill-php80": "^1.16.0",
-                "symfony/process": "^6.4 || ^7.1",
-                "symfony/security-core": "^6.4 || ^7.1",
-                "symfony/security-csrf": "^6.4 || ^7.1",
-                "symfony/twig-bundle": "^6.4 || ^7.1",
-                "symfony/validator": "^6.4 || ^7.1",
-                "symfony/yaml": "^6.4 || ^7.1"
+                "symfony/browser-kit": "^7.2",
+                "symfony/console": "^7.3",
+                "symfony/framework-bundle": "^7.2",
+                "symfony/phpunit-bridge": "^7.2",
+                "symfony/routing": "^7.2",
+                "symfony/security-bundle": "^7.3@beta",
+                "symfony/twig-bundle": "^7.2",
+                "symfony/var-dumper": "^7.2"
             },
-            "suggest": {
-                "symfony/workflow": "To generate a workflow from PHP constants",
-                "symplify/easy-coding-standard": "cleanup generated files"
-            },
+            "default-branch": true,
             "type": "symfony-bundle",
-            "extra": {
-                "symfony": {
-                    "require": "^6.4 | ^7.0",
-                    "allow-contrib": "true"
-                },
-                "branch-alias": {
-                    "dev-main": "1.6-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
-                    "Survos\\Bundle\\MakerBundle\\": "src/"
+                    "Survos\\CodeBundle\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "authors": [
-                {
-                    "name": "Tac Tacelosky",
-                    "email": "tacman@gmail.com"
-                }
-            ],
-            "description": "Tools to generate controllers and templates for the admin interface",
+            "description": "generate code for Symfony applications",
             "keywords": [
-                "crud",
+                "code",
                 "dev",
                 "generator",
-                "symfony"
+                "php"
             ],
             "support": {
-                "issues": "https://github.com/survos/SurvosMakerBundle/issues",
-                "source": "https://github.com/survos/SurvosMakerBundle/tree/1.5.529"
+                "issues": "https://github.com/survos/SurvosCodeBundle/issues",
+                "source": "https://github.com/survos/SurvosCodeBundle/tree/main"
             },
             "funding": [
                 {
@@ -15935,7 +15882,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-17T11:53:22+00:00"
+            "time": "2025-05-13T23:28:58+00:00"
         },
         {
             "name": "symfony/browser-kit",
@@ -16459,6 +16406,7 @@
     "stability-flags": {
         "knplabs/packagist-api": 20,
         "survos/api-grid-bundle": 20,
+        "survos/code-bundle": 20,
         "survos/core-bundle": 20,
         "survos/installer": 20,
         "survos/meili-admin-bundle": 20,

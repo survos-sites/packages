@@ -210,6 +210,9 @@
     "survos/bootstrap-bundle": {
         "version": "1.5.156"
     },
+    "survos/code-bundle": {
+        "version": "dev-main"
+    },
     "survos/command-bundle": {
         "version": "1.5",
         "recipe": {
@@ -244,9 +247,6 @@
     },
     "survos/js-twig-bundle": {
         "version": "1.6.0"
-    },
-    "survos/maker-bundle": {
-        "version": "1.5.198"
     },
     "survos/meili-admin-bundle": {
         "version": "1.5.370"

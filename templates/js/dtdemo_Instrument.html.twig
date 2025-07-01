@@ -24,7 +24,6 @@
         {% for country in hit.countries %}
             <li>
                 <span class="fi fi-{{ country|lower }}"></span>
-                <code>{{ country|lower }}</code>
                 <span
                     class="text-tiny" {{ stimulus_target(_sc, 'country') }} data-cc="{{ country|lower }}">{{ country }}
                 </span>

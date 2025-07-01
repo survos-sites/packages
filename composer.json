@@ -146,11 +146,12 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.65",
+        "nette/php-generator": "^4.1",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^12.1",
         "pierstoval/smoke-testing": "*",
         "rector/rector": "^2.0",
-        "survos/maker-bundle": "^1.5",
+        "survos/code-bundle": "dev-main",
         "symfony/browser-kit": "^7.0.3",
         "symfony/css-selector": "^7.0.3",
         "symfony/debug-bundle": "^7.0.3",
