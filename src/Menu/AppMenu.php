@@ -2,6 +2,7 @@
 
 namespace App\Menu;
 
+use App\Repository\EndpointRepository;
 use Survos\ApiGrid\Service\MeiliService;
 use Survos\BootstrapBundle\Event\KnpMenuEvent;
 use Survos\BootstrapBundle\Service\MenuService;
@@ -28,7 +29,9 @@ final class AppMenu implements KnpMenuHelperInterface
     public function __construct(
         #[Autowire('%kernel.environment%')] protected string $env,
         private MenuService                                  $menuService,
-        private Security                                     $security, private readonly MeiliService $meiliService,
+        private Security                                     $security,
+        private readonly MeiliService $meiliService,
+        private readonly EndpointRepository $endpointRepository,
         private ?AuthorizationCheckerInterface               $authorizationChecker = null,
     ) {
     }
@@ -52,29 +55,21 @@ final class AppMenu implements KnpMenuHelperInterface
         $menu = $event->getMenu();
         $options = $event->getOptions();
 
-        $this->add($menu, 'app_homepage');
-        $sub = $this->addSubmenu($menu, 'InstaSearch');
-//        $indexes = $this->meiliService->getMeiliClient()->getIndexes(); dd($indexes);
-        foreach (['packages_Package', 'dtdemo_Official',
-//                     'kpa_Song',
-                     'kpa_Video',
-                     'm_px_victoria_obj',
-                     'm_Owner',
-                     'm_px_cleveland_obj',
-                     'dtdemo_Instrument',
-                     'dtdemo_Work',
-                     'dtdemo_Jeopardy',
-                     'dummy_Product'] as $indexName) {
+        $this->add($menu, 'app_homepage', label: 'Home');
+        foreach ($this->endpointRepository->findAll() as $endpoint) {
             try {
-                $index = $this->meiliService->getIndex($indexName);
+                $index = $this->meiliService->getIndex($endpoint->name);
 //                dd($index->getSettings());
             } catch (\Exception $e) {
                 continue;
             }
             // @todo: better way to map indexes to columns.  Number of fields?
-            $this->add($sub, 'app_insta', ['indexName' => $indexName], label: $indexName);
-
+            $this->add($menu, 'app_insta', ['indexName' => $endpoint->name, 'class' => 'grid-' . $endpoint->columns], label: $endpoint->label);
         }
+
+        return;
+
+        $sub = $this->addSubmenu($menu, 'InstaSearch');
         $this->add($menu, uri: 'https://github.com/survos-sites/packages', label: 'Github');
         $this->add($menu, uri: 'https://packagist.org/', label: 'Packagist.org');
         if ($this->env === 'dev') {
@@ -87,7 +82,6 @@ final class AppMenu implements KnpMenuHelperInterface
 
         if ($this->isGranted('ROLE_ADMIN')) {
             $nestedMenu = $this->addSubmenu($menu, 'Credits');
-            $this->add($menu, 'app_homepage');
             $this->add($menu, 'riccox_meili_admin');
             $this->add($menu, 'survos_workflows');
             $this->add($menu, 'survos_commands', if: $this->isEnv('dev') || $this->isGranted('ROLE_ADMIN'));
