@@ -48,10 +48,12 @@ final class AppController extends AbstractController
     ): Response|array
     {
 
-        $dummyServer = 'https://dummy.survos.com/api/docs.jsonopenapi';
+        if (0) {
+            $dummyServer = 'https://dummy.survos.com/api/docs.jsonopenapi';
 // realpath is needed for resolving references with relative Paths or URLs
-        $openapi = Reader::readFromJsonFile($dummyServer);
-        $openapi->resolveReferences();
+            $openapi = Reader::readFromJsonFile($dummyServer);
+            $openapi->resolveReferences();
+        }
 
         // Entity, then _list_ of groups separated by _
 //        dd($openapi->components->schemas['Product.jsonld-product.read_product.details']);
