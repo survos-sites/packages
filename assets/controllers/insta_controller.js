@@ -7,7 +7,7 @@ import {prettyPrintJson} from 'pretty-print-json';
 import Twig from 'twig';
 import instantsearch from 'instantsearch.js'
 import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
-import {hits, pagination, refinementList, rangeSlider, rangeInput, searchBox} from 'instantsearch.js/es/widgets'
+import {hits, pagination, refinementList, clearRefinements, rangeSlider, rangeInput, searchBox} from 'instantsearch.js/es/widgets'
 import {stimulus_action, stimulus_controller, stimulus_target,} from "stimulus-attributes";
 import {Meilisearch} from "meilisearch";
 
@@ -17,6 +17,7 @@ import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 // @todo: custom css AFTER this.  Hack: move to app.css
 // import 'instantsearch.css/themes/algolia.min.css';
 import './../styles/hack.css';
+import 'flag-icons/css/flag-icons.min.css';
 
 Routing.setData(RoutingData);
 
@@ -91,13 +92,16 @@ const tpl = Twig.twig({
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ['searchBox', 'hits',
-        'template', 'pagination',
+        'template',
+        'reset',
+        'pagination',
         'refinementList', 'marking']
     static values = {
         serverUrl: String,
         serverApiKey: String,
         indexName: String,
         templateUrl: String,
+        userLocale: {type: String, default: 'en'},
         hitClass: {type: String, default: 'grid-3'},
         globalsJson: {type: String, default: '{}'},
         iconsJson: {type: String, default: '{}'},
@@ -111,7 +115,10 @@ export default class extends Controller {
         // this._fooBar = this.fooBar.bind(this)
         this.globals = JSON.parse(this.globalsJsonValue);
         this.icons = JSON.parse(this.iconsJsonValue);
-        console.error(this.hitClassValue);
+        this.regionNames = new Intl.DisplayNames(
+            [this.userLocaleValue], {type: 'region'}
+        );
+
 
     }
 
@@ -177,7 +184,6 @@ export default class extends Controller {
         //     return await searchClient.search(query, params);
         // }
         // let results = s('doll');
-        console.log(this.hitClassValue);
 
         // helpers to convert back and forth
         const toIndex = date => date.getFullYear() * 12 + date.getMonth();
@@ -197,13 +203,14 @@ export default class extends Controller {
             }),
             hits({
                 container: this.hitsTarget,
+                escapeHTML: false,
                 cssClasses: {
                     root: 'MyCustomHits',
                     item: this.hitClassValue,
                     list: ['MyCustomHitsList', 'MyCustomHitsList--subclass'],
                 },
                 templates: {
-                    // banner: (b) => { console.log(b); return '' },
+                    banner: ( {b}, {html}) => { console.error(b); return '' },
                     item: (hit, html, index) => {
                         //     <div class="hit-name">
                         //       {{#helpers.highlight}}{ "attribute": "name" }{{/helpers.highlight}}
@@ -230,6 +237,25 @@ export default class extends Controller {
             }),
         ]);
 
+            search.addWidgets([
+                clearRefinements({
+                container: this.resetTarget,
+                // also clears the query input:
+                clearsQuery: true,
+                // the text inside the button
+                templates: {
+                    reset: 'Reset all filters'
+                },
+                // style the <button> to look like a link
+                cssClasses: {
+                    button: 'btn btn-link p-0',
+                    disabledButton: 'text-muted'  // optional: grey it out when nothing to clear
+                }
+            })
+                ]
+        );
+
+
         const attributeDivs = this.refinementListTarget.querySelectorAll('[data-attribute]')
 
         attributeDivs.forEach(div => {
@@ -238,6 +264,8 @@ export default class extends Controller {
 
             const startDate = new Date(2003, 0, 1);      // Jan 2020
             const endDate   = new Date(2022, 11, 1);     // Dec 2022
+
+
 
             if (["monthIndex"].includes(attribute)) {
                 // https://stackoverflow.com/questions/71663103/how-to-set-the-title-for-a-rangeslider-in-instantsearch-js
@@ -275,9 +303,23 @@ export default class extends Controller {
                             limit: 5,
                             showMoreLimit: 10,
                             showMore: true,
-                            searchable: !['gender','house','currentParty','marking'].includes(attribute),
+                            searchable: !['gender','house','currentParty','marking','countries'].includes(attribute),
                             attribute: attribute,
+                            escapeHTML: false,
                             transformItems: (items, { results }) => {
+                                if (['country','countries', 'countryCode'].includes(attribute)) {
+                                    return items.map(item => {
+                                        // item.label = 'XX' + lookup[item.value] || item.value;
+                                        // item.value = lookup[item.value];
+                                        return {
+                                            ...item,
+                                            highlighted:
+                                                this.regionNames.of(item.value.toUpperCase())
+                                        };
+                                    });
+                                    // `<span class="fi fi-${item.value.toLowerCase()}"></span>`+
+
+                                }
                                 if (Object.keys(lookup).length === 0) {
                                     return items;
                                 }

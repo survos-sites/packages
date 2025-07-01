@@ -41,7 +41,9 @@ rendered X: {{ x }}
     <span class="badge rounded-pill bg-success">{{ tag }}</span>
   {% endfor %}
 
-    Flags:
+    <span class="fi fi-{{ hit.countryCode }}"></span>
+
+    <br />
     {% for locale in hit.targetLocales %}
         <span class="badge rounded-pill bg-warning">{{ locale }}</span>
     {% endfor %}

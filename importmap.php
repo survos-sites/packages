@@ -269,4 +269,11 @@ return [
     '@andypf/json-viewer' => [
         'version' => '2.1.10',
     ],
+    'flag-icons' => [
+        'version' => '7.5.0',
+    ],
+    'flag-icons/css/flag-icons.min.css' => [
+        'version' => '7.5.0',
+        'type' => 'css',
+    ],
 ];
