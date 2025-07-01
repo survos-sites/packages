@@ -5,9 +5,13 @@
 {#    {% block importmap %}{{ importmap('app') }}{% endblock %} #}
 {# {% endblock %} #}
 
-{% block xxstylesheets %}
+{% block stylesheets %}
     {{ parent() }}
     <style>
+        li .ais-Hits-item {
+            width: calc(33% - 1rem);
+        }
+
         .container {
             display: grid;
             grid-template-columns: 350px 1fr;
@@ -40,10 +44,14 @@
         bug: ux_icon('tabler:bug'),
     } %}
 
+    {% set hitClass = app.request.get('class', 'grid-2') %}
+    {{ hitClass }}
+
     <div {{ stimulus_controller(_sc, {
             serverUrl: server,
             serverApiKey: apiKey,
             indexName: indexName,
+            hitClass: hitClass,
             globalsJson: globals|json_encode,
             iconsJson: icons|json_encode,
             templateUrl: path('app_template', {indexName: indexName})
@@ -59,6 +67,7 @@
                                 <h4 class="card-title fs-5 flex-grow-1 fw-bold mb-0">Insta</h4>
                                 <a href="#!" class="flex-shrink-0">Reset All</a>
                             </div>
+                            {# aside might not be the best element for this. #}
                             <aside class="col-12 col-md-12 mb-4"
                                 {{ stimulus_target(_sc, 'refinementList') }}
                             >
