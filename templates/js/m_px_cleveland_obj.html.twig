@@ -1,0 +1,78 @@
+{# example of search at
+
+https://collections.museumsvictoria.com.au/search?query=statue&view=list
+#}
+{% set obj = hit %}
+<div class="card h-100">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fs-3">{{ hit._highlightResult.label.value }}</span>
+        {{ hit.year }}
+    </div>
+
+    <div class="card-body">
+        {# @todo: thumbnail! #}
+{#        <img src="{{ hit.thumbnail }}"/>#}
+        {% if hit.images.web|default(false) %}
+                <img src="{{ hit.images.web.url }}"/>
+        {% endif %}
+
+        <div
+            data-controller="collapse"
+            data-collapse-lines-value="3"
+            data-collapse-more-text-value="Read more"
+            data-collapse-less-text-value="Show less"
+            class="mb-4"
+        >
+            <p data-collapse-target="text" class="line-clamp">
+                {{ hit._highlightResult.description.value }}
+            </p>
+
+            <button
+                data-collapse-target="button"
+                data-action="click->collapse#toggle"
+                class="btn btn-sm btn-link p-0"
+                aria-expanded="false"
+            >
+                Read more
+            </button>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <!-- Loop over your tags: replace this with your template syntax -->
+            <!-- Example in plain HTML: -->
+            {#    <span class="badge rounded-pill bg-primary">New</span> #}
+            {#    <span class="badge rounded-pill bg-success">Sale</span> #}
+            {#    <span class="badge rounded-pill bg-warning text-dark">Limited</span> #}
+            {% for tag in hit.keywords %}
+                <span class="badge rounded-pill bg-success">{{ tag }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <div>
+        <a href="{{ hit.citation }}" target="_blank">
+            {{ hit.credit|default(hit.citation) }}
+        </a>
+    </div>
+
+    <div class="card-footer">
+        <button
+            {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
+            data-hit-id="{{ hit.id }}"
+            class="btn btn-sm btn-outline-primary">
+            {{ icons.json }}
+        </button>
+    </div>
+
+    <!-- Flex container so badges wrap neatly -->
+    <div>
+
+    </div>
+
+
+    {# {{ hit.pixie_key }} #}
+    {# {{ hit.date_modified }} #}
+    {# {{ hit.keywords|slice(0,2)|join(' ') }} #}
+    {# {{ obj|keys|join(" ") }} #}
+</div>

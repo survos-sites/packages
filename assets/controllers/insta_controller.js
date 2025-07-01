@@ -236,11 +236,11 @@ export default class extends Controller {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
 
-            const startDate = new Date(2020, 0, 1);      // Jan 2020
+            const startDate = new Date(2003, 0, 1);      // Jan 2020
             const endDate   = new Date(2022, 11, 1);     // Dec 2022
 
             if (["monthIndex"].includes(attribute)) {
-                console.error(attribute);
+                // https://stackoverflow.com/questions/71663103/how-to-set-the-title-for-a-rangeslider-in-instantsearch-js
                 search.addWidgets([
                     rangeSlider({
                         container: div,
@@ -254,7 +254,7 @@ export default class extends Controller {
                         pips: false                         // turn off default Rheostat markers
                     })
                 ]);
-            }
+            } else
             if (["rating", "price", "stock", "year", "value", "show", "starsXX"].includes(attribute)) {
                 search.addWidgets([
                     rangeSlider({
@@ -268,45 +268,47 @@ export default class extends Controller {
                     }),
                 ]);
                 return;
-            }
-            let x = search.addWidgets([
-                refinementList({
-                    container: div,
-                    limit: 5,
-                    showMoreLimit: 10,
-                    showMore: true,
-                    searchable: !['gender','house','currentParty','marking'].includes(attribute),
-                    attribute: attribute,
-                    transformItems: (items, { results }) => {
-                        if (Object.keys(lookup).length === 0) {
-                            return items;
-                        }
-                        // let related = this.indexNameValue.replace(/obj$/, attribute);
-                        // let related = 'm_px_victoria_type';
-                        // let index = this.rawMeiliSearch.index(related);
-                        // let index = this.searchClient.index(related);
-                        // let yy = index.search('');
-                        // yy.then(x => {
-                        //     // console.log(attribute, related, x);
-                        // })
+            } else {
+                let x = search.addWidgets([
+                    refinementList({
+                            container: div,
+                            limit: 5,
+                            showMoreLimit: 10,
+                            showMore: true,
+                            searchable: !['gender','house','currentParty','marking'].includes(attribute),
+                            attribute: attribute,
+                            transformItems: (items, { results }) => {
+                                if (Object.keys(lookup).length === 0) {
+                                    return items;
+                                }
+                                // let related = this.indexNameValue.replace(/obj$/, attribute);
+                                // let related = 'm_px_victoria_type';
+                                // let index = this.rawMeiliSearch.index(related);
+                                // let index = this.searchClient.index(related);
+                                // let yy = index.search('');
+                                // yy.then(x => {
+                                //     // console.log(attribute, related, x);
+                                // })
 
-                        // The 'results' parameter contains the full results data
-                        return items.map(item => {
-                            item.label = lookup[item.value] || item.value;
-                            // item.value = lookup[item.value];
-                            return {
-                                ...item,
-                                highlighted: lookup[item.value] || item.value
-                            };
-                        });
-                    },
-                    templates: {
-                        showMoreText(data, { html }) {
-                          return html`<span class="btn btn-sm btn-primary">${data.isShowingMore ? 'Show less' : 'Show more'}</span>`;
-                        },
-                      },
-                    }
-                )]);
+                                // The 'results' parameter contains the full results data
+                                return items.map(item => {
+                                    item.label = lookup[item.value] || item.value;
+                                    // item.value = lookup[item.value];
+                                    return {
+                                        ...item,
+                                        highlighted: lookup[item.value] || item.value
+                                    };
+                                });
+                            },
+                            templates: {
+                                showMoreText(data, { html }) {
+                                    return html`<span class="btn btn-sm btn-primary">${data.isShowingMore ? 'Show less' : 'Show more'}</span>`;
+                                },
+                            },
+                        }
+                    )]);
+
+            }
             // console.log(`Found div with data-attribute="${attribute}"`, div);
             // console.log(x);
 

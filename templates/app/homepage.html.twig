@@ -23,6 +23,27 @@
     "test": "Hello World"}'></andypf-json-viewer>
 
 
+        <style>
+            .composer-package {
+                font-family: monospace;
+                font-size: 1.2em;
+            }
+            .composer-package__vendor {
+                opacity: 0.6;       /* lighter tone */
+                font-size: 0.9em;   /* slightly smaller */
+            }
+            .composer-package__name {
+                font-weight: 600;   /* bolder */
+                color: #222;        /* darker */
+            }
+        </style>
+    <p>Installed package:</p>
+    <span class="composer-package">
+    <span class="composer-package__vendor">symfony</span>/
+    <span class="composer-package__name">console</span>
+  </span>
+
+
 {% endblock %}
 
 {% block title %}

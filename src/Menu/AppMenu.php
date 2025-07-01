@@ -60,13 +60,18 @@ final class AppMenu implements KnpMenuHelperInterface
                      'kpa_Video',
                      'm_px_victoria_obj',
                      'm_Owner',
+                     'm_px_cleveland_obj',
+                     'dtdemo_Instrument',
+                     'dtdemo_Work',
                      'dtdemo_Jeopardy',
                      'dummy_Product'] as $indexName) {
             try {
                 $index = $this->meiliService->getIndex($indexName);
+//                dd($index->getSettings());
             } catch (\Exception $e) {
                 continue;
             }
+            // @todo: better way to map indexes to columns.  Number of fields?
             $this->add($sub, 'app_insta', ['indexName' => $indexName], label: $indexName);
 
         }

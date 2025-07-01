@@ -39,7 +39,7 @@
 
             <div class="card-footer clearfix xxd-flex float-end xjustify-content-end">
                 <div class="float-start">
-                    {{ hit.airDate|slice(0,4) }}
+                    {{ hit.airDate|date('Y (M d)') }}
                 </div>
                 <span>
                     {% if hit._rankingScore != 1 %}
