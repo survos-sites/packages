@@ -171,6 +171,12 @@ input.ais-SearchBox-input {
     font-size: 20px;
 }
 
+.card-header .badge svg {
+    width: 0.7rem;
+    height: 0.7rem;
+}
+
+
 .insta-side-panel .ais-RefinementList-showMore {
     background: none;
     padding: 0;
