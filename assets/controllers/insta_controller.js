@@ -203,7 +203,7 @@ export default class extends Controller {
             }),
             hits({
                 container: this.hitsTarget,
-                escapeHTML: false,
+                // escapeHTML: false,
                 cssClasses: {
                     root: 'MyCustomHits',
                     item: this.hitClassValue,
@@ -305,7 +305,7 @@ export default class extends Controller {
                             showMore: true,
                             searchable: !['gender','house','currentParty','marking','countries'].includes(attribute),
                             attribute: attribute,
-                            escapeHTML: false,
+                            // escapeHTML: false,
                             transformItems: (items, { results }) => {
                                 if (['country','countries', 'countryCode'].includes(attribute)) {
                                     return items.map(item => {
