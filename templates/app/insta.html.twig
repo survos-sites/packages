@@ -50,6 +50,7 @@
             serverApiKey: apiKey,
             indexName: indexName,
             hitClass: hitClass,
+            sortingJson: sorting|json_encode,
             globalsJson: globals|json_encode,
             iconsJson: icons|json_encode,
             templateUrl: path('app_template', {indexName: indexName})
@@ -91,6 +92,10 @@
 {#                        {{ server }}#}
                         {# Sidebar: search + filters #}
                         <div class="mb-3" {{ stimulus_target(_sc, 'searchBox') }}></div>
+
+                        {# the sorting dropdown #}
+                        <div class="mt-4" {{ stimulus_target(_sc, 'sort') }}></div>
+
                         {# Main: hits + pagination #}
                         <main
                             {{ stimulus_controller(_sc_modal, {
@@ -117,5 +122,10 @@
                 </div>
             </div>
         </div>
+
     </div>
+
+    {{ settings|json_pretty }}
+
 {% endblock %}
+

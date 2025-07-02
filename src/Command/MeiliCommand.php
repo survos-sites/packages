@@ -35,6 +35,8 @@ class MeiliCommand
                      'dtdemo_Official' => "congress",
 //                     'kpa_Song',
                      'kpa_Video' => 'videos',
+                     'm_px_aust_obj' => 'AustObj',
+                     'm_px_aust_mat' => 'AustMat',
                      'm_px_victoria_obj' => 'Victoria',
                      'm_Owner' => 'museums',
                      'm_px_cleveland_obj' => 'CMA',

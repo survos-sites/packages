@@ -2,6 +2,41 @@
 
 {% block body %}
 
+    <div class="jumbotron">
+        <h1 class="display-4">Meilisearch Demos</h1>
+        <p class="lead">
+            Meilisearch is screaming fast.  Here are some demos I built to show it off.
+            (Note: I have no affiliation with Meilisearch.com, just a fan.)
+
+        </p>
+        <hr class="my-4">
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="https://meilisearch.com" target="_blank" role="button">Learn more</a>
+        </p>
+    </div>
+
+    <ul>
+
+    {% for endpoint in endpoints %}
+        <li>
+
+            <a href="{{ path('app_insta', {
+                indexName: endpoint.name,
+                class: 'grid-' ~ endpoint.columns
+            }) }}">{{ endpoint.label }}</a>
+
+            {{ endpoint.settings|json_pretty }}
+{#            <andypf-json-viewer data='{{ endpoint.settings|json_encode }}'></andypf-json-viewer>#}
+
+
+        </li>
+
+    {% endfor %}
+    </ul>
+
+{% endblock  %}
+{% block xbody %}
+
     There are over 13,000 packages on packagist.org with the tag 'symfony-bundle'.
 
     This tool help you browse them.

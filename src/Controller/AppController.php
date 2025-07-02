@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\EndpointRepository;
 use cebe\openapi\Reader;
 use Meilisearch\Client;
 use Meilisearch\Meilisearch;
@@ -21,6 +22,7 @@ final class AppController extends AbstractController
         #[Autowire('%env(MEILI_SEARCH_KEY)%')] private string $apiKey,
         private MeiliService $meiliService,
         private UrlGeneratorInterface $router,
+        private EndpointRepository $endpointRepository,
     ) {}
 
     #[Route('/template/{indexName}', name: 'app_template')]
@@ -37,7 +39,10 @@ final class AppController extends AbstractController
     #[Template('app/homepage.html.twig')]
     public function home(): Response|array
     {
-        return [];
+
+        return [
+            'endpoints' => $this->endpointRepository->findAll(),
+        ];
     }
 
     #[Route('/index/{indexName}', name: 'app_insta')]
@@ -64,6 +69,17 @@ final class AppController extends AbstractController
         $locale = 'en'; // @todo
         $index = $this->meiliService->getIndexEndpoint($indexName);
         $settings = $index->getSettings();
+        $sorting[] = ['value' => $indexName, 'label' => 'relevancy'];
+        foreach ($settings['sortableAttributes'] as $sortableAttribute) {
+            foreach (['asc','desc'] as $direction) {
+                $sorting[] = [
+                    'label' => sprintf("%s %s", $sortableAttribute, $direction),
+                    'value' => sprintf("%s:%s:%s", $indexName, $sortableAttribute, $direction)
+                    ];
+            }
+        }
+
+
         $facets = $settings['filterableAttributes'];
         // this is specific to our way of handling related, translated messages
         $related = $this->meiliService->getRelated($facets, $indexName, $locale);
@@ -78,6 +94,8 @@ final class AppController extends AbstractController
             'apiKey' => $this->apiKey,
             'indexName' => $indexName,
             'facets' => $facets,
+            'sorting' => $sorting,
+            'settings' => $settings,
             'related' => $related, // the facet lookups
         ];
         return $params;

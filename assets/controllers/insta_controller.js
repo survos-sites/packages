@@ -7,7 +7,10 @@ import {prettyPrintJson} from 'pretty-print-json';
 import Twig from 'twig';
 import instantsearch from 'instantsearch.js'
 import {instantMeiliSearch} from '@meilisearch/instant-meilisearch';
-import {hits, pagination, refinementList, clearRefinements, rangeSlider, rangeInput, searchBox} from 'instantsearch.js/es/widgets'
+import {hits, pagination, refinementList, clearRefinements, rangeSlider,
+    rangeInput, searchBox} from 'instantsearch.js/es/widgets'
+import { infiniteHits, sortBy, configure } from 'instantsearch.js/es/widgets';
+
 import {stimulus_action, stimulus_controller, stimulus_target,} from "stimulus-attributes";
 import {Meilisearch} from "meilisearch";
 
@@ -93,6 +96,7 @@ const tpl = Twig.twig({
 export default class extends Controller {
     static targets = ['searchBox', 'hits',
         'template',
+        'sort',
         'reset',
         'pagination',
         'refinementList', 'marking']
@@ -105,6 +109,7 @@ export default class extends Controller {
         hitClass: {type: String, default: 'grid-3'},
         globalsJson: {type: String, default: '{}'},
         iconsJson: {type: String, default: '{}'},
+        sortingJson: {type: String, default: '{}'},
     }
 
     initialize() {
@@ -115,6 +120,8 @@ export default class extends Controller {
         // this._fooBar = this.fooBar.bind(this)
         this.globals = JSON.parse(this.globalsJsonValue);
         this.icons = JSON.parse(this.iconsJsonValue);
+        this.sorting = JSON.parse(this.sortingJsonValue);
+        console.error(this.sorting);
         this.regionNames = new Intl.DisplayNames(
             [this.userLocaleValue], {type: 'region'}
         );
@@ -194,22 +201,38 @@ export default class extends Controller {
             return d.toLocaleString('default', { year:'numeric', month:'short' });
         };
 
-
-
         search.addWidgets([
             searchBox({
                 container: this.searchBoxTarget,
                 placeholder: 'Search...',
             }),
-            hits({
+            sortBy({
+                container: this.sortTarget,
+                items: this.sorting
+                //     [
+                //     { label: 'Relevance', value: this.indexNameValue },                             // default ranking
+                //     { label: 'Price: Low → High', value: this.indexNameValue + ':value:asc' },           // price asc
+                //     { label: 'Price: Low → High', value: this.indexNameValue + ':value:desc' },           // price asc
+                //     // { label: 'Price: High → Low', value: 'movies:price:desc' },          // price desc
+                //     // { label: 'Newest First',    value: 'movies:release_date:desc' },     // date desc
+                //     // { label: 'Oldest First',    value: 'movies:release_date:asc' },      // date asc
+                // ],
+            }),
+            configure({ hitsPerPage: 20 }), // how many items per “page”, @todo: configurable
+            // hits({
+            infiniteHits({
                 container: this.hitsTarget,
                 // escapeHTML: false,
                 cssClasses: {
                     root: 'MyCustomHits',
                     item: this.hitClassValue,
                     list: ['MyCustomHitsList', 'MyCustomHitsList--subclass'],
+                    loadMore: 'btn btn-primary',           // add your own styling
+                    disabledLoadMore: 'btn btn-secondary disabled'
                 },
                 templates: {
+                    loadMoreText: 'Load More',            // default: “Show more”
+                    disabledLoadMoreText: 'No more results',
                     banner: ( {b}, {html}) => { console.error(b); return '' },
                     item: (hit, html, index) => {
                         //     <div class="hit-name">
@@ -222,9 +245,9 @@ export default class extends Controller {
                         // idea: extend the language to have a
                         // generic debug: https://github.com/twigjs/twig.js/wiki/Extending-twig.js-With-Custom-Tags
                         // this _does_ work, with includes!
-                        let x= tpl.render({hit: hit, title: 'const tpl'});
+                        // let x= tpl.render({hit: hit, title: 'const tpl'});
                         return this.template.render({
-                            x: x,
+                            x: '', // x,
                             hit: hit,
                             icons: this.icons,
                             globals: this.globals
@@ -232,9 +255,9 @@ export default class extends Controller {
                     },
                 },
             }),
-            pagination({
-                container: this.paginationTarget
-            }),
+            // pagination({
+            //     container: this.paginationTarget
+            // }),
         ]);
 
             search.addWidgets([
@@ -283,7 +306,7 @@ export default class extends Controller {
                     })
                 ]);
             } else
-            if (["rating", "price", "stock", "year", "value", "show", "starsXX"].includes(attribute)) {
+            if (["rating", "price", "stock", "year", "valueXX", "show", "starsXX"].includes(attribute)) {
                 search.addWidgets([
                     rangeSlider({
                         container: div,
