@@ -24,8 +24,10 @@
                 indexName: endpoint.name,
                 class: 'grid-' ~ endpoint.columns
             }) }}">{{ endpoint.label }}</a>
-
-            {{ endpoint.settings|json_pretty }}
+            <details>
+                <summary>{{ endpoint.label }} Settings</summary>
+                {{ endpoint.settings|json_pretty }}
+            </details>
 {#            <andypf-json-viewer data='{{ endpoint.settings|json_encode }}'></andypf-json-viewer>#}
 
 

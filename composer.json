@@ -127,11 +127,8 @@
         "load": [
             "php -d memory_limit=4048M bin/console workflow:iterate App\\\\Entity\\\\Package --marking=new --transition=load"
         ],
-        "process": [
-            "php -d memory_limit=4048M bin/console app:load-data --process && php -d memory_limit=4512M bin/console grid:index"
-        ],
         "index": [
-            "php -d memory_limit=2048M bin/console grid:index --reset"
+            "php -d memory_limit=2048M bin/console meili:index --reset"
         ],
         "coverage": "php -d xpcov.enabled=1 vendor/bin/phpunit --coverage-html coverage"
 
