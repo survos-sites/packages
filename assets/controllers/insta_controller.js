@@ -121,7 +121,6 @@ export default class extends Controller {
         this.globals = JSON.parse(this.globalsJsonValue);
         this.icons = JSON.parse(this.iconsJsonValue);
         this.sorting = JSON.parse(this.sortingJsonValue);
-        console.error(this.sorting);
         this.regionNames = new Intl.DisplayNames(
             [this.userLocaleValue], {type: 'region'}
         );
@@ -207,7 +206,7 @@ export default class extends Controller {
         search.addWidgets([
             searchBox({
                 container: this.searchBoxTarget,
-                placeholder: 'Search...',
+                placeholder: 'Search ' + this.serverUrlValue + '/' + this.indexNameValue + '...',
             }),
             sortBy({
                 container: this.sortTarget,
@@ -289,10 +288,8 @@ export default class extends Controller {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
 
-            const startDate = new Date(2003, 0, 1);      // Jan 2020
-            const endDate   = new Date(2022, 11, 1);     // Dec 2022
-
-
+            // const startDate = new Date(2003, 0, 1);      // Jan 2020
+            // const endDate   = new Date(2022, 11, 1);     // Dec 2022
 
             if (["monthIndex"].includes(attribute)) {
                 // https://stackoverflow.com/questions/71663103/how-to-set-the-title-for-a-rangeslider-in-instantsearch-js
@@ -300,8 +297,8 @@ export default class extends Controller {
                     rangeSlider({
                         container: div,
                         attribute: attribute, //  numeric field in MeiliSearch
-                        min: toIndex(startDate),           // integer endpoint
-                        max: toIndex(endDate),
+                        // min: toIndex(startDate),           // integer endpoint
+                        // max: toIndex(endDate),
                         step: 1,                            // one‐month granularity
                         tooltips: {
                             format: fromIndex                // show “Jan 2020”, “Feb 2020”, etc.
@@ -309,8 +306,7 @@ export default class extends Controller {
                         pips: false                         // turn off default Rheostat markers
                     })
                 ]);
-            } else
-            if (["rating", "price", "stock", "year", "valueXX", "show", "starsXX"].includes(attribute)) {
+            } else if (["rating", "price", "stock", "year", "valueXX", "show", "starsXX"].includes(attribute)) {
                 search.addWidgets([
                     rangeSlider({
                         container: div,
@@ -322,7 +318,7 @@ export default class extends Controller {
                                 : value,
                     }),
                 ]);
-                return;
+                // return;
             } else {
                 let x = search.addWidgets([
                     refinementList({
@@ -420,8 +416,7 @@ export default class extends Controller {
         //       }),
         //   ])
 
-        search.start()
-
+        search.start();
     }
 
     // Add custom controller actions here

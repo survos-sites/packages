@@ -16,7 +16,7 @@
 
             <div class="card-body">
                 <div class="blockquote">
-                    {{ hit._highlightResult.question.value|raw }}
+                    {{ hit._highlightResult.answer.value|raw }}
                 </div>
 {#                <p class="card-text">#}
 {#                    {{ hit._highlightResult.question.value|raw }}#}
@@ -32,14 +32,14 @@
                     </button>
 
                     <div data-reveal-target="item" class="d-none mt-2">
-                        <div class="alert alert-info mb-0">{{ hit.answer }}</div>
+                        <div class="alert alert-info mb-0">{{ hit.question }}</div>
                     </div>
                 </div>
             </div>
 
             <div class="card-footer clearfix xxd-flex float-end xjustify-content-end">
                 <div class="float-start">
-                    {{ hit.airDate|date('Y (M d)') }}
+                    {{ hit.airDate|date('Y (D, M j)') }}
                 </div>
                 <span>
                     {% if hit._rankingScore != 1 %}

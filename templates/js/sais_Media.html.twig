@@ -3,8 +3,9 @@
 
 <div class="card h-100">
     <div class="card-header d-flex justify-content-between align-items-center">
-            <span class="fs-3">{{ hit._highlightResult.title.value }}</span>
-        {{ hit.year }}
+
+            <span class="fs-3">{{ hit.root }}</span>
+        {{ hit.id }}
 
     </div>
 
@@ -14,20 +15,30 @@
         <div class="blockquote">
             {{ hit._highlightResult.description.value }}
         </div>
-        {{ hit.originalUrl }}
 
+        {% set resized = hit.resized|default([]) %}
+            <a href="{{ hit.originalUrl }}" target="_blank">
+                {% if resized.small|default(false) %}
+                <img style="max-width: 100px" src="{{ resized.small }}" alt="{{ resized.small }}"/>
+                {% else %}
+                    {{ hit.originalUrl }}
+                {% endif %}
+            </a>
+        <ul class="list-inline">
         {% for size, resized in hit.resized|default([]) %}
-            <li>
-                <b>{{ size }}</b>
-                <img style="max-width: 100px" src="{{ resized }}" alt="{{ resized }}"/>
-            </li>r
+            <li class="list-inline-item">
+                <a href="{{ resized }}" target="_blank">
+                    <i>{{ size }}</i>
+                </a>
+            </li>
         {% endfor %}
+        </ul>
 
     </div>
 
     <div class="card-footer clearfix d-flex float-end justify-content-end">
         <a href="{{ hit.originalUrl }}" target="_blank" class="btn-outline-blue">
-            {{ hit.originalUrl }}
+            original
         </a>
         <code>{{ hit.marking }}</code>
         <button
