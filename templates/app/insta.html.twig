@@ -57,7 +57,7 @@
         }) }}
         class="container-fluid py-4"
     >
-        <div class="w-100">
+        <div class="w-100" {{ stimulus_controller(_sc_locale, {userLocale: app.request.locale}) }}>
             <div class="row g-4">
                 <div class="col-lg-3">
                     <div class="card insta-side-panel">

@@ -125,6 +125,9 @@ export default class extends Controller {
         this.regionNames = new Intl.DisplayNames(
             [this.userLocaleValue], {type: 'region'}
         );
+        this.languageNames = new Intl.DisplayNames(
+            [this.userLocaleValue], {type: 'language'}
+        );
 
 
     }
@@ -242,6 +245,7 @@ export default class extends Controller {
                         {
                             console.log(hit);
                         }
+                        this.globals._sc_locale = 'locale_display';
                         // idea: extend the language to have a
                         // generic debug: https://github.com/twigjs/twig.js/wiki/Extending-twig.js-With-Custom-Tags
                         // this _does_ work, with includes!
@@ -326,10 +330,22 @@ export default class extends Controller {
                             limit: 5,
                             showMoreLimit: 10,
                             showMore: true,
-                            searchable: !['gender','house','currentParty','marking','countries'].includes(attribute),
+                            searchable: !['gender','house','currentParty','marking','countries','locale'    ].includes(attribute),
                             attribute: attribute,
                             // escapeHTML: false,
                             transformItems: (items, { results }) => {
+                                if (['locale'].includes(attribute)) {
+                                    return items.map(item => {
+                                        // item.label = 'XX' + lookup[item.value] || item.value;
+                                        // item.value = lookup[item.value];
+                                        return {
+                                            ...item,
+                                            highlighted:
+                                                this.languageNames.of(item.value.toUpperCase())
+                                        };
+                                    });
+
+                                }
                                 if (['country','countries', 'countryCode'].includes(attribute)) {
                                     return items.map(item => {
                                         // item.label = 'XX' + lookup[item.value] || item.value;

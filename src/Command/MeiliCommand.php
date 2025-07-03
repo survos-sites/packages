@@ -40,6 +40,8 @@ class MeiliCommand
                      'm_px_victoria_obj' => 'Victoria',
                      'm_Owner' => 'museums',
                      'm_px_cleveland_obj' => 'CMA',
+                     'm_px_met_obj' => 'MET',
+                     'sais_Media' => 'Sais/Media',
                      'dtdemo_Instrument' => 'Instruments',
                      'dtdemo_Work' => 'Songs',
                      'dtdemo_Jeopardy' => 'Jeopardy',

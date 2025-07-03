@@ -3,6 +3,9 @@ twig:
     form_themes:
 #        - 'bootstrap_5_layout.html.twig'
         - 'bootstrap_5_horizontal_layout.html.twig'
+    globals:
+        _sc_locale: locale_display
+
 
 when@test:
     twig:

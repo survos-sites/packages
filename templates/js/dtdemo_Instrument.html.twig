@@ -19,14 +19,14 @@
         </div>
         {% set _sc = 'locale_display' %}
 {#        <ul {{ stimulus_controller(_sc) }}>#}
-        <ul {{ stimulus_controller(_sc, {userLocale: 'en'}) }}>
+        <ul}}>
 
         {% for country in hit.countries %}
             <li>
                 <span class="fi fi-{{ country|lower }}"></span>
-                <span
-                    class="text-tiny" {{ stimulus_target(_sc, 'country') }} data-cc="{{ country|lower }}">{{ country }}
-                </span>
+                    <span
+                        class="text-tiny" {{ stimulus_target(_sc, 'country') }} data-cc="{{ country|lower }}">{{ country }}
+                    </span>
 
             </li>
         {% endfor %}

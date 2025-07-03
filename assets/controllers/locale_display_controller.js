@@ -1,3 +1,4 @@
+// locale_display
 import {Controller} from '@hotwired/stimulus';
 
 // @todo, add days of week and month names: https://stackoverflow.com/questions/39972925/get-localized-month-name-using-native-js
