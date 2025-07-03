@@ -16,7 +16,7 @@
 
             <div class="card-body">
                 <div class="blockquote">
-                    {{ hit._highlightResult.answer.value|raw }}
+                    {{ hit._highlightResult.question.value|raw }}
                 </div>
 {#                <p class="card-text">#}
 {#                    {{ hit._highlightResult.question.value|raw }}#}
@@ -32,7 +32,7 @@
                     </button>
 
                     <div data-reveal-target="item" class="d-none mt-2">
-                        <div class="alert alert-info mb-0">{{ hit.question }}</div>
+                        <div class="alert alert-info mb-0">{{ hit.answer }}</div>
                     </div>
                 </div>
             </div>
