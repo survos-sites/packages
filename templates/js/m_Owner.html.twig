@@ -43,9 +43,24 @@ rendered X: {{ x }}
 
     <span class="fi fi-{{ hit.countryCode }}"></span>
 
+    {{ hit.countryCode }}
+    {% if hit.countryCode %}
+
+    <span
+        class="text-tiny"
+        {{ stimulus_target(globals._sc_locale, 'country') }}
+        data-cc="{{ hit.countryCode|lower }}"
+    >
+        {{ hit.countryCode }}
+                </span>
+    {% endif %}
+
     <br />
     {% for locale in hit.targetLocales %}
-        <span class="badge rounded-pill bg-warning">{{ locale }}</span>
+        <span class="badge rounded-pill bg-warning"
+            {{ stimulus_target(globals._sc_locale, 'language') }}
+            data-lang="{{ locale|lower }}"
+        >{{ locale }}</span>
     {% endfor %}
 
 </div>

@@ -1,0 +1,55 @@
+
+{% set _sc = 'reveal' %}
+
+<div class="card h-100">
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+            <span class="fs-3">{{ hit.root }}</span>
+        {{ hit.id }}
+
+    </div>
+
+    <div class="card-body">
+        {% set video = hit %}
+        <img src="{{ hit.thumbnailUrl }}" />
+        <div class="blockquote">
+            {{ hit._highlightResult.description.value }}
+        </div>
+
+        {% set resized = hit.resized|default([]) %}
+            <a href="{{ hit.originalUrl }}" target="_blank">
+                {% if resized.small|default(false) %}
+                <img style="max-width: 100px" src="{{ resized.small }}" alt="{{ resized.small }}"/>
+                {% else %}
+                    {{ hit.originalUrl }}
+                {% endif %}
+            </a>
+        <ul class="list-inline">
+        {% for size, resized in hit.resized|default([]) %}
+            <li class="list-inline-item">
+                <a href="{{ resized }}" target="_blank">
+                    <i>{{ size }}</i>
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+
+    </div>
+
+    <div class="card-footer clearfix d-flex float-end justify-content-end">
+        <a href="{{ hit.originalUrl }}" target="_blank" class="btn-outline-blue">
+            original
+        </a>
+        <code>{{ hit.marking }}</code>
+        <button
+            {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
+            data-hit-id="{{ hit.id }}"
+            class="float-end btn btn-sm btn-outline-primary">
+            {{ icons.json }}
+        </button>
+    </div>
+</div>
+
+
+
+

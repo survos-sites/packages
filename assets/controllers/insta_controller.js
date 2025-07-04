@@ -124,6 +124,9 @@ export default class extends Controller {
         this.regionNames = new Intl.DisplayNames(
             [this.userLocaleValue], {type: 'region'}
         );
+        this.languageNames = new Intl.DisplayNames(
+            [this.userLocaleValue], {type: 'language'}
+        );
 
 
     }
@@ -203,7 +206,7 @@ export default class extends Controller {
         search.addWidgets([
             searchBox({
                 container: this.searchBoxTarget,
-                placeholder: 'Search...',
+                placeholder: 'Search ' + this.serverUrlValue + '/' + this.indexNameValue + '...',
             }),
             sortBy({
                 container: this.sortTarget,
@@ -233,6 +236,7 @@ export default class extends Controller {
                         {
                             console.log(hit);
                         }
+                        this.globals._sc_locale = 'locale_display';
                         // idea: extend the language to have a
                         // generic debug: https://github.com/twigjs/twig.js/wiki/Extending-twig.js-With-Custom-Tags
                         // this _does_ work, with includes!
@@ -276,10 +280,8 @@ export default class extends Controller {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
 
-            const startDate = new Date(2003, 0, 1);      // Jan 2020
-            const endDate   = new Date(2022, 11, 1);     // Dec 2022
-
-
+            // const startDate = new Date(2003, 0, 1);      // Jan 2020
+            // const endDate   = new Date(2022, 11, 1);     // Dec 2022
 
             if (["monthIndex"].includes(attribute)) {
                 // https://stackoverflow.com/questions/71663103/how-to-set-the-title-for-a-rangeslider-in-instantsearch-js
@@ -287,8 +289,8 @@ export default class extends Controller {
                     rangeSlider({
                         container: div,
                         attribute: attribute, //  numeric field in MeiliSearch
-                        min: toIndex(startDate),           // integer endpoint
-                        max: toIndex(endDate),
+                        // min: toIndex(startDate),           // integer endpoint
+                        // max: toIndex(endDate),
                         step: 1,                            // one‐month granularity
                         tooltips: {
                             format: fromIndex                // show “Jan 2020”, “Feb 2020”, etc.
@@ -296,8 +298,7 @@ export default class extends Controller {
                         pips: false                         // turn off default Rheostat markers
                     })
                 ]);
-            } else
-            if (["rating", "price", "stock", "year", "valueXX", "show", "starsXX"].includes(attribute)) {
+            } else if (["rating", "price", "stock", "year", "valueXX", "show", "starsXX"].includes(attribute)) {
                 search.addWidgets([
                     rangeSlider({
                         container: div,
@@ -309,7 +310,7 @@ export default class extends Controller {
                                 : value,
                     }),
                 ]);
-                return;
+                // return;
             } else {
                 let x = search.addWidgets([
                     refinementList({
@@ -317,10 +318,22 @@ export default class extends Controller {
                             limit: 5,
                             showMoreLimit: 10,
                             showMore: true,
-                            searchable: !['gender','house','currentParty','marking','countries'].includes(attribute),
+                            searchable: !['gender','house','currentParty','marking','countries','locale'    ].includes(attribute),
                             attribute: attribute,
                             // escapeHTML: false,
                             transformItems: (items, { results }) => {
+                                if (['locale'].includes(attribute)) {
+                                    return items.map(item => {
+                                        // item.label = 'XX' + lookup[item.value] || item.value;
+                                        // item.value = lookup[item.value];
+                                        return {
+                                            ...item,
+                                            highlighted:
+                                                this.languageNames.of(item.value.toUpperCase())
+                                        };
+                                    });
+
+                                }
                                 if (['country','countries', 'countryCode'].includes(attribute)) {
                                     return items.map(item => {
                                         // item.label = 'XX' + lookup[item.value] || item.value;
@@ -395,8 +408,7 @@ export default class extends Controller {
         //       }),
         //   ])
 
-        search.start()
-
+        search.start();
     }
 
     // Add custom controller actions here
