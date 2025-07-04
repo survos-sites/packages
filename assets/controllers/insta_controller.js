@@ -121,7 +121,6 @@ export default class extends Controller {
         this.globals = JSON.parse(this.globalsJsonValue);
         this.icons = JSON.parse(this.iconsJsonValue);
         this.sorting = JSON.parse(this.sortingJsonValue);
-        console.error(this.sorting);
         this.regionNames = new Intl.DisplayNames(
             [this.userLocaleValue], {type: 'region'}
         );
@@ -209,14 +208,6 @@ export default class extends Controller {
             sortBy({
                 container: this.sortTarget,
                 items: this.sorting
-                //     [
-                //     { label: 'Relevance', value: this.indexNameValue },                             // default ranking
-                //     { label: 'Price: Low → High', value: this.indexNameValue + ':value:asc' },           // price asc
-                //     { label: 'Price: Low → High', value: this.indexNameValue + ':value:desc' },           // price asc
-                //     // { label: 'Price: High → Low', value: 'movies:price:desc' },          // price desc
-                //     // { label: 'Newest First',    value: 'movies:release_date:desc' },     // date desc
-                //     // { label: 'Oldest First',    value: 'movies:release_date:asc' },      // date asc
-                // ],
             }),
             configure({ hitsPerPage: 20 }), // how many items per “page”, @todo: configurable
             // hits({
