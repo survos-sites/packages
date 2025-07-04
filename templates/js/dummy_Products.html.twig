@@ -1,0 +1,40 @@
+{% set hit = hit|merge(hit.data) %}
+
+
+This is for semantic search
+{% set _sc = 'reveal' %}
+
+<div class="card h-100">
+    <div class="card-header d-flex justify-content-between align-items-center gap-2">
+        <span class="fs-5 fw-semibold">{{ hit._highlightResult.data.title.value }}</span>
+        <span class="text-danger">${{ hit.price|number_format(2) }}</span>
+    </div>
+
+    <div class="card-body">
+        <img src="{{ hit.thumbnail }}" alt="image" class="mx-auto d-block img-fluid" />
+        <div class="blockquote text-muted fs-6">
+            {{ hit._highlightResult.data.description.value }}
+        </div>
+
+    </div>
+
+    <div class="card-footer clearfix d-flex gap-2 align-items-center flex-wrap">
+        {# <code>{{ hit.marking }}</code> #}
+        <div class="flex-shrink-0 badge bg-success">
+            In Stock: {{ hit.stock }}
+        </div>
+
+        <div class="badge bg-warning me-auto">
+            Rating: {{ hit.rating }}
+        </div>
+        <button
+            {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
+            data-hit-id="{{ hit.sku }}"
+            class="float-end btn btn-sm btn-outline-primary">
+            {{ icons.json }}
+        </button>
+    </div>
+</div>
+
+
+

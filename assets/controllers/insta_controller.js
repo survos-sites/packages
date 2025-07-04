@@ -159,32 +159,65 @@ export default class extends Controller {
             this.serverUrlValue,
             this.serverApiKeyValue,
             {
-                // placeholderSearch: false, // default: true.
-                // primaryKey: 'id', // default: undefined
-                keepZeroFacets: true,
-                showRankingScore: true,
-                showRankingScoreDetails: true
+                setMeiliSearchParams: {
+                    // placeholderSearch: false, // default: true.
+                    // primaryKey: 'id', // default: undefined
+                    keepZeroFacets: false, // true,
+                    showRankingScore: false,
+                    showRankingScoreDetails: true,
+                    semantic_ratio: 0.5,
+                }
             }
         );
-
-        this.searchClient = searchClient;
         setMeiliSearchParams({
-            showRankingScore: true,
-            showRankingScoreDetails: true
+            showRankingScoreDetails: true,
+            keepZeroFacets: true,
+            hybrid: { embedder: 'openai_dummy_products', semanticRatio: 0.8 }
         });
 
         const search = instantsearch({
-            indexName: this.indexNameValue,
+            indexName: 'dummy_products', // this.indexNameValue,
             searchClient,
-        })
+        });
+        // search.addWidgets([
+        //     configure({ hitsPerPage: 2,
+        //         showRankingScore: false,
+        //         showRankingScoreDetails: true,
+        //         keepZeroFacets: false,
+        //     }), // how many items per “page”, @todo: configurable
+        //     hits({
+        //         container: this.hitsTarget
+        //     })
+        // ]);
+        // search.start();
+        // search.refresh();
+        // console.error(search, searchClient);
+        // return;
 
 
-        // An index is where the documents are stored.
-        // let client = searchClient.index;
-        this.rawMeiliSearch = new Meilisearch( {
-                host: this.serverUrlValue,
-                apiKey: this.serverApiKeyValue
-            });
+
+        this.searchClient = searchClient;
+        // setMeiliSearchParams({
+        //     keepZeroFacets: false, // true,
+        //     showRankingScore: true,
+        //     showRankingScoreDetails: true,
+        //     additionalSearchParams: { semantic_ratio: 0.7 },
+        //     semantic_ratio: 0.5
+        // });
+
+        const hybrid = {
+            semantic_ratio: 0.2,
+            embedder: 'open_ai_embedder',
+        }
+        console.log('🔄 Updating search params', hybrid)
+
+
+        // // An index is where the documents are stored.
+        // // let client = searchClient.index;
+        // this.rawMeiliSearch = new Meilisearch( {
+        //         host: this.serverUrlValue,
+        //         apiKey: this.serverApiKeyValue
+        //     });
 
 
         // searchClient.search = async function(query, params) {
@@ -203,7 +236,17 @@ export default class extends Controller {
             return d.toLocaleString('default', { year:'numeric', month:'short' });
         };
 
+        // 3) Add widgets (including yours)
+        // search.addWidgets([
+        //     this.semanticRatioWidget({ container: '#semantic-widget' }),
+        //     searchBox({ container: '#searchbox' }),
+        //     hits({ container: '#hits' })
+        // ]);
+
         search.addWidgets([
+            this.semanticRatioWidget(
+                { container: '#semantic-widget' }
+            ),
             searchBox({
                 container: this.searchBoxTarget,
                 placeholder: 'Search ' + this.serverUrlValue + '/' + this.indexNameValue + '...',
@@ -241,6 +284,7 @@ export default class extends Controller {
                         // generic debug: https://github.com/twigjs/twig.js/wiki/Extending-twig.js-With-Custom-Tags
                         // this _does_ work, with includes!
                         // let x= tpl.render({hit: hit, title: 'const tpl'});
+                        return hit.title; // JSON.stringify(hit);
                         return this.template.render({
                             x: '', // x,
                             hit: hit,
@@ -276,6 +320,7 @@ export default class extends Controller {
 
         const attributeDivs = this.refinementListTarget.querySelectorAll('[data-attribute]')
 
+        if (0)
         attributeDivs.forEach(div => {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
@@ -455,5 +500,60 @@ export default class extends Controller {
         }
     }
 
+// 1) Create the custom widget factory
+semanticRatioWidget({ container, min = 0, max = 1, step = 0.1, defaultValue = 0.5 }) {
+    let helper;
+    return {
+        init({ instantSearchInstance, helper: h }) {
+            helper = h;
+
+            // render the slider
+            const root = document.querySelector(container);
+            root.innerHTML = `
+        <label>
+          Semantic ratio:
+          <input
+            type="range"
+            id="semantic-slider"
+            min="${min}"
+            max="${max}"
+            step="${step}"
+            value="${defaultValue}"
+          />
+          <span id="semantic-value">${defaultValue}</span>
+        </label>
+      `;
+
+            // wire up the listener
+            const slider = root.querySelector('#semantic-slider');
+            const valueDisplay = root.querySelector('#semantic-value');
+            console.log(slider);
+            slider.addEventListener('input', () => {
+                const ratio = parseFloat(slider.value);
+                console.error(ratio);
+                valueDisplay.textContent = ratio.toFixed(2);
+
+                // setMeiliSearchParams({
+                //     showRankingScoreDetails: true,
+                //     keepZeroFacets: true,
+                //     hybrid: { embedder: 'openai_dummy_products', semanticRatio: 0.8 }
+                // });
+
+                // 2) tell the helper to include your custom param
+                helper
+                    .setQueryParameter('semantic_ratio', ratio);
+                console.log(helper);
+                helper
+                    .search();                   // 3) re-run the search
+
+            });
+        },
+        render() {
+            console.log('render()');
+
+            // we don’t need to re-render anything on each search
+        }
+    };
+}
 
 }
