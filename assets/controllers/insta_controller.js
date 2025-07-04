@@ -111,6 +111,7 @@ export default class extends Controller {
         iconsJson: {type: String, default: '{}'},
         sortingJson: {type: String, default: '{}'},
     }
+    
 
     initialize() {
         // Called once when the controller is first instantiated (per element)
@@ -169,16 +170,16 @@ export default class extends Controller {
                 }
             }
         );
-        setMeiliSearchParams({
-            showRankingScoreDetails: true,
-            keepZeroFacets: true,
-            hybrid: { embedder: 'openai_dummy_products', semanticRatio: 0.8 }
-        });
+
+        window.setMeiliSearchParams = setMeiliSearchParams;
+        window.searchClient = searchClient;
 
         const search = instantsearch({
             indexName: 'dummy_products', // this.indexNameValue,
             searchClient,
         });
+
+        window.search = search;
         // search.addWidgets([
         //     configure({ hitsPerPage: 2,
         //         showRankingScore: false,
@@ -194,9 +195,6 @@ export default class extends Controller {
         // console.error(search, searchClient);
         // return;
 
-
-
-        this.searchClient = searchClient;
         // setMeiliSearchParams({
         //     keepZeroFacets: false, // true,
         //     showRankingScore: true,
@@ -245,7 +243,10 @@ export default class extends Controller {
 
         search.addWidgets([
             this.semanticRatioWidget(
-                { container: '#semantic-widget' }
+                { 
+                    container: '#semantic-widget', 
+                    searchController: this.searchController,
+                }
             ),
             searchBox({
                 container: this.searchBoxTarget,
@@ -316,7 +317,6 @@ export default class extends Controller {
             })
                 ]
         );
-
 
         const attributeDivs = this.refinementListTarget.querySelectorAll('[data-attribute]')
 
@@ -501,7 +501,7 @@ export default class extends Controller {
     }
 
 // 1) Create the custom widget factory
-semanticRatioWidget({ container, min = 0, max = 1, step = 0.1, defaultValue = 0.5 }) {
+semanticRatioWidget({ container, min = 0, max = 1, step = 0.1, defaultValue = 0.5 ,searchController}) {
     let helper;
     return {
         init({ instantSearchInstance, helper: h }) {
@@ -528,15 +528,33 @@ semanticRatioWidget({ container, min = 0, max = 1, step = 0.1, defaultValue = 0.
             const slider = root.querySelector('#semantic-slider');
             const valueDisplay = root.querySelector('#semantic-value');
             console.log(slider);
+
             slider.addEventListener('input', () => {
                 const ratio = parseFloat(slider.value);
                 console.error(ratio);
+
+                // that.setMeiliSearchParams({
+                //     showRankingScoreDetails: true,
+                //     keepZeroFacets: true,
+                //     hybrid: { embedder: 'openai_dummy_products', semanticRatio: ratio }
+                // });
+
+
+                window.setMeiliSearchParams({
+                    showRankingScoreDetails: true,
+                    keepZeroFacets: true,
+                    hybrid: { embedder: 'openai_dummy_products', semanticRatio: ratio }
+                });
+
+                window.searchClient.clearCache();
+                window.search.helper.search();
+
                 valueDisplay.textContent = ratio.toFixed(2);
 
                 // setMeiliSearchParams({
                 //     showRankingScoreDetails: true,
                 //     keepZeroFacets: true,
-                //     hybrid: { embedder: 'openai_dummy_products', semanticRatio: 0.8 }
+                //     hybrid: { embedder: 'openai_dummy_products', semanticRatio: ratio }
                 // });
 
                 // 2) tell the helper to include your custom param
