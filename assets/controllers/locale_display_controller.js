@@ -16,7 +16,6 @@ export default class extends Controller {
 
     // ...
     initialize() {
-        console.warn('init from ' + this.identifier + ' / ' + this.userLocaleValue);
         this.regionNames = new Intl.DisplayNames(
             [this.userLocaleValue], {type: 'region'}
         );
