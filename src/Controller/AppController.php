@@ -52,6 +52,9 @@ final class AppController extends AbstractController
         #[MapQueryParameter] bool $useProxy = false
     ): Response|array
     {
+        $endpoint = $this->endpointRepository->findOneBy([
+            'name' => $indexName]
+        );
 
         if (0) {
             $dummyServer = 'https://dummy.survos.com/api/docs.jsonopenapi';
@@ -96,6 +99,7 @@ final class AppController extends AbstractController
             'facets' => $facets,
             'sorting' => $sorting,
             'settings' => $settings,
+            'endpoint' => $endpoint,
             'related' => $related, // the facet lookups
         ];
         return $params;

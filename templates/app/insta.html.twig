@@ -44,7 +44,7 @@
         bug: ux_icon('tabler:bug'),
     } %}
 
-    {% set hitClass = app.request.get('class', 'grid-2') %}
+    {% set hitClass = app.request.get('class', 'grid-' ~ endpoint.columns) %}
     <div {{ stimulus_controller(_sc, {
             serverUrl: server,
             serverApiKey: apiKey,
