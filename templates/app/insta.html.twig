@@ -71,10 +71,9 @@
                                 </div>
                             </div>
 
-                            Semantic
-                            <div id="semantic-widget">
-                                widget here.
-                            </div>
+                            {% if embedder %}
+                            <div id="semantic-widget">{{ embedder }}</div>
+                            {% endif %}
 
                             {# aside might not be the best element for this. #}
                             <aside class="col-12 col-md-12 mb-4"

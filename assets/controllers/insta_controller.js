@@ -162,7 +162,7 @@ export default class extends Controller {
             this.serverUrlValue,
             this.serverApiKeyValue,
             {
-                setMeiliSearchParams: {
+                meiliSearchParams: {
                     // placeholderSearch: false, // default: true.
                     // primaryKey: 'id', // default: undefined
                     keepZeroFacets: false, // true,
@@ -267,7 +267,9 @@ export default class extends Controller {
                 container: this.sortTarget,
                 items: this.sorting
             }),
-            configure({ hitsPerPage: 20 }), // how many items per “page”, @todo: configurable
+            configure({
+                showRankingScore:       true,   // ← here, too
+                hitsPerPage: 4 }), // how many items per “page”, @todo: configurable
             // hits({
             infiniteHits({
                 container: this.hitsTarget,
