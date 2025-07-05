@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Endpoint;
 use App\Repository\EndpointRepository;
 use cebe\openapi\Reader;
 use Meilisearch\Client;
+use Meilisearch\Contracts\IndexesQuery;
+use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Meilisearch;
 use Survos\MeiliAdminBundle\Service\MeiliService;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -35,13 +38,45 @@ final class AppController extends AbstractController
         return new Response($template);
     }
 
+
+
     #[Route('/', name: 'app_homepage')]
     #[Template('app/homepage.html.twig')]
     public function home(): Response|array
     {
-
+        $endpoints = $this->endpointRepository->findAll();
         return [
-            'endpoints' => $this->endpointRepository->findAll(),
+            'endpoints' => $endpoints,
+        ];
+    }
+
+    #[Route('/all', name: 'app_all')]
+    #[Template('app/homepage.html.twig')]
+    public function all(): Response|array
+    {
+        $indexes = $this->meiliService->getMeiliClient()->getIndexes(
+            new IndexesQuery()->setLimit(100)
+        );
+        $endpoints = [];
+        /**
+         * @var $uid
+         * @var Indexes  $index
+         */
+        foreach ($indexes as $uid => $index) {
+//            if ($index->getUid() === '')
+            $settings = $index->getSettings();
+            $embedders = $index->getEmbedders();
+            if (count($embedders) > 0) {
+                $endpoint = new Endpoint(label: $index->getUid(), name: $index->getUid(),
+                    settings: $settings
+                );
+                $endpoints[] = $endpoint;
+            }
+            $uid = $index->getUid();
+//            dd($index, $settings, $uid, $index->fetchInfo(), );
+        }
+        return [
+            'endpoints' => $endpoints,
         ];
     }
 
@@ -49,7 +84,8 @@ final class AppController extends AbstractController
     #[Template('app/insta.html.twig')]
     public function index(
         string $indexName, //  = 'packagesPackage',
-        #[MapQueryParameter] bool $useProxy = false
+        #[MapQueryParameter] ?string $embedder = null,
+        #[MapQueryParameter] bool $useProxy = false,
     ): Response|array
     {
         $endpoint = $this->endpointRepository->findOneBy([
@@ -101,6 +137,7 @@ final class AppController extends AbstractController
             'sorting' => $sorting,
             'settings' => $settings,
             'endpoint' => $endpoint,
+            'embedder' => $embedder,
             'related' => $related, // the facet lookups
         ];
         return $params;

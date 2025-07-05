@@ -104,6 +104,7 @@ export default class extends Controller {
         serverUrl: String,
         serverApiKey: String,
         indexName: String,
+        embedderName: String,
         templateUrl: String,
         userLocale: {type: String, default: 'en'},
         hitClass: {type: String, default: 'grid-3'},
@@ -111,7 +112,7 @@ export default class extends Controller {
         iconsJson: {type: String, default: '{}'},
         sortingJson: {type: String, default: '{}'},
     }
-    
+
 
     initialize() {
         // Called once when the controller is first instantiated (per element)
@@ -128,12 +129,14 @@ export default class extends Controller {
         this.languageNames = new Intl.DisplayNames(
             [this.userLocaleValue], {type: 'language'}
         );
-
+        console.warn(this.embedderNameValue);
 
     }
 
     connect() {
         const self = this; // or use: const that = this;
+        const ctrl = this;
+        this._self = this;
 
         // Called every time the controller is connected to the DOM
         // (on page load, when it's added to the DOM, moved in the DOM, etc.)
@@ -142,7 +145,6 @@ export default class extends Controller {
         // add or remove classes, attributes, dispatch custom events, etc.
         // this.fooTarget.addEventListener('click', this._fooBar)
 
-        this._self = this;
         this.fetchFile().then(() => {
                 try {
                     this.search();
@@ -164,7 +166,7 @@ export default class extends Controller {
                     // placeholderSearch: false, // default: true.
                     // primaryKey: 'id', // default: undefined
                     keepZeroFacets: false, // true,
-                    showRankingScore: false,
+                    showRankingScore: true,
                     showRankingScoreDetails: true,
                     semantic_ratio: 0.5,
                 }
@@ -175,7 +177,7 @@ export default class extends Controller {
         window.searchClient = searchClient;
 
         const search = instantsearch({
-            indexName: 'dummy_products', // this.indexNameValue,
+            indexName: this.indexNameValue, // 'dummy_products', //
             searchClient,
         });
 
@@ -203,11 +205,13 @@ export default class extends Controller {
         //     semantic_ratio: 0.5
         // });
 
-        const hybrid = {
-            semantic_ratio: 0.2,
-            embedder: 'open_ai_embedder',
+        if (this.embedderNameValue) {
+            const hybrid = {
+                semantic_ratio: 0.2,
+                embedder: this.embedderNameValue
+            }
+            console.log('🔄 Updating search params', hybrid)
         }
-        console.log('🔄 Updating search params', hybrid)
 
 
         // // An index is where the documents are stored.
@@ -241,13 +245,20 @@ export default class extends Controller {
         //     hits({ container: '#hits' })
         // ]);
 
+        if (this.embedderNameValue) {
+            search.addWidgets([
+                this.semanticRatioWidget(
+                    {
+                        container: '#semantic-widget',
+                        searchController: this.searchController,
+                    }
+                )
+            ]);
+        } else {
+            console.warn("No embeddder");
+        }
+
         search.addWidgets([
-            this.semanticRatioWidget(
-                { 
-                    container: '#semantic-widget', 
-                    searchController: this.searchController,
-                }
-            ),
             searchBox({
                 container: this.searchBoxTarget,
                 placeholder: 'Search ' + this.serverUrlValue + '/' + this.indexNameValue + '...',
@@ -285,7 +296,7 @@ export default class extends Controller {
                         // generic debug: https://github.com/twigjs/twig.js/wiki/Extending-twig.js-With-Custom-Tags
                         // this _does_ work, with includes!
                         // let x= tpl.render({hit: hit, title: 'const tpl'});
-                        return hit.title; // JSON.stringify(hit);
+                        // return hit.title + '/'; // JSON.stringify(hit);
                         return this.template.render({
                             x: '', // x,
                             hit: hit,
@@ -320,7 +331,6 @@ export default class extends Controller {
 
         const attributeDivs = this.refinementListTarget.querySelectorAll('[data-attribute]')
 
-        if (0)
         attributeDivs.forEach(div => {
             const attribute = div.getAttribute("data-attribute")
             const lookup = JSON.parse(div.getAttribute('data-lookup'));
@@ -477,7 +487,7 @@ export default class extends Controller {
         try {
             const response = await fetch(this.templateUrlValue)
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status} – ${response.statusText}`)
+                throw new Error(`HTTP ${this.templateUrlValue} ${response.status} – ${response.statusText}`)
             }
 
             // Decide how to read it (JSON vs. text)
@@ -503,6 +513,7 @@ export default class extends Controller {
 // 1) Create the custom widget factory
 semanticRatioWidget({ container, min = 0, max = 1, step = 0.1, defaultValue = 0.5 ,searchController}) {
     let helper;
+    const ctrl = this;
     return {
         init({ instantSearchInstance, helper: h }) {
             helper = h;
@@ -531,7 +542,7 @@ semanticRatioWidget({ container, min = 0, max = 1, step = 0.1, defaultValue = 0.
 
             slider.addEventListener('input', () => {
                 const ratio = parseFloat(slider.value);
-                console.error(ratio);
+                console.error(ratio, ctrl.embedderNameValue);
 
                 // that.setMeiliSearchParams({
                 //     showRankingScoreDetails: true,
@@ -539,30 +550,27 @@ semanticRatioWidget({ container, min = 0, max = 1, step = 0.1, defaultValue = 0.
                 //     hybrid: { embedder: 'openai_dummy_products', semanticRatio: ratio }
                 // });
 
+                    window.setMeiliSearchParams({
+                        showRankingScoreDetails: true,
+                        keepZeroFacets: true,
+                        hybrid: { embedder: ctrl.embedderNameValue, semanticRatio: ratio }
+                    });
 
-                window.setMeiliSearchParams({
-                    showRankingScoreDetails: true,
-                    keepZeroFacets: true,
-                    hybrid: { embedder: 'openai_dummy_products', semanticRatio: ratio }
-                });
 
-                window.searchClient.clearCache();
-                window.search.helper.search();
 
-                valueDisplay.textContent = ratio.toFixed(2);
-
-                // setMeiliSearchParams({
-                //     showRankingScoreDetails: true,
-                //     keepZeroFacets: true,
-                //     hybrid: { embedder: 'openai_dummy_products', semanticRatio: ratio }
-                // });
 
                 // 2) tell the helper to include your custom param
                 helper
+                    .setQueryParameter('showRankingScoreDetails', true)
+                    .setQueryParameter('embedder', ctrl.embedderNameValue)
                     .setQueryParameter('semantic_ratio', ratio);
                 console.log(helper);
                 helper
                     .search();                   // 3) re-run the search
+
+                window.searchClient.clearCache();
+                window.search.helper.search();
+                valueDisplay.textContent = ratio.toFixed(2);
 
             });
         },

@@ -51,9 +51,10 @@ final class AppMenu implements KnpMenuHelperInterface
 
     #[AsEventListener(event: KnpMenuEvent::NAVBAR_MENU)]
     public function navbarMenu(KnpMenuEvent $event): void
-    {
+        {
         $menu = $event->getMenu();
         $options = $event->getOptions();
+
 
         $this->add($menu, 'app_homepage', label: 'Home');
         foreach ($this->endpointRepository->findAll() as $endpoint) {
@@ -63,8 +64,20 @@ final class AppMenu implements KnpMenuHelperInterface
             } catch (\Exception $e) {
                 continue;
             }
+            $settings = $endpoint->settings;
+            dump($settings);
+            if (count($settings['embedders'])) {
+                dd($settings['embedders']);
+                $sub  = $this->addSubmenu($menu,  $endpoint->label);
+                foreach ($settings['embedders'] as $embedder=>$embedderConfig) {
+                    $this->add($sub, 'app_insta', ['embedder' => $embedder, 'indexName' => $endpoint->name, 'class' => 'grid-' . $endpoint->columns], label: $endpoint->label);
+                }
+
+            } else {
+                $this->add($menu, 'app_insta', ['indexName' => $endpoint->name, 'class' => 'grid-' . $endpoint->columns], label: $endpoint->label);
+
+            }
             // @todo: better way to map indexes to columns.  Number of fields?
-            $this->add($menu, 'app_insta', ['indexName' => $endpoint->name, 'class' => 'grid-' . $endpoint->columns], label: $endpoint->label);
         }
 
         return;

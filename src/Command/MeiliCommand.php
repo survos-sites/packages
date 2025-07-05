@@ -27,8 +27,6 @@ class MeiliCommand
 
 	public function __invoke(SymfonyStyle $io): int
 	{
-        //        $indexes = $this->meiliService->getMeiliClient()->getIndexes(); dd($indexes);
-
         foreach ([
 
             'packages_Package' => 'bundles',
@@ -45,7 +43,8 @@ class MeiliCommand
                      'dtdemo_Instrument' => 'Instruments',
                      'dtdemo_Work' => 'Songs',
                      'dtdemo_Jeopardy' => 'Jeopardy',
-                     'dummy_Product' => 'products'
+                     'dummy_Product' => 'products',
+                     'dummy_products' => 'products!!'
                  ] as $indexName => $label) {
             try {
                 $index = $this->meiliService->getIndex($indexName);

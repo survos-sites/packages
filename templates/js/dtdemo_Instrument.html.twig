@@ -50,11 +50,11 @@
         <div class="float-start">
             {{ hit._highlightResult.type.value }}
         </div>
-        <span>
-                    {% if hit._rankingScore != 1 %}
+                {% if hit._rankingScore != 1 %}
+                <span class="m-4">
                         score: {{ hit._rankingScore|number_format(2) }}
-                    {% endif %}
                 </span>
+                    {% endif %}
         <button
             {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
             data-hit-id="{{ hit.id }}"

@@ -24,6 +24,20 @@
                 indexName: endpoint.name,
                 class: 'grid-' ~ endpoint.columns
             }) }}">{{ endpoint.label }}</a>
+
+            <ul>
+
+            {% for embedder, eConfig in endpoint.settings.embedders %}
+                <li>
+                    <a href="{{ path('app_insta', {
+                        indexName: endpoint.name,
+                        embedder: embedder,
+                        class: 'grid-' ~ endpoint.columns
+                    }) }}">with {{ embedder }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+
             <details>
                 <summary>{{ endpoint.label }} Settings</summary>
                 {{ endpoint.settings|json_pretty }}
