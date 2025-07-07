@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Endpoint;
 use App\Repository\EndpointRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Meilisearch\Contracts\IndexesQuery;
 use Survos\MeiliAdminBundle\Service\MeiliService;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -27,30 +28,46 @@ class MeiliCommand
 
 	public function __invoke(SymfonyStyle $io): int
 	{
-        foreach ([
 
-            'packages_Package' => 'bundles',
-                     'dtdemo_Official' => "congress",
-//                     'kpa_Song',
-                     'kpa_Video' => 'videos',
-                     'm_px_aust_obj' => 'AustObj',
-                     'm_px_aust_mat' => 'AustMat',
-                     'm_px_victoria_obj' => 'Victoria',
-                     'm_Owner' => 'museums',
-                     'm_px_cleveland_obj' => 'CMA',
-                     'm_px_met_obj' => 'MET',
-                     'sais_Media' => 'Sais/Media',
-                     'dtdemo_Instrument' => 'Instruments',
-                     'dtdemo_Work' => 'Songs',
-                     'dtdemo_Jeopardy' => 'Jeopardy',
-                     'dummy_Product' => 'products',
-                     'dummy_products' => 'products!!'
-                 ] as $indexName => $label) {
+        foreach ($this->meiliService->getMeiliClient()->getIndexes(
+            new IndexesQuery()->setLimit(100)
+        ) as $index) {
+
+//        }
+//        if (0)
+//        foreach ([
+//                     'dtdemo_Instrument' => 'Instruments',
+//
+//            'packages_Package' => 'bundles',
+//                     'dtdemo_Official' => "congress",
+////                     'kpa_Song',
+//                     'kpa_Video' => 'videos',
+//                     'showcase_Project' => 'Sites',
+//                     'showcase_Show' => 'Ciine',
+//                     'm_px_aust_obj' => 'AustObj',
+//                     'm_px_aust_mat' => 'AustMat',
+//                     'm_px_victoria_obj' => 'Victoria',
+//                     'm_Owner' => 'museums',
+//                     'm_px_cleveland_obj' => 'CMA',
+//                     'm_px_met_obj' => 'MET',
+//                     'sais_Media' => 'Sais/Media',
+//                     'dtdemo_Work' => 'Songs',
+//                     'dtdemo_Jeopardy' => 'Jeopardy',
+//                     'dummy_Product' => 'products',
+//                     'dummy_products' => 'products!!'
+//                 ] as $indexName => $label) {
             try {
-                $index = $this->meiliService->getIndex($indexName);
+//                $index = $this->meiliService->getIndex($indexName);
             } catch (\Exception $e) {
                 continue;
             }
+            $indexName = $index->getUid();
+            $label = $indexName;
+            if ($indexName !== 'dtdemo_Instrument') {
+                continue;
+//                dd($index->getEmbedders(), $endpoint->settings, $index->getUid());
+            }
+
             if (!$endpoint = $this->endpointRepository->findOneBy(['name' => $indexName])) {
                 $endpoint = new Endpoint(
                     name: $indexName,
@@ -71,7 +88,7 @@ class MeiliCommand
         $this->entityManager->flush();
 
 
-        $io->success(self::class . " success.");
+        $io->success(self::class . " success. " . $this->endpointRepository->count() );
 		return Command::SUCCESS;
 	}
 }
