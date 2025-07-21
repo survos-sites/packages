@@ -66,7 +66,6 @@ final class AppMenu implements KnpMenuHelperInterface
             }
             $settings = $endpoint->settings;
             if (count($settings['embedders'])) {
-                dump($settings['embedders']);
                 $sub  = $this->addSubmenu($menu,  $endpoint->label);
                 foreach ($settings['embedders'] as $embedder=>$embedderConfig) {
                     $this->add($sub, 'app_insta', ['embedder' => $embedder, 'indexName' => $endpoint->name, 'class' => 'grid-' . $endpoint->columns], label: $endpoint->label);
