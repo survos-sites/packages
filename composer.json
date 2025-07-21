@@ -32,7 +32,6 @@
         "openconext/monitor-bundle": "^4.1",
         "phpdocumentor/reflection-docblock": "^5.3",
         "sentry/sentry-symfony": "^5.0.1",
-        "survos/api-grid-bundle": "dev-main",
         "survos/auth-bundle": "^1.5",
         "survos/bootstrap-bundle": "^1.5",
         "survos/command-bundle": "^1.5",
@@ -40,7 +39,7 @@
         "survos/crawler-bundle": "^1.5.196",
         "survos/installer": "dev-main",
         "survos/js-twig-bundle": "^1.6",
-        "survos/meili-admin-bundle": "dev-main",
+        "survos/meili-bundle": "*",
         "survos/simple-datatables-bundle": "^1.5",
         "survos/workflow-helper-bundle": "dev-main",
         "symfony/amqp-messenger": "^7.3",
@@ -111,7 +110,7 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "assets:install %PUBLIC_DIR% --symlink": "symfony-cmd",
             "importmap:install": "symfony-cmd",
             "fos:js-routing:dump --format=js --target=public/js/fos_js_routes.js --callback=\"export default  \"": "symfony-cmd"
         },

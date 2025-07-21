@@ -14,10 +14,8 @@ use App\Workflow\BundleWorkflow;
 use App\Workflow\BundleWorkflowInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Survos\MeiliAdminBundle\Api\Filter\FacetsFieldSearchFilter;
+use Survos\MeiliBundle\Api\Filter\FacetsFieldSearchFilter;
 
-use Survos\ApiGrid\Api\Filter\MultiFieldSearchFilter;
-use Survos\ApiGrid\State\MeiliSearchStateProvider;
 use Survos\CoreBundle\Entity\RouteParametersInterface;
 use Survos\CoreBundle\Entity\RouteParametersTrait;
 use Survos\WorkflowBundle\Traits\MarkingInterface;
@@ -32,22 +30,22 @@ use Symfony\Component\Serializer\Attribute\Groups;
     normalizationContext: ['groups' => ['package.read', 'marking', 'browse', 'transitions', 'rp']],
     denormalizationContext: ['groups' => ['Default', 'minimum', 'browse']],
 )]
-#[GetCollection(
-    name: 'meili-packages',
-    uriTemplate: 'meili/packages',
-    provider: MeiliSearchStateProvider::class,
-    normalizationContext: [
-        'groups' => ['package.read', 'package.facets', 'browse', 'tree', 'marking'],
-    ]
-)]
+//#[GetCollection(
+//    name: 'meili-packages',
+//    uriTemplate: 'meili/packages',
+//    provider: MeiliSearchStateProvider::class,
+//    normalizationContext: [
+//        'groups' => ['package.read', 'package.facets', 'browse', 'tree', 'marking'],
+//    ]
+//)]
 #[ApiFilter(OrderFilter::class, properties: ['marking', 'vendor', 'name', 'stars', 'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: ['marking' => 'exact', 'name' => 'partial'])]
 #[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'stars', 'keywords', 'marking'])]
-#[ApiFilter(
-    MultiFieldSearchFilter::class,
-    properties: ['name', 'description'],
-    arguments: ['searchParameterName' => 'search']
-)]
+//#[ApiFilter(
+//    MultiFieldSearchFilter::class,
+//    properties: ['name', 'description'],
+//    arguments: ['searchParameterName' => 'search']
+//)]
 // #[Groups(['package.read'])] // NO! The embedded json data is too big
 class Package implements RouteParametersInterface, MarkingInterface, BundleWorkflowInterface, \Stringable
 {

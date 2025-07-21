@@ -1,7 +1,11 @@
 {% extends "@SurvosBootstrap/%s/base.html.twig"|format(theme) %}
 
-        {% block stylesheets %}
-        {% endblock %}
+     {% block stylesheets %}
+         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/survosbootstrap/bootstrap/style.css') }}">
+         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/survosmeili/style.css') }}">
+
+         {{ parent() }}
+     {% endblock %}
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}

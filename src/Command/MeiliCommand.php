@@ -6,7 +6,7 @@ use App\Entity\Endpoint;
 use App\Repository\EndpointRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Meilisearch\Contracts\IndexesQuery;
-use Survos\MeiliAdminBundle\Service\MeiliService;
+use Survos\MeiliBundle\Service\MeiliService;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
@@ -64,7 +64,7 @@ class MeiliCommand
             $indexName = $index->getUid();
             $label = $indexName;
             if ($indexName !== 'dtdemo_Instrument') {
-                continue;
+//                continue;
 //                dd($index->getEmbedders(), $endpoint->settings, $index->getUid());
             }
 

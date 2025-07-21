@@ -1,5 +1,5 @@
-import {prettyPrintJson} from 'pretty-print-json';
-import 'pretty-print-json/dist/css/pretty-print-json.min.css';
+// import {prettyPrintJson} from 'pretty-print-json';
+// import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 
 /*
 * The following line makes this controller "lazy": it won't be downloaded until needed
@@ -94,7 +94,7 @@ export default class extends Dialog {
                 // console.log(clean);
 // → { b: 2, c: { e: 5 } }
 
-                const html = prettyPrintJson.toHtml(clean);
+                // const html = prettyPrintJson.toHtml(clean);
                 console.log(hit);
                 // this.userStatusOutlets.forEach(outlet => {
                 //     console.log(outlet);

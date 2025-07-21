@@ -30,7 +30,6 @@ return [
     Zenstruck\Twig\ZenstruckTwigServiceBundle::class => ['all' => true],
     KnpU\OAuth2ClientBundle\KnpUOAuth2ClientBundle::class => ['all' => true],
     Survos\AuthBundle\SurvosAuthBundle::class => ['all' => true],
-    Survos\MeiliAdminBundle\SurvosMeiliAdminBundle::class => ['all' => true],
     Inspector\Symfony\Bundle\InspectorBundle::class => ['all' => true],
     Survos\SimpleDatatables\SurvosSimpleDatatablesBundle::class => ['all' => true],
     EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle::class => ['all' => true],
@@ -38,7 +37,7 @@ return [
     FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true],
     Jwage\PhpAmqpLibMessengerBundle\PhpAmqpLibMessengerBundle::class => ['all' => true],
     Survos\InspectionBundle\SurvosInspectionBundle::class => ['all' => true],
-    Survos\ApiGrid\SurvosApiGridBundle::class => ['all' => true],
     Ecourty\McpServerBundle\McpServerBundle::class => ['all' => true],
     Survos\CodeBundle\SurvosCodeBundle::class => ['dev' => true, 'test' => true],
+    Survos\MeiliBundle\SurvosMeiliBundle::class => ['all' => true],
 ];

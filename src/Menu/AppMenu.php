@@ -3,11 +3,11 @@
 namespace App\Menu;
 
 use App\Repository\EndpointRepository;
-use Survos\ApiGrid\Service\MeiliService;
 use Survos\BootstrapBundle\Event\KnpMenuEvent;
 use Survos\BootstrapBundle\Service\MenuService;
 use Survos\BootstrapBundle\Traits\KnpMenuHelperInterface;
 use Survos\BootstrapBundle\Traits\KnpMenuHelperTrait;
+use Survos\MeiliBundle\Service\MeiliService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;

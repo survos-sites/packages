@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use Survos\MeiliAdminBundle\Service\MeiliService;
+use Survos\MeiliBundle\Service\MeiliService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

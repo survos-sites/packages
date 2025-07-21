@@ -201,9 +201,6 @@
             "config/packages/sentry.yaml"
         ]
     },
-    "survos/api-grid-bundle": {
-        "version": "1.5.600"
-    },
     "survos/auth-bundle": {
         "version": "1.5.255"
     },
@@ -248,8 +245,8 @@
     "survos/js-twig-bundle": {
         "version": "1.6.0"
     },
-    "survos/meili-admin-bundle": {
-        "version": "1.5.370"
+    "survos/meili-bundle": {
+        "version": "1.5.0"
     },
     "survos/simple-datatables-bundle": {
         "version": "1.5.446"

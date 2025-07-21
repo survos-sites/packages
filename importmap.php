@@ -72,16 +72,16 @@ return [
         'version' => '2.3.0',
     ],
     'datatables.net-bs5' => [
-        'version' => '2.3.2',
+        'version' => '2.1.6',
     ],
     'jquery' => [
         'version' => '3.7.1',
     ],
     'datatables.net' => [
-        'version' => '2.3.2',
+        'version' => '2.1.6',
     ],
     'datatables.net-bs5/css/dataTables.bootstrap5.min.css' => [
-        'version' => '2.3.2',
+        'version' => '2.1.6',
         'type' => 'css',
     ],
     'datatables.net-buttons-bs5' => [
@@ -135,13 +135,13 @@ return [
         'type' => 'css',
     ],
     'datatables.net-select-bs5' => [
-        'version' => '3.0.1',
+        'version' => '2.1.0',
     ],
     'datatables.net-select' => [
-        'version' => '3.0.1',
+        'version' => '2.1.0',
     ],
     'datatables.net-select-bs5/css/select.bootstrap5.min.css' => [
-        'version' => '3.0.1',
+        'version' => '2.1.0',
         'type' => 'css',
     ],
     'bootstrap' => [
@@ -176,10 +176,10 @@ return [
         'type' => 'css',
     ],
     'simple-datatables' => [
-        'version' => '10.0.0',
+        'version' => '9.2.2',
     ],
     'simple-datatables/dist/style.min.css' => [
-        'version' => '10.0.0',
+        'version' => '9.2.2',
         'type' => 'css',
     ],
     'instantsearch.js' => [

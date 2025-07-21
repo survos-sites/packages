@@ -9,7 +9,7 @@ use Meilisearch\Client;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Meilisearch;
-use Survos\MeiliAdminBundle\Service\MeiliService;
+use Survos\MeiliBundle\Service\MeiliService;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;

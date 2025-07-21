@@ -13,8 +13,9 @@ use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Events;
 use Meilisearch\Endpoints\Indexes;
 use Psr\Log\LoggerInterface;
-use Survos\ApiGrid\Service\MeiliService;
 use Survos\CoreBundle\Service\SurvosUtils;
+use Survos\MeiliBundle\Service\MeiliService;
+use Survos\MeiliBundle\Service\SettingsService;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -28,6 +29,7 @@ class DoctrineEventListener
 {
     public function __construct(
         private MeiliService                 $meiliService,
+        private SettingsService                 $settingsService,
         private readonly NormalizerInterface $normalizer,
         private readonly LoggerInterface     $logger,
         private array                        $objectsByClass=[],
@@ -75,7 +77,7 @@ class DoctrineEventListener
         }
         // we need a better way to flag MeiliClasses, probably an attribute with the normalizer fields
         if (empty($groups)) {
-            $groups = $this->meiliService->getNormalizationGroups($object::class);
+            $groups = $this->settingsService->getNormalizationGroups($object::class);
         }
 
         //        // we used to use this:
