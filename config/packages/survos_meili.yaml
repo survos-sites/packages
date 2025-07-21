@@ -1,4 +1,6 @@
 survos_meili:
   core_name: 'table'
+  apiKey: '%env(MEILI_API_KEY)%'
+  searchKey: '%env(MEILI_SEARCH_KEY)%'
 
 

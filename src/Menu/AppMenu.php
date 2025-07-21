@@ -59,7 +59,7 @@ final class AppMenu implements KnpMenuHelperInterface
         $this->add($menu, 'app_homepage', label: 'Home');
         foreach ($this->endpointRepository->findAll() as $endpoint) {
             try {
-                $index = $this->meiliService->getIndex($endpoint->name);
+//                $index = $this->meiliService->getIndex($endpoint->name);
 //                dd($index->getSettings());
             } catch (\Exception $e) {
                 continue;

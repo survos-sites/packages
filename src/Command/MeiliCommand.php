@@ -26,11 +26,16 @@ class MeiliCommand
 	}
 
 
-	public function __invoke(SymfonyStyle $io): int
+	public function __invoke(SymfonyStyle $io,
+    #[Option] ?bool $reset = null
+    ): int
 	{
 
+        if ($reset) {
+            $this->endpointRepository->createQueryBuilder('endpoint')->delete()->getQuery()->execute();
+        }
         foreach ($this->meiliService->getMeiliClient()->getIndexes(
-            new IndexesQuery()->setLimit(100)
+            new IndexesQuery()->setLimit(500)
         ) as $index) {
 
 //        }
