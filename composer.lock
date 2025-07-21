@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa05bb3a70f6c5add9f50ddfd2def635",
+    "content-hash": "f3fd2990e4d5431d728b4d7ab5356526",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -5552,16 +5552,16 @@
         },
         {
             "name": "survos/installer",
-            "version": "dev-main",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/installer.git",
-                "reference": "e86037d45db2ce92bc704b2c019ad8f24af434e5"
+                "reference": "aeb5a3dd3476a21e42e946d5ce18ed7e93b55983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/installer/zipball/e86037d45db2ce92bc704b2c019ad8f24af434e5",
-                "reference": "e86037d45db2ce92bc704b2c019ad8f24af434e5",
+                "url": "https://api.github.com/repos/survos/installer/zipball/aeb5a3dd3476a21e42e946d5ce18ed7e93b55983",
+                "reference": "aeb5a3dd3476a21e42e946d5ce18ed7e93b55983",
                 "shasum": ""
             },
             "require": {
@@ -5603,7 +5603,7 @@
             ],
             "description": "Composer plugin for installing configuration files and updating .env and .gitignore, based on survos/installer",
             "support": {
-                "source": "https://github.com/survos/installer/tree/main"
+                "source": "https://github.com/survos/installer/tree/2.1.4"
             },
             "funding": [
                 {
@@ -5611,7 +5611,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-09T15:06:17+00:00"
+            "time": "2025-07-14T14:06:29+00:00"
         },
         {
             "name": "survos/js-twig-bundle",
@@ -5673,30 +5673,31 @@
         },
         {
             "name": "survos/meili-bundle",
-            "version": "1.5.0",
+            "version": "1.5.601",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/meili-bundle.git",
-                "reference": "23a70fcc7a4ec21691c430a5b375f39315ac11cb"
+                "reference": "9872dc4ae3275dc992c9a71a9383d4748672d563"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/23a70fcc7a4ec21691c430a5b375f39315ac11cb",
-                "reference": "23a70fcc7a4ec21691c430a5b375f39315ac11cb",
+                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/9872dc4ae3275dc992c9a71a9383d4748672d563",
+                "reference": "9872dc4ae3275dc992c9a71a9383d4748672d563",
                 "shasum": ""
             },
             "require": {
                 "adbario/php-dot-notation": "^3.3",
                 "cebe/php-openapi": "^1.8",
                 "meilisearch/meilisearch-php": "^1.14",
-                "php": "^8.3",
+                "nyholm/psr7": "^1.8",
+                "php": "^8.4",
                 "survos/core-bundle": "^1.5",
                 "survos/inspection-bundle": "^1.5",
-                "survos/installer": "^1.5 || ^2.0",
-                "symfony/config": "^6.4 || ^7.1",
+                "survos/installer": "^2.1.2",
+                "symfony/config": "^7.3",
                 "symfony/console": "^7.3",
-                "symfony/dependency-injection": "^6.4 || ^7.1",
-                "symfony/http-kernel": "^6.4 || ^7.1",
+                "symfony/dependency-injection": "^7.3",
+                "symfony/http-kernel": "^7.3",
                 "symfony/property-access": "^7.2",
                 "twig/twig": "^3.4"
             },
@@ -5704,15 +5705,15 @@
                 "api-platform/doctrine-orm": "^4.1",
                 "phpstan/phpstan": "^2.0",
                 "rector/rector": "^2.0",
-                "symfony/browser-kit": "^6.4 || ^7.1",
-                "symfony/framework-bundle": "^6.4 || ^7.1",
+                "symfony/browser-kit": "^7.3",
+                "symfony/framework-bundle": "^7.3",
                 "symfony/http-client": "^7.2",
                 "symfony/intl": "^7.3",
-                "symfony/phpunit-bridge": "^6.4 || ^7.1",
-                "symfony/twig-bundle": "^6.4 || ^7.1",
+                "symfony/phpunit-bridge": "^7.3",
+                "symfony/twig-bundle": "^7.3",
                 "symfony/ux-chartjs": "^2.23",
                 "symfony/ux-twig-component": "^2.27",
-                "symfony/var-dumper": "^6.4 || ^7.1"
+                "symfony/var-dumper": "^7.3"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -5724,13 +5725,13 @@
             "license": [
                 "MIT"
             ],
-            "description": "Utilies for managing a meilisearch indexes",
+            "description": "Utilities for managing a meilisearch indexes",
             "keywords": [
                 "symfony-ux"
             ],
             "support": {
                 "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/1.5.0"
+                "source": "https://github.com/survos/meili-bundle/tree/1.5.601"
             },
             "funding": [
                 {
@@ -5738,7 +5739,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-09T14:19:39+00:00"
+            "time": "2025-07-21T14:46:05+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
@@ -16395,7 +16396,6 @@
         "knplabs/packagist-api": 20,
         "survos/code-bundle": 20,
         "survos/core-bundle": 20,
-        "survos/installer": 20,
         "survos/workflow-helper-bundle": 20
     },
     "prefer-stable": true,
