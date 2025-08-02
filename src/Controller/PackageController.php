@@ -42,7 +42,9 @@ class PackageController extends AbstractController implements HandleTransitionsI
             return $this->redirectToRoute('package_show', $package->getRP());
         }
 
-        $reader = new ComposerReader($package->data);
+        if ($package->data) {
+            $reader = new ComposerReader($package->data);
+        }
 
         //        dd($composer);
         return $this->render('package/show.html.twig', [

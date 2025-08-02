@@ -30,6 +30,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 #[AsCommand('app:load-data', 'Search and Load repos from packagist')]
 final class LoadDataCommand
 {
+    const BASE_URL = 'https://packagist.org/packages/list.json';
     private SymfonyStyle $io;
 
     public function __construct(
@@ -83,7 +84,7 @@ final class LoadDataCommand
 
             $packages = $this->cache->get('json', function (CacheItem $cacheItem) {
                 $cacheItem->expiresAfter(3600);
-                $json = file_get_contents('https://packagist.org/packages/list.json?type=symfony-bundle&fields[]=abandoned&fields[]=type&fields[]=repository');
+                $json = file_get_contents(self::BASE_URL . '?type=symfony-bundle&fields[]=abandoned&fields[]=type&fields[]=repository');
 //                file_put_contents('packages.json', $json);
                 return json_decode($json)->packages;
             });

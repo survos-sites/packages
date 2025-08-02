@@ -75,6 +75,7 @@
         "symfony/yaml": "^7.0.3",
         "twig/extra-bundle": "^3.8",
         "twig/twig": "^3.17",
+        "zenstruck/console-extra": "^1.4",
         "zenstruck/twig-service-bundle": "^1.5"
     },
     "config": {

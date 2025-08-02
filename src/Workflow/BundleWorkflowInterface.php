@@ -2,13 +2,17 @@
 
 namespace App\Workflow;
 
+use App\Command\LoadDataCommand;
 use Survos\WorkflowBundle\Attribute\Place;
 use Survos\WorkflowBundle\Attribute\Transition;
 
 interface BundleWorkflowInterface
 {
-    #[Place(initial: true, info: "entity in database")]
+    #[Place(initial: true,
+        description: "load from " . LoadDataCommand::BASE_URL,
+        info: "basic from app:load")]
     final public const PLACE_NEW = 'new';
+    #[Place(info: "composer.json", description: "Loaded from ")]
     final public const string PLACE_COMPOSER_LOADED = 'composer_loaded';
     #[Place(info: "outdated symfony")]
     final public const PLACE_SYMFONY_OUTDATED = 'outdated_symfony';

@@ -18,6 +18,7 @@ use Survos\MeiliBundle\Api\Filter\FacetsFieldSearchFilter;
 
 use Survos\CoreBundle\Entity\RouteParametersInterface;
 use Survos\CoreBundle\Entity\RouteParametersTrait;
+use Survos\MeiliBundle\Metadata\MeiliIndex;
 use Survos\WorkflowBundle\Traits\MarkingInterface;
 use Survos\WorkflowBundle\Traits\MarkingTrait;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -41,6 +42,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiFilter(OrderFilter::class, properties: ['marking', 'vendor', 'name', 'stars', 'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: ['marking' => 'exact', 'name' => 'partial'])]
 #[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'stars', 'keywords', 'marking'])]
+#[MeiliIndex()]
 //#[ApiFilter(
 //    MultiFieldSearchFilter::class,
 //    properties: ['name', 'description'],

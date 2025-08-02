@@ -1,11 +1,18 @@
+
 Markdown for BundleWorkflow
 
-![BundleWorkflow.svg](BundleWorkflow.svg)
+![BundleWorkflow](assets/BundleWorkflow.svg)
 
 
 
-## load -- transition
+---
+## Transition: load
 
+### load.Transition
+
+onLoadComposer()
+        // 
+        // 
 
 ```php
 #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
@@ -13,18 +20,19 @@ public function onLoadComposer(TransitionEvent $event): void
 {
     $package = $this->getPackage($event);
     // @todo: check updatedAt
-    if (true || !$data = $package->getData()) {
+    if (true || !$data = $package->data) {
         $this->loadLatestVersionData($package);
     }
     $this->packageService->populateFromComposerData($package);
 }
 ```
-blob/main/src/Workflow/BundleWorkflow.php#L143-151
-        
+[View source](packages/blob/main/src/Workflow/BundleWorkflow.php#L142-L150)
 
+### load.Completed
 
-## load -- completed
-
+onLoadCompleted()
+        // 
+        // 
 
 ```php
 #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
@@ -38,11 +46,19 @@ public function onLoadCompleted(CompletedEvent $event): void
     }
 }
 ```
-blob/main/src/Workflow/BundleWorkflow.php#L121-129
-        
+[View source](packages/blob/main/src/Workflow/BundleWorkflow.php#L120-L128)
 
-## php_okay -- completed
 
+
+
+---
+## Transition: php_okay
+
+### php_okay.Completed
+
+onPhpOkayCompleted()
+        // PHP &gt;= 8.1?
+        // 
 
 ```php
 #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_PHP_OKAY)]
@@ -56,5 +72,6 @@ public function onPhpOkayCompleted(CompletedEvent $event): void
     }
 }
 ```
-blob/main/src/Workflow/BundleWorkflow.php#L132-140
-        
+[View source](packages/blob/main/src/Workflow/BundleWorkflow.php#L131-L139)
+
+

@@ -48,12 +48,20 @@
 {#    Stars: {{ package.stars }}<br />#}
     Updated: {{ package.data.time|time_diff }}
 
-{#    <twig:item_grid#}
-{#        :data="package.data.require">#}
-{#    </twig:item_grid>#}
+    {% if package.data %}
 
-    <twig:item_grid
-            :data="package.data">
-    </twig:item_grid>
+        <andypf-json-viewer
+            indent="2"
+            expanded="true"
+            theme="default-light"
+            show-data-types="true"
+            show-toolbar="false"
+            expand-icon-type="arrow"
+            show-copy="true"
+            show-size="true"
+            data='{{ package.data|json_encode }}'
+        ></andypf-json-viewer>
 
+
+    {% endif %}
 {% endblock %}

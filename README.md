@@ -8,7 +8,7 @@ Configure a Postgres database and set it in .env.local, then run
 #bin/load-database.sh
 
 bin/console app:load-data
-bin/console workflow:iterate App\\Entity\\Package --marking=new --transition=load --limit 3
+bin/console workflow:iterate Package --marking=new --transition=load --limit 3
 bin/console mess:stats
 
 bin/console mess:consume async --limit 1 -vv
