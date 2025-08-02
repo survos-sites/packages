@@ -8,13 +8,21 @@
     "repository": "https:\/\/github.com\/survos-sites\/packages",
     "scripts": {
         "dokku": {
-            "predeploy": "bin/console importmap:install && bin/console asset-map:compile && bin/console d:m:m -n --allow-no-migration",
-            "postdeploy": ""
+            "predeploy": "bin/console mess:stop && bin/console importmap:install && bin/console asset-map:compile && bin/console d:m:m -n --allow-no-migration",
+            "postdeploy": "bin/console mess:consume meili  --time-limit 115"
         }
     },
     "cron": [
         {
-            "command": "bin/console mess:consume async  --time-limit 270",
+            "command": "bin/console mess:consume async  --time-limit 290",
+            "schedule": "*/5 * * * *"
+        },
+        {
+            "command": "bin/console mess:consume meili  --time-limit 115",
+            "schedule": "*/2 * * * *"
+        },
+        {
+            "command": "bin/console mess:consume load_composer  --time-limit 290",
             "schedule": "*/5 * * * *"
         }
     ],
