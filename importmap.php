@@ -360,4 +360,10 @@ return [
     'has-property-descriptors' => [
         'version' => '1.0.2',
     ],
+    '@stimulus-components/timeago' => [
+        'version' => '5.0.2',
+    ],
+    'date-fns' => [
+        'version' => '4.1.0',
+    ],
 ];

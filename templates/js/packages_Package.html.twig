@@ -37,6 +37,14 @@
         {% endfor %}
 
 
+        {{ hit.version }}
+        {% if hit.lastUpdatedOnPackagist %}
+            Last updated:
+            <span {{ stimulus_controller('timeago', {datetime: hit.lastUpdatedOnPackagist }) }}>
+                    {{ hit.lastUpdatedOnPackagist|date }}
+                </span>
+        {% endif %}
+
     </div>
 
     <div class="card-footer clearfix d-flex float-end xjustify-content-end align-items-center gap-2 flex-wrap">
@@ -56,6 +64,26 @@
         <a target="_blank" href="{{ path('package_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
             Details
         </a>
+
+{#        {{ globals|keys|json_encode }}#}
+{#        {% set globals = {#}
+{#            packagistIcon: ux_icon('simple-icons:packagist'),#}
+{#            githubIcon: ux_icon('tabler:brand-github'),#}
+{#            iconMap: {#}
+{#                new:  ux_icon('clarity:new-line'),#}
+{#                composer_loaded: ux_icon('logos:composer'),#}
+{#                php_too_old:  ux_icon('icon-park-outline:invalid-files', {class: 'bg-danger text-white'}),#}
+{#            }#}
+{#        } %}#}
+
+        <a href="https://packagist.org/packages/{{ hit.name }}" target="_blank">
+            {{ globals.packagistIcon }}
+            On Packagist
+            {#                <span class="bi bi-github"></span> #}
+        </a>
+        <br />
+
+
         <button
             {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
             data-hit-id="{{ hit.id }}"

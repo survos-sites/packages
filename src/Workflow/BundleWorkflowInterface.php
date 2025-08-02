@@ -12,14 +12,22 @@ interface BundleWorkflowInterface
         description: "load from " . LoadDataCommand::BASE_URL,
         info: "basic from app:load")]
     final public const PLACE_NEW = 'new';
-    #[Place(info: "composer.json", description: "Loaded from ")]
+    #[Place(info: "composer.json", description: "Loaded from /packages/%s.json on " . LoadDataCommand::BASE_URL,
+        next: [self::TRANSITION_PHP_OKAY, self::TRANSITION_PHP_TOO_OLD]
+    )]
     final public const string PLACE_COMPOSER_LOADED = 'composer_loaded';
+
     #[Place(info: "outdated symfony")]
     final public const PLACE_SYMFONY_OUTDATED = 'outdated_symfony';
     #[Place(info: "works with supported Symfony")]
     final public const PLACE_SYMFONY_OKAY = 'symfony_ok';
 
+    #[Place(info: "outdated PHP")]
     final public const PLACE_OUTDATED_PHP = 'php_is_too_old';
+    #[Place(
+        info: "php okay",
+        next: [self::TRANSITION_SYMFONY_OKAY, self::TRANSITION_OUTDATED]
+    )]
     final public const PLACE_PHP_OKAY = 'php_ok';
     #[Place(info: "abandoned or misconfigured")]
     final public const PLACE_ABANDONED = 'abandoned';
@@ -27,7 +35,13 @@ interface BundleWorkflowInterface
     #[Place(info: "usable!")]
     final public const PLACE_VALID_REQUIREMENTS = 'valid';
 
-    #[Transition([self::PLACE_NEW, self::PLACE_SYMFONY_OKAY, self::PLACE_VALID_REQUIREMENTS], self::PLACE_COMPOSER_LOADED)]
+    #[Transition(
+        [self::PLACE_NEW, self::PLACE_SYMFONY_OKAY, self::PLACE_VALID_REQUIREMENTS],
+        self::PLACE_COMPOSER_LOADED,
+        description: "Slow but detailed API call",
+        info: "details from packagist API",
+        transport: 'load_composer'
+    )]
     final public const TRANSITION_LOAD = 'load';
 
     #[Transition([self::PLACE_NEW], self::PLACE_ABANDONED, guard: 'subject.abandoned')]

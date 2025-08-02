@@ -2,9 +2,9 @@
 
 set SYMFONY_DEPRECATIONS_HELPER=disabled
 # more verbose on the first run
-bin/console mess:stats async
+bin/console mess:stats
 #SYMFONY_DEPRECATIONS_HELPER=disabled bin/console messenger:consume low  -vvv --limit 1 --time-limit 60
 #bin/console messenger:consume high normal low -vv --limit 1 --time-limit 30;
 
 ## use sleep  so that you can break out with ^C
-while true; do  bin/console messenger:consume async -vv --limit 200  --time-limit 20; echo "pausing..."; bin/console mess:stats && sleep 4;   done;
+while true; do  bin/console messenger:consume async meili load_composer -vv --limit 200  --time-limit 20; echo "pausing..."; bin/console mess:stats && sleep 4;   done;

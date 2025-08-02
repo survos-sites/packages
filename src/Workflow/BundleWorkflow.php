@@ -116,33 +116,34 @@ final class BundleWorkflow implements BundleWorkflowInterface
         return $package->data;
     }
 
-    #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
-    public function onLoadCompleted(CompletedEvent $event): void
-    {
-        $package = $this->getPackage($event);
-        foreach ([self::TRANSITION_PHP_TOO_OLD, self::TRANSITION_PHP_OKAY] as $transitionName) {
-            if ($this->workflow->can($package, $transitionName)) {
-                $this->workflow->apply($package, $transitionName);
-            }
-        }
-    }
+//    #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
+//    public function onLoadCompleted(CompletedEvent $event): void
+//    {
+//        $package = $this->getPackage($event);
+//        foreach ([self::TRANSITION_PHP_TOO_OLD, self::TRANSITION_PHP_OKAY] as $transitionName) {
+//            if ($this->workflow->can($package, $transitionName)) {
+//                $this->workflow->apply($package, $transitionName);
+//            }
+//        }
+//    }
 
-    #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_PHP_OKAY)]
-    public function onPhpOkayCompleted(CompletedEvent $event): void
-    {
-        $package = $this->getPackage($event);
-        foreach ([self::TRANSITION_OUTDATED, self::TRANSITION_SYMFONY_OKAY] as $transitionName) {
-            if ($this->workflow->can($package, $transitionName)) {
-                $this->workflow->apply($package, $transitionName);
-            }
-        }
-    }
+//    #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_PHP_OKAY)]
+//    public function onPhpOkayCompleted(CompletedEvent $event): void
+//    {
+//        $package = $this->getPackage($event);
+//        foreach ([self::TRANSITION_OUTDATED, self::TRANSITION_SYMFONY_OKAY] as $transitionName) {
+//            if ($this->workflow->can($package, $transitionName)) {
+//                $this->workflow->apply($package, $transitionName);
+//            }
+//        }
+//    }
 
     #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
     public function onLoadComposer(TransitionEvent $event): void
     {
         $package = $this->getPackage($event);
         // @todo: check updatedAt
+        // https://packagist.org/apidoc#track-package-updates
         if (true || !$data = $package->data) {
             $this->loadLatestVersionData($package);
         }
@@ -167,10 +168,34 @@ final class BundleWorkflow implements BundleWorkflowInterface
          */
         $packagistPackage = $this->packagistClient->get($packageName);
 
+        // get the default branch
+        $versionCode = null;
+        foreach ($packagistPackage->getVersions() as $version) {
+            if ($version->getDefaultBranch()) {
+                $versionCode = $version->getVersion();
+            }
+        }
+        $package->version = $versionCode;
+        if (!$versionCode) {
+            return; // OnCompleted should check for no version and transition to a new state
+            dd($packagistPackage);
+        }
+        assert($versionCode, "No default version?");
+
+        $lastUpdated = $version->getTime();
+        if (str_contains($packageName, 'media')) {
+//            dd($packagistPackage, $lastUpdated);
+        }
+        $package->setLastUpdatedOnPackagist($lastUpdated);
+        $package->version = $versionCode; // could also be an array of the version data.
+        // @todo: skip if no new data
+
+        $package->lastUpdated = new \DateTimeImmutable(); // now
+
         /**
          * @var PackagistPackage\Version $version
         */
-            foreach ($packagistPackage->getVersions() as $versionCode => $version) {
+//            foreach ($packagistPackage->getVersions() as $versionCode => $version) {
                 // need a different API call for github stars.
                 //                if ($package->getFavers() || $package->getGithubStars()) {
                 //                    dd($package->getFavers(), $package);
@@ -182,11 +207,8 @@ final class BundleWorkflow implements BundleWorkflowInterface
 
                 $package->stars = $packagistPackage->getFavers();
                 $package->downloads = $packagistPackage->getDownloads()->getTotal();
-                $package->version = $versionCode;
                 $package->description = $version->getDescription();
                 $package->data = json_decode($json, true);
-                break; // we're getting the first one only, most recent.  hackish
-            }
     }
 
     #[AsMessageHandler]

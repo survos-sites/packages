@@ -39,7 +39,10 @@ use Symfony\Component\Serializer\Attribute\Groups;
 //        'groups' => ['package.read', 'package.facets', 'browse', 'tree', 'marking'],
 //    ]
 //)]
-#[ApiFilter(OrderFilter::class, properties: ['marking', 'vendor', 'name', 'stars', 'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(OrderFilter::class, properties: [
+    'marking', 'vendor', 'name', 'stars',
+    'lastUpdatedOnPackagist',
+    'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: ['marking' => 'exact', 'name' => 'partial'])]
 #[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'stars', 'keywords', 'marking'])]
 #[MeiliIndex()]
@@ -79,7 +82,16 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['package.read'])]
     public ?string $version = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['package.read'])]
+    public ?\DateTimeImmutable $lastUpdatedOnPackagist = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['package.read'])]
+    public ?\DateTimeImmutable $lastUpdated = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['package.read'])]
@@ -166,6 +178,14 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setLastUpdatedOnPackagist(string|\DateTimeInterface $timestamp): void
+    {
+        if (is_string($timestamp)) {
+            $timestamp = new \DateTimeImmutable($timestamp);
+        }
+        $this->lastUpdatedOnPackagist = \DateTimeImmutable::createFromInterface($timestamp);
     }
 
 

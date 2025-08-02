@@ -14,6 +14,26 @@ framework:
                 retry_strategy:
                     max_retries: 3
                     multiplier: 2
+            load_composer:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: load_composer
+                    queues:
+                        load_composer: ~
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
+            meili:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: meili
+                    queues:
+                        meili: ~
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
 
 #            doctrine_async:
 #                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
@@ -32,7 +52,9 @@ framework:
             Symfony\Component\Notifier\Message\SmsMessage: async
             App\Message\FetchComposer: async
             Survos\WorkflowBundle\Message\AsyncTransitionMessage: async
-#            App\Message\ProcessPackage: async
+            Survos\MeiliBundle\Message\BatchIndexEntitiesMessage: meili
+
+            #            App\Message\ProcessPackage: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
