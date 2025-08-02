@@ -5247,7 +5247,7 @@
         },
         {
             "name": "survos/auth-bundle",
-            "version": "1.6.19",
+            "version": "1.6.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosAuthBundle.git",
@@ -5326,7 +5326,7 @@
             "description": "Helper commands and classes for symfony security",
             "support": {
                 "issues": "https://github.com/survos/SurvosAuthBundle/issues",
-                "source": "https://github.com/survos/SurvosAuthBundle/tree/1.6.19"
+                "source": "https://github.com/survos/SurvosAuthBundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -5338,7 +5338,7 @@
         },
         {
             "name": "survos/bootstrap-bundle",
-            "version": "1.6.19",
+            "version": "1.6.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/BootstrapBundle.git",
@@ -5425,7 +5425,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/BootstrapBundle/issues",
-                "source": "https://github.com/survos/BootstrapBundle/tree/1.6.19"
+                "source": "https://github.com/survos/BootstrapBundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -5437,7 +5437,7 @@
         },
         {
             "name": "survos/command-bundle",
-            "version": "1.6.19",
+            "version": "1.6.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosCommandBundle.git",
@@ -5493,7 +5493,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosCommandBundle/issues",
-                "source": "https://github.com/survos/SurvosCommandBundle/tree/1.6.19"
+                "source": "https://github.com/survos/SurvosCommandBundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -5584,7 +5584,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosCoreBundle/issues",
-                "source": "https://github.com/survos/SurvosCoreBundle/tree/1.6.19"
+                "source": "https://github.com/survos/SurvosCoreBundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -5596,7 +5596,7 @@
         },
         {
             "name": "survos/crawler-bundle",
-            "version": "1.6.19",
+            "version": "1.6.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosCrawlerBundle.git",
@@ -5680,7 +5680,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosCrawlerBundle/issues",
-                "source": "https://github.com/survos/SurvosCrawlerBundle/tree/1.6.19"
+                "source": "https://github.com/survos/SurvosCrawlerBundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -5692,7 +5692,7 @@
         },
         {
             "name": "survos/inspection-bundle",
-            "version": "1.6.19",
+            "version": "1.6.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosInspectionBundle.git",
@@ -5769,7 +5769,7 @@
             "description": "Inspects Doctrine entities with APIPlatform attributes",
             "support": {
                 "issues": "https://github.com/survos/SurvosInspectionBundle/issues",
-                "source": "https://github.com/survos/SurvosInspectionBundle/tree/1.6.19"
+                "source": "https://github.com/survos/SurvosInspectionBundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -5844,7 +5844,7 @@
         },
         {
             "name": "survos/js-twig-bundle",
-            "version": "1.6.19",
+            "version": "1.6.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/JsTwigBundle.git",
@@ -5890,7 +5890,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/JsTwigBundle/issues",
-                "source": "https://github.com/survos/JsTwigBundle/tree/1.6.19"
+                "source": "https://github.com/survos/JsTwigBundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -5902,16 +5902,16 @@
         },
         {
             "name": "survos/meili-bundle",
-            "version": "1.6.19",
+            "version": "1.6.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/meili-bundle.git",
-                "reference": "299ec6fc196c2ff76f86df59ab833e13638a2eff"
+                "reference": "1d039dd625e01d51ba24a0434ad41d134379a621"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/299ec6fc196c2ff76f86df59ab833e13638a2eff",
-                "reference": "299ec6fc196c2ff76f86df59ab833e13638a2eff",
+                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/1d039dd625e01d51ba24a0434ad41d134379a621",
+                "reference": "1d039dd625e01d51ba24a0434ad41d134379a621",
                 "shasum": ""
             },
             "require": {
@@ -5965,7 +5965,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/1.6.19"
+                "source": "https://github.com/survos/meili-bundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -5973,11 +5973,11 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-01T14:09:44+00:00"
+            "time": "2025-08-02T20:34:35+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
-            "version": "1.6.19",
+            "version": "1.6.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosSimpleDatatablesBundle.git",
@@ -6042,7 +6042,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosSimpleDatatablesBundle/issues",
-                "source": "https://github.com/survos/SurvosSimpleDatatablesBundle/tree/1.6.19"
+                "source": "https://github.com/survos/SurvosSimpleDatatablesBundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -6058,12 +6058,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosWorkflowHelperBundle.git",
-                "reference": "abc7af845b202001c3e017147fd59e71fbd0e9bd"
+                "reference": "60e01df3be1be0e6bdfbb13727bfd3f5c8a33952"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosWorkflowHelperBundle/zipball/abc7af845b202001c3e017147fd59e71fbd0e9bd",
-                "reference": "abc7af845b202001c3e017147fd59e71fbd0e9bd",
+                "url": "https://api.github.com/repos/survos/SurvosWorkflowHelperBundle/zipball/60e01df3be1be0e6bdfbb13727bfd3f5c8a33952",
+                "reference": "60e01df3be1be0e6bdfbb13727bfd3f5c8a33952",
                 "shasum": ""
             },
             "require": {
@@ -6152,7 +6152,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosWorkflowHelperBundle/issues",
-                "source": "https://github.com/survos/SurvosWorkflowHelperBundle/tree/main"
+                "source": "https://github.com/survos/SurvosWorkflowHelperBundle/tree/1.6.20"
             },
             "funding": [
                 {
@@ -6160,7 +6160,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-01T17:20:15+00:00"
+            "time": "2025-08-02T20:34:34+00:00"
         },
         {
             "name": "symfony/amqp-messenger",
