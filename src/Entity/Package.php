@@ -65,10 +65,9 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     //    }
 
     #[ORM\Id]
-    #[ORM\GeneratedValue()]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column()]
     #[Groups(['browse'])]
-    private int $id;
+    private(set) string $id;
 
     #[ORM\Column(nullable: true)]
     public ?array $data = null;
@@ -172,12 +171,15 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     )
     {
         [$this->vendor, $this->shortName] = explode('/', $this->name);
+        $this->id = self::idFromName($this->name);
         $this->marking = self::PLACE_NEW;
     }
 
-    public function getId(): ?int
+    public static function idFromName(string $name): string
     {
-        return $this->id;
+        $slug =  str_replace('/', '--', $name);
+        $slug =  str_replace('.', '--', $slug);
+        return $slug;
     }
 
     public function setLastUpdatedOnPackagist(string|\DateTimeInterface $timestamp): void
