@@ -77,7 +77,8 @@
         "twig/extra-bundle": "^3.8",
         "twig/twig": "^3.17",
         "zenstruck/console-extra": "^1.4",
-        "zenstruck/twig-service-bundle": "^1.5"
+        "zenstruck/twig-service-bundle": "^1.5",
+        "zenstruck/messenger-monitor-bundle": "^0.5.4"
     },
     "config": {
         "allow-plugins": {
@@ -156,7 +157,6 @@
         "symfony/maker-bundle": "^1.57",
         "symfony/phpunit-bridge": "^7.0.4",
         "symfony/stopwatch": "^7.0.3",
-        "symfony/web-profiler-bundle": "^7.0.4",
-        "zenstruck/messenger-monitor-bundle": "^0.5.4"
+        "symfony/web-profiler-bundle": "^7.0.4"
     }
 }
