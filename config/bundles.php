@@ -21,7 +21,6 @@ return [
     Survos\BootstrapBundle\SurvosBootstrapBundle::class => ['all' => true],
     Survos\CommandBundle\SurvosCommandBundle::class => ['all' => true],
     Survos\CrawlerBundle\SurvosCrawlerBundle::class => ['all' => true],
-    Survos\WorkflowBundle\SurvosWorkflowBundle::class => ['all' => true],
     Knp\Bundle\TimeBundle\KnpTimeBundle::class => ['all' => true],
     Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
     Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
@@ -40,4 +39,5 @@ return [
     Ecourty\McpServerBundle\McpServerBundle::class => ['all' => true],
     Survos\CodeBundle\SurvosCodeBundle::class => ['dev' => true, 'test' => true],
     Survos\MeiliBundle\SurvosMeiliBundle::class => ['all' => true],
+    Survos\StateBundle\SurvosStateBundle::class => ['all' => true],
 ];

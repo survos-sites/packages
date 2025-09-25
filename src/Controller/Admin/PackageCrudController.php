@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use ApiPlatform\Doctrine\Odm\Filter\BooleanFilter;
 use App\Entity\Package;
 use App\Workflow\BundleWorkflow;
+use App\Workflow\BundleWorkflowInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
@@ -22,7 +23,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 class PackageCrudController extends AbstractCrudController
 {
     public function __construct(
-        #[Target(BundleWorkflow::WORKFLOW_NAME)] private readonly WorkflowInterface $workflow,
+        #[Target(BundleWorkflowInterface::WORKFLOW_NAME)] private readonly WorkflowInterface $workflow,
     )
     {
     }

@@ -251,8 +251,8 @@
     "survos/simple-datatables-bundle": {
         "version": "1.5.446"
     },
-    "survos/workflow-helper-bundle": {
-        "version": "1.5.156"
+    "survos/state-bundle": {
+        "version": "1.5.600"
     },
     "symfony/asset-mapper": {
         "version": "7.0",

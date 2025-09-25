@@ -42,7 +42,7 @@ final class LoadDataCommand
         private LoggerInterface            $logger,
         private MessageBusInterface        $messageBus,
         private PackageService             $packageService,
-        #[Target(BundleWorkflow::WORKFLOW_NAME)]
+        #[Target(BundleWorkflowInterface::WORKFLOW_NAME)]
         private readonly WorkflowInterface $workflow,
     )
     {

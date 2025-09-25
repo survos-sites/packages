@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Entity\Package;
 use App\Repository\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Survos\WorkflowBundle\Traits\HandleTransitionsTrait;
+use Survos\StateBundle\Traits\HandleTransitionsTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

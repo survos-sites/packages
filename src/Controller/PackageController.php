@@ -6,10 +6,11 @@ namespace App\Controller;
 
 use App\Entity\Package;
 use App\Workflow\BundleWorkflow;
+use App\Workflow\BundleWorkflowInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Nadar\PhpComposerReader\ComposerReader;
-use Survos\WorkflowBundle\Controller\HandleTransitionsInterface;
-use Survos\WorkflowBundle\Traits\HandleTransitionsTrait;
+use Survos\StateBundle\Controller\HandleTransitionsInterface;
+use Survos\StateBundle\Traits\HandleTransitionsTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,7 @@ class PackageController extends AbstractController implements HandleTransitionsI
     #[Route('/transition/{transition}', name: 'package_transition', options: ['expose' => true], methods: [Request::METHOD_GET])]
     public function show(
         Package $package,
-        #[Target(BundleWorkflow::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
+        #[Target(BundleWorkflowInterface::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
         ?string $transition = null,
     ): Response {
         if ($flashMessage = $this->handleTransitionButtons($workflow, $transition, $package)) {

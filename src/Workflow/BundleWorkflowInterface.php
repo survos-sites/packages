@@ -3,11 +3,18 @@
 namespace App\Workflow;
 
 use App\Command\LoadDataCommand;
-use Survos\WorkflowBundle\Attribute\Place;
-use Survos\WorkflowBundle\Attribute\Transition;
+use App\Entity\Package;
+use App\Workflow\BundleWorkflowInterface as WF;
+use Survos\StateBundle\Attribute\Place;
+use Survos\StateBundle\Attribute\Transition;
+use Survos\StateBundle\Attribute\Workflow;
 
-interface BundleWorkflowInterface
+#[Workflow(supports: [Package::class], name:self::WORKFLOW_NAME)]
+class BundleWorkflowInterface
 {
+    // This name is used for injecting the workflow into a controller!
+    public const WORKFLOW_NAME = 'BundleWorkflow';
+
     #[Place(initial: true,
         description: "load from " . LoadDataCommand::BASE_URL,
         info: "basic from app:load")]

@@ -44,12 +44,6 @@
                 }
             }
         },
-        "@survos/workflow-helper-bundle": {
-            "workflow": {
-                "enabled": true,
-                "fetch": "eager"
-            }
-        },
         "@symfony/ux-turbo": {
             "turbo-core": {
                 "enabled": true,
