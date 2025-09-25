@@ -9,7 +9,7 @@
     "scripts": {
         "dokku": {
             "predeploy": "bin/console mess:stop && bin/console importmap:install && bin/console asset-map:compile && bin/console d:m:m -n --allow-no-migration",
-            "postdeploy": "bin/console mess:consume meili  --time-limit 10"
+            "postdeploy": "bin/console mess:stats"
         }
     },
     "cron": [

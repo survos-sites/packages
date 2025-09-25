@@ -25,7 +25,7 @@ framework:
 #                    max_retries: 3
 #                    multiplier: 2
             meili:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
 #                options:
 #                    exchange:
 #                        name: meili
