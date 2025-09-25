@@ -6,7 +6,6 @@ use Symfony\Component\Validator\Constraints\When;
 use Zenstruck\Messenger\Monitor\History\Model\ProcessedMessage as BaseProcessedMessage;
 use Doctrine\ORM\Mapping as ORM;
 
-#[When('dev')]
 #[ORM\Entity(readOnly: true)]
 #[ORM\Table('messenger_processed_messages')]
 class ProcessedMessage extends BaseProcessedMessage

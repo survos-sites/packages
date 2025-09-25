@@ -1,6 +1,5 @@
-when@dev:
-    # Default configuration for extension with alias: "zenstruck_messenger_monitor"
-    zenstruck_messenger_monitor:
+# Default configuration for extension with alias: "zenstruck_messenger_monitor"
+zenstruck_messenger_monitor:
         storage:
             orm:
                 entity_class: App\Entity\ProcessedMessage
