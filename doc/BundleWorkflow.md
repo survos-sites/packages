@@ -15,7 +15,7 @@ onLoadComposer()
         // Slow but detailed API call
 
 ```php
-#[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
+#[AsTransitionListener(WF::WORKFLOW_NAME, WF::TRANSITION_LOAD)]
 public function onLoadComposer(TransitionEvent $event): void
 {
     $package = $this->getPackage($event);
@@ -27,6 +27,6 @@ public function onLoadComposer(TransitionEvent $event): void
     $this->packageService->populateFromComposerData($package);
 }
 ```
-[View source](packages/blob/main/src/Workflow/BundleWorkflow.php#L142-L151)
+[View source](packages/blob/main/src/Workflow/BundleWorkflow.php#L140-L149)
 
 
