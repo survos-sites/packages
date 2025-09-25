@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "93ee608d6556c36d2a00df43808b4bc8",
+    "content-hash": "22087d7fb63340ba5abbc91c26080c2a",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -5923,55 +5923,58 @@
         },
         {
             "name": "survos/meili-bundle",
-            "version": "1.6.44",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/meili-bundle.git",
-                "reference": "9fd8af18605129788dd2d6ccc947ca8f0286a04b"
+                "reference": "89cc504a778a04da56c63a7067858c2b5a490ee2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/9fd8af18605129788dd2d6ccc947ca8f0286a04b",
-                "reference": "9fd8af18605129788dd2d6ccc947ca8f0286a04b",
+                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/89cc504a778a04da56c63a7067858c2b5a490ee2",
+                "reference": "89cc504a778a04da56c63a7067858c2b5a490ee2",
                 "shasum": ""
             },
             "require": {
                 "adbario/php-dot-notation": "^3.3",
                 "cebe/php-openapi": "^1.8",
                 "ext-pdo": "*",
-                "meilisearch/meilisearch-php": "^1.14",
+                "meilisearch/meilisearch-php": "^1.11",
                 "nyholm/psr7": "^1.8",
                 "php": "^8.4",
                 "survos/core-bundle": "^1.5",
                 "survos/inspection-bundle": "^1.5",
-                "survos/installer": "^2.1.2",
+                "survos/installer": "^2.0",
                 "symfony/config": "^7.3",
                 "symfony/console": "^7.3",
                 "symfony/dependency-injection": "^7.3",
                 "symfony/http-kernel": "^7.3",
-                "symfony/property-access": "^7.2",
+                "symfony/object-mapper": "^7.3",
+                "symfony/property-access": "^7.3",
                 "symfony/stopwatch": "^7.3",
                 "twig/twig": "^3.4",
                 "zenstruck/bytes": "^1.0"
             },
             "require-dev": {
                 "api-platform/doctrine-orm": "^4.1",
-                "doctrine/doctrine-bundle": "^2.15",
+                "doctrine/doctrine-bundle": "^2.7",
                 "jwage/phpamqplib-messenger": "^0.8.5",
                 "phpstan/phpstan": "^2.0",
                 "rector/rector": "^2.0",
+                "survos/babel-bundle": "^2.0",
                 "survos/js-twig-bundle": "^1.6",
                 "symfony/browser-kit": "^7.3",
                 "symfony/framework-bundle": "^7.3",
-                "symfony/http-client": "^7.2",
+                "symfony/http-client": "^7.3",
                 "symfony/intl": "^7.3",
                 "symfony/messenger": "^7.3",
                 "symfony/phpunit-bridge": "^7.3",
                 "symfony/twig-bundle": "^7.3",
-                "symfony/ux-chartjs": "^2.23",
-                "symfony/ux-twig-component": "^2.27",
+                "symfony/ux-chartjs": "^2.21",
+                "symfony/ux-twig-component": "^2.8",
                 "symfony/var-dumper": "^7.3"
             },
+            "default-branch": true,
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
@@ -5988,7 +5991,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/1.6.44"
+                "source": "https://github.com/survos/meili-bundle/tree/main"
             },
             "funding": [
                 {
@@ -5996,7 +5999,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-12T14:05:41+00:00"
+            "time": "2025-09-25T14:29:52+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
@@ -6081,12 +6084,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/state-bundle.git",
-                "reference": "6c986595263671267912744cef6a4b9d50b0e0c0"
+                "reference": "d22c04d926e9cc382fefaf64ed4bc1fec8a5aa81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/state-bundle/zipball/6c986595263671267912744cef6a4b9d50b0e0c0",
-                "reference": "6c986595263671267912744cef6a4b9d50b0e0c0",
+                "url": "https://api.github.com/repos/survos/state-bundle/zipball/d22c04d926e9cc382fefaf64ed4bc1fec8a5aa81",
+                "reference": "d22c04d926e9cc382fefaf64ed4bc1fec8a5aa81",
                 "shasum": ""
             },
             "require": {
@@ -6184,7 +6187,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-20T20:54:05+00:00"
+            "time": "2025-09-25T14:28:00+00:00"
         },
         {
             "name": "symfony/amqp-messenger",
@@ -17161,6 +17164,7 @@
         "knplabs/packagist-api": 20,
         "survos/code-bundle": 20,
         "survos/core-bundle": 20,
+        "survos/meili-bundle": 20,
         "survos/state-bundle": 20
     },
     "prefer-stable": true,

@@ -160,6 +160,7 @@ class PackageService
     {
         // @todo: cache
         try {
+            $this->logger->warning("Loading " . $survosPackage->name);
             $composer = $this->client->getComposer($survosPackage->name);
             assert($composer);
         } catch (\Exception $exception) {

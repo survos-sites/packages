@@ -152,6 +152,7 @@ final class BundleWorkflow
     private function loadLatestVersionData(Package $package)
     {
         $packageName = $package->name;
+        $this->logger->warning($package->name);
         try {
             $composer = $this->packagistClient->getComposer($packageName);
         } catch (\Exception $exception) {
@@ -217,6 +218,7 @@ final class BundleWorkflow
         // @todo: check update time or use a real cache.
         if (!$package->packagistData) {
             $packagistInfoUrl = sprintf('https://packagist.org/packages/%s.json', $message->getName());
+            $this->logger->warning($packagistInfoUrl);
             $info = json_decode(file_get_contents($packagistInfoUrl), true);
             $package->packagistData = $info['package'];
         }

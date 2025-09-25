@@ -14,6 +14,8 @@ use Packagist\Api\Result\Package;
 use Packagist\Api\Result\Result;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use Survos\StateBundle\Message\TransitionMessage;
+use Survos\StateBundle\Service\AsyncQueueLocator;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -37,6 +39,7 @@ final class LoadDataCommand
         private PackageRepository          $packageRepository,
         private EntityManagerInterface     $entityManager,
         private CacheInterface             $cache,
+        private AsyncQueueLocator $asyncQueueLocator,
 
         private SerializerInterface        $serializer,
         private LoggerInterface            $logger,
@@ -55,6 +58,10 @@ final class LoadDataCommand
         SymfonyStyle                                                             $io,
         #[Argument('search query for packages, e.g.type=symfony-bundle')] string $q = 'type=symfony-bundle',
         #[Option('load the bundle names and vendors')] bool                      $setup = true,
+        #[Option('Dispatch the load request')] bool                              $dispatch = false,
+        #[Option('Dispatch sync')] bool                              $sync = false,
+
+
         #[Option('refresh the data')] bool                                       $refresh = true,
         #[Option('fetch the latest version json')] bool                          $fetch = false,
         #[Option('process the json in the database')] bool                       $process = false,
@@ -78,7 +85,8 @@ final class LoadDataCommand
         $client = new Client();
         //        'fields' => ['abandoned','repository','type'],
 
-        if ($setup) {
+        if ($setup)
+        {
             $idx = 0;
             // alternative:
 
@@ -124,6 +132,19 @@ final class LoadDataCommand
             }
             $this->entityManager->flush();
             $io->writeln('total bundles in database: ' . $this->packageRepository->count([]));
+        }
+        if ($dispatch) {
+            if ($sync) {
+                $this->asyncQueueLocator->sync = true;
+            }
+            foreach ($this->packageRepository->findBy(['marking' => BundleWorkflowInterface::PLACE_NEW], ['id' => 'ASC'], $limit ?: null) as $package) {
+                $msg = new TransitionMessage($package->id, $package::class,
+                    BundleWorkflowInterface::TRANSITION_LOAD,
+                BundleWorkflowInterface::WORKFLOW_NAME
+                );
+                $stamps = $this->asyncQueueLocator->stamps($msg);
+                $this->messageBus->dispatch($msg, $stamps);
+            }
         }
 
         $where = [];
