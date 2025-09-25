@@ -21,7 +21,7 @@ when@dev:
             console:
                 type: console
                 process_psr_3_messages: false
-                channels: ["!event", "!doctrine", "!console", "!deprecation"]
+                channels: ["!event", "!doctrine", "!console", "!deprecation", "!cache"]
 
 when@test:
     monolog:
@@ -54,7 +54,7 @@ when@prod:
             console:
                 type: console
                 process_psr_3_messages: false
-                channels: ["!event", "!doctrine"]
+                channels: ["!event", "!doctrine", "!cache"]
 #            deprecation:
 #                type: stream
 #                channels: [deprecation]
