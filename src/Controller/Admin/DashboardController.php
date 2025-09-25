@@ -67,15 +67,17 @@ class DashboardController extends AbstractDashboardController
          yield MenuItem::linkToCrud('Packages', 'fas fa-list', Package::class);
 
          $menuItems = [];
+        yield MenuItem::section('By Marking');
          foreach ($this->workflowHelperService->getCounts(Package::class, 'marking') as $marking=>$count) {
-             $menuItems[] = MenuItem::linkToCrud($marking, 'fa fa-tags', Package::class)
+
+             yield MenuItem::linkToCrud($marking, 'fa fa-tags', Package::class)
                  ->setBadge($count)
                  ->setQueryParameter('filters[marking][value]', $marking)
                  ->setQueryParameter('filters[marking][comparison]', '=')
                  ;
          }
 
-        yield MenuItem::subMenu('By Marking', 'fa fa-article')->setSubItems($menuItems);
+//        yield MenuItem::subMenu('By Marking', 'fa fa-article')->setSubItems($menuItems);
 
          yield MenuItem::linkToRoute('Search', 'fas fa-search',
              'app_insta',
