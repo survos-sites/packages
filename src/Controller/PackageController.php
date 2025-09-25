@@ -29,9 +29,9 @@ class PackageController extends AbstractController implements HandleTransitionsI
     ) {
     }
 
-    #[Route('/', name: 'package_show', options: ['expose' => true], methods: [Request::METHOD_GET])]
     #[Route('/transition/{transition}', name: 'package_transition', options: ['expose' => true], methods: [Request::METHOD_GET])]
-    #[AdminRoute('/bundle/{packageId}', name: 'bundle_show')]
+    #[Route('/', name: 'package_show', options: ['expose' => true], methods: [Request::METHOD_GET])]
+    #[AdminRoute('/bundle/{packageId}', name: 'bundle_show', options: ['expose' => true])]
     public function show(
         string $packageId,
 //        Package $package,
