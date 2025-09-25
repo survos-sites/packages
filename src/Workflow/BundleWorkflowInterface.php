@@ -47,7 +47,7 @@ class BundleWorkflowInterface
         self::PLACE_COMPOSER_LOADED,
         description: "Slow but detailed API call",
         info: "details from packagist API",
-        transport: 'load_composer'
+        async: true
     )]
     final public const TRANSITION_LOAD = 'load';
 

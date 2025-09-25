@@ -4,33 +4,33 @@ framework:
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
-            async:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                options:
-                    exchange:
-                        name: async
-                    queues:
-                        async: ~
-                retry_strategy:
-                    max_retries: 3
-                    multiplier: 2
-            load_composer:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                options:
-                    exchange:
-                        name: load_composer
-                    queues:
-                        load_composer: ~
-                retry_strategy:
-                    max_retries: 3
-                    multiplier: 2
+#            async:
+#                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+##                options:
+##                    exchange:
+##                        name: async
+##                    queues:
+##                        async: ~
+#                retry_strategy:
+#                    max_retries: 3
+#                    multiplier: 2
+#            load_composer:
+#                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+#                options:
+#                    exchange:
+#                        name: load_composer
+#                    queues:
+#                        load_composer: ~
+#                retry_strategy:
+#                    max_retries: 3
+#                    multiplier: 2
             meili:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                options:
-                    exchange:
-                        name: meili
-                    queues:
-                        meili: ~
+#                options:
+#                    exchange:
+#                        name: meili
+#                    queues:
+#                        meili: ~
                 retry_strategy:
                     max_retries: 3
                     multiplier: 2
@@ -47,10 +47,10 @@ framework:
             sync: 'sync://'
 
         routing:
-            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
-            Symfony\Component\Notifier\Message\ChatMessage: async
-            Symfony\Component\Notifier\Message\SmsMessage: async
-            App\Message\FetchComposer: async
+#            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+#            Symfony\Component\Notifier\Message\ChatMessage: async
+#            Symfony\Component\Notifier\Message\SmsMessage: async
+#            App\Message\FetchComposer: async
             Survos\MeiliBundle\Message\BatchIndexEntitiesMessage: meili
 
             #            App\Message\ProcessPackage: async

@@ -58,7 +58,12 @@ final class AppMenu implements KnpMenuHelperInterface
 
         $this->add($menu, 'app_homepage', label: 'Home');
         $this->add($menu, 'admin', label: 'ez');
-        $this->add($menu, 'survos_workflow_entities', label: '*entities');
+
+            if ($this->isEnv('dev')) {
+            $this->add($menu, 'zenstruck_messenger_monitor_dashboard', label: '*msg');
+            }
+
+            $this->add($menu, 'survos_workflow_entities', label: '*entities');
         foreach ($this->meiliService->indexedEntities as $entityClass) {
             $indexName = $this->meiliService->getPrefixedIndexName($entityClass);
             $this->add($menu, 'app_insta', ['indexName' => $indexName], label: $indexName);
