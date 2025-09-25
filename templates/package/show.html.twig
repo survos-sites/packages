@@ -1,67 +1,109 @@
-{% extends "package/base.html.twig" %}
+{% extends '@EasyAdmin/layout.html.twig' %}
 
-{% block title package.name  %}
-{% block body %}
-    <h1>{{ package.name }}</h1>
+{% block title %}{{ package.name }}{% endblock %}
 
-    <code>{{ package.marking }}</code>
-{#    {{ dump(package) }}#}
-{#    Starred: {{ package.favers }}#}
-
-    <div class="blockquote">
-        {{ package.description }}
+{% block content_header %}
+    <div class="content-header-title">
+        <h1 class="title">{{ package.name }}</h1>
     </div>
-    <h3>{{ package.keywords|length }} Keywords</h3>
-    {% for keyword in package.keywords %}
-        <li>{{ keyword }}</li>
-    {% endfor %}
-    <br />Downloads: {{ package.downloads }}
-    {{ package.sourceType }}: <a target="_blank" href="{{ package.sourceUrl }}">{{ package.sourceUrl     }}</a>
 
-    <ul>
-        <li>
-            Symfony: <code>{{ package.symfonyVersionString }}</code> {{ package.symfonyVersions|join('|') }}
-        </li>
-        <li>
-            PHP: <code>{{ package.phpVersionString }}</code> {{ package.phpVersions|join('|') }}
-        </li>
-        <li>
-            PHPUnit: <code>{{ package.phpUnitVersionString }}</code> {{ package.phpUnitVersions|default([])|join('|') }}
-        </li>
-
-    </ul>
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <h3>Admin</h3>
-        {#        flowName: 'SubmissionWorkflow',#}
-        {{ include('@SurvosWorkflow/_entity_transitions.html.twig', {
-            transition_path: 'package_transition', entity: package
-        }) }}
-    {% endif %}
-
-    {% if package.data %}
-    {{ block('content') }}
-    {% endif %}
+    <div class="page-actions">
+        <a href="{{ path('admin_package_index') }}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left"></i> Back to list
+        </a>
+    </div>
 {% endblock %}
 
-{% block content %}
-{#    Stars: {{ package.stars }}<br />#}
-    Updated: {{ package.data.time|time_diff }}
+{% block main %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <code class="badge badge-secondary">{{ package.marking }}</code>
+                    </div>
 
-    {% if package.data %}
+                    {% if package.description %}
+                        <blockquote class="blockquote mb-4">
+                            {{ package.description }}
+                        </blockquote>
+                    {% endif %}
 
-        <andypf-json-viewer
-            indent="2"
-            expanded="true"
-            theme="default-light"
-            show-data-types="true"
-            show-toolbar="false"
-            expand-icon-type="arrow"
-            show-copy="true"
-            show-size="true"
-            data='{{ package.data|json_encode }}'
-        ></andypf-json-viewer>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Package Info</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Downloads:</strong> {{ package.downloads|number_format }}</li>
+                                <li><strong>{{ package.sourceType|title }}:</strong>
+                                    <a target="_blank" href="{{ package.sourceUrl }}" class="text-decoration-none">
+                                        {{ package.sourceUrl }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
 
+                        <div class="col-md-6">
+                            <h5>Requirements</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Symfony:</strong> <code>{{ package.symfonyVersionString }}</code></li>
+                                <li><strong>PHP:</strong> <code>{{ package.phpVersionString }}</code></li>
+                                {% if package.phpUnitVersionString %}
+                                    <li><strong>PHPUnit:</strong> <code>{{ package.phpUnitVersionString }}</code></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
 
-    {% endif %}
+                    {% if package.keywords|length > 0 %}
+                        <h5>Keywords ({{ package.keywords|length }})</h5>
+                        <div class="mb-3">
+                            {% for keyword in package.keywords %}
+                                <span class="badge badge-light me-1">{{ keyword }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Admin Actions</h5>
+                            </div>
+                            <div class="card-body">
+                                {{ include('@SurvosWorkflow/_entity_transitions.html.twig', {
+                                    transition_path: 'package_transition',
+                                    entity: package
+                                }) }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if package.data %}
+                        {{ block('extra') }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Package Data</h5>
+            <small class="text-muted">Updated: {{ package.data.time|time_diff }}</small>
+        </div>
+        <div class="card-body">
+            <andypf-json-viewer
+                indent="2"
+                expanded="true"
+                theme="default-light"
+                show-data-types="true"
+                show-toolbar="false"
+                expand-icon-type="arrow"
+                show-copy="true"
+                show-size="true"
+                data='{{ package.data|json_encode }}'
+            ></andypf-json-viewer>
+        </div>
+    </div>
 {% endblock %}

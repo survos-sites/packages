@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -45,8 +46,22 @@ class PackageCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
 
-        yield IdField::new('id')->hideOnForm();
-        yield ArrayField::new('symfonyVersions')->hideOnForm();
+        yield TextField::new('vendor');
+        yield TextField::new('shortName')
+            ->formatValue(function ($value, Package $entity) {
+                return sprintf(
+                    '<a href="%s">%s</a>',
+                    $this->generateUrl('admin_bundle_show', ['packageId' => $entity->id]),
+                    $value
+                );
+            });
+
+        yield IdField::new('id')->onlyOnDetail();
+        yield DateField::new('lastUpdatedOnPackagist', 'updated')
+            ->hideOnForm()
+            ->setTemplatePath('admin/field/timeago.html.twig');
+
+        yield ArrayField::new('symfonyVersions', 'Symfony')->hideOnForm();
         yield ArrayField::new('keywords')->hideOnForm();
         yield ChoiceField::new('marking')->setChoices(
             $this->workflow->getDefinition()->getPlaces()
@@ -58,6 +73,10 @@ class PackageCrudController extends AbstractCrudController
             $easyadminField = match ($propertyName) {
                 'marking' => null,
                 'id' => null,
+                'shortName',
+                'lastUpdatedOnPackagist',
+                'lastUpdated' => null,
+                'vendor' => null,
                 'version' => null,
 //                'fetchStatusCode' => $field->setLabel('Fetch Status'),
 
