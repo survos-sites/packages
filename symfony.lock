@@ -89,12 +89,12 @@
         ]
     },
     "inspector-apm/inspector-symfony": {
-        "version": "1.2",
+        "version": "1.8",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "main",
-            "version": "1.0",
-            "ref": "fefb11e1366fc61c05f82296d98d4fb3210aa06d"
+            "version": "1.4",
+            "ref": "60ac12d92b25c43830fdf25922e53467058feab1"
         },
         "files": [
             "config/packages/inspector.yaml"
