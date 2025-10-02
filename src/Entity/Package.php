@@ -43,7 +43,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
     'marking', 'vendor', 'name', 'stars',
     'lastUpdatedOnPackagist',
     'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
-#[ApiFilter(SearchFilter::class, properties: ['marking' => 'exact', 'name' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: [
+    'marking' => 'exact', // api platform, it's a facet in meili
+    'name' => 'partial',
+    'description' => 'partial',
+])]
 #[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'stars', 'keywords', 'marking'])]
 #[MeiliIndex()]
 //#[ApiFilter(
