@@ -19,8 +19,8 @@ use Survos\MeiliBundle\Api\Filter\FacetsFieldSearchFilter;
 use Survos\CoreBundle\Entity\RouteParametersInterface;
 use Survos\CoreBundle\Entity\RouteParametersTrait;
 use Survos\MeiliBundle\Metadata\MeiliIndex;
-use Survos\WorkflowBundle\Traits\MarkingInterface;
-use Survos\WorkflowBundle\Traits\MarkingTrait;
+use Survos\StateBundle\Traits\MarkingInterface;
+use Survos\StateBundle\Traits\MarkingTrait;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
@@ -43,7 +43,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
     'marking', 'vendor', 'name', 'stars',
     'lastUpdatedOnPackagist',
     'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
-#[ApiFilter(SearchFilter::class, properties: ['marking' => 'exact', 'name' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: [
+    'marking' => 'exact', // api platform, it's a facet in meili
+    'name' => 'partial',
+    'description' => 'partial',
+])]
 #[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'stars', 'keywords', 'marking'])]
 #[MeiliIndex()]
 //#[ApiFilter(
@@ -52,7 +56,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 //    arguments: ['searchParameterName' => 'search']
 //)]
 // #[Groups(['package.read'])] // NO! The embedded json data is too big
-class Package implements RouteParametersInterface, MarkingInterface, BundleWorkflowInterface, \Stringable
+class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 {
     use RouteParametersTrait;
     use MarkingTrait;
@@ -172,7 +176,7 @@ class Package implements RouteParametersInterface, MarkingInterface, BundleWorkf
     {
         [$this->vendor, $this->shortName] = explode('/', $this->name);
         $this->id = self::idFromName($this->name);
-        $this->marking = self::PLACE_NEW;
+        $this->marking = BundleWorkflowInterface::PLACE_NEW;
     }
 
     public static function idFromName(string $name): string

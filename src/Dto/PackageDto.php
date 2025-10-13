@@ -11,7 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Filter\DtoFilter;
 use App\State\DtoProcessor;
 use App\State\DtoProvider;
-use Survos\ApiGrid\Filter\MeiliSearch\MultiFieldSearchFilter;
+use Survos\MeiliBundle\Api\Filter\MultiFieldSearchFilter;
 
 #[ApiResource(
     provider: DtoProvider::class,

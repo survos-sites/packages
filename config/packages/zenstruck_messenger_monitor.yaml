@@ -1,0 +1,10 @@
+# Default configuration for extension with alias: "zenstruck_messenger_monitor"
+zenstruck_messenger_monitor:
+        storage:
+            orm:
+                entity_class: App\Entity\ProcessedMessage
+
+            # Message classes to disable monitoring for (can be abstract/interface)
+            exclude:
+#                - Survos\MeiliBundle\Message\BatchIndexEntitiesMessage
+#                - Survos\StateBundle\Message\TransitionMessage

@@ -48,7 +48,18 @@ class PackageService
             }
         }
         $parser = new VersionParser();
-        $constraint = $parser->parseConstraints($versionConstraintString);
+        try {
+            $constraint = $parser->parseConstraints($versionConstraintString);
+        } catch (\Exception $exception) {
+            $this->logger->error($versionConstraintString . "\n\n" . $exception->getMessage());
+//            In VersionParser.php line 526:
+//
+//  [UnexpectedValueException]
+//  Could not parse version constraint self.version: Invalid version string "self.version"
+            return []; // for now.
+
+
+        }
         $matches = [];
         foreach ($versions as $version) {
             $actualVersionConstraint = $parser->parseConstraints($version);
@@ -149,6 +160,7 @@ class PackageService
     {
         // @todo: cache
         try {
+            $this->logger->warning("Loading " . $survosPackage->name);
             $composer = $this->client->getComposer($survosPackage->name);
             assert($composer);
         } catch (\Exception $exception) {

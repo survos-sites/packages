@@ -1,11 +1,11 @@
 {
     "api-platform/core": {
-        "version": "3.2",
+        "version": "4.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "3.2",
-            "ref": "696d44adc3c0d4f5d25a2f1c4f3700dd8a5c6db9"
+            "version": "4.0",
+            "ref": "cb9e6b8ceb9b62f32d41fc8ad72a25d5bd674c6d"
         },
         "files": [
             "config/packages/api_platform.yaml",
@@ -23,12 +23,12 @@
         }
     },
     "doctrine/doctrine-bundle": {
-        "version": "2.11",
+        "version": "2.16",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "2.10",
-            "ref": "310a02a22033e35640468f48ff6bf31a25891537"
+            "version": "2.13",
+            "ref": "620b57f496f2e599a6015a9fa222c2ee0a32adcb"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -89,12 +89,12 @@
         ]
     },
     "inspector-apm/inspector-symfony": {
-        "version": "1.2",
+        "version": "1.8",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "main",
-            "version": "1.0",
-            "ref": "fefb11e1366fc61c05f82296d98d4fb3210aa06d"
+            "version": "1.4",
+            "ref": "60ac12d92b25c43830fdf25922e53467058feab1"
         },
         "files": [
             "config/packages/inspector.yaml"
@@ -251,16 +251,16 @@
     "survos/simple-datatables-bundle": {
         "version": "1.5.446"
     },
-    "survos/workflow-helper-bundle": {
-        "version": "1.5.156"
+    "survos/state-bundle": {
+        "version": "1.5.600"
     },
     "symfony/asset-mapper": {
-        "version": "7.0",
+        "version": "7.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "6.4",
-            "ref": "4ff49f66191ce9356098e588684c27b935958b33"
+            "ref": "5ad1308aa756d58f999ffbe1540d1189f5d7d14a"
         },
         "files": [
             "assets/app.js",
@@ -270,12 +270,12 @@
         ]
     },
     "symfony/console": {
-        "version": "7.0",
+        "version": "7.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "5.3",
-            "ref": "da0c8be8157600ad34f10ff0c9cc91232522e047"
+            "ref": "1781ff40d8a17d87cf53f8d4cf0c8346ed2bb461"
         },
         "files": [
             "bin/console"
@@ -583,6 +583,20 @@
             "version": "1.9",
             "ref": "66c5290398734ff02cedddf44dce6eb2002d958c"
         }
+    },
+    "zenstruck/messenger-monitor-bundle": {
+        "version": "0.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "0.5",
+            "ref": "e830a96e19aef36b23c63a4f8884fe51815f06d8"
+        },
+        "files": [
+            "config/packages/zenstruck_messenger_monitor.yaml",
+            "src/Controller/Admin/MessengerMonitorController.php",
+            "src/Entity/ProcessedMessage.php"
+        ]
     },
     "zenstruck/twig-service-bundle": {
         "version": "1.5",

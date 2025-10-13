@@ -6,10 +6,12 @@ namespace App\Controller;
 
 use App\Entity\Package;
 use App\Workflow\BundleWorkflow;
+use App\Workflow\BundleWorkflowInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use Nadar\PhpComposerReader\ComposerReader;
-use Survos\WorkflowBundle\Controller\HandleTransitionsInterface;
-use Survos\WorkflowBundle\Traits\HandleTransitionsTrait;
+use Survos\StateBundle\Controller\HandleTransitionsInterface;
+use Survos\StateBundle\Traits\HandleTransitionsTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,13 +29,17 @@ class PackageController extends AbstractController implements HandleTransitionsI
     ) {
     }
 
-    #[Route('/', name: 'package_show', options: ['expose' => true], methods: [Request::METHOD_GET])]
     #[Route('/transition/{transition}', name: 'package_transition', options: ['expose' => true], methods: [Request::METHOD_GET])]
+    #[Route('/', name: 'package_show', options: ['expose' => true], methods: [Request::METHOD_GET])]
+    #[AdminRoute('/bundle/{packageId}', name: 'bundle_show', options: ['expose' => true])]
     public function show(
-        Package $package,
-        #[Target(BundleWorkflow::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
+        string $packageId,
+//        Package $package,
+        #[Target(BundleWorkflowInterface::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
         ?string $transition = null,
     ): Response {
+        $package = $this->entityManager->getRepository(Package::class)->find($packageId);
+        assert($package instanceof Package, "wrong id $packageId");
         if ($flashMessage = $this->handleTransitionButtons($workflow, $transition, $package)) {
             // this could be done in a .leave listener too.
             $this->addFlash('info', $flashMessage);

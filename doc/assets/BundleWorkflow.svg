@@ -9,7 +9,7 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 972)">
 <title>workflow</title>
 <polygon fill="white" stroke="transparent" points="-4,4 -4,-972 707.77,-972 707.77,4 -4,4"/>
-<text text-anchor="start" x="301.88" y="-8.8" font-family="Times,serif" font-weight="bold" font-size="14.00">BundleWorkflow</text>
+<text text-anchor="start" x="286.88" y="-8.8" font-family="Times,serif" font-weight="bold" font-size="14.00">BundleWorkflow</text>
 <!-- place_new -->
 <g id="node1" class="node">
 <title>place_new</title>
@@ -22,9 +22,9 @@
 <g id="node9" class="node">
 <title>transition_load</title>
 <polygon fill="lightBlue" stroke="lightBlue" points="499.77,-851 355.77,-851 355.77,-779 499.77,-779 499.77,-851"/>
-<text text-anchor="start" x="418.77" y="-825.6" font-family="Arial" font-weight="bold" font-size="8.00">load</text>
-<text text-anchor="start" x="381.77" y="-817.6" font-family="Arial" font-style="italic" font-size="8.00">details from packagist API</text>
-<text text-anchor="start" x="392.27" y="-801.6" font-family="Arial" font-size="8.00">Via: load_composer</text>
+<text text-anchor="start" x="418.77" y="-821.6" font-family="Arial" font-weight="bold" font-size="8.00">load</text>
+<text text-anchor="start" x="381.77" y="-813.6" font-family="Arial" font-style="italic" font-size="8.00">details from packagist API</text>
+<text text-anchor="start" x="415.27" y="-805.6" font-family="Arial" font-size="8.00">async: </text>
 <text text-anchor="middle" x="283.27" y="-853.6" font-family="Arial" font-size="8.00">Transition load: Slow but detailed API call</text>
 </g>
 <!-- place_new&#45;&gt;transition_load -->
@@ -38,8 +38,7 @@
 <g id="node10" class="node">
 <title>transition_abandon</title>
 <polygon fill="lightBlue" stroke="lightBlue" points="682.77,-851 538.77,-851 538.77,-779 682.77,-779 682.77,-851"/>
-<text text-anchor="start" x="592.77" y="-817.6" font-family="Arial" font-weight="bold" font-size="8.00">abandon</text>
-<text text-anchor="start" x="590.27" y="-809.6" font-family="Arial" text-decoration="underline" font-size="8.00">abandoned</text>
+<text text-anchor="start" x="592.77" y="-814.1" font-family="Arial" font-weight="bold" font-size="8.00">abandon</text>
 <text text-anchor="middle" x="502.27" y="-853.6" font-family="Arial" font-size="8.00">Transition abandon: </text>
 </g>
 <!-- place_new&#45;&gt;transition_abandon -->
@@ -66,10 +65,9 @@
 <g id="node12" class="node">
 <title>transition_php_too_old</title>
 <polygon fill="lightBlue" stroke="lightBlue" points="501.77,-635 357.77,-635 357.77,-563 501.77,-563 501.77,-635"/>
-<text text-anchor="start" x="403.77" y="-605.6" font-family="Arial" font-weight="bold" font-size="8.00">php_too_old</text>
-<text text-anchor="start" x="399.27" y="-597.6" font-family="Arial" text-decoration="underline" font-size="8.00">!ValidPhpVersion</text>
-<text text-anchor="start" x="408.77" y="-589.6" font-family="Arial" font-style="italic" font-size="8.00">PHP &lt; 8.1?</text>
-<text text-anchor="middle" x="315.27" y="-637.6" font-family="Arial" font-size="8.00">Transition php_too_old: </text>
+<text text-anchor="start" x="403.77" y="-601.6" font-family="Arial" font-weight="bold" font-size="8.00">php_too_old</text>
+<text text-anchor="start" x="408.77" y="-593.6" font-family="Arial" font-style="italic" font-size="8.00">PHP &lt; 8.1?</text>
+<text text-anchor="middle" x="314.77" y="-637.6" font-family="Arial" font-size="8.00">Transition php_too_old: </text>
 </g>
 <!-- place_composer_loaded&#45;&gt;transition_php_too_old -->
 <!-- composer_loaded -->
@@ -82,9 +80,8 @@
 <g id="node13" class="node">
 <title>transition_php_okay</title>
 <polygon fill="lightBlue" stroke="lightBlue" points="327.77,-635 183.77,-635 183.77,-563 327.77,-563 327.77,-635"/>
-<text text-anchor="start" x="235.77" y="-605.6" font-family="Arial" font-weight="bold" font-size="8.00">php_okay</text>
-<text text-anchor="start" x="226.27" y="-597.6" font-family="Arial" text-decoration="underline" font-size="8.00">ValidPhpVersion</text>
-<text text-anchor="start" x="232.77" y="-589.6" font-family="Arial" font-style="italic" font-size="8.00">PHP &gt;= 8.1?</text>
+<text text-anchor="start" x="235.77" y="-601.6" font-family="Arial" font-weight="bold" font-size="8.00">php_okay</text>
+<text text-anchor="start" x="232.77" y="-593.6" font-family="Arial" font-style="italic" font-size="8.00">PHP &gt;= 8.1?</text>
 <text text-anchor="middle" x="145.77" y="-637.6" font-family="Arial" font-size="8.00">Transition php_okay: </text>
 </g>
 <!-- place_composer_loaded&#45;&gt;transition_php_okay -->
@@ -121,9 +118,8 @@
 <g id="node11" class="node">
 <title>transition_valid</title>
 <polygon fill="lightBlue" stroke="lightBlue" points="383.77,-203 239.77,-203 239.77,-131 383.77,-131 383.77,-203"/>
-<text text-anchor="start" x="302.27" y="-169.6" font-family="Arial" font-weight="bold" font-size="8.00">valid</text>
-<text text-anchor="start" x="273.77" y="-161.6" font-family="Arial" text-decoration="underline" font-size="8.00">ValidSymfonyVersion</text>
-<text text-anchor="middle" x="211.27" y="-205.6" font-family="Arial" font-size="8.00">Transition valid: </text>
+<text text-anchor="start" x="302.27" y="-166.1" font-family="Arial" font-weight="bold" font-size="8.00">valid</text>
+<text text-anchor="middle" x="210.77" y="-205.6" font-family="Arial" font-size="8.00">Transition valid: </text>
 </g>
 <!-- place_symfony_ok&#45;&gt;transition_valid -->
 <!-- symfony_ok -->
@@ -157,10 +153,9 @@
 <g id="node14" class="node">
 <title>transition_symfony_outdated</title>
 <polygon fill="lightBlue" stroke="lightBlue" points="302.77,-419 158.77,-419 158.77,-347 302.77,-347 302.77,-419"/>
-<text text-anchor="start" x="193.27" y="-389.6" font-family="Arial" font-weight="bold" font-size="8.00">symfony_outdated</text>
-<text text-anchor="start" x="191.77" y="-381.6" font-family="Arial" text-decoration="underline" font-size="8.00">!ValidSymfonyVersion</text>
-<text text-anchor="start" x="202.77" y="-373.6" font-family="Arial" font-style="italic" font-size="8.00">Symfony &lt; 5.4?</text>
-<text text-anchor="middle" x="105.77" y="-421.6" font-family="Arial" font-size="8.00">Transition symfony_outdated: </text>
+<text text-anchor="start" x="193.27" y="-385.6" font-family="Arial" font-weight="bold" font-size="8.00">symfony_outdated</text>
+<text text-anchor="start" x="202.77" y="-377.6" font-family="Arial" font-style="italic" font-size="8.00">Symfony &lt; 5.4?</text>
+<text text-anchor="middle" x="105.27" y="-421.6" font-family="Arial" font-size="8.00">Transition symfony_outdated: </text>
 </g>
 <!-- place_php_ok&#45;&gt;transition_symfony_outdated -->
 <!-- php_ok -->
@@ -173,10 +168,9 @@
 <g id="node15" class="node">
 <title>transition_symfony_okay</title>
 <polygon fill="lightBlue" stroke="lightBlue" points="464.77,-419 320.77,-419 320.77,-347 464.77,-347 464.77,-419"/>
-<text text-anchor="start" x="363.77" y="-389.6" font-family="Arial" font-weight="bold" font-size="8.00">symfony_okay</text>
-<text text-anchor="start" x="354.77" y="-381.6" font-family="Arial" text-decoration="underline" font-size="8.00">ValidSymfonyVersion</text>
-<text text-anchor="start" x="366.77" y="-373.6" font-family="Arial" font-style="italic" font-size="8.00">Symfony &gt; 5.4</text>
-<text text-anchor="middle" x="275.27" y="-421.6" font-family="Arial" font-size="8.00">Transition symfony_okay: </text>
+<text text-anchor="start" x="363.77" y="-385.6" font-family="Arial" font-weight="bold" font-size="8.00">symfony_okay</text>
+<text text-anchor="start" x="366.77" y="-377.6" font-family="Arial" font-style="italic" font-size="8.00">Symfony &gt; 5.4</text>
+<text text-anchor="middle" x="274.77" y="-421.6" font-family="Arial" font-size="8.00">Transition symfony_okay: </text>
 </g>
 <!-- place_php_ok&#45;&gt;transition_symfony_okay -->
 <!-- php_ok -->

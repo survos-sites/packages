@@ -6,3 +6,9 @@ framework:
         precompress:
             # possible values: 'brotli', 'zstandard', 'gzip'
             format: gzip
+        missing_import_mode: warn
+
+when@prod:
+    framework:
+        asset_mapper:
+            missing_import_mode: warn
