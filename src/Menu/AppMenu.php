@@ -64,9 +64,8 @@ final class AppMenu implements KnpMenuHelperInterface
             }
 
             $this->add($menu, 'survos_workflow_entities', label: '*entities');
-        foreach ($this->meiliService->indexedEntities as $entityClass) {
-            $indexName = $this->meiliService->getPrefixedIndexName($entityClass);
-            $this->add($menu, 'app_insta', ['indexName' => $indexName], label: $indexName);
+        foreach ($this->meiliService->settings as $indexName => $settings) {
+            $this->add($menu, 'meili_insta', ['indexName' => $indexName], label: $settings['rawName']);
         }
         foreach ($this->endpointRepository->findAll() as $endpoint) {
             try {

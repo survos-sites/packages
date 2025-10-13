@@ -79,9 +79,9 @@ class DashboardController extends AbstractDashboardController
 
 //        yield MenuItem::subMenu('By Marking', 'fa fa-article')->setSubItems($menuItems);
 
-         yield MenuItem::linkToRoute('Search', 'fas fa-search',
-             'app_insta',
-             routeParameters: ["indexName" => "packages_Package"]);
+//         yield MenuItem::linkToRoute('Search', 'fas fa-search',
+//             'app_insta',
+//             routeParameters: ["indexName" => "packages_Package"]);
 
     }
 

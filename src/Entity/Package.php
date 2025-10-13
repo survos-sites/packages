@@ -31,6 +31,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     normalizationContext: ['groups' => ['package.read', 'marking', 'browse', 'transitions', 'rp']],
     denormalizationContext: ['groups' => ['Default', 'minimum', 'browse']],
 )]
+
 //#[GetCollection(
 //    name: 'meili-packages',
 //    uriTemplate: 'meili/packages',
@@ -39,17 +40,20 @@ use Symfony\Component\Serializer\Attribute\Groups;
 //        'groups' => ['package.read', 'package.facets', 'browse', 'tree', 'marking'],
 //    ]
 //)]
-#[ApiFilter(OrderFilter::class, properties: [
-    'marking', 'vendor', 'name', 'stars',
-    'lastUpdatedOnPackagist',
-    'favers', 'downloads'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(OrderFilter::class, properties: self::SORTABLE, arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: [
     'marking' => 'exact', // api platform, it's a facet in meili
     'name' => 'partial',
     'description' => 'partial',
 ])]
-#[ApiFilter(FacetsFieldSearchFilter::class, properties: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'stars', 'keywords', 'marking'])]
-#[MeiliIndex()]
+
+//#[ApiFilter(FacetsFieldSearchFilter::class, properties:
+
+#[MeiliIndex(
+    sortable: self::SORTABLE,
+    searchable: ['marking','name','description'],
+    filterable: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'stars', 'keywords', 'marking']
+)]
 //#[ApiFilter(
 //    MultiFieldSearchFilter::class,
 //    properties: ['name', 'description'],
@@ -60,6 +64,12 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 {
     use RouteParametersTrait;
     use MarkingTrait;
+
+    private const SORTABLE = [
+        'marking', 'vendor', 'name', 'stars',
+        'lastUpdatedOnPackagist',
+        'favers', 'downloads'];
+
 
     public const array UNIQUE_PARAMETERS = ['packageId' => 'id'];
     //    #[Groups(['rp'])]
@@ -202,7 +212,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 
     public function getFlowCode(): string
     {
-        return BundleWorkflow::WORKFLOW_NAME;
+        return BundleWorkflowInterface::WORKFLOW_NAME;
     }
 
     public function __toString(): string
