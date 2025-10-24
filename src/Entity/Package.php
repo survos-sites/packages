@@ -18,6 +18,7 @@ use Survos\MeiliBundle\Api\Filter\FacetsFieldSearchFilter;
 
 use Survos\CoreBundle\Entity\RouteParametersInterface;
 use Survos\CoreBundle\Entity\RouteParametersTrait;
+use Survos\MeiliBundle\Metadata\Facet;
 use Survos\MeiliBundle\Metadata\MeiliIndex;
 use Survos\StateBundle\Traits\MarkingInterface;
 use Survos\StateBundle\Traits\MarkingTrait;
@@ -52,7 +53,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[MeiliIndex(
     sortable: self::SORTABLE,
     searchable: ['marking','name','description'],
-    filterable: ['vendor', 'symfonyVersions', 'phpUnitVersion', 'phpVersions', 'stars', 'keywords', 'marking']
+    filterable: ['vendor', 'symfonyVersions', 'phpVersions', 'stars', 'keywords', 'marking']
 )]
 //#[ApiFilter(
 //    MultiFieldSearchFilter::class,
@@ -112,6 +113,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.facets', 'package.read'])]
+    #[Facet(searchable: false, collapsed: false)]
     public ?array $symfonyVersions = null;
 
     #[Groups(['package.read'])]
@@ -134,6 +136,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.read'])]
+    #[Facet(searchable: false)]
     public ?array $phpVersions = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
@@ -156,6 +159,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 
     #[ORM\Column(nullable: true)]
     #[Groups(['package.read'])]
+    #[Facet(visible: false)]
     public ?array $phpUnitVersions = null;
 
     #[ORM\Column(length: 255, nullable: true)]
