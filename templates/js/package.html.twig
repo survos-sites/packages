@@ -61,6 +61,12 @@
             {% endif %}
         </span>
 
+        {% for phpVersion in hit.phpVersions %}
+            <li>
+                {{ phpVersion }}
+            </li>
+        {% endfor %}
+
         <a target="_blank" href="{{ path('admin_bundle_show', hit.rp) }}" class="btn btn-sm btn-outline-primary">
             Details
         </a>
@@ -85,7 +91,7 @@
 
 
         <button
-            {{ stimulus_action(_sc_modal|default('debug_dialog'), 'modal') }}
+            {{ stimulus_action(globals._sc_modal, 'modal') }}
             data-hit-id="{{ hit.id }}"
             class="btn btn-sm btn-outline-primary">
             {{ icons.json }}

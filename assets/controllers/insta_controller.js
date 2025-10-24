@@ -335,7 +335,25 @@ export default class extends Controller {
 
         attributeDivs.forEach(div => {
             const attribute = div.getAttribute("data-attribute")
-            const lookup = JSON.parse(div.getAttribute('data-lookup'));
+                const lookup = JSON.parse(div.getAttribute('data-lookup'));
+
+            const searchableAttr   = div.getAttribute('data-searchable');
+            const limitAttr        = div.getAttribute('data-limit');
+            const showMoreLimitAttr= div.getAttribute('data-show-more-limit');
+
+            const searchable =
+                searchableAttr === 'true'  ? true  :
+                    searchableAttr === 'false' ? false :
+                        !['gender','house','currentParty','marking','countries','locale'].includes(attribute); // fallback
+
+            const limit = (limitAttr && !Number.isNaN(parseInt(limitAttr, 10)))
+                ? parseInt(limitAttr, 10)
+                : 5;
+
+            const showMoreLimit = (showMoreLimitAttr && !Number.isNaN(parseInt(showMoreLimitAttr, 10)))
+                ? parseInt(showMoreLimitAttr, 10)
+                : 10;
+
 
             // const startDate = new Date(2003, 0, 1);      // Jan 2020
             // const endDate   = new Date(2022, 11, 1);     // Dec 2022
@@ -371,12 +389,12 @@ export default class extends Controller {
             } else {
                 let x = search.addWidgets([
                     refinementList({
-                            container: div,
-                            limit: 5,
-                            showMoreLimit: 10,
-                            showMore: true,
-                            searchable: !['gender','house','currentParty','marking','countries','locale'    ].includes(attribute),
-                            attribute: attribute,
+                        container: div,
+                        limit,
+                        showMoreLimit,
+                        showMore: true,
+                        searchable,
+                        attribute: attribute,
                             // escapeHTML: false,
                             transformItems: (items, { results }) => {
                                 if (['locale'].includes(attribute)) {
