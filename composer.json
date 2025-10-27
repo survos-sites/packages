@@ -22,6 +22,7 @@
         "ecourty/mcp-server-bundle": "^1.0",
         "friendsofsymfony/jsrouting-bundle": "^3.5",
         "inspector-apm/inspector-symfony": "^1.2",
+        "jolicode/castor": "^1.0",
         "jwage/phpamqplib-messenger": "^0.8.3",
         "knplabs/knp-time-bundle": "^2.2",
         "knplabs/packagist-api": "dev-master",
@@ -77,8 +78,8 @@
         "twig/extra-bundle": "^3.8",
         "twig/twig": "^3.17",
         "zenstruck/console-extra": "^1.4",
-        "zenstruck/twig-service-bundle": "^1.5",
-        "zenstruck/messenger-monitor-bundle": "^0.5.4"
+        "zenstruck/messenger-monitor-bundle": "^0.5.4",
+        "zenstruck/twig-service-bundle": "^1.5"
     },
     "config": {
         "allow-plugins": {

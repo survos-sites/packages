@@ -8,6 +8,7 @@ use App\Repository\PackageRepository;
 use App\Service\PackageService;
 use App\Workflow\BundleWorkflow;
 use App\Workflow\BundleWorkflowInterface;
+use Castor\Attribute\AsSymfonyTask;
 use Doctrine\ORM\EntityManagerInterface;
 use Packagist\Api\Client;
 use Packagist\Api\Result\Package;
@@ -30,6 +31,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsCommand('app:load-data', 'Search and Load repos from packagist')]
+#[AsSymfonyTask(name: 'app:load')]
 final class LoadDataCommand
 {
     const BASE_URL = 'https://packagist.org/packages/list.json';

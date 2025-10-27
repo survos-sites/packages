@@ -34,3 +34,5 @@ phpstan.neon
 ###< friendsofphp/php-cs-fixer ###
 
 /public/js/fos_js_routes.js
+
+.castor.stub.php
