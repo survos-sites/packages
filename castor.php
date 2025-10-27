@@ -1,17 +1,17 @@
 <?php
 
 use Castor\Attribute\AsTask;
-use Castor\Attribute\AsSymfonyTask;
 
-use function Castor\{import, io, fs, capture, run};
+use function Castor\io;
+use function Castor\capture;
+use function Castor\import;
 
-import('.castor/vendor/tacman/castor-tools/castor.php');
+#[AsTask(description: 'Welcome to Castor!')]
+function hello(): void
+{
+    $currentUser = capture('whoami');
 
-//#[AsTask('load', "Load using symfony")]
-//#[AsSymfonyTask('app:load-data')]
-//function load(): void
-//{
-//    run('php bin/console app:load-data');
-//}
+    io()->title(sprintf('Hello %s!', $currentUser));
+}
 
-
+import(__DIR__ . '/src/Command/HelloCommand.php');
