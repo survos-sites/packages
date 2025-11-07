@@ -31,7 +31,8 @@ use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsCommand('app:load-data', 'Search and Load repos from packagist')]
-//#[AsSymfonyTask(name: 'app:load')]
+//#[AsSymfonyTask(name: 'symfony:hello', originalName: 'app:load-data')]
+#[AsSymfonyTask(name: 'app:load')]
 final class LoadDataCommand
 {
     const BASE_URL = 'https://packagist.org/packages/list.json';

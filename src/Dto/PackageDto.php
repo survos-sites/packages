@@ -11,7 +11,6 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Filter\DtoFilter;
 use App\State\DtoProcessor;
 use App\State\DtoProvider;
-use Survos\MeiliBundle\Api\Filter\MultiFieldSearchFilter;
 
 #[ApiResource(
     provider: DtoProvider::class,
@@ -25,7 +24,6 @@ use Survos\MeiliBundle\Api\Filter\MultiFieldSearchFilter;
 //#[ApiFilter(DtoFilter::class)]
 //#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'marking' => 'exact'])]
 #[ApiFilter(DtoFilter::class, properties: ['name' => 'partial', 'marking' => 'exact'])]
-#[ApiFilter(MultiFieldSearchFilter::class)]
 class PackageDto {
     #[ApiProperty('identifier', identifier: true)]
     public int $id;

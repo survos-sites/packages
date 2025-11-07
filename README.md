@@ -5,6 +5,12 @@ This application downloads Symfony bundles from packagist.org and makes it easy 
 Configure a Postgres database and set it in .env.local, then run
 
 ```bash
+git clone git@github.com:survos-sites/packages.git && cd packages
+bin/console list
+
+```
+
+```bash
 #bin/load-database.sh
 
 bin/console app:load-data

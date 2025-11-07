@@ -31,7 +31,11 @@ class PackageController extends AbstractController implements HandleTransitionsI
 
     #[Route('/transition/{transition}', name: 'package_transition', options: ['expose' => true], methods: [Request::METHOD_GET])]
     #[Route('/', name: 'package_show', options: ['expose' => true], methods: [Request::METHOD_GET])]
-    #[AdminRoute('/bundle/{packageId}', name: 'bundle_show', options: ['expose' => true])]
+    #[AdminRoute('/bundle/{packageId}', name: 'bundle_show',
+        options: ['options' => ['expose' => true]]
+        // https://github.com/EasyCorp/EasyAdminBundle/issues/7092#issuecomment-3496033443
+//        options: ['expose' => true]
+    )]
     public function show(
         string $packageId,
 //        Package $package,
