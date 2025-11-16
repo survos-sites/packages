@@ -1,3 +1,4 @@
+import './stimulus_bootstrap.js';
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -14,7 +15,6 @@ import '@tabler/core';
 import '@tabler/core/dist/css/tabler.min.css';
 
 // start the Stimulus application
-import './bootstrap.js';
 
 // import 'bootstrap'
 // hack to support bg-seconary
