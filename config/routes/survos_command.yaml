@@ -1,2 +1,6 @@
-survos_commands: {path: /commands, controller: 'Survos\CommandBundle\Controller\CommandController::commands'}
-survos_command: {path: "/command/{commandName}", controller: 'Survos\CommandBundle\Controller\CommandController::runCommand'}
+survos_command:
+    prefix: /admin/commands
+    type: attribute
+    resource:
+        path: '@SurvosCommandBundle/src/Controller/'
+        namespace: Survos\CommandBundle\Controller
