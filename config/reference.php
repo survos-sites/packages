@@ -1761,13 +1761,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         vary?: list<scalar|null>,
  *     },
  * }
- * @psalm-type McpServerConfig = array{
- *     server?: array{
- *         name?: scalar|null, // Default: "MCP Server"
- *         title?: scalar|null, // Default: "MCP Server"
- *         version?: scalar|null, // Default: "1.0.0"
- *     },
- * }
  * @psalm-type SurvosCodeConfig = array{
  *     base_layout?: scalar|null, // Default: "base.html.twig"
  * }
@@ -1844,7 +1837,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *     survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *     survos_js_twig?: SurvosJsTwigConfig,
  *     fos_js_routing?: FosJsRoutingConfig,
- *     mcp_server?: McpServerConfig,
  *     survos_meili?: SurvosMeiliConfig,
  *     survos_state?: SurvosStateConfig,
  *     zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
@@ -1881,7 +1873,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         fos_js_routing?: FosJsRoutingConfig,
- *         mcp_server?: McpServerConfig,
  *         survos_code?: SurvosCodeConfig,
  *         survos_meili?: SurvosMeiliConfig,
  *         survos_state?: SurvosStateConfig,
@@ -1918,7 +1909,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         fos_js_routing?: FosJsRoutingConfig,
- *         mcp_server?: McpServerConfig,
  *         survos_meili?: SurvosMeiliConfig,
  *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
@@ -1954,7 +1944,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         fos_js_routing?: FosJsRoutingConfig,
- *         mcp_server?: McpServerConfig,
  *         survos_code?: SurvosCodeConfig,
  *         survos_meili?: SurvosMeiliConfig,
  *         survos_state?: SurvosStateConfig,
