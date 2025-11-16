@@ -315,12 +315,12 @@
         ]
     },
     "symfony/framework-bundle": {
-        "version": "7.3",
+        "version": "7.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "7.3",
-            "ref": "a64726446f6dcf3721f192c1df35418d69b3ba92"
+            "version": "7.4",
+            "ref": "02a78fc0b847dce890992e0d845838bd15e8e2e8"
         },
         "files": [
             ".editorconfig",
