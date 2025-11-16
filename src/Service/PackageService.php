@@ -126,7 +126,7 @@ class PackageService
             }
         }
         if ($symfonyVersionStr) {
-            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['5.4', '6.4', '7.3'], $dependency);
+            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['5.4', '6.4', '7.3','8.0'], $dependency);
             if (count($symfonyVersions)) {
 //                dd($symfonyVersions, $symfonyVersionStr);
             }
@@ -144,7 +144,7 @@ class PackageService
         }
 
         if ($phpUnitVersionStr = $data['requireDev.phpunit/phpunit'] ?? null) {
-            $matches = $this->constraintComplies($phpUnitVersionStr, ['8.4', '9.4', '10.3', '11.4', '12.0'],
+            $matches = $this->constraintComplies($phpUnitVersionStr, ['9.4', '10.3', '11.4', '12.0'],
                 'phpunit/phpunit');
             $survosPackage->phpUnitVersions = $matches;
             $survosPackage->phpUnitVersionString = $phpUnitVersionStr;

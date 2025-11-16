@@ -2,9 +2,7 @@
 
 use Castor\Attribute\AsTask;
 
-use function Castor\io;
-use function Castor\capture;
-use function Castor\import;
+use function Castor\{io,run,capture,import};
 
 #[AsTask(description: 'Welcome to Castor!')]
 function hello(): void
@@ -13,10 +11,13 @@ function hello(): void
     io()->title(sprintf('Hello %s!', $currentUser));
 }
 
-#[AsTask(description: 'Load the data!')]
-function load(): void
+#[AsTask(description: 'dispatch detailed load')]
+function dispatch(): void
 {
-    \Castor\run("bin/console app:load");
+    if (io()->confirm('Do you want to dispatch the load transition?')) {
+        run('bin/console state:iterate Package --marking=new --transition=load');
+        run('bin/console mess:stats');
+    }
 }
 
 import(__DIR__ . '/src/Command/LoadDataCommand.php');
