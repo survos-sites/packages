@@ -4,7 +4,7 @@
     "name": "survos-sites/packages",
     "description": "Symfony application showing Symfony bundles",
     "keywords": ["symfony","pwa","datatables"],
-    "minimum-stability": "stable",
+    "minimum-stability": "RC",
     "prefer-stable": true,
     "require": {
         "php": "^8.4",
@@ -140,10 +140,12 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": true
+            "allow-contrib": true,
+            "require": "^7.4"
         }
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "friendsofphp/php-cs-fixer": "^3.65",
         "nette/php-generator": "^4.1",
         "phpstan/phpstan": "^2.0",

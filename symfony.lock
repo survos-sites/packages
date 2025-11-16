@@ -239,9 +239,6 @@
             "config/routes/survos_crawler.php"
         ]
     },
-    "survos/inspection-bundle": {
-        "version": "1.5.529"
-    },
     "survos/js-twig-bundle": {
         "version": "1.6.0"
     },
