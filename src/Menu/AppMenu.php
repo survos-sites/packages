@@ -58,6 +58,7 @@ final class AppMenu implements KnpMenuHelperInterface
 
         $this->add($menu, 'app_homepage', label: 'Home');
         $this->add($menu, 'admin', label: 'ez');
+        $this->add($menu, 'meili_admin', label: 'meili');
 
             if ($this->isEnv('dev')) {
             $this->add($menu, 'zenstruck_messenger_monitor_dashboard', label: '*msg');
