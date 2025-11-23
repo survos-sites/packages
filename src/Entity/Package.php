@@ -52,7 +52,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[MeiliIndex(
     sortable: self::SORTABLE,
-    searchable: ['marking','name','description'],
+    searchable: ['name','description'],
     filterable: ['vendor', 'symfonyVersions', 'phpVersions', 'stars', 'keywords', 'marking']
 )]
 //#[ApiFilter(
