@@ -39,4 +39,5 @@ return [
     Survos\MeiliBundle\SurvosMeiliBundle::class => ['all' => true],
     Survos\StateBundle\SurvosStateBundle::class => ['all' => true],
     Zenstruck\Messenger\Monitor\ZenstruckMessengerMonitorBundle::class => ['all' => true],
+    Survos\JsonlBundle\SurvosJsonlBundle::class => ['all' => true],
 ];
