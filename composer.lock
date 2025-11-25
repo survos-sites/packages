@@ -5722,23 +5722,23 @@
         },
         {
             "name": "survos/meili-bundle",
-            "version": "2.0.71",
+            "version": "2.0.72",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/meili-bundle.git",
-                "reference": "b4dff7fc7a03196e2f799add35ca060d5b56b236"
+                "reference": "7a26908fbec7732de97c202d2a57ddd1c5803ef2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/b4dff7fc7a03196e2f799add35ca060d5b56b236",
-                "reference": "b4dff7fc7a03196e2f799add35ca060d5b56b236",
+                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/7a26908fbec7732de97c202d2a57ddd1c5803ef2",
+                "reference": "7a26908fbec7732de97c202d2a57ddd1c5803ef2",
                 "shasum": ""
             },
             "require": {
                 "adbario/php-dot-notation": "^3.3",
                 "cebe/php-openapi": "^1.8",
                 "ext-pdo": "*",
-                "meilisearch/meilisearch-php": "*",
+                "meilisearch/meilisearch-php": "dev-main",
                 "nyholm/psr7": "^1.8",
                 "php": "^8.4",
                 "survos/core-bundle": "^2.0",
@@ -5793,7 +5793,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/2.0.71"
+                "source": "https://github.com/survos/meili-bundle/tree/2.0.72"
             },
             "funding": [
                 {
@@ -5801,7 +5801,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-23T12:43:32+00:00"
+            "time": "2025-11-25T12:58:33+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
