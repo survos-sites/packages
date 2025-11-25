@@ -24,7 +24,7 @@
         "jwage/phpamqplib-messenger": "^0.8.3",
         "knplabs/knp-time-bundle": "^2.2",
         "knplabs/packagist-api": "dev-master",
-        "meilisearch/meilisearch-php": "^1.7",
+        "meilisearch/meilisearch-php": "dev-main",
         "nadar/php-composer-reader": "^2.0",
         "nelmio/cors-bundle": "^2.4",
         "nyholm/psr7": "^1.8.1",
