@@ -3,8 +3,8 @@ framework:
         # The paths to make available to the asset mapper.
         paths:
             - assets/
-        precompress:
-            # possible values: 'brotli', 'zstandard', 'gzip'
+#        precompress:
+#            # possible values: 'brotli', 'zstandard', 'gzip'
 #            format: gzip
         missing_import_mode: warn
 
