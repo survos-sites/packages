@@ -5,7 +5,7 @@ framework:
             - assets/
         precompress:
             # possible values: 'brotli', 'zstandard', 'gzip'
-            format: gzip
+#            format: gzip
         missing_import_mode: warn
 
 when@prod:
