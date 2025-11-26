@@ -22,7 +22,7 @@
             "schedule": "*/2 * * * *"
         },
         {
-            "command": "bin/console mess:consume load_composer  --time-limit 290",
+            "command": "bin/console mess:consume bundle.load  --time-limit 290",
             "schedule": "*/5 * * * *"
         }
     ],
