@@ -16,6 +16,10 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'admin' => [
+        'path' => './assets/admin.js',
+        'entrypoint' => true,
+    ],
     '@symfony/stimulus-bundle' => [
         'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
     ],
@@ -183,34 +187,34 @@ return [
         'type' => 'css',
     ],
     'instantsearch.js' => [
-        'version' => '4.80.0',
+        'version' => '4.86.1',
     ],
     '@algolia/events' => [
         'version' => '4.0.1',
     ],
     'algoliasearch-helper' => [
-        'version' => '3.26.0',
+        'version' => '3.27.0',
     ],
     'qs' => [
-        'version' => '6.14.0',
+        'version' => '6.14.1',
     ],
     'algoliasearch-helper/types/algoliasearch.js' => [
-        'version' => '3.26.0',
+        'version' => '3.27.0',
     ],
     '@meilisearch/instant-meilisearch' => [
-        'version' => '0.27.0',
+        'version' => '0.29.0',
     ],
     'meilisearch' => [
-        'version' => '0.53.0',
+        'version' => '0.54.0',
     ],
     'instantsearch.js/es/widgets' => [
-        'version' => '4.80.0',
+        'version' => '4.86.1',
     ],
     'instantsearch-ui-components' => [
-        'version' => '0.11.2',
+        'version' => '0.16.0',
     ],
     'preact' => [
-        'version' => '10.27.1',
+        'version' => '10.28.1',
     ],
     'hogan.js' => [
         'version' => '3.0.2',
@@ -219,7 +223,7 @@ return [
         'version' => '3.1.1',
     ],
     'preact/hooks' => [
-        'version' => '10.27.1',
+        'version' => '10.28.1',
     ],
     '@babel/runtime/helpers/extends' => [
         'version' => '7.28.4',
@@ -283,7 +287,7 @@ return [
         'version' => '1.3.0',
     ],
     'object-inspect' => [
-        'version' => '1.13.4',
+        'version' => '1.13.3',
     ],
     'side-channel-list' => [
         'version' => '1.0.0',
@@ -295,10 +299,10 @@ return [
         'version' => '1.0.2',
     ],
     'get-intrinsic' => [
-        'version' => '1.3.0',
+        'version' => '1.2.5',
     ],
     'call-bound' => [
-        'version' => '1.0.4',
+        'version' => '1.0.2',
     ],
     'es-errors' => [
         'version' => '1.3.0',
@@ -328,13 +332,13 @@ return [
         'version' => '1.1.0',
     ],
     'dunder-proto/get' => [
-        'version' => '1.0.1',
+        'version' => '1.0.0',
     ],
     'call-bind-apply-helpers/functionApply' => [
-        'version' => '1.0.2',
+        'version' => '1.0.0',
     ],
     'call-bind-apply-helpers/functionCall' => [
-        'version' => '1.0.2',
+        'version' => '1.0.0',
     ],
     'function-bind' => [
         'version' => '1.1.2',
@@ -346,13 +350,13 @@ return [
         'version' => '1.0.8',
     ],
     'call-bind-apply-helpers' => [
-        'version' => '1.0.2',
+        'version' => '1.0.0',
     ],
     'set-function-length' => [
         'version' => '1.2.2',
     ],
     'call-bind-apply-helpers/applyBind' => [
-        'version' => '1.0.2',
+        'version' => '1.0.0',
     ],
     'define-data-property' => [
         'version' => '1.1.4',
@@ -407,5 +411,53 @@ return [
     ],
     'ms' => [
         'version' => '2.1.3',
+    ],
+    'ai' => [
+        'version' => '5.0.117',
+    ],
+    '@babel/runtime/helpers/typeof' => [
+        'version' => '7.28.4',
+    ],
+    '@babel/runtime/helpers/slicedToArray' => [
+        'version' => '7.28.4',
+    ],
+    '@babel/runtime/helpers/toConsumableArray' => [
+        'version' => '7.28.4',
+    ],
+    'markdown-to-jsx' => [
+        'version' => '7.7.17',
+    ],
+    '@ai-sdk/gateway' => [
+        'version' => '2.0.24',
+    ],
+    '@ai-sdk/provider-utils' => [
+        'version' => '3.0.20',
+    ],
+    '@ai-sdk/provider' => [
+        'version' => '2.0.1',
+    ],
+    'zod/v4' => [
+        'version' => '4.2.1',
+    ],
+    '@opentelemetry/api' => [
+        'version' => '1.9.0',
+    ],
+    'react' => [
+        'version' => '19.2.0',
+    ],
+    '@vercel/oidc' => [
+        'version' => '3.0.5',
+    ],
+    'eventsource-parser/stream' => [
+        'version' => '3.0.6',
+    ],
+    'zod/v3' => [
+        'version' => '4.2.1',
+    ],
+    '@standard-schema/spec' => [
+        'version' => '1.1.0',
+    ],
+    'chart.js' => [
+        'version' => '3.9.1',
     ],
 ];
