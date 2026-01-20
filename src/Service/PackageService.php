@@ -97,7 +97,7 @@ class PackageService
         }
 
         if ($phpVersionStr = $data['require.php'] ?? false) {
-            $matches = $this->constraintComplies($phpVersionStr, ['8.2', '8.3', '8.4']);
+            $matches = $this->constraintComplies($phpVersionStr, ['8.3', '8.4', '8.5']);
 
             $survosPackage->phpVersionString = $phpVersionStr;
             $survosPackage->phpVersions = $matches;
@@ -126,7 +126,7 @@ class PackageService
             }
         }
         if ($symfonyVersionStr) {
-            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['5.4', '6.4', '7.3','8.0'], $dependency);
+            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['6.4', '7.4', '8.0'], $dependency);
             if (count($symfonyVersions)) {
 //                dd($symfonyVersions, $symfonyVersionStr);
             }

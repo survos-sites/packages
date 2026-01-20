@@ -18,10 +18,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use Survos\EzBundle\Controller\AbstractEzCrudController;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-class PackageCrudController extends AbstractCrudController
+class PackageCrudController extends AbstractEzCrudController
 {
     public function __construct(
         #[Target(BundleWorkflowInterface::WORKFLOW_NAME)] private readonly WorkflowInterface $workflow,
@@ -34,14 +35,6 @@ class PackageCrudController extends AbstractCrudController
         return Package::class;
     }
 
-    public function configureActions(Actions $actions): Actions
-    {
-
-        // completely disable the "delete" action on all pages
-        return $actions
-            ->disable(Action::BATCH_DELETE)
-            ->disable(Action::DELETE);
-    }
 
     public function configureFields(string $pageName): iterable
     {

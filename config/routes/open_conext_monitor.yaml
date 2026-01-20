@@ -1,4 +1,0 @@
-open_conext_monitor:
-    resource: "@OpenConextMonitorBundle/src/Controller"
-    type: attribute
-    prefix: /

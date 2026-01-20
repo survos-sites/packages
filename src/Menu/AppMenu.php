@@ -2,6 +2,7 @@
 
 namespace App\Menu;
 
+use App\Controller\Admin\MeiliDashboardController;
 use App\Repository\EndpointRepository;
 use Survos\BootstrapBundle\Event\KnpMenuEvent;
 use Survos\BootstrapBundle\Service\MenuService;
@@ -58,7 +59,7 @@ final class AppMenu implements KnpMenuHelperInterface
 
         $this->add($menu, 'app_homepage', label: 'Home');
         $this->add($menu, 'admin', label: 'ez');
-        $this->add($menu, 'meili_admin', label: 'meili');
+        $this->add($menu, MeiliDashboardController::MEILI_ROUTE, label: 'meili');
 
             if ($this->isEnv('dev')) {
             $this->add($menu, 'zenstruck_messenger_monitor_dashboard', label: '*msg');
@@ -66,7 +67,7 @@ final class AppMenu implements KnpMenuHelperInterface
 
             $this->add($menu, 'survos_workflow_entities', label: '*entities');
         foreach ($this->meiliService->settings as $indexName => $settings) {
-            $this->add($menu, 'meili_insta', ['indexName' => $indexName], label: $settings['rawName']);
+            $this->add($menu, 'meili_insta', ['indexName' => $indexName], label: $settings['baseName']);
         }
         foreach ($this->endpointRepository->findAll() as $endpoint) {
             try {

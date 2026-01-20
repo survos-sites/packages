@@ -20,6 +20,10 @@ return [
         'path' => './assets/admin.js',
         'entrypoint' => true,
     ],
+    'meili' => [
+        'path' => './assets/meili.js',
+        'entrypoint' => true,
+    ],
     '@symfony/stimulus-bundle' => [
         'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
     ],
@@ -202,7 +206,7 @@ return [
         'version' => '3.27.0',
     ],
     '@meilisearch/instant-meilisearch' => [
-        'version' => '0.29.0',
+        'version' => '0.29.1',
     ],
     'meilisearch' => [
         'version' => '0.54.0',

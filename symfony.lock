@@ -97,9 +97,6 @@
             "config/packages/inspector.yaml"
         ]
     },
-    "jwage/phpamqplib-messenger": {
-        "version": "0.8.3"
-    },
     "knplabs/knp-menu-bundle": {
         "version": "v3.3.0"
     },
@@ -142,9 +139,6 @@
             "config/packages/nelmio_cors.yaml"
         ]
     },
-    "openconext/monitor-bundle": {
-        "version": "4.1.2"
-    },
     "php-http/discovery": {
         "version": "1.19",
         "recipe": {
@@ -183,9 +177,6 @@
             "phpunit.xml.dist",
             "tests/bootstrap.php"
         ]
-    },
-    "pierstoval/smoke-testing": {
-        "version": "v1.0.0"
     },
     "sentry/sentry-symfony": {
         "version": "5.6",
@@ -236,6 +227,9 @@
             "config/packages/survos_crawler.yaml",
             "config/routes/survos_crawler.yaml"
         ]
+    },
+    "survos/ez-bundle": {
+        "version": "2.0.94"
     },
     "survos/js-twig-bundle": {
         "version": "1.6.0"
@@ -334,6 +328,18 @@
             "public/index.php",
             "src/Controller/.gitignore",
             "src/Kernel.php"
+        ]
+    },
+    "symfony/lock": {
+        "version": "8.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.2",
+            "ref": "8e937ff2b4735d110af1770f242c1107fdab4c8e"
+        },
+        "files": [
+            "config/packages/lock.yaml"
         ]
     },
     "symfony/mailer": {

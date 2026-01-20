@@ -82,7 +82,6 @@
                                 {% for attr in facets %}
                                     <div class="mb-4">
                                         <h5 class="sub-title mb-2 fw-medium">{{ attr }}</h5>
-{#                                        {{ dump(related[attr]|default([])|json_encode) }}#}
                                         <div
                                             data-lookup="{{ related[attr]|default({})|json_encode }}"
                                             data-attribute="{{ attr }}"
