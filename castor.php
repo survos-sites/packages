@@ -20,6 +20,5 @@ function dispatch(): void
     }
 }
 
-import(__DIR__ . '/src/Command/LoadDataCommand.php');
-import(__DIR__ . '/src/Command/HelloCommand.php');
-import('.castor/vendor/tacman/castor-tools/castor.php');
+//import(__DIR__ . '/src/Command/LoadDataCommand.php');
+//import(__DIR__ . '/src/Command/HelloCommand.php');

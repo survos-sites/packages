@@ -13,7 +13,6 @@
         "ext-intl": "*",
         "adbario/php-dot-notation": "^3.3",
         "api-platform/core": "^4.0",
-        "nadar/cebe-php-openapi": "^1.0",
         "composer/semver": "^3.4",
         "doctrine/doctrine-bundle": "^3.0",
         "doctrine/doctrine-migrations-bundle": "^4.0",
@@ -23,7 +22,8 @@
         "inspector-apm/inspector-symfony": "^1.2",
         "knplabs/knp-time-bundle": "^2.2",
         "knplabs/packagist-api": "^2.0|dev-master",
-        "meilisearch/meilisearch-php": "^1.0|dev-main",
+        "meilisearch/meilisearch-php": "dev-main",
+        "nadar/cebe-php-openapi": "^1.0",
         "nadar/php-composer-reader": "^2.0",
         "nelmio/cors-bundle": "^2.4",
         "nyholm/psr7": "^1.8",
@@ -136,13 +136,15 @@
     },
     "scripts": {
         "auto-scripts": {
-            "cache:clear": "symfony-cmd",
+            
+            "cache:warmup": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd",
-            "fos:js-routing:dump --format=js --target=public/js/fos_js_routes.js --callback=\"export default  \"": "symfony-cmd"
+            "importmap:install": "symfony-cmd"
         },
-        "post-install-cmd": ["@auto-scripts"],
-        "post-update-cmd": ["@auto-scripts"],
+        "post-install-cmd": [
+            "php -d memory_limit=512M bin/console cache:clear","@auto-scripts"],
+        "post-update-cmd": [
+            "php -d memory_limit=512M bin/console cache:clear","@auto-scripts"],
         "setup": ["php -d memory_limit=4048M bin/console app:load-data"],
         "load": ["php -d memory_limit=4048M bin/console workflow:iterate App\\\\Entity\\\\Package --marking=new --transition=load"],
         "index": ["php -d memory_limit=2048M bin/console meili:index --reset"],

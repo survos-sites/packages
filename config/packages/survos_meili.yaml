@@ -4,3 +4,7 @@ survos_meili:
   searchKey: '%env(MEILI_SEARCH_KEY)%'
 
 
+  chat:
+    workspaces:
+      meili_assistant:
+        apiKey: '%env(OPENAI_API_KEY)%'
