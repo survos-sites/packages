@@ -996,7 +996,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             use_underscore?: bool|Param, // Default: true
  *             unordered_list_markers?: list<scalar|Param|null>,
  *         },
- *         ...<mixed>
+ *         ...<string, mixed>
  *     },
  * }
  * @psalm-type SecurityConfig = array{
@@ -1485,6 +1485,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         serialize_payload_fields?: mixed, // Set to null to serialize all payload fields when a validation error is thrown, or set the fields you want to include explicitly. // Default: []
  *         query_parameter_validation?: bool|Param, // Deprecated: Will be removed in API Platform 5.0. // Default: true
  *     },
+ *     jsonapi?: array{
+ *         use_iri_as_id?: bool|Param, // Set to false to use entity identifiers instead of IRIs as the "id" field in JSON:API responses. // Default: true
+ *     },
  *     eager_loading?: bool|array{
  *         enabled?: bool|Param, // Default: true
  *         fetch_partial?: bool|Param, // Fetch only partial data according to serialization groups. If enabled, Doctrine ORM entities will not work as expected if any of the other fields are used. // Default: false
@@ -1496,11 +1499,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     enable_json_streamer?: bool|Param, // Enable json streamer. // Default: false
  *     enable_swagger_ui?: bool|Param, // Enable Swagger UI // Default: true
  *     enable_re_doc?: bool|Param, // Enable ReDoc // Default: true
+ *     enable_scalar?: bool|Param, // Enable Scalar API Reference // Default: true
  *     enable_entrypoint?: bool|Param, // Enable the entrypoint // Default: true
  *     enable_docs?: bool|Param, // Enable the docs // Default: true
  *     enable_profiler?: bool|Param, // Enable the data collector and the WebProfilerBundle integration. // Default: true
  *     enable_phpdoc_parser?: bool|Param, // Enable resource metadata collector using PHPStan PhpDocParser. // Default: true
- *     enable_link_security?: bool|Param, // Enable security for Links (sub resources) // Default: false
+ *     enable_link_security?: bool|Param, // Deprecated: This option is always enabled and will be removed in API Platform 5.0. // Enable security for Links (sub resources). // Default: true
  *     collection?: array{
  *         exists_parameter_name?: scalar|Param|null, // The name of the query parameter to filter on nullable field values. // Default: "exists"
  *         order?: scalar|Param|null, // The default order of results. // Default: "ASC"
@@ -1584,7 +1588,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             max_header_length?: int|Param, // Max header length supported by the cache server. // Default: 7500
  *             request_options?: mixed, // To pass options to the client charged with the request. // Default: []
  *             purger?: scalar|Param|null, // Specify a purger to use (available values: "api_platform.http_cache.purger.varnish.ban", "api_platform.http_cache.purger.varnish.xkey", "api_platform.http_cache.purger.souin"). // Default: "api_platform.http_cache.purger.varnish"
- *             xkey?: array{ // Deprecated: The "xkey" configuration is deprecated, use your own purger to customize surrogate keys or the appropriate paramters.
+ *             xkey?: array{ // Deprecated: The "xkey" configuration is deprecated, use your own purger to customize surrogate keys or the appropriate parameters.
  *                 glue?: scalar|Param|null, // xkey glue between keys // Default: " "
  *             },
  *         },
@@ -1600,6 +1604,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     elasticsearch?: bool|array{
  *         enabled?: bool|Param, // Default: false
  *         hosts?: list<scalar|Param|null>,
+ *         ssl_ca_bundle?: scalar|Param|null, // Path to the SSL CA bundle file for Elasticsearch SSL verification. // Default: null
+ *         ssl_verification?: bool|Param, // Enable or disable SSL verification for Elasticsearch connections. // Default: true
+ *         client?: "elasticsearch"|"opensearch"|Param, // The search engine client to use: "elasticsearch" or "opensearch". // Default: "elasticsearch"
  *     },
  *     openapi?: array{
  *         contact?: array{
@@ -1618,12 +1625,18 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             identifier?: scalar|Param|null, // An SPDX license expression for the API. The identifier field is mutually exclusive of the url field. // Default: null
  *         },
  *         swagger_ui_extra_configuration?: mixed, // To pass extra configuration to Swagger UI, like docExpansion or filter. // Default: []
+ *         scalar_extra_configuration?: mixed, // To pass extra configuration to Scalar API Reference, like theme or darkMode. // Default: []
  *         overrideResponses?: bool|Param, // Whether API Platform adds automatic responses to the OpenAPI documentation. // Default: true
  *         error_resource_class?: scalar|Param|null, // The class used to represent errors in the OpenAPI documentation. // Default: null
  *         validation_error_resource_class?: scalar|Param|null, // The class used to represent validation errors in the OpenAPI documentation. // Default: null
  *     },
  *     maker?: bool|array{
  *         enabled?: bool|Param, // Default: true
+ *         namespace_prefix?: scalar|Param|null, // Add a prefix to all maker generated classes. e.g set it to "Api" to set the maker namespace to "App\Api\" (if the maker.root_namespace config is App). e.g. App\Api\State\MyStateProcessor // Default: ""
+ *     },
+ *     mcp?: bool|array{
+ *         enabled?: bool|Param, // Default: true
+ *         format?: scalar|Param|null, // The serialization format used for MCP tool input/output. Must be a format registered in api_platform.formats (e.g. "jsonld", "json", "jsonapi"). // Default: "jsonld"
  *     },
  *     exception_to_status?: array<string, int|Param>,
  *     formats?: array<string, array{ // Default: {"jsonld":{"mime_types":["application/ld+json"]}}
@@ -1708,12 +1721,37 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         rules?: mixed,
  *         policy?: mixed,
  *         middleware?: mixed,
- *         parameters?: mixed,
+ *         parameters?: array<string, array{ // Default: []
+ *             key?: mixed,
+ *             schema?: mixed,
+ *             open_api?: mixed,
+ *             provider?: mixed,
+ *             filter?: mixed,
+ *             property?: mixed,
+ *             description?: mixed,
+ *             properties?: mixed,
+ *             required?: mixed,
+ *             priority?: mixed,
+ *             hydra?: mixed,
+ *             constraints?: mixed,
+ *             security?: mixed,
+ *             security_message?: mixed,
+ *             extra_properties?: mixed,
+ *             filter_context?: mixed,
+ *             native_type?: mixed,
+ *             cast_to_array?: mixed,
+ *             cast_to_native_type?: mixed,
+ *             cast_fn?: mixed,
+ *             default?: mixed,
+ *             filter_class?: mixed,
+ *             ...<string, mixed>
+ *         }>,
  *         strict_query_parameter_validation?: mixed,
  *         hide_hydra_operation?: mixed,
  *         json_stream?: mixed,
  *         extra_properties?: mixed,
  *         map?: mixed,
+ *         mcp?: mixed,
  *         route_name?: mixed,
  *         errors?: mixed,
  *         read?: mixed,
@@ -1721,11 +1759,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         validate?: mixed,
  *         write?: mixed,
  *         serialize?: mixed,
+ *         content_negotiation?: mixed,
  *         priority?: mixed,
  *         name?: mixed,
  *         allow_create?: mixed,
  *         item_uri_template?: mixed,
- *         ...<mixed>
+ *         ...<string, mixed>
  *     },
  * }
  * @psalm-type NelmioCorsConfig = array{
@@ -1830,6 +1869,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         traces_sampler?: scalar|Param|null,
  *         profiles_sample_rate?: float|Param, // The sampling factor to apply to profiles. A value of 0 will deny sending any profiles, and a value of 1 will send all profiles. Profiles are sampled in relation to traces_sample_rate
  *         enable_logs?: bool|Param,
+ *         log_flush_threshold?: mixed, // Default: null
  *         enable_metrics?: bool|Param, // Default: true
  *         attach_stacktrace?: bool|Param,
  *         attach_metric_code_locations?: bool|Param,
@@ -1839,6 +1879,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         spotlight?: bool|Param,
  *         spotlight_url?: scalar|Param|null,
  *         release?: scalar|Param|null, // Default: "%env(default::SENTRY_RELEASE)%"
+ *         org_id?: int|Param,
  *         server_name?: scalar|Param|null,
  *         ignore_exceptions?: list<scalar|Param|null>,
  *         ignore_transactions?: list<scalar|Param|null>,
@@ -1849,6 +1890,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         before_send_log?: scalar|Param|null,
  *         before_send_metric?: scalar|Param|null,
  *         trace_propagation_targets?: mixed,
+ *         strict_trace_continuation?: bool|Param,
  *         tags?: array<string, scalar|Param|null>,
  *         error_types?: scalar|Param|null,
  *         max_breadcrumbs?: int|Param,
@@ -1873,11 +1915,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: true
  *         capture_soft_fails?: bool|Param, // Default: true
  *         isolate_breadcrumbs_by_message?: bool|Param, // Default: false
+ *         isolate_context_by_message?: bool|Param, // Default: false
  *     },
  *     tracing?: bool|array{
  *         enabled?: bool|Param, // Default: true
  *         dbal?: bool|array{
  *             enabled?: bool|Param, // Default: true
+ *             ignore_prepare_spans?: bool|Param, // Default: false
  *             connections?: list<scalar|Param|null>,
  *         },
  *         twig?: bool|array{
@@ -1901,6 +1945,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         path?: scalar|Param|null, // The local icon set directory path. (cannot be used with 'alias')
  *         alias?: scalar|Param|null, // The remote icon set identifier. (cannot be used with 'path')
  *         icon_attributes?: array<string, scalar|Param|null>,
+ *         suffixes?: array<string, array{ // The suffix name (e.g. "solid", "20-solid") // Default: []
+ *             icon_attributes?: array<string, scalar|Param|null>,
+ *         }>,
  *     }>,
  *     aliases?: array<string, string|Param>,
  *     iconify?: bool|array{ // Configuration for the remote icon service.
@@ -1923,7 +1970,17 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     clients?: array<string, array<string, mixed>>,
  * }
  * @psalm-type SurvosAuthConfig = array{
+ *     providers?: array<string, array{ // Default: []
+ *         type?: scalar|Param|null, // Default: null
+ *         client_id?: scalar|Param|null, // Default: null
+ *         client_secret?: scalar|Param|null, // Default: null
+ *         scopes?: list<scalar|Param|null>,
+ *         redirect_route?: scalar|Param|null, // Default: null
+ *         redirect_params?: list<scalar|Param|null>,
+ *         use_state?: bool|Param|null, // Default: null
+ *     }>,
  *     new_user_redirect_route?: scalar|Param|null, // Default: "oauth_profile"
+ *     production_url_base?: scalar|Param|null, // Default: null
  *     user_provider?: scalar|Param|null, // Default: null
  *     user_class?: scalar|Param|null, // Default: "App\\Entity\\User"
  * }
@@ -1935,6 +1992,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     messenger?: bool|Param, // Default: true
  *     query?: bool|Param, // Default: true
  *     query_bindings?: bool|Param, // Default: true
+ *     http_client?: bool|Param, // Default: true
  *     templates?: bool|Param, // Default: true
  *     user?: bool|Param, // Default: true
  *     transport?: scalar|Param|null, // Default: "async"
@@ -1943,7 +2001,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     ignore_messages?: list<scalar|Param|null>,
  * }
  * @psalm-type SurvosSimpleDatatablesConfig = array{
- *     stimulus_controller?: scalar|Param|null, // Default: "@survos/simple-datatables-bundle/table"
+ *     stimulus_controller?: scalar|Param|null, // Default: "@survos/simple-datatables/table"
  *     per_page?: bool|Param, // Default: 10
  *     searchable?: bool|Param, // Default: true
  *     fixed_height?: scalar|Param|null, // Default: true
@@ -2046,13 +2104,18 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             apiVersion?: scalar|Param|null, // Default: null
  *             deploymentId?: scalar|Param|null, // Default: null
  *             label?: scalar|Param|null, // Human-readable label used in dynamic prompts (defaults to indexName) // Default: null
+ *             curatorName?: scalar|Param|null, // Optional explicit curator display name for this workspace template // Default: null
+ *             curatorNameByIndex?: list<scalar|Param|null>,
  *             detailUrlPattern?: scalar|Param|null, // URL pattern for item detail pages; use {id} as placeholder e.g. /product/{id} // Default: null
+ *             schemaUrl?: scalar|Param|null, // Optional OpenAPI schema URL used to explain field meanings in collection overview responses // Default: null
  *             examples?: list<scalar|Param|null>,
+ *             examplesByIndex?: list<list<scalar|Param|null>>,
  *             prompts?: array{ // Static prompt overrides — these win over dynamic template rendering
  *                 system?: scalar|Param|null, // Default: null
  *                 searchFilterParam?: scalar|Param|null, // Default: null
  *                 searchDescription?: scalar|Param|null, // Default: null
  *                 searchQParam?: scalar|Param|null, // Default: null
+ *                 searchIndexUidParam?: scalar|Param|null, // Pin the index UID — prevents Meilisearch generating a full enum of all indexes, which blows the OpenAI context limit. // Default: null
  *             },
  *             indexes?: list<scalar|Param|null>,
  *         }>,
