@@ -36,3 +36,5 @@ phpstan.neon
 /public/js/fos_js_routes.js
 
 .castor.stub.php
+config.bat
+node_modules
