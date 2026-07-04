@@ -1,10 +1,4 @@
-{% extends "@SurvosBootstrap/%s/base.html.twig"|format(theme) %}
-{% block javascripts %}
-    {{ parent() }}
-    {% block importmap %}
-        {{ importmap('app') }}
-    {% endblock %}
-{% endblock %}
+{% extends "@SurvosTabler/layout/base.html.twig" %}
 
 {% block body %}
     Replace the body tag

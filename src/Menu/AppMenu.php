@@ -4,24 +4,17 @@ namespace App\Menu;
 
 use App\Controller\Admin\MeiliDashboardController;
 use App\Repository\EndpointRepository;
-use Survos\BootstrapBundle\Event\KnpMenuEvent;
-use Survos\BootstrapBundle\Service\MenuService;
-use Survos\BootstrapBundle\Traits\KnpMenuHelperInterface;
-use Survos\BootstrapBundle\Traits\KnpMenuHelperTrait;
+use Survos\TablerBundle\Event\MenuEvent;
+use Survos\TablerBundle\Service\MenuService;
+use Survos\TablerBundle\Traits\KnpMenuHelperInterface;
+use Survos\TablerBundle\Traits\KnpMenuHelperTrait;
 use Survos\MeiliBundle\Service\MeiliService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-// events are
-/*
-// #[AsEventListener(event: KnpMenuEvent::NAVBAR_MENU2)]
-#[AsEventListener(event: KnpMenuEvent::SIDEBAR_MENU, method: 'sidebarMenu')]
-#[AsEventListener(event: KnpMenuEvent::PAGE_MENU, method: 'pageMenu')]
-#[AsEventListener(event: KnpMenuEvent::FOOTER_MENU, method: 'footerMenu')]
-#[AsEventListener(event: KnpMenuEvent::AUTH_MENU, method: 'appAuthMenu')]
-*/
+// other available slots: MenuEvent::SIDEBAR, MenuEvent::BREADCRUMB, MenuEvent::PAGE_NAV, MenuEvent::PAGE_ACTIONS
 
 final class AppMenu implements KnpMenuHelperInterface
 {
@@ -37,25 +30,26 @@ final class AppMenu implements KnpMenuHelperInterface
     ) {
     }
 
-    public function appAuthMenu(KnpMenuEvent $event): void
+    // not wired up: this app doesn't use login/logout/register routes (see config/routes/survos_auth.yaml)
+    public function appAuthMenu(MenuEvent $event): void
     {
-        $menu = $event->getMenu();
-        $this->menuService->addAuthMenu($menu);
+        if (!$this->authorizationChecker) {
+            return;
+        }
+        $this->authMenu($this->authorizationChecker, $this->security, $event->getMenu());
     }
 
-    #[AsEventListener(event: KnpMenuEvent::FOOTER_MENU)]
-    public function footer(KnpMenuEvent $event): void
+    #[AsEventListener(event: MenuEvent::FOOTER)]
+    public function footer(MenuEvent $event): void
     {
         $menu = $event->getMenu();
         $this->add($menu, uri: 'https://github.com/survos-sites/packages', label: 'Github');
     }
 
-    #[AsEventListener(event: KnpMenuEvent::NAVBAR_MENU)]
-    public function navbarMenu(KnpMenuEvent $event): void
+    #[AsEventListener(event: MenuEvent::NAVBAR_MENU)]
+    public function navbarMenu(MenuEvent $event): void
         {
         $menu = $event->getMenu();
-        $options = $event->getOptions();
-
 
         $this->add($menu, 'app_homepage', label: 'Home');
         $this->add($menu, 'admin', label: 'ez');

@@ -190,11 +190,11 @@
             "config/packages/sentry.yaml"
         ]
     },
+    "survos/atlas-bundle": {
+        "version": "2.10.19"
+    },
     "survos/auth-bundle": {
         "version": "1.5.255"
-    },
-    "survos/bootstrap-bundle": {
-        "version": "1.5.156"
     },
     "survos/code-bundle": {
         "version": "dev-main"
@@ -231,11 +231,17 @@
     "survos/ez-bundle": {
         "version": "2.0.94"
     },
+    "survos/field-bundle": {
+        "version": "2.10.19"
+    },
     "survos/js-twig-bundle": {
         "version": "1.6.0"
     },
     "survos/jsonl-bundle": {
         "version": "2.0.71"
+    },
+    "survos/kit-bundle": {
+        "version": "2.9.4"
     },
     "survos/meili-bundle": {
         "version": "1.5.0"

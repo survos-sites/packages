@@ -5,6 +5,7 @@ doctrine:
                 logging: false
                 profiling_collect_backtrace: '%kernel.debug%'
                 url: '%env(resolve:DATABASE_URL)%'
+                schema_filter: '~^(?!(?:_timescaledb_|timescaledb_|toolkit_))~'
 
             messenger:
                 <<: *dbal_defaults
