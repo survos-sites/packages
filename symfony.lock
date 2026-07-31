@@ -97,6 +97,9 @@
             "config/packages/inspector.yaml"
         ]
     },
+    "jwage/phpamqplib-messenger": {
+        "version": "0.10.1"
+    },
     "knplabs/knp-menu-bundle": {
         "version": "v3.3.0"
     },
@@ -251,6 +254,9 @@
     },
     "survos/state-bundle": {
         "version": "1.5.600"
+    },
+    "survos/tabler-bundle": {
+        "version": "2.7.23"
     },
     "symfony/asset-mapper": {
         "version": "7.3",

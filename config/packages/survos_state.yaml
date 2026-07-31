@@ -1,0 +1,12 @@
+survos_state:
+    base_layout: base.html.twig
+    enable_dynamic_routing: true
+    workflow_paths:
+        - '%kernel.project_dir%/src/Workflow'
+
+    # Testbed for the RabbitMQ dynamic-queue driver (see mono/bu/state-bundle
+    # StatePrependExtension): one transport per async transition, auto-created
+    # via jwage/phpamqplib-messenger's "dsn/vhost/exchange" convention instead
+    # of Doctrine's shared-table + queue_name trick.
+    queue_driver: rabbitmq
+    async_transport_dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
