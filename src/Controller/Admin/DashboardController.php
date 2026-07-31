@@ -64,13 +64,13 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-         yield MenuItem::linkToCrud('Packages', 'fas fa-list', Package::class);
+         yield MenuItem::linkTo(PackageCrudController::class, 'Packages', 'fas fa-list');
 
          $menuItems = [];
         yield MenuItem::section('By Marking');
          foreach ($this->workflowHelperService->getCounts(Package::class, 'marking') as $marking=>$count) {
 
-             yield MenuItem::linkToCrud($marking, 'fa fa-tags', Package::class)
+             yield MenuItem::linkTo(PackageCrudController::class, $marking, 'fa fa-tags')
                  ->setBadge($count)
                  ->setQueryParameter('filters[marking][value]', $marking)
                  ->setQueryParameter('filters[marking][comparison]', '=')
