@@ -5477,16 +5477,16 @@
         },
         {
             "name": "survos/data-contracts",
-            "version": "2.19.5",
+            "version": "2.19.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/data-contracts.git",
-                "reference": "562d8cb13017dd90752466ae2938221a5c23a5e7"
+                "reference": "47fd87f111a232e48251c355bcdda47dfe179e52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/data-contracts/zipball/562d8cb13017dd90752466ae2938221a5c23a5e7",
-                "reference": "562d8cb13017dd90752466ae2938221a5c23a5e7",
+                "url": "https://api.github.com/repos/survos/data-contracts/zipball/47fd87f111a232e48251c355bcdda47dfe179e52",
+                "reference": "47fd87f111a232e48251c355bcdda47dfe179e52",
                 "shasum": ""
             },
             "require": {
@@ -5512,7 +5512,7 @@
             "description": "Shared data vocabularies, content metadata, and item DTO contracts for Survos data/media/import packages.",
             "support": {
                 "issues": "https://github.com/survos/data-contracts/issues",
-                "source": "https://github.com/survos/data-contracts/tree/2.19.5"
+                "source": "https://github.com/survos/data-contracts/tree/2.19.6"
             },
             "funding": [
                 {
@@ -5520,7 +5520,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-12T12:24:27+00:00"
+            "time": "2026-08-12T14:13:39+00:00"
         },
         {
             "name": "survos/debug-utils",
