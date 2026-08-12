@@ -1,5 +1,19 @@
 {
     "controllers": {
+        "@survos/api-grid-bundle": {
+            "api_grid": {
+                "enabled": true,
+                "fetch": "lazy",
+                "autoimport": {
+                    "datatables.net-columncontrol-bs5/css/columnControl.bootstrap5.css": true,
+                    "datatables.net-bs5/css/dataTables.bootstrap5.css": true,
+                    "datatables.net-buttons-bs5/css/buttons.bootstrap5.css": true,
+                    "datatables.net-responsive-bs5/css/responsive.bootstrap5.css": true,
+                    "datatables.net-searchbuilder-bs5/css/searchBuilder.bootstrap5.css": true,
+                    "datatables.net-select-bs5/css/select.bootstrap5.css": true
+                }
+            }
+        },
         "@survos/js-twig-bundle": {
             "dexie": {
                 "enabled": true,
@@ -57,6 +71,18 @@
             "search": {
                 "enabled": true,
                 "fetch": "lazy"
+            },
+            "clipboard": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "closeable": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "tooltip": {
+                "enabled": true,
+                "fetch": "lazy"
             }
         },
         "@symfony/ux-chartjs": {
@@ -68,7 +94,10 @@
         "@symfony/ux-turbo": {
             "turbo-core": {
                 "enabled": true,
-                "fetch": "eager"
+                "fetch": "eager",
+                "autoimport": {
+                    "@symfony/ux-turbo/dist/mercure_stream_source_element.js": true
+                }
             },
             "mercure-turbo-stream": {
                 "enabled": false,

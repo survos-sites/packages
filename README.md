@@ -1,6 +1,8 @@
 # Symfony Bundle Browser
 
 This application downloads Symfony bundles from packagist.org and makes it easy to search by version.
+It served as the original test case for `survos/api-grid-bundle`, and is now the testbed for
+running a survos-sites app under FrankenPHP.
 
 Configure a Postgres database and set it in .env.local, then run
 
@@ -21,16 +23,6 @@ bin/console mess:consume bundle.load --limit 1 -vv
 ```
 
 It takes a while because of scraping packagist.
-
-
-```bash
-composer config repositories.tacman_packagist_api '{"type": "path", "url": "/home/tac/g/tacman/packagist-api"}'
-composer req knplabs/packagist-api:*@dev
-
-composer config repositories.survos_api_grid_bundle '{"type": "vcs", "url": "git@github.com:survos/SurvosApiGridBundle.git"}'
-composer req survos/api-grid-bundle:dev-main
-
-```
 
 ## Notes
 

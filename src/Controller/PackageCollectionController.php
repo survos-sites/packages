@@ -24,17 +24,19 @@ class PackageCollectionController extends AbstractController
     }
 
     #[Route(path: '/{style}', name: 'package_browse', methods: [Request::METHOD_GET], requirements: ['style' => 'normal|simple'])]
-    public function browse(Request $request,
+    public function browse(
         string $style = 'normal', //  'simple', //  'normal'
     ): Response {
         // WorkflowInterface $projectStateMachine
         $markingData = []; // $this->workflowHelperService->getMarkingData($projectStateMachine, $class);
-        $apiRoute = $request->get('doctrine', false) ? 'doctrine-packages' : 'meili-packages';
 
         return $this->render('package/browse.html.twig', [
             'packageClass' => Package::class,
             'style' => $style,
-            'apiRoute' => $apiRoute,
+            // ApiGridComponent's meili DataTables mode was removed upstream
+            // (survos/api-grid-bundle) -- ux-search/Meilisearch integration
+            // for this page is deferred.
+            'apiGetCollectionUrl' => $this->generateUrl('doctrine-packages'),
             'filter' => [],
 
             //            'owner' => $owner,

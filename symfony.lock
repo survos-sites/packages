@@ -193,6 +193,9 @@
             "config/packages/sentry.yaml"
         ]
     },
+    "survos/api-grid-bundle": {
+        "version": "2.19.2"
+    },
     "survos/atlas-bundle": {
         "version": "2.10.19"
     },
@@ -254,6 +257,9 @@
     },
     "survos/state-bundle": {
         "version": "1.5.600"
+    },
+    "survos/supervisor-bundle": {
+        "version": "2.10.20"
     },
     "survos/tabler-bundle": {
         "version": "2.7.23"

@@ -2,8 +2,8 @@
 
 {% block title %}BASE Package{% endblock %}
 
-{% block page_title %}{{ package }}{% endblock %}
-{% block page_subtitle %}{{ app.request.get('_route') }}{% endblock %}
+{% block page_title %}{{ package|default('Packages') }}{% endblock %}
+{% block page_subtitle %}{{ app.request.attributes.get('_route') }}{% endblock %}
 
 {% block body %}
 

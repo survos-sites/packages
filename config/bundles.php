@@ -43,4 +43,6 @@ return [
     Survos\AtlasBundle\SurvosAtlasBundle::class => ['all' => true],
     Survos\FieldBundle\SurvosFieldBundle::class => ['all' => true],
     Jwage\PhpAmqpLibMessengerBundle\PhpAmqpLibMessengerBundle::class => ['all' => true],
+    Survos\SupervisorBundle\SurvosSupervisorBundle::class => ['dev' => true, 'test' => true],
+    Survos\ApiGridBundle\SurvosApiGridBundle::class => ['all' => true],
 ];

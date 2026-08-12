@@ -8,42 +8,13 @@
     "repository": "https:\/\/github.com\/survos-sites\/packages",
     "scripts": {
         "dokku": {
-            "predeploy": "bin/console mess:stop && bin/console importmap:install && bin/console asset-map:compile && bin/console d:m:m -n --allow-no-migration",
+            "predeploy": "bin/console mess:stop && bin/console d:m:m -n --allow-no-migration",
             "postdeploy": "bin/console about"
         }
     },
-    "cron": [
-        {
-            "command": "bin/console mess:consume async  --time-limit 290",
-            "schedule": "*/5 * * * *"
-        },
-        {
-            "command": "bin/console mess:consume meili  --time-limit 115",
-            "schedule": "*/2 * * * *"
-        },
-        {
-            "command": "bin/console mess:consume bundle.load  --time-limit 290",
-            "schedule": "*/5 * * * *"
-        }
-    ],
-    "env": {
-        "SECRET_TOKEN": {
-            "description": "A secret key for verifying the integrity of signed cookies.",
-            "value": "secret"
-        },
-        "WEB_CONCURRENCY": {
-            "description": "The number of processes to run.",
-            "generator": "echo 5"
-        }
-    },
-    "image": "gliderlabs\/herokuish",
     "addons": [
         "dokku-postgres",
-        "dokku-redis"
-    ],
-    "buildpacks": [
-        {
-            "url": "https:\/\/github.com\/heroku\/heroku-buildpack-php.git"
-        }
+        "dokku-redis",
+        "dokku-rabbitmq"
     ]
 }
