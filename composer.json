@@ -8,6 +8,7 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.5",
+        "ext-amqp": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
