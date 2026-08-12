@@ -5477,16 +5477,16 @@
         },
         {
             "name": "survos/data-contracts",
-            "version": "2.19.3",
+            "version": "2.19.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/data-contracts.git",
-                "reference": "02b9116afbff7ceedca196a79bdf9cecc2b7cdca"
+                "reference": "562d8cb13017dd90752466ae2938221a5c23a5e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/data-contracts/zipball/02b9116afbff7ceedca196a79bdf9cecc2b7cdca",
-                "reference": "02b9116afbff7ceedca196a79bdf9cecc2b7cdca",
+                "url": "https://api.github.com/repos/survos/data-contracts/zipball/562d8cb13017dd90752466ae2938221a5c23a5e7",
+                "reference": "562d8cb13017dd90752466ae2938221a5c23a5e7",
                 "shasum": ""
             },
             "require": {
@@ -5512,7 +5512,7 @@
             "description": "Shared data vocabularies, content metadata, and item DTO contracts for Survos data/media/import packages.",
             "support": {
                 "issues": "https://github.com/survos/data-contracts/issues",
-                "source": "https://github.com/survos/data-contracts/tree/2.19.3"
+                "source": "https://github.com/survos/data-contracts/tree/2.19.5"
             },
             "funding": [
                 {
@@ -5520,7 +5520,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-11T15:54:04+00:00"
+            "time": "2026-08-12T12:24:27+00:00"
         },
         {
             "name": "survos/debug-utils",
@@ -5977,16 +5977,16 @@
         },
         {
             "name": "survos/meili-bundle",
-            "version": "2.19.4",
+            "version": "2.19.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/meili-bundle.git",
-                "reference": "7c98ac0063a6345090b199c41e6a2fefc907c6f3"
+                "reference": "60f7512afefbaa06a91bd0d7625eaec3751dc9a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/7c98ac0063a6345090b199c41e6a2fefc907c6f3",
-                "reference": "7c98ac0063a6345090b199c41e6a2fefc907c6f3",
+                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/60f7512afefbaa06a91bd0d7625eaec3751dc9a6",
+                "reference": "60f7512afefbaa06a91bd0d7625eaec3751dc9a6",
                 "shasum": ""
             },
             "require": {
@@ -6058,7 +6058,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/2.19.4"
+                "source": "https://github.com/survos/meili-bundle/tree/2.19.5"
             },
             "funding": [
                 {
@@ -6066,7 +6066,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-11T16:20:46+00:00"
+            "time": "2026-08-12T00:02:38+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
