@@ -4,13 +4,12 @@
 
 :{$PORT:80} {
 	root * /app/public
-	# zstd deliberately omitted: packages.survos.com is Cloudflare-proxied
-	# (not a tunnel, unlike depot), and Cloudflare's edge doesn't reliably
-	# pass Content-Encoding: zstd through to the browser intact -- confirmed
-	# live, the origin response was valid zstd but every asset still failed
-	# with net::ERR_CONTENT_DECODING_FAILED. gzip is universally solid
-	# through Cloudflare.
-	encode gzip
+	# No `encode` directive: packages.survos.com is Cloudflare-proxied, and
+	# Cloudflare compresses on the way to the browser regardless of what the
+	# origin sends. Setting Content-Encoding here just adds a layer that can
+	# go wrong in transit -- confirmed live with zstd (valid at the origin,
+	# broke every asset in the browser with net::ERR_CONTENT_DECODING_FAILED
+	# once it hit Cloudflare's edge). Let Cloudflare own it end-to-end.
 
 	request_body {
 		max_size 64MB

@@ -3,6 +3,10 @@ framework:
         # The paths to make available to the asset mapper.
         paths:
             - assets/
+        # Leave disabled: Cloudflare compresses on the way to the browser
+        # regardless, and origin-side compression (this or the Caddyfile's
+        # `encode` directive) has caused real breakage before -- confirmed
+        # live with zstd Content-Encoding not surviving Cloudflare's edge.
 #        precompress:
 #            # possible values: 'brotli', 'zstandard', 'gzip'
 #            format: gzip
