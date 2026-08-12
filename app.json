@@ -16,5 +16,18 @@
         "dokku-postgres",
         "dokku-redis",
         "dokku-rabbitmq"
-    ]
+    ],
+    "healthchecks": {
+        "web": [
+            {
+                "type": "startup",
+                "name": "Bundle browser responds",
+                "path": "/packages",
+                "attempts": 6,
+                "initialDelay": 5,
+                "wait": 5,
+                "timeout": 10
+            }
+        ]
+    }
 }
