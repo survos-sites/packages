@@ -33,6 +33,13 @@ FROM base AS build
 
 RUN install-php-extensions @composer
 
+# Everything in this stage runs as root (no USER switch). Composer detects
+# that and silently disables all plugins in --no-interaction mode unless
+# told otherwise -- including symfony/runtime's plugin, which is what
+# generates the runtime bootstrap glue bin/console needs. Without this,
+# bin/console fails with "Symfony Runtime is missing" right after
+# dump-autoload, even though `composer install` itself reports success.
+ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV APP_ENV=prod APP_DEBUG=0
 
 COPY composer.json composer.lock symfony.lock ./
