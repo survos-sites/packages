@@ -63,8 +63,11 @@ FROM base AS prod
 
 ENV APP_ENV=prod APP_DEBUG=0
 
-COPY --from=build /app /app
-RUN chown -R www-data:www-data var
+# --chown here sets ownership during the copy itself (one pass) instead of
+# a separate `RUN chown -R` walking the whole tree afterward (two passes) --
+# meaningfully faster once var/cache is populated with thousands of warmed
+# cache/container files.
+COPY --from=build --chown=www-data:www-data /app /app
 
 EXPOSE 80
 
