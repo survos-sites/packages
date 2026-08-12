@@ -14,6 +14,7 @@ FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION} AS base
 WORKDIR /app
 
 RUN install-php-extensions \
+        amqp \
         apcu \
         intl \
         opcache \
