@@ -197,4 +197,6 @@ return [
     'datatables.net-columncontrol-bs5/css/columnControl.bootstrap5.min.css' => ['version' => '2.0.0', 'type' => 'css'],
     'datatables.net-columncontrol-bs5/css/columnControl.bootstrap5.css' => ['version' => '2.0.0', 'type' => 'css'],
     'markdown-to-jsx/entities' => ['version' => '9.10.2'],
+    'perfect-scrollbar' => ['version' => '1.5.6'],
+    'perfect-scrollbar/css/perfect-scrollbar.min.css' => ['version' => '1.5.6', 'type' => 'css'],
 ];
