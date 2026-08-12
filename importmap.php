@@ -199,4 +199,6 @@ return [
     'markdown-to-jsx/entities' => ['version' => '9.10.2'],
     'perfect-scrollbar' => ['version' => '1.5.6'],
     'perfect-scrollbar/css/perfect-scrollbar.min.css' => ['version' => '1.5.6', 'type' => 'css'],
+    'simple-datatables' => ['version' => '10.3.0'],
+    'simple-datatables/dist/style.min.css' => ['version' => '10.3.0', 'type' => 'css'],
 ];
