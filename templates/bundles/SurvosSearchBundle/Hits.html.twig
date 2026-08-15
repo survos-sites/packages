@@ -1,0 +1,41 @@
+{# Overrides the `hit` block of survos/search-bundle's Hits component, which otherwise dumps
+   hit.data as JSON for debugging. Same mechanism zm and openfoto use. #}
+{% extends '@!SurvosSearch/Hits.html.twig' %}
+
+{% block hit %}
+    {% set doc = hit.data %}
+    <div class="ux-search-hits__item card">
+        <div class="card-body py-2">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+                <div class="min-w-0">
+                    <h3 class="card-title h5 mb-1 text-truncate">
+                        <a href="https://packagist.org/packages/{{ doc.id|replace({'--': '/'}) }}"
+                           target="_blank" rel="noopener">{{ doc.id|replace({'--': '/'}) }}</a>
+                    </h3>
+                    {% if doc.description is defined and doc.description %}
+                        <p class="text-secondary mb-2">{{ doc.description }}</p>
+                    {% endif %}
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for v in doc.symfonyVersions ?? [] %}
+                            <span class="badge bg-blue-lt">sf {{ v }}</span>
+                        {% endfor %}
+                        {% for v in doc.phpVersions ?? [] %}
+                            <span class="badge bg-purple-lt">php {{ v }}</span>
+                        {% endfor %}
+                        {% if doc.marking is defined and doc.marking %}
+                            <span class="badge bg-secondary-lt">{{ doc.marking }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="text-nowrap text-secondary small text-end">
+                    {% if doc.stars is defined and doc.stars is not null %}
+                        <div>★ {{ doc.stars|number_format }}</div>
+                    {% endif %}
+                    {% if doc.downloads is defined and doc.downloads is not null %}
+                        <div>↓ {{ doc.downloads|number_format }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

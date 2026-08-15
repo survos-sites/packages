@@ -3,7 +3,11 @@
     "license": "proprietary",
     "name": "survos-sites/packages",
     "description": "Symfony application showing Symfony bundles",
-    "keywords": ["symfony", "pwa", "datatables"],
+    "keywords": [
+        "symfony",
+        "pwa",
+        "datatables"
+    ],
     "minimum-stability": "RC",
     "prefer-stable": true,
     "require": {
@@ -39,10 +43,12 @@
         "survos/command-bundle": "^2.0",
         "survos/core-bundle": "^2.0",
         "survos/crawler-bundle": "^2.0",
+        "survos/elastic-bundle": "^2.24",
         "survos/ez-bundle": "^2.0",
         "survos/js-twig-bundle": "^2.0",
         "survos/lingua-core": "^2.0",
         "survos/meili-bundle": "^2.0",
+        "survos/search-bundle": "^2.24",
         "survos/simple-datatables-bundle": "^2.19",
         "survos/state-bundle": "^2.0",
         "survos/tabler-bundle": "^2.19",
@@ -143,18 +149,27 @@
     },
     "scripts": {
         "auto-scripts": {
-            
             "cache:warmup": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "importmap:install": "symfony-cmd"
         },
         "post-install-cmd": [
-            "php -d memory_limit=512M bin/console cache:clear","@auto-scripts"],
+            "php -d memory_limit=512M bin/console cache:clear",
+            "@auto-scripts"
+        ],
         "post-update-cmd": [
-            "php -d memory_limit=512M bin/console cache:clear","@auto-scripts"],
-        "setup": ["php -d memory_limit=4048M bin/console app:load-data"],
-        "load": ["php -d memory_limit=4048M bin/console workflow:iterate App\\\\Entity\\\\Package --marking=new --transition=load"],
-        "index": ["php -d memory_limit=2048M bin/console meili:index --reset"],
+            "php -d memory_limit=512M bin/console cache:clear",
+            "@auto-scripts"
+        ],
+        "setup": [
+            "php -d memory_limit=4048M bin/console app:load-data"
+        ],
+        "load": [
+            "php -d memory_limit=4048M bin/console workflow:iterate App\\\\Entity\\\\Package --marking=new --transition=load"
+        ],
+        "index": [
+            "php -d memory_limit=2048M bin/console meili:index --reset"
+        ],
         "coverage": "php -d xpcov.enabled=1 vendor/bin/phpunit --coverage-html coverage"
     }
 }

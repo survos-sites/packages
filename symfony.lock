@@ -234,6 +234,9 @@
             "config/routes/survos_crawler.yaml"
         ]
     },
+    "survos/elastic-bundle": {
+        "version": "2.24.2"
+    },
     "survos/ez-bundle": {
         "version": "2.0.94"
     },
@@ -251,6 +254,9 @@
     },
     "survos/meili-bundle": {
         "version": "1.5.0"
+    },
+    "survos/search-bundle": {
+        "version": "2.24.1"
     },
     "survos/simple-datatables-bundle": {
         "version": "1.5.446"
@@ -529,6 +535,18 @@
         "files": [
             "assets/icons/symfony.svg",
             "config/packages/ux_icons.yaml"
+        ]
+    },
+    "symfony/ux-live-component": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.6",
+            "ref": "b7130b7b5ddc2f8994bd6149d7c093b184782f0c"
+        },
+        "files": [
+            "config/routes/ux_live_component.yaml"
         ]
     },
     "symfony/ux-turbo": {

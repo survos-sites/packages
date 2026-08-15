@@ -1,0 +1,21 @@
+survos_search:
+    # MUST be a literal, not %env(...)%. AutoEntitySearchPass resolves this key against the
+    # adapters map at COMPILE time, when an env placeholder is still an unresolved string --
+    # the lookup misses, the DSN comes out NULL, and the search silently falls back to the
+    # Doctrine adapter with no error. The DSNs below may be env vars, because the adapter
+    # scheme is only string-matched at runtime.
+    default_adapter: es
+    adapters:
+        # Elasticsearch. Handles Package's multi-valued facets (symfonyVersions,
+        # phpVersions) natively -- it buckets each array element.
+        es: '%env(ELASTICSEARCH_DSN)%'
+
+        # Postgres BM25, over the same tables Doctrine already owns.
+        #
+        # NOTE: flipping SEARCH_ADAPTER to `pg` currently throws, on purpose.
+        # Package::FILTERABLE_FIELDS names json columns, and a DBAL adapter would
+        # GROUP BY the whole serialized array -- rendering ["8.2","8.3"] as a single
+        # bucket. AutoEntitySearch::configureDbalAdapter() refuses rather than produce
+        # facets that look plausible and are wrong. To compare backends, drop the
+        # array columns from FILTERABLE_FIELDS first.
+        pg: 'postgres-bm25://default'

@@ -27,6 +27,7 @@ return [
     'admin' => ['path' => './assets/admin.js', 'entrypoint' => true],
     'meili' => ['path' => './assets/meili.js', 'entrypoint' => true],
     '@survos/js-twig/generated/fos_routes.js' => ['path' => '@survos/js-twig/generated/fos_routes.js'],
+    '@survos/search-bundle/styles/ux-search.css' => ['path' => '@survos/search-bundle/styles/ux-search.css', 'type' => 'css'],
     '@symfony/stimulus-bundle' => ['path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js'],
     '@hotwired/stimulus' => ['version' => '3.2.2'],
     '@hotwired/turbo' => ['version' => '8.0.23'],
@@ -201,4 +202,5 @@ return [
     'perfect-scrollbar/css/perfect-scrollbar.min.css' => ['version' => '1.5.6', 'type' => 'css'],
     'simple-datatables' => ['version' => '10.3.0'],
     'simple-datatables/dist/style.min.css' => ['version' => '10.3.0', 'type' => 'css'],
+    '@symfony/ux-live-component' => ['path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js'],
 ];

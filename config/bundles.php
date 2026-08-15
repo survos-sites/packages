@@ -45,4 +45,7 @@ return [
     Jwage\PhpAmqpLibMessengerBundle\PhpAmqpLibMessengerBundle::class => ['all' => true],
     Survos\SupervisorBundle\SurvosSupervisorBundle::class => ['dev' => true, 'test' => true],
     Survos\ApiGridBundle\SurvosApiGridBundle::class => ['all' => true],
+    Symfony\UX\LiveComponent\LiveComponentBundle::class => ['all' => true],
+    Survos\SearchBundle\SurvosSearchBundle::class => ['all' => true],
+    Survos\ElasticBundle\SurvosElasticBundle::class => ['all' => true],
 ];

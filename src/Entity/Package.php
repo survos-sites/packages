@@ -16,6 +16,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Survos\MeiliBundle\Api\Filter\FacetsFieldSearchFilter;
 
+use Survos\FieldBundle\Attribute\EntityMeta;
 use Survos\CoreBundle\Entity\RouteParametersInterface;
 use Survos\CoreBundle\Entity\RouteParametersTrait;
 use Survos\MeiliBundle\Metadata\Facet;
@@ -25,6 +26,7 @@ use Survos\StateBundle\Traits\MarkingTrait;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
+#[EntityMeta(icon: 'tabler:package', group: 'Content', order: 10, label: 'Packages', description: 'Composer packages harvested from Packagist.')]
 #[ApiResource(
     operations: [new Get(), new GetCollection(
         name: 'doctrine-packages'
@@ -70,6 +72,26 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
         'marking', 'vendor', 'name', 'stars',
         'lastUpdatedOnPackagist',
         'favers', 'downloads'];
+
+    /**
+     * Read by survos/search-bundle's AutoEntitySearch::applyConstantFields() to build the
+     * faceted search at /entity/app_package/search. Separate from self::SORTABLE, which
+     * feeds API Platform's OrderFilter and includes fields (favers) that aren't columns.
+     */
+    public const array SEARCHABLE_FIELDS = ['id', 'shortName', 'vendor', 'description'];
+
+    /**
+     * symfonyVersions/phpVersions are json columns. Elasticsearch buckets each element, so
+     * these are real per-version facets; a DBAL adapter would GROUP BY the serialized array
+     * and is refused outright. See config/packages/survos_search.yaml.
+     */
+    public const array FILTERABLE_FIELDS = [
+        'symfonyVersions', 'phpVersions', 'vendor', 'sourceType', 'marking',
+    ];
+
+    public const array SORTABLE_FIELDS = [
+        'shortName', 'vendor', 'stars', 'downloads', 'lastUpdatedOnPackagist',
+    ];
 
 
     public const array UNIQUE_PARAMETERS = ['packageId' => 'id'];
