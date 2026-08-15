@@ -2291,7 +2291,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * }
  * @psalm-type SurvosElasticConfig = array{
  *     spool_dir?: scalar|Param|null, // Where postFlush writes the ids awaiting reindex. // Default: "%kernel.project_dir%/var/elastic-spool"
- *     spool_enabled?: bool|Param, // Turn the Doctrine spool listener off for bulk imports that reindex explicitly afterwards. // Default: true
+ *     spool_enabled?: bool|Param, // Turn the Doctrine listener off for bulk imports that reindex explicitly afterwards. // Default: true
+ *     async?: bool|Param, // Dispatch reindex work through Messenger. With this off (or with no bus installed) the listener writes a JSONL spool for elastic:spool:flush instead -- the right mode for bulk imports. // Default: true
+ *     batch_size?: int|Param, // Ids per message. One huge flush becomes several bounded jobs. // Default: 500
  * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
