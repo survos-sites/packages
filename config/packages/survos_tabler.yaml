@@ -13,3 +13,5 @@ survos_tabler:
   app:
     code: bundles
     abbr: symfony<b>Bundles</b>
+  favicon:
+    text: SB
