@@ -1,10 +1,8 @@
 survos_search:
-    # MUST be a literal, not %env(...)%. AutoEntitySearchPass resolves this key against the
-    # adapters map at COMPILE time, when an env placeholder is still an unresolved string --
-    # the lookup misses, the DSN comes out NULL, and the search silently falls back to the
-    # Doctrine adapter with no error. The DSNs below may be env vars, because the adapter
-    # scheme is only string-matched at runtime.
-    default_adapter: es
+    # An env var is fine here: the adapter is resolved at RUNTIME by AdapterProvider, not read
+    # at compile time to pick a code branch. (It used to be the latter, and an %env() here
+    # silently produced a null DSN and fell back to Doctrine -- see survos/mono#41.)
+    default_adapter: '%env(SEARCH_ADAPTER)%'
     adapters:
         # Elasticsearch. Handles Package's multi-valued facets (symfonyVersions,
         # phpVersions) natively -- it buckets each array element.
