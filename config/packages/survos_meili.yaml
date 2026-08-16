@@ -3,8 +3,19 @@ survos_meili:
   apiKey: '%env(MEILI_API_KEY)%'
   searchKey: '%env(MEILI_SEARCH_KEY)%'
 
-
-  chat:
-    workspaces:
-      meili_assistant:
-        apiKey: '%env(OPENAI_API_KEY)%'
+  # Chat is off here on purpose. Declaring a workspace makes meili:settings:update push a
+  # `chat` block to every index, which the server rejects unless the chatCompletions
+  # experimental feature is enabled on that instance:
+  #
+  #   setting `chat` in the index settings requires enabling the `chat completions`
+  #   experimental feature
+  #
+  # Conversational search is going to be built on Elasticsearch rather than Meilisearch, so
+  # there is no reason to carry the dependency on a runtime-only Meili experimental flag here.
+  # To re-enable: restore the block below AND run bin/enable-experimental-features.sh from
+  # ~/sites/meilisearch against the target instance.
+  #
+  # chat:
+  #   workspaces:
+  #     meili_assistant:
+  #       apiKey: '%env(OPENAI_API_KEY)%'
