@@ -3,6 +3,18 @@ framework:
         failure_transport: failed
 
         transports:
+            # Separate queue from meili on purpose: a full Elasticsearch reindex must not
+            # delay Meilisearch updates, the two want different retry behaviour (ES answers
+            # 429 when its write queue saturates), and each can be consumed and stopped by
+            # its own worker.
+            elastic:
+                dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queue_name: elastic
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
+
             meili:
                 dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
 #                options:
@@ -28,6 +40,8 @@ framework:
 #            Symfony\Component\Notifier\Message\SmsMessage: async
 #            App\Message\FetchComposer: async
             Survos\MeiliBundle\Message\BatchIndexEntitiesMessage: meili
+            Survos\ElasticBundle\Message\ReindexDocuments: elastic
+            Survos\ElasticBundle\Message\RemoveDocuments: elastic
 
             #            App\Message\ProcessPackage: async
 
