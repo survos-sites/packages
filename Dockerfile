@@ -53,8 +53,16 @@ COPY . .
 # survos/js-twig-bundle's FosRoutingCacheWarmer is what generates
 # var/js_twig_bundle/generated/fos_routes.js, and asset-map:compile fails
 # without it already on disk (known recurring gap on every upgrade).
+# assets:install is NOT optional here. It is normally run by composer's
+# auto-scripts, but `composer install --no-scripts` above skips those, and
+# public/bundles/ is gitignored -- so it is absent from the build context dokku
+# pushes. Without this line the image ships no public/bundles/ at all and every
+# bundle-provided asset 404s: EasyAdmin's own CSS/JS, api-platform's, tabler's.
+# AssetMapper's output is unaffected (it goes to public/assets/), which is what
+# makes the failure confusing -- /assets/* serves fine while /bundles/* is gone.
 RUN composer dump-autoload --classmap-authoritative --no-dev --no-interaction \
     && php bin/console cache:clear --env=prod --no-debug \
+    && php bin/console assets:install public --env=prod \
     && php bin/console importmap:install --env=prod \
     && php bin/console asset-map:compile --env=prod
 

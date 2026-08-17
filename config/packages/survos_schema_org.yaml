@@ -4,3 +4,9 @@ survos_schema_org:
     # every layout in the app; templates that DO call render_schema_org() (base.html.twig,
     # and so the listing pages) suppress the injection, so nothing renders twice.
     auto_inject: true
+
+    # On in prod too, unlike the %kernel.debug% default. This app is the public
+    # reference example for the bundle, so the JSON-LD is meant to be read in
+    # view-source by people learning the mapping. The cost is bytes before
+    # compression, and Cloudflare compresses this response anyway.
+    pretty_print: true

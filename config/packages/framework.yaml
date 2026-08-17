@@ -1,6 +1,18 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
+parameters:
+    default_trusted_proxies: 'private_ranges'
+
 framework:
     secret: '%env(APP_SECRET)%'
+
+    # TLS terminates at the dokku/Cloudflare proxy and reaches the container as plain
+    # HTTP. Without trusting the proxy, Symfony ignores X-Forwarded-Proto and builds
+    # http:// absolute URLs -- which is how every @id in this app's JSON-LD came out as
+    # http://packages.survos.com/... on an https site. @ids are identities, so an
+    # http:// one names a different resource than the page it describes.
+    # See CONVENTIONS.md, "Reverse proxy / trusted_proxies".
+    trusted_proxies: '%env(default:default_trusted_proxies:TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port']
 
     # Note that the session will be started ONLY if you read or write from it.
     session: true
