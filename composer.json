@@ -48,7 +48,7 @@
         "survos/js-twig-bundle": "^2.0",
         "survos/lingua-core": "^2.0",
         "survos/meili-bundle": "^2.0",
-        "survos/schema-org-bundle": "^2.24.12",
+        "survos/schema-org-bundle": "^2.24.13",
         "survos/search-bundle": "^2.24",
         "survos/simple-datatables-bundle": "^2.19",
         "survos/state-bundle": "^2.0",

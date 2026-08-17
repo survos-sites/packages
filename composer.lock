@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91c59ef0ffe9cf21826354dfa3e88923",
+    "content-hash": "c7ed3bc8765554fad10cf3117b1e79a0",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -6563,16 +6563,16 @@
         },
         {
             "name": "survos/schema-org-bundle",
-            "version": "2.24.12",
+            "version": "2.24.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/schema-org-bundle.git",
-                "reference": "8a04caeaaae7ff54601f799a53de26489b896ec1"
+                "reference": "d422965c92857658331bcc6021756b3d4fe4a7d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/schema-org-bundle/zipball/8a04caeaaae7ff54601f799a53de26489b896ec1",
-                "reference": "8a04caeaaae7ff54601f799a53de26489b896ec1",
+                "url": "https://api.github.com/repos/survos/schema-org-bundle/zipball/d422965c92857658331bcc6021756b3d4fe4a7d2",
+                "reference": "d422965c92857658331bcc6021756b3d4fe4a7d2",
                 "shasum": ""
             },
             "require": {
@@ -6616,7 +6616,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/schema-org-bundle/issues",
-                "source": "https://github.com/survos/schema-org-bundle/tree/2.24.12"
+                "source": "https://github.com/survos/schema-org-bundle/tree/2.24.13"
             },
             "funding": [
                 {
@@ -6624,7 +6624,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-17T12:01:49+00:00"
+            "time": "2026-08-17T13:09:14+00:00"
         },
         {
             "name": "survos/search-bundle",
