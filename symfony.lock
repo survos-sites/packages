@@ -255,6 +255,9 @@
     "survos/meili-bundle": {
         "version": "1.5.0"
     },
+    "survos/schema-org-bundle": {
+        "version": "2.24.12"
+    },
     "survos/search-bundle": {
         "version": "2.24.1"
     },

@@ -22,6 +22,8 @@ use Survos\CoreBundle\Entity\RouteParametersTrait;
 use Survos\MeiliBundle\Metadata\Facet;
 use Survos\MeiliBundle\Metadata\MeiliIndex;
 use Survos\StateBundle\Traits\MarkingInterface;
+use Survos\SchemaOrgBundle\Attribute\SchemaOrg;
+use Survos\SchemaOrgBundle\Attribute\SchemaProperty;
 use Survos\StateBundle\Traits\MarkingTrait;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -63,6 +65,12 @@ use Symfony\Component\Serializer\Attribute\Groups;
 //    arguments: ['searchParameterName' => 'search']
 //)]
 // #[Groups(['package.read'])] // NO! The embedded json data is too big
+/**
+ * A published Symfony bundle: source code you compose into an app, not an
+ * application a user installs and runs -- hence SoftwareSourceCode rather than
+ * SoftwareApplication. See App\Schema\PackageSchema for the rest of the graph.
+ */
+#[SchemaOrg('SoftwareSourceCode')]
 class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 {
     use RouteParametersTrait;
@@ -115,10 +123,12 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 
     #[ORM\Column(type: Types::TEXT, length: 255, nullable: true)]
     #[Groups(['package.read'])]
+    #[SchemaProperty('description')]
     public ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['package.read'])]
+    #[SchemaProperty('version')]
     public ?string $version = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
@@ -127,6 +137,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     #[Groups(['package.read'])]
+    #[SchemaProperty('dateModified')]
     public ?\DateTimeImmutable $lastUpdated = null;
 
     #[ORM\Column(length: 255)]
@@ -150,6 +161,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     }
 
     #[Groups(['package.facets', 'package.read'])]
+    #[SchemaProperty('keywords')]
     public array $keywords { get => $this->data['keywords'] ?? []; }
 
     #[ORM\Column(nullable: true, type: Types::INTEGER)]
@@ -170,6 +182,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['package.read'])]
+    #[SchemaProperty('codeRepository')]
     public ?string $repo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -207,6 +220,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     public function __construct(
         #[ORM\Column(type: Types::STRING, length: 255)]
         #[Groups(['browse'])]
+        #[SchemaProperty('name')]
         private(set) readonly ?string $name=null
     )
     {

@@ -1,5 +1,14 @@
 {% extends "@SurvosTabler/layout/base.html.twig" %}
 
+{% block head %}
+    {{ parent() }}
+
+    {# survos/schema-org-bundle: every node the request collected, as one JSON-LD
+       @graph, or nothing at all when a page collected none. Rendered here rather
+       than per-template so any controller can contribute nodes. #}
+    {{ render_schema_org() }}
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/survosmeili/style.css') }}">

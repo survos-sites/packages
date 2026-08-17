@@ -5,6 +5,7 @@
 namespace App\Controller;
 
 use App\Entity\Package;
+use App\Schema\PackageSchema;
 use App\Repository\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Survos\StateBundle\Traits\HandleTransitionsTrait;
@@ -44,10 +45,24 @@ class PackageCollectionController extends AbstractController
     }
 
     #[Route('/index', name: 'package_index', methods: [Request::METHOD_GET])]
-    public function index(PackageRepository $packageRepository): Response
-    {
+    public function index(
+        PackageRepository $packageRepository,
+        Request $request,
+        PackageSchema $packageSchema,
+    ): Response {
+        $packages = $packageRepository->findBy([], [], 30);
+
+        // CollectionPage -> ItemList -> ListItem per package, each pointing at that
+        // package's own SoftwareSourceCode node in this same graph.
+        $packageSchema->addPackageList(
+            packages: $packages,
+            siteUrl: $request->getSchemeAndHttpHost(),
+            canonicalUrl: $request->getUri(),
+            name: 'Symfony bundles',
+        );
+
         return $this->render('package/index.html.twig', [
-            'packages' => $packageRepository->findBy([], [], 30),
+            'packages' => $packages,
         ]);
     }
 

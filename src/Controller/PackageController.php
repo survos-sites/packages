@@ -5,6 +5,7 @@
 namespace App\Controller;
 
 use App\Entity\Package;
+use App\Schema\PackageSchema;
 use App\Workflow\BundleWorkflow;
 use App\Workflow\BundleWorkflowInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,6 +40,8 @@ class PackageController extends AbstractController implements HandleTransitionsI
     public function show(
         string $packageId,
 //        Package $package,
+        Request $request,
+        PackageSchema $packageSchema,
         #[Target(BundleWorkflowInterface::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
         ?string $transition = null,
     ): Response {
@@ -55,6 +58,9 @@ class PackageController extends AbstractController implements HandleTransitionsI
         if ($package->data) {
             $reader = new ComposerReader($package->data);
         }
+
+        // SoftwareSourceCode + WebPage + authors/vendor; base.html.twig renders it.
+        $packageSchema->addPackage($package, $request->getSchemeAndHttpHost());
 
         //        dd($composer);
         return $this->render('package/show.html.twig', [

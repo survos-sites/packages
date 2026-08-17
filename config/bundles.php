@@ -48,4 +48,5 @@ return [
     Symfony\UX\LiveComponent\LiveComponentBundle::class => ['all' => true],
     Survos\SearchBundle\SurvosSearchBundle::class => ['all' => true],
     Survos\ElasticBundle\SurvosElasticBundle::class => ['all' => true],
+    Survos\SchemaOrgBundle\SurvosSchemaOrgBundle::class => ['all' => true],
 ];

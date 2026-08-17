@@ -1,0 +1,6 @@
+survos_schema_org:
+    # The package detail template extends @EasyAdmin/layout.html.twig, which we don't
+    # own and can't add {{ render_schema_org() }} to. Injecting before </head> covers
+    # every layout in the app; templates that DO call render_schema_org() (base.html.twig,
+    # and so the listing pages) suppress the injection, so nothing renders twice.
+    auto_inject: true
