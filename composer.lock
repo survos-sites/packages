@@ -2945,16 +2945,16 @@
         },
         {
             "name": "knplabs/packagist-api",
-            "version": "v2.1.4",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/packagist-api.git",
-                "reference": "e81b908fdb84792fa2c258f6a5c9a4c0111776c5"
+                "reference": "f4c089feb1f4dd899e158d3cee2f88a82531dd3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/packagist-api/zipball/e81b908fdb84792fa2c258f6a5c9a4c0111776c5",
-                "reference": "e81b908fdb84792fa2c258f6a5c9a4c0111776c5",
+                "url": "https://api.github.com/repos/KnpLabs/packagist-api/zipball/f4c089feb1f4dd899e158d3cee2f88a82531dd3a",
+                "reference": "f4c089feb1f4dd899e158d3cee2f88a82531dd3a",
                 "shasum": ""
             },
             "require": {
@@ -2963,11 +2963,11 @@
                 "doctrine/inflector": "^1.0 || ^2.0",
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^6.0 || ^7.0",
-                "php": "^7.4 || ^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
-                "phpspec/phpspec": "^6.0 || ^7.0",
-                "squizlabs/php_codesniffer": "^3.0"
+                "phpspec/phpspec": "^7.5 || ^8.0",
+                "squizlabs/php_codesniffer": "^4.0"
             },
             "type": "library",
             "extra": {
@@ -2999,9 +2999,9 @@
             ],
             "support": {
                 "issues": "https://github.com/KnpLabs/packagist-api/issues",
-                "source": "https://github.com/KnpLabs/packagist-api/tree/v2.1.4"
+                "source": "https://github.com/KnpLabs/packagist-api/tree/v2.2.0"
             },
-            "time": "2025-05-20T10:33:28+00:00"
+            "time": "2026-08-15T21:04:00+00:00"
         },
         {
             "name": "knpuniversity/oauth2-client-bundle",
@@ -5904,16 +5904,16 @@
         },
         {
             "name": "survos/data-contracts",
-            "version": "2.19.6",
+            "version": "2.24.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/data-contracts.git",
-                "reference": "47fd87f111a232e48251c355bcdda47dfe179e52"
+                "reference": "e16459fb7e7b5768be80b355e22c8e846d7c22d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/data-contracts/zipball/47fd87f111a232e48251c355bcdda47dfe179e52",
-                "reference": "47fd87f111a232e48251c355bcdda47dfe179e52",
+                "url": "https://api.github.com/repos/survos/data-contracts/zipball/e16459fb7e7b5768be80b355e22c8e846d7c22d4",
+                "reference": "e16459fb7e7b5768be80b355e22c8e846d7c22d4",
                 "shasum": ""
             },
             "require": {
@@ -5939,7 +5939,7 @@
             "description": "Shared data vocabularies, content metadata, and item DTO contracts for Survos data/media/import packages.",
             "support": {
                 "issues": "https://github.com/survos/data-contracts/issues",
-                "source": "https://github.com/survos/data-contracts/tree/2.19.6"
+                "source": "https://github.com/survos/data-contracts/tree/2.24.10"
             },
             "funding": [
                 {
@@ -5947,7 +5947,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-12T14:13:39+00:00"
+            "time": "2026-08-17T10:20:20+00:00"
         },
         {
             "name": "survos/debug-utils",
@@ -6002,16 +6002,16 @@
         },
         {
             "name": "survos/elastic-bundle",
-            "version": "2.24.5",
+            "version": "2.24.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/elastic-bundle.git",
-                "reference": "5235a71dbeb1e0037407ddc6a9cab5cf0bb2dc86"
+                "reference": "c82b322057578d23b63df7654a79381c361491a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/elastic-bundle/zipball/5235a71dbeb1e0037407ddc6a9cab5cf0bb2dc86",
-                "reference": "5235a71dbeb1e0037407ddc6a9cab5cf0bb2dc86",
+                "url": "https://api.github.com/repos/survos/elastic-bundle/zipball/c82b322057578d23b63df7654a79381c361491a2",
+                "reference": "c82b322057578d23b63df7654a79381c361491a2",
                 "shasum": ""
             },
             "require": {
@@ -6022,17 +6022,20 @@
                 "survos/search-bundle": "^2.24",
                 "symfony/console": "^8.1",
                 "symfony/dependency-injection": "^8.1",
-                "symfony/framework-bundle": "^8.1"
+                "symfony/framework-bundle": "^8.1",
+                "symfony/routing": "^8.1"
             },
             "require-dev": {
                 "doctrine/orm": "^3.4",
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^13.0",
-                "survos/jsonl-bundle": "^2.6"
+                "survos/jsonl-bundle": "^2.6",
+                "survos/tabler-bundle": "^2.24"
             },
             "suggest": {
                 "doctrine/orm": "For the postFlush spool listener that records changed entity ids.",
                 "survos/jsonl-bundle": "For JSONL spool files (shared with survos/meili-bundle's spooler).",
+                "survos/tabler-bundle": "For the Elastic dropdown in the admin navbar and the Tabler-styled index/schema pages.",
                 "symfony/messenger": "To flush the spool asynchronously instead of via elastic:spool:flush."
             },
             "type": "symfony-bundle",
@@ -6053,7 +6056,7 @@
             "description": "Elasticsearch index lifecycle for Symfony: create/populate/status, and Doctrine change spooling. The query and faceted-UI half lives in survos/search-bundle.",
             "support": {
                 "issues": "https://github.com/survos/elastic-bundle/issues",
-                "source": "https://github.com/survos/elastic-bundle/tree/2.24.5"
+                "source": "https://github.com/survos/elastic-bundle/tree/2.24.9"
             },
             "funding": [
                 {
@@ -6061,7 +6064,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T03:37:38+00:00"
+            "time": "2026-08-16T19:11:30+00:00"
         },
         {
             "name": "survos/ez-bundle",
@@ -6126,16 +6129,16 @@
         },
         {
             "name": "survos/field-bundle",
-            "version": "2.18.18",
+            "version": "2.24.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/field-bundle.git",
-                "reference": "157c3e12530ff183190ff7c3083cd45f929fd634"
+                "reference": "6f02daa514c49701e47c1a17fd691e397a588da4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/field-bundle/zipball/157c3e12530ff183190ff7c3083cd45f929fd634",
-                "reference": "157c3e12530ff183190ff7c3083cd45f929fd634",
+                "url": "https://api.github.com/repos/survos/field-bundle/zipball/6f02daa514c49701e47c1a17fd691e397a588da4",
+                "reference": "6f02daa514c49701e47c1a17fd691e397a588da4",
                 "shasum": ""
             },
             "require": {
@@ -6186,7 +6189,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/field-bundle/issues",
-                "source": "https://github.com/survos/field-bundle/tree/2.18.18"
+                "source": "https://github.com/survos/field-bundle/tree/2.24.6"
             },
             "funding": [
                 {
@@ -6194,7 +6197,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-06T12:45:37+00:00"
+            "time": "2026-08-16T10:21:06+00:00"
         },
         {
             "name": "survos/js-twig-bundle",
@@ -6319,16 +6322,16 @@
         },
         {
             "name": "survos/kit-bundle",
-            "version": "2.17.0",
+            "version": "2.24.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/kit-bundle.git",
-                "reference": "ebf2f745b2e591c0f673bcd9edaebb918e3e8c00"
+                "reference": "e27bc177594a7bd23b3a969343a17f2389b6d05b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/ebf2f745b2e591c0f673bcd9edaebb918e3e8c00",
-                "reference": "ebf2f745b2e591c0f673bcd9edaebb918e3e8c00",
+                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/e27bc177594a7bd23b3a969343a17f2389b6d05b",
+                "reference": "e27bc177594a7bd23b3a969343a17f2389b6d05b",
                 "shasum": ""
             },
             "require": {
@@ -6366,7 +6369,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/kit-bundle/issues",
-                "source": "https://github.com/survos/kit-bundle/tree/2.17.0"
+                "source": "https://github.com/survos/kit-bundle/tree/2.24.8"
             },
             "funding": [
                 {
@@ -6374,20 +6377,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-23T11:04:17+00:00"
+            "time": "2026-08-16T18:53:26+00:00"
         },
         {
             "name": "survos/lingua-contracts",
-            "version": "2.10.19",
+            "version": "2.24.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/lingua-contracts.git",
-                "reference": "1eb696d760847ff93d1d36d2b1ba480e31166581"
+                "reference": "107ad8038dda23261035eac6ffe29272f5458303"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/lingua-contracts/zipball/1eb696d760847ff93d1d36d2b1ba480e31166581",
-                "reference": "1eb696d760847ff93d1d36d2b1ba480e31166581",
+                "url": "https://api.github.com/repos/survos/lingua-contracts/zipball/107ad8038dda23261035eac6ffe29272f5458303",
+                "reference": "107ad8038dda23261035eac6ffe29272f5458303",
                 "shasum": ""
             },
             "require": {
@@ -6410,7 +6413,7 @@
             "description": "Shared DTOs and API surface (routes/headers) for Survos Lingua client/server interoperability.",
             "support": {
                 "issues": "https://github.com/survos/lingua-contracts/issues",
-                "source": "https://github.com/survos/lingua-contracts/tree/2.10.19"
+                "source": "https://github.com/survos/lingua-contracts/tree/2.24.8"
             },
             "funding": [
                 {
@@ -6418,7 +6421,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-09T21:17:06+00:00"
+            "time": "2026-08-16T18:53:15+00:00"
         },
         {
             "name": "survos/lingua-core",
@@ -6467,16 +6470,16 @@
         },
         {
             "name": "survos/meili-bundle",
-            "version": "2.19.6",
+            "version": "2.24.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/meili-bundle.git",
-                "reference": "55cb92f18c04b9fe7bc778fc31200397e98470b8"
+                "reference": "562c776db9a9dffce07124f8011d09518df7f3fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/55cb92f18c04b9fe7bc778fc31200397e98470b8",
-                "reference": "55cb92f18c04b9fe7bc778fc31200397e98470b8",
+                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/562c776db9a9dffce07124f8011d09518df7f3fd",
+                "reference": "562c776db9a9dffce07124f8011d09518df7f3fd",
                 "shasum": ""
             },
             "require": {
@@ -6548,7 +6551,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/2.19.6"
+                "source": "https://github.com/survos/meili-bundle/tree/2.24.7"
             },
             "funding": [
                 {
@@ -6556,7 +6559,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-12T19:33:54+00:00"
+            "time": "2026-08-16T12:06:28+00:00"
         },
         {
             "name": "survos/schema-org-bundle",
@@ -6625,16 +6628,16 @@
         },
         {
             "name": "survos/search-bundle",
-            "version": "2.24.4",
+            "version": "2.24.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/search-bundle.git",
-                "reference": "a55cc45048054b98b6a11c4254e6eb55864b59c4"
+                "reference": "4cc31ceadf3d4538115dca6d5571ef8c85241ea8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/search-bundle/zipball/a55cc45048054b98b6a11c4254e6eb55864b59c4",
-                "reference": "a55cc45048054b98b6a11c4254e6eb55864b59c4",
+                "url": "https://api.github.com/repos/survos/search-bundle/zipball/4cc31ceadf3d4538115dca6d5571ef8c85241ea8",
+                "reference": "4cc31ceadf3d4538115dca6d5571ef8c85241ea8",
                 "shasum": ""
             },
             "require": {
@@ -6701,9 +6704,18 @@
                 "MIT"
             ],
             "description": "First-party Symfony search kernel and faceted UX with field-driven Doctrine, Meilisearch, Algolia, SQLite FTS5, PostgreSQL BM25, and Elasticsearch adapters.",
+            "keywords": [
+                "elasticsearch",
+                "facets",
+                "meilisearch",
+                "search",
+                "symfony",
+                "symfony-ux",
+                "ux"
+            ],
             "support": {
                 "issues": "https://github.com/survos/search-bundle/issues",
-                "source": "https://github.com/survos/search-bundle/tree/2.24.4"
+                "source": "https://github.com/survos/search-bundle/tree/2.24.9"
             },
             "funding": [
                 {
@@ -6711,7 +6723,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-15T21:44:07+00:00"
+            "time": "2026-08-16T19:09:49+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
@@ -6791,16 +6803,16 @@
         },
         {
             "name": "survos/state-bundle",
-            "version": "2.18.19",
+            "version": "2.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/state-bundle.git",
-                "reference": "d6fd9a09d310f7583d01afd04ee68a00101627e9"
+                "reference": "bdc3f8e91364b41aa33c29b994ed823abc5f0a8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/state-bundle/zipball/d6fd9a09d310f7583d01afd04ee68a00101627e9",
-                "reference": "d6fd9a09d310f7583d01afd04ee68a00101627e9",
+                "url": "https://api.github.com/repos/survos/state-bundle/zipball/bdc3f8e91364b41aa33c29b994ed823abc5f0a8d",
+                "reference": "bdc3f8e91364b41aa33c29b994ed823abc5f0a8d",
                 "shasum": ""
             },
             "require": {
@@ -6866,7 +6878,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/state-bundle/issues",
-                "source": "https://github.com/survos/state-bundle/tree/2.18.19"
+                "source": "https://github.com/survos/state-bundle/tree/2.23.1"
             },
             "funding": [
                 {
@@ -6874,20 +6886,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-07T10:39:08+00:00"
+            "time": "2026-08-14T14:19:20+00:00"
         },
         {
             "name": "survos/tabler-bundle",
-            "version": "2.19.2",
+            "version": "2.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/tabler-bundle.git",
-                "reference": "197246bd73382e40982e2121597b5ebff7c061c5"
+                "reference": "88009357c3fd0d6c2921689793bf6c5a56954133"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/197246bd73382e40982e2121597b5ebff7c061c5",
-                "reference": "197246bd73382e40982e2121597b5ebff7c061c5",
+                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/88009357c3fd0d6c2921689793bf6c5a56954133",
+                "reference": "88009357c3fd0d6c2921689793bf6c5a56954133",
                 "shasum": ""
             },
             "require": {
@@ -6970,7 +6982,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/tabler-bundle/issues",
-                "source": "https://github.com/survos/tabler-bundle/tree/2.19.2"
+                "source": "https://github.com/survos/tabler-bundle/tree/2.24.0"
             },
             "funding": [
                 {
@@ -6978,7 +6990,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-09T15:59:27+00:00"
+            "time": "2026-08-15T11:41:45+00:00"
         },
         {
             "name": "symfony/amqp-messenger",
@@ -15689,16 +15701,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "14.3.0",
+            "version": "14.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "060a5c93e81afb01e97dbe8930a5d0c9bd46e54e"
+                "reference": "6ce313bb110384148d1dc7695a99175f59529069"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/060a5c93e81afb01e97dbe8930a5d0c9bd46e54e",
-                "reference": "060a5c93e81afb01e97dbe8930a5d0c9bd46e54e",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6ce313bb110384148d1dc7695a99175f59529069",
+                "reference": "6ce313bb110384148d1dc7695a99175f59529069",
                 "shasum": ""
             },
             "require": {
@@ -15717,7 +15729,7 @@
                 "theseer/tokenizer": "^2.0.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^13.3"
+                "phpunit/phpunit": "^13.3.1"
             },
             "suggest": {
                 "ext-pcov": "PHP extension that provides line coverage",
@@ -15755,7 +15767,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.3.0"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.3.1"
             },
             "funding": [
                 {
@@ -15775,7 +15787,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-07T07:24:15+00:00"
+            "time": "2026-08-16T05:23:47+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -16072,16 +16084,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.3.0",
+            "version": "13.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "346fcba6ce7ab89bb1b0675feac6bc29c0f7711b"
+                "reference": "fc024931d6ad047404e9d86536735923fe63a06b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/346fcba6ce7ab89bb1b0675feac6bc29c0f7711b",
-                "reference": "346fcba6ce7ab89bb1b0675feac6bc29c0f7711b",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fc024931d6ad047404e9d86536735923fe63a06b",
+                "reference": "fc024931d6ad047404e9d86536735923fe63a06b",
                 "shasum": ""
             },
             "require": {
@@ -16091,12 +16103,12 @@
                 "ext-libxml": "*",
                 "ext-mbstring": "*",
                 "ext-xmlwriter": "*",
-                "myclabs/deep-copy": "^1.13.4",
+                "myclabs/deep-copy": "^1.14.0",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.4.1",
                 "phpunit/php-code-coverage": "^14.3",
-                "phpunit/php-file-iterator": "^7.0.0",
+                "phpunit/php-file-iterator": "^7.0.1",
                 "phpunit/php-invoker": "^7.0.0",
                 "phpunit/php-text-template": "^6.0.0",
                 "phpunit/php-timer": "^9.0.0",
@@ -16108,9 +16120,9 @@
                 "sebastian/file-filter": "^1.0",
                 "sebastian/git-state": "^1.0",
                 "sebastian/global-state": "^9.0.1",
-                "sebastian/object-enumerator": "^8.0.0",
+                "sebastian/object-enumerator": "^8.1.0",
                 "sebastian/recursion-context": "^8.0.1",
-                "sebastian/type": "^7.0.1",
+                "sebastian/type": "^7.0.2",
                 "sebastian/version": "^7.0.0",
                 "staabm/side-effects-detector": "^1.0.5"
             },
@@ -16152,7 +16164,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.3.0"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.3.1"
             },
             "funding": [
                 {
@@ -16160,7 +16172,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-08-07T07:37:01+00:00"
+            "time": "2026-08-13T13:14:23+00:00"
         },
         {
             "name": "react/cache",
@@ -16895,12 +16907,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "35f5b660a49b3f1b49a103ba69167f3145f0b9b8"
+                "reference": "52fa31ed9e3b6f830bec2e0443041750d2bd73e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/35f5b660a49b3f1b49a103ba69167f3145f0b9b8",
-                "reference": "35f5b660a49b3f1b49a103ba69167f3145f0b9b8",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/52fa31ed9e3b6f830bec2e0443041750d2bd73e1",
+                "reference": "52fa31ed9e3b6f830bec2e0443041750d2bd73e1",
                 "shasum": ""
             },
             "conflict": {
@@ -17005,7 +17017,7 @@
                 "bytefury/crater": "<6.0.2",
                 "cachethq/cachet": "<2.5.1",
                 "cadmium-org/cadmium-cms": "<=0.4.9",
-                "cakephp/authentication": "<3.3.6|>=4,<4.1.1",
+                "cakephp/authentication": "<2.11.1|>=3,<3.3.6|>=4,<4.1.1",
                 "cakephp/cakephp": "<4.5.11|>=4.6,<4.6.4|>=5,<5.1.7|>=5.2,<5.2.13|>=5.3,<5.3.6",
                 "cakephp/database": ">=4.2,<4.2.12|>=4.3,<4.3.11|>=4.4,<4.4.10",
                 "cardgate/magento2": "<2.0.33",
@@ -17407,6 +17419,7 @@
                 "mautic/grapes-js-builder-bundle": ">=4,<4.4.18|>=5,<5.2.9|>=6,<6.0.7",
                 "maximebf/debugbar": "<1.19",
                 "mckenziearts/livewire-markdown-editor": "<1.3",
+                "mcp/sdk": ">=0.5,<0.7.1",
                 "mdanter/ecc": "<2",
                 "mediawiki/abuse-filter": "<1.39.9|>=1.40,<1.41.3|>=1.42,<1.42.2",
                 "mediawiki/cargo": "<3.8.3",
@@ -17567,10 +17580,11 @@
                 "pimcore/demo": "<10.3",
                 "pimcore/ecommerce-framework-bundle": "<1.0.10",
                 "pimcore/perspective-editor": "<1.5.1",
-                "pimcore/pimcore": "<=12.3.8|>=2026.1,<2026.1.3",
+                "pimcore/pimcore": "<12.3.9|>=2026.1,<=2026.1.4",
                 "pimcore/web2print-tools-bundle": "<=5.2.1|>=6.0.0.0-RC1-dev,<=6.1",
                 "piwik/piwik": "<1.11",
                 "pixelfed/pixelfed": "<0.12.5",
+                "plank/laravel-mediable": "<7",
                 "plotly/plotly.js": "<2.25.2",
                 "pocketmine/bedrock-protocol": "<8.0.2",
                 "pocketmine/pocketmine-mp": "<5.42.1",
@@ -17828,7 +17842,7 @@
                 "typo3/cms-backend": "<10.4.57|>=11,<11.5.51|>=12,<12.4.46|>=13,<13.4.31|>=14,<14.3.3",
                 "typo3/cms-belog": ">=10,<=10.4.47|>=11,<=11.5.41|>=12,<=12.4.24|>=13,<=13.4.2",
                 "typo3/cms-beuser": ">=9,<9.5.55|>=10,<10.4.54|>=11,<11.5.48|>=12,<12.4.37|>=13,<13.4.18",
-                "typo3/cms-core": "<10.4.57|>=11,<11.5.51|>=12,<12.4.46|>=13,<13.4.31|>=14,<14.3.3",
+                "typo3/cms-core": "<10.4.57|>=11,<11.5.51|>=12,<12.4.46|>=13,<13.4.34|>=14,<14.3.6",
                 "typo3/cms-dashboard": ">=10,<10.4.54|>=11,<11.5.48|>=12,<12.4.37|>=13,<13.4.18",
                 "typo3/cms-extbase": "<6.2.24|>=7,<7.6.8|==8.1.1",
                 "typo3/cms-extensionmanager": ">=10,<=10.4.47|>=11,<=11.5.41|>=12,<=12.4.24|>=13,<=13.4.2",
@@ -18014,7 +18028,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-12T19:14:50+00:00"
+            "time": "2026-08-14T18:52:44+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -18776,30 +18790,29 @@
         },
         {
             "name": "sebastian/object-enumerator",
-            "version": "8.0.0",
+            "version": "8.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/object-enumerator.git",
-                "reference": "b39ab125fd9a7434b0ecbc4202eebce11a98cfc5"
+                "reference": "511064ecde82bd747e2ba2fab3dda8d977b59576"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/object-enumerator/zipball/b39ab125fd9a7434b0ecbc4202eebce11a98cfc5",
-                "reference": "b39ab125fd9a7434b0ecbc4202eebce11a98cfc5",
+                "url": "https://api.github.com/repos/sebastianbergmann/object-enumerator/zipball/511064ecde82bd747e2ba2fab3dda8d977b59576",
+                "reference": "511064ecde82bd747e2ba2fab3dda8d977b59576",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.4",
-                "sebastian/object-reflector": "^6.0",
-                "sebastian/recursion-context": "^8.0"
+                "sebastian/recursion-context": "^8.0.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^13.0"
+                "phpunit/phpunit": "^13.3.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "8.0-dev"
+                    "dev-main": "8.1-dev"
                 }
             },
             "autoload": {
@@ -18822,7 +18835,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/object-enumerator/issues",
                 "security": "https://github.com/sebastianbergmann/object-enumerator/security/policy",
-                "source": "https://github.com/sebastianbergmann/object-enumerator/tree/8.0.0"
+                "source": "https://github.com/sebastianbergmann/object-enumerator/tree/8.1.0"
             },
             "funding": [
                 {
@@ -18842,27 +18855,27 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-06T04:46:36+00:00"
+            "time": "2026-08-13T07:05:05+00:00"
         },
         {
             "name": "sebastian/object-reflector",
-            "version": "6.0.0",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/object-reflector.git",
-                "reference": "3ca042c2c60b0eab094f8a1b6a7093f4d4c72200"
+                "reference": "f71bbcdc4f95456b4622810bec64eb06372e25b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/object-reflector/zipball/3ca042c2c60b0eab094f8a1b6a7093f4d4c72200",
-                "reference": "3ca042c2c60b0eab094f8a1b6a7093f4d4c72200",
+                "url": "https://api.github.com/repos/sebastianbergmann/object-reflector/zipball/f71bbcdc4f95456b4622810bec64eb06372e25b2",
+                "reference": "f71bbcdc4f95456b4622810bec64eb06372e25b2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^13.0"
+                "phpunit/phpunit": "^13.3.0"
             },
             "type": "library",
             "extra": {
@@ -18890,7 +18903,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/object-reflector/issues",
                 "security": "https://github.com/sebastianbergmann/object-reflector/security/policy",
-                "source": "https://github.com/sebastianbergmann/object-reflector/tree/6.0.0"
+                "source": "https://github.com/sebastianbergmann/object-reflector/tree/6.1.0"
             },
             "funding": [
                 {
@@ -18910,7 +18923,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-06T04:47:13+00:00"
+            "time": "2026-08-13T06:34:36+00:00"
         },
         {
             "name": "sebastian/recursion-context",
