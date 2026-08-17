@@ -10,3 +10,26 @@ survos_state:
     # of Doctrine's shared-table + queue_name trick.
     queue_driver: rabbitmq
     async_transport_dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+
+# Local dev runs the same transports on Doctrine instead. Both drivers are
+# supported by state-bundle's StatePrependExtension -- the driver only decides
+# how the per-transition transports are built: doctrine shares one physical
+# table filtered by queue_name, rabbitmq creates a queue per transition via the
+# dsn/vhost/exchange convention.
+#
+# Doctrine locally means every pending transition is one row you can select,
+# and zenstruck/messenger-monitor at /admin/messenger can list and retry them.
+# Under RabbitMQ the same messages are invisible to both -- which is exactly how
+# a kickoff that WAS working looked like one that wasn't (2026-08-17: counted
+# messenger_messages rows for an AMQP transport and read the flat count as
+# "nothing dispatched").
+#
+# when@dev rather than an env var: queue_driver is an EnumNode, so a
+# '%env(...)%' placeholder fails validation before it can ever be resolved
+# ("The value "" is not allowed ... Permissible values: doctrine, rabbitmq").
+# async_transport_dsn below IS env-driven, because that one is passed through
+# as an opaque DSN string and resolved later.
+when@dev:
+    survos_state:
+        queue_driver: doctrine
+        async_transport_dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'

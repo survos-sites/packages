@@ -17,7 +17,20 @@ class BundleWorkflowInterface
 
     #[Place(initial: true,
         description: "load from " . LoadDataCommand::BASE_URL,
-        info: "basic from app:load")]
+        info: "basic from app:load",
+        // Start the machine on persist. state-bundle's InitialPlaceKickoffListener
+        // dispatches the first of these whose guard passes when a Package row is
+        // created, so `state:iterate Package --marking=new --transition=load` is
+        // no longer something anyone has to remember — it was in castor.php,
+        // README.md and bin/load-database.sh, three copies of a step the flow
+        // already knew about. Every later place already chains via its own
+        // `next`; `new` was the only one without a starter.
+        //
+        // TRANSITION_ABANDON is deliberately not listed: its guard reads
+        // subject.abandoned, which Package does not have — LoadDataCommand tests
+        // that on the Packagist API response and simply skips those, so no
+        // abandoned row is ever created.
+        next: [self::TRANSITION_LOAD])]
     final public const PLACE_NEW = 'new';
     #[Place(info: "composer.json", description: "Loaded from /packages/%s.json on " . LoadDataCommand::BASE_URL,
         next: [self::TRANSITION_PHP_OKAY, self::TRANSITION_PHP_TOO_OLD]
