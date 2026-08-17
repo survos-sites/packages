@@ -5,7 +5,7 @@
         "php",
         "symfony"
     ],
-    "repository": "https:\/\/github.com\/survos-sites\/packages",
+    "repository": "https://github.com/survos-sites/packages",
     "scripts": {
         "dokku": {
             "predeploy": "sh -c 'bin/console mess:stop && bin/console d:m:m -n --allow-no-migration'",
@@ -21,12 +21,12 @@
         "web": [
             {
                 "type": "startup",
-                "name": "Bundle browser responds",
-                "path": "/packages",
-                "attempts": 6,
-                "initialDelay": 5,
-                "wait": 5,
-                "timeout": 10
+                "name": "App boots and routes",
+                "path": "/health",
+                "attempts": 10,
+                "initialDelay": 2,
+                "wait": 2,
+                "timeout": 5
             }
         ]
     }

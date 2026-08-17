@@ -3,8 +3,18 @@
 # actually run -- not the old herokuish/nginx+fpm command.
 web: frankenphp run --config /etc/caddy/Caddyfile
 # Always-on workers, replacing the old app.json `cron` entries (a live consumer
-# beats polling every 2-5min). Enable on prod with:
+# beats polling every 2-5min). Declared here, but SCALED OUTSIDE THE DEPLOY:
 #   dokku ps:scale <app> meili=1 elastic=1 bundle-load=1   |   logs: dokku logs <app> -p meili -t
+#
+# Scaling outside the deploy is deliberate. Dokku healthchecks every scaled process
+# type, and these have no healthcheck of their own, so they are judged on "did the
+# container stay up" -- which a messenger:consume against an unreachable transport
+# does not. Scaled during the deploy, a broken RabbitMQ would fail the release of a
+# web app that was perfectly healthy. Scaled outside it, the same breakage degrades
+# background processing and leaves deploys alone. They restart on their own after a
+# deploy (restart policy on-failure:10), which is why the app.json predeploy runs
+# `mess:stop`: it retires the running consumers so they pick up the new release
+# instead of holding the old code.
 # The elastic worker drains ReindexDocuments/RemoveDocuments from the postFlush
 # listener. Without it those messages queue forever and the index silently drifts
 # from the database -- searches keep working, they just return stale documents.
