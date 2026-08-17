@@ -11,10 +11,17 @@ web: frankenphp run --config /etc/caddy/Caddyfile
 # container stay up" -- which a messenger:consume against an unreachable transport
 # does not. Scaled during the deploy, a broken RabbitMQ would fail the release of a
 # web app that was perfectly healthy. Scaled outside it, the same breakage degrades
-# background processing and leaves deploys alone. They restart on their own after a
-# deploy (restart policy on-failure:10), which is why the app.json predeploy runs
-# `mess:stop`: it retires the running consumers so they pick up the new release
-# instead of holding the old code.
+# background processing and leaves deploys alone. The app.json predeploy runs
+# `mess:stop` so the running consumers retire and pick up the new release instead of
+# holding the old code.
+#
+# WARNING -- these need `dokku ps:set <app> restart-policy unless-stopped`.
+# `messenger:consume --time-limit` exits 0 when the limit is reached (verified: it
+# returns Command::SUCCESS, not a failure), and docker's `on-failure` policy -- the
+# dokku default, and what this app is currently set to -- does NOT restart a
+# container that exited 0. So under on-failure every worker here dies for good one
+# hour after deploy and never returns. zm and ssai are both in that state right now:
+# every consumer `exited`, only web running, queues silently growing.
 # The elastic worker drains ReindexDocuments/RemoveDocuments from the postFlush
 # listener. Without it those messages queue forever and the index silently drifts
 # from the database -- searches keep working, they just return stale documents.
