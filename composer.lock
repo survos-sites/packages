@@ -6890,16 +6890,16 @@
         },
         {
             "name": "survos/tabler-bundle",
-            "version": "2.24.0",
+            "version": "2.24.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/tabler-bundle.git",
-                "reference": "88009357c3fd0d6c2921689793bf6c5a56954133"
+                "reference": "26cdd7bf3266da9e5600398c17dbb1bbbe27263d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/88009357c3fd0d6c2921689793bf6c5a56954133",
-                "reference": "88009357c3fd0d6c2921689793bf6c5a56954133",
+                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/26cdd7bf3266da9e5600398c17dbb1bbbe27263d",
+                "reference": "26cdd7bf3266da9e5600398c17dbb1bbbe27263d",
                 "shasum": ""
             },
             "require": {
@@ -6982,7 +6982,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/tabler-bundle/issues",
-                "source": "https://github.com/survos/tabler-bundle/tree/2.24.0"
+                "source": "https://github.com/survos/tabler-bundle/tree/2.24.14"
             },
             "funding": [
                 {
@@ -6990,7 +6990,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-15T11:41:45+00:00"
+            "time": "2026-08-17T13:22:17+00:00"
         },
         {
             "name": "symfony/amqp-messenger",
