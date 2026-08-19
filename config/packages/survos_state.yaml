@@ -9,7 +9,7 @@ survos_state:
     # via jwage/phpamqplib-messenger's "dsn/vhost/exchange" convention instead
     # of Doctrine's shared-table + queue_name trick.
     queue_driver: rabbitmq
-    async_transport_dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+    async_transport_dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%'
 
 # Local dev runs the same transports on Doctrine instead. Both drivers are
 # supported by state-bundle's StatePrependExtension -- the driver only decides
@@ -29,7 +29,12 @@ survos_state:
 # ("The value "" is not allowed ... Permissible values: doctrine, rabbitmq").
 # async_transport_dsn below IS env-driven, because that one is passed through
 # as an opaque DSN string and resolved later.
-when@dev:
-    survos_state:
-        queue_driver: doctrine
-        async_transport_dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
+# DEV RUNS ON RABBIT TOO, deliberately -- same reasoning as running Postgres rather than
+# SQLite locally: the broker is what production uses, so it is what dev should exercise. The
+# Doctrine fallback is what you opt INTO for a debugging session. Re-add if you need
+# inspectable rows:
+#
+#   when@dev:
+#       survos_state:
+#           queue_driver: doctrine
+#           async_transport_dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
