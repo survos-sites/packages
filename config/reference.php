@@ -2074,7 +2074,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     production_url_base?: scalar|Param|null, // Default: null
  *     user_provider?: scalar|Param|null, // Default: null
  *     user_class?: scalar|Param|null, // Default: "App\\Entity\\User"
- *     dev_auto_login?: scalar|Param|null, // User identifier (usually an email) to auto-authenticate as. Registers DevAutoLoginAuthenticator, which must then be listed in a when@dev firewall's custom_authenticators. Ignored entirely outside debug mode — there is no production code path. Point it at an env var so it can be switched off without editing security.yaml. // Default: null
  * }
  * @psalm-type InspectorConfig = array{
  *     enabled?: bool|Param, // Default: true
@@ -2226,12 +2225,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     workflow_paths?: list<scalar|Param|null>,
  *     async_transport_dsn?: scalar|Param|null, // Default: "doctrine://default"
  *     queue_driver?: "doctrine"|"rabbitmq"|Param, // Default: "doctrine"
- *     retry_strategy?: array{
- *         max_retries?: int|Param, // Default: 3
- *         delay?: int|Param, // Default: 1000
- *         multiplier?: float|Param, // Default: 2
- *         max_delay?: int|Param, // Default: 0
- *     },
  * }
  * @psalm-type ZenstruckMessengerMonitorConfig = array{
  *     storage?: array{
