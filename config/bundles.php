@@ -33,10 +33,8 @@ return [
     Survos\JsTwigBundle\SurvosJsTwigBundle::class => ['all' => true],
     FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true],
     Survos\CodeBundle\SurvosCodeBundle::class => ['dev' => true, 'test' => true],
-    Survos\MeiliBundle\SurvosMeiliBundle::class => ['all' => true],
     Survos\StateBundle\SurvosStateBundle::class => ['all' => true],
     Zenstruck\Messenger\Monitor\ZenstruckMessengerMonitorBundle::class => ['all' => true],
-    Survos\JsonlBundle\SurvosJsonlBundle::class => ['all' => true],
     Symfony\UX\Chartjs\ChartjsBundle::class => ['all' => true],
     Survos\EzBundle\SurvosEzBundle::class => ['all' => true],
     Survos\Kit\SurvosKitBundle::class => ['all' => true],
@@ -49,4 +47,6 @@ return [
     Survos\SearchBundle\SurvosSearchBundle::class => ['all' => true],
     Survos\ElasticBundle\SurvosElasticBundle::class => ['all' => true],
     Survos\SchemaOrgBundle\SurvosSchemaOrgBundle::class => ['all' => true],
+    Survos\JsonlBundle\SurvosJsonlBundle::class => ['all' => true],
+    Survos\TuiExtrasBundle\SurvosTuiExtrasBundle::class => ['dev' => true, 'test' => true],
 ];

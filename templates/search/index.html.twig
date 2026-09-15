@@ -1,20 +1,29 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Hello SearchController!{% endblock %}
-
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/tac/sites/packages/src/Controller/SearchController.php</code></li>
-        <li>Your template at <code>/home/tac/sites/packages/templates/search/index.html.twig</code></li>
-    </ul>
+{% block title %}Symfony bundles{% endblock %}
+{% block page_title %}Search{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('styles/search.css') }}">{% endblock %}
+{% block page_content %}
+{% set sc = survos_stimulus('search-bundle', 'instantsearch') %}
+<div class="pk-shell" {{ stimulus_controller(sc, {endpoint: path('survos_search_instant'), name: name, template: path('app_search_template'), sorts: sorts}) }}>
+    <header class="pk-heading">
+        <div>
+            <h1>Symfony bundles</h1>
+            <p>Bundles harvested from Packagist, filterable by the Symfony and PHP versions they support.</p>
+        </div>
+    </header>
+    <div class="pk-searchbox" {{ stimulus_target(sc, 'query') }}></div>
+    <div class="pk-error" hidden role="alert" {{ stimulus_target(sc, 'error') }}></div>
+    <div class="pk-workspace">
+        <aside class="pk-sidebar" aria-label="Search filters">
+            <div class="pk-filter-heading"><h2>Refine results</h2><div {{ stimulus_target(sc, 'clear') }}></div></div>
+            {% for field, label in facets %}<section class="pk-facet"><h3>{{ label }}</h3><div data-field="{{ field }}" data-label="{{ label }}" {{ stimulus_target(sc, 'facet') }}></div></section>{% endfor %}
+        </aside>
+        <main class="pk-results">
+            <div class="pk-toolbar"><div aria-live="polite" {{ stimulus_target(sc, 'stats') }}></div><div aria-label="Sort results" {{ stimulus_target(sc, 'sort') }}></div></div>
+            <div class="pk-current" {{ stimulus_target(sc, 'current') }}></div>
+            <div {{ stimulus_target(sc, 'hits') }}></div>
+            <div class="pk-pagination" {{ stimulus_target(sc, 'pagination') }}></div>
+        </main>
+    </div>
 </div>
 {% endblock %}

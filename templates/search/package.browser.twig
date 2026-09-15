@@ -1,0 +1,18 @@
+<article class="pk-card">
+    <div class="pk-card-body">
+        <div class="pk-vendor">{% if hit._highlightResult.vendor is defined %}{{ hit._highlightResult.vendor.value|raw }}{% else %}{{ hit.vendor|e }}{% endif %}/</div>
+        <h2>{% if hit._highlightResult.shortName is defined %}{{ hit._highlightResult.shortName.value|raw }}{% else %}{{ hit.shortName|e }}{% endif %}</h2>
+        <p>{% if hit._highlightResult.description is defined %}{{ hit._highlightResult.description.value|raw }}{% else %}{{ hit.description|default('')|e }}{% endif %}</p>
+        <div class="pk-tags">
+            {% for v in hit.symfonyVersions|default([]) %}<span class="pk-sf">Symfony {{ v|e }}</span>{% endfor %}
+            {% if hit.phpVersionString %}<span>PHP {{ hit.phpVersionString|e }}</span>{% endif %}
+        </div>
+    </div>
+    <footer class="pk-card-footer">
+        <span>{{ hit.marking|default('')|e }}{% if hit.stars %} · ★ {{ hit.stars|e }}{% endif %}{% if hit.downloads %} · {{ hit.downloads|e }} downloads{% endif %}</span>
+        <span>
+            {% if hit.repo %}<a href="{{ hit.repo|e }}" target="_blank" rel="noopener">Repo</a>{% endif %}
+            <a href="https://packagist.org/packages/{{ hit.name|e }}" target="_blank" rel="noopener">Packagist <span aria-hidden="true">↗</span></a>
+        </span>
+    </footer>
+</article>

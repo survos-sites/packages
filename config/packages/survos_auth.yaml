@@ -1,2 +1,4 @@
 survos_auth:
+  # No User entity or login here yet; its /auth routes would 500 ("No entity manager for App\Entity\User").
+  routes_enabled: false
   #  auth_menu: true

@@ -14,13 +14,10 @@ use App\Workflow\BundleWorkflow;
 use App\Workflow\BundleWorkflowInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Survos\MeiliBundle\Api\Filter\FacetsFieldSearchFilter;
 
 use Survos\FieldBundle\Attribute\EntityMeta;
 use Survos\CoreBundle\Entity\RouteParametersInterface;
 use Survos\CoreBundle\Entity\RouteParametersTrait;
-use Survos\MeiliBundle\Metadata\Facet;
-use Survos\MeiliBundle\Metadata\MeiliIndex;
 use Survos\StateBundle\Traits\MarkingInterface;
 use Survos\SchemaOrgBundle\Attribute\SchemaOrg;
 use Survos\SchemaOrgBundle\Attribute\SchemaProperty;
@@ -37,28 +34,14 @@ use Symfony\Component\Serializer\Attribute\Groups;
     denormalizationContext: ['groups' => ['Default', 'minimum', 'browse']],
 )]
 
-//#[GetCollection(
-//    name: 'meili-packages',
-//    uriTemplate: 'meili/packages',
-//    provider: MeiliSearchStateProvider::class,
-//    normalizationContext: [
-//        'groups' => ['package.read', 'package.facets', 'browse', 'tree', 'marking'],
-//    ]
-//)]
 #[ApiFilter(OrderFilter::class, properties: self::SORTABLE, arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: [
-    'marking' => 'exact', // api platform, it's a facet in meili
+    'marking' => 'exact',
     'name' => 'partial',
     'description' => 'partial',
 ])]
 
-//#[ApiFilter(FacetsFieldSearchFilter::class, properties:
 
-#[MeiliIndex(
-    sortable: self::SORTABLE,
-    searchable: ['name','description'],
-    filterable: ['vendor', 'symfonyVersions', 'phpVersions', 'stars', 'keywords', 'marking']
-)]
 //#[ApiFilter(
 //    MultiFieldSearchFilter::class,
 //    properties: ['name', 'description'],

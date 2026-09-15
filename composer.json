@@ -31,7 +31,6 @@
         "jwage/phpamqplib-messenger": "dev-main@dev",
         "knplabs/knp-time-bundle": "^2.2",
         "knplabs/packagist-api": "^2.0|dev-master",
-        "meilisearch/meilisearch-php": "dev-main",
         "nadar/cebe-php-openapi": "^1.0",
         "nadar/php-composer-reader": "^2.0",
         "nelmio/cors-bundle": "^2.4",
@@ -47,7 +46,6 @@
         "survos/ez-bundle": "^2.0",
         "survos/js-twig-bundle": "^2.0",
         "survos/lingua-core": "^2.0",
-        "survos/meili-bundle": "^2.0",
         "survos/schema-org-bundle": "^2.24.13",
         "survos/search-bundle": "^2.24",
         "survos/simple-datatables-bundle": "^2.19",
@@ -169,7 +167,7 @@
             "php -d memory_limit=4048M bin/console workflow:iterate App\\\\Entity\\\\Package --marking=new --transition=load"
         ],
         "index": [
-            "php -d memory_limit=2048M bin/console meili:index --reset"
+            "php -d memory_limit=2048M bin/console elastic:index:rebuild app_package"
         ],
         "coverage": "php -d xpcov.enabled=1 vendor/bin/phpunit --coverage-html coverage"
     }

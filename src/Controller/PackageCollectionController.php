@@ -34,9 +34,6 @@ class PackageCollectionController extends AbstractController
         return $this->render('package/browse.html.twig', [
             'packageClass' => Package::class,
             'style' => $style,
-            // ApiGridComponent's meili DataTables mode was removed upstream
-            // (survos/api-grid-bundle) -- ux-search/Meilisearch integration
-            // for this page is deferred.
             'apiGetCollectionUrl' => $this->generateUrl('doctrine-packages'),
             'filter' => [],
 

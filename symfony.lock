@@ -247,13 +247,10 @@
         "version": "1.6.0"
     },
     "survos/jsonl-bundle": {
-        "version": "2.0.71"
+        "version": "2.10.19"
     },
     "survos/kit-bundle": {
         "version": "2.9.4"
-    },
-    "survos/meili-bundle": {
-        "version": "1.5.0"
     },
     "survos/schema-org-bundle": {
         "version": "2.24.12"
@@ -272,6 +269,9 @@
     },
     "survos/tabler-bundle": {
         "version": "2.7.23"
+    },
+    "survos/tui-extras-bundle": {
+        "version": "2.24.24"
     },
     "symfony/asset-mapper": {
         "version": "7.3",
@@ -358,7 +358,7 @@
         ]
     },
     "symfony/lock": {
-        "version": "8.0",
+        "version": "8.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",

@@ -3,6 +3,9 @@ survos_search:
     # at compile time to pick a code branch. (It used to be the latter, and an %env() here
     # silently produced a null DSN and fell back to Doctrine -- see survos/mono#41.)
     default_adapter: '%env(SEARCH_ADAPTER)%'
+    # Searches the browser may query through /instant-search (search-bundle).
+    public_searches: [app_package]
+    index_prefix: '%env(SEARCH_INDEX_PREFIX)%'
     adapters:
         # Elasticsearch. Handles Package's multi-valued facets (symfonyVersions,
         # phpVersions) natively -- it buckets each array element.

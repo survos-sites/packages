@@ -687,10 +687,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         signing_algorithm?: scalar|Param|null, // Default: "sha256"
  *         routing?: array<string, array{ // Default: []
  *             service?: scalar|Param|null,
- *             secret?: scalar|Param|null, // Default: ""
+ *             secret?: scalar|Param|null, // The secret used to verify incoming request signatures. It must be set in production: with an empty value, requests from any sender are accepted. // Default: ""
  *         }>,
  *     },
- *     remote-event?: bool|array{ // RemoteEvent configuration
+ *     remote_event?: bool|array{ // RemoteEvent configuration
  *         enabled?: bool|Param, // Default: false
  *     },
  *     json_streamer?: bool|array{ // JSON streamer configuration
@@ -1121,7 +1121,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             limiter?: scalar|Param|null, // A service id implementing "Symfony\Component\HttpFoundation\RateLimiter\RequestRateLimiterInterface".
  *             max_attempts?: int|Param, // Default: 5
  *             interval?: scalar|Param|null, // Default: "1 minute"
- *             lock_factory?: scalar|Param|null, // The service ID of the lock factory used by the login rate limiter (or null to disable locking). // Default: null
+ *             lock_factory?: scalar|Param|null, // The service ID of the lock factory used by the login rate limiter ("auto" to use the default one when the Lock component is configured, or null to disable locking). // Default: "auto"
  *             cache_pool?: string|Param, // The cache pool to use for storing the limiter state // Default: "cache.rate_limiter"
  *             storage_service?: string|Param, // The service ID of a custom storage implementation, this precedes any configured "cache_pool" // Default: null
  *         },
@@ -1311,9 +1311,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             lifetime?: int|Param, // Default: 31536000
  *             path?: scalar|Param|null, // Default: "/"
  *             domain?: scalar|Param|null, // Default: null
- *             secure?: true|false|"auto"|Param, // Default: false
+ *             secure?: true|false|"auto"|Param, // Default: "auto"
  *             httponly?: bool|Param, // Default: true
- *             samesite?: null|"lax"|"strict"|"none"|Param, // Default: null
+ *             samesite?: null|"lax"|"strict"|"none"|Param, // Default: "lax"
  *             always_remember_me?: bool|Param, // Default: false
  *             remember_me_parameter?: scalar|Param|null, // Default: "_remember_me"
  *         },
@@ -1750,6 +1750,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         policy?: mixed,
  *         middleware?: mixed,
  *         parameters?: array<string, array{ // Default: []
+ *             class?: scalar|Param|null, // The parameter class for a named global parameter entry.
  *             key?: mixed,
  *             schema?: mixed,
  *             open_api?: mixed,
@@ -1852,6 +1853,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         logo_small?: scalar|Param|null, // Default: null
  *         homepage_route?: scalar|Param|null, // Default: null
  *         homepage_url?: scalar|Param|null, // Default: null
+ *         tunnel_host?: scalar|Param|null, // Default: "%env(default::TUNNEL_HOST)%"
+ *         local_host?: scalar|Param|null, // Default: "%env(default::APP_BASE_URL)%"
  *         links?: array{
  *             github?: scalar|Param|null, // Default: null
  *             docs?: scalar|Param|null, // Default: null
@@ -2074,6 +2077,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     production_url_base?: scalar|Param|null, // Default: null
  *     user_provider?: scalar|Param|null, // Default: null
  *     user_class?: scalar|Param|null, // Default: "App\\Entity\\User"
+ *     dev_auto_login?: scalar|Param|null, // User identifier (usually an email) to auto-authenticate as. Registers DevAutoLoginAuthenticator, which must then be listed in a when@dev firewall's custom_authenticators. Ignored entirely outside debug mode — there is no production code path. Point it at an env var so it can be switched off without editing security.yaml. // Default: null
  * }
  * @psalm-type InspectorConfig = array{
  *     enabled?: bool|Param, // Default: true
@@ -2128,103 +2132,26 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SurvosCodeConfig = array{
  *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
  * }
- * @psalm-type SurvosMeiliConfig = array{
- *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
- *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/meili"
- *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
- *     core_name?: scalar|Param|null, // Default: "core"
- *     enabled?: bool|Param, // Default: true
- *     meiliUiUrl?: scalar|Param|null, // Base URL of the Meilisearch UI (riccox). Used to generate per-index links. Override via MEILI_UI_URL env var. // Default: "http://127.0.0.1:24900/ins/0"
- *     host?: scalar|Param|null, // Default: "%env(default::MEILI_SERVER)%"
- *     apiKey?: scalar|Param|null, // Default: "%env(default::MEILI_ADMIN_KEY)%"
- *     transport?: scalar|Param|null, // Default: "%env(default::MEILI_TRANSPORT)%"
- *     searchKey?: scalar|Param|null, // Default: "%env(default::MEILI_SEARCH_KEY)%"
- *     meiliPrefix?: scalar|Param|null, // Default: "%env(default::MEILI_PREFIX)%"
- *     translationStyle?: scalar|Param|null, // Default: "simple"
- *     passLocale?: bool|Param, // Default: false
- *     multiLingual?: bool|Param, // turn on multi-lingual indexing // Default: false
- *     maxValuesPerFacet?: int|Param, // Default: 1000
- *     tools?: list<array{ // Default: []
- *         label?: scalar|Param|null,
- *         url?: scalar|Param|null,
- *     }>,
- *     embedders?: array<string, array{ // Default: []
- *         source?: scalar|Param|null,
- *         model?: scalar|Param|null,
- *         apiKey?: scalar|Param|null, // Default: null
- *         for?: scalar|Param|null, // Default: null
- *         template?: scalar|Param|null, // Default: null
- *         documentTemplateMaxBytes?: int|Param, // Default: 4096
- *         maxTokensPerDoc?: int|Param, // Default: null
- *         examples?: list<scalar|Param|null>,
- *     }>,
- *     pricing?: array{
- *         embedders?: array<string, scalar|Param|null>,
- *     },
- *     meili_settings?: array{
- *         typoTolerance?: array{
- *             enabled?: bool|Param, // Default: true
- *             oneTypo?: int|Param, // Default: 5
- *             twoTypos?: int|Param, // Default: 9
- *             disableOnWords?: list<scalar|Param|null>,
- *             disableOnAttributes?: list<scalar|Param|null>,
- *             disableOnNumbers?: bool|Param, // Default: false
- *         },
- *         faceting?: array{
- *             maxValuesPerFacet?: int|Param, // Default: 1000
- *             sortFacetValuesBy?: array<string, scalar|Param|null>,
- *         },
- *         pagination?: array{
- *             maxTotalHits?: int|Param, // Default: 1000
- *         },
- *         facetSearch?: bool|Param, // Default: true
- *         prefixSearch?: scalar|Param|null, // Default: "indexingTime"
- *     },
- *     entity_dirs?: list<scalar|Param|null>,
- *     file_proxy?: array{
- *         enabled?: bool|Param, // Default: true
- *         allow_hidden?: bool|Param, // Default: false
- *         cache_control?: scalar|Param|null, // Default: "private, max-age=60"
- *         roots?: list<scalar|Param|null>,
- *     },
- *     chat?: array{
- *         workspaces?: array<string, array{ // Default: []
- *             source?: scalar|Param|null, // LLM provider: openAi | azureOpenAi | mistral | gemini | vLlm // Default: "openAi"
- *             apiKey?: scalar|Param|null, // Provider API key (use %env(OPENAI_API_KEY)%) // Default: null
- *             model?: scalar|Param|null, // Model sent in each completion request (not stored in workspace settings) // Default: "gpt-4o-mini"
- *             baseUrl?: scalar|Param|null, // Default: null
- *             orgId?: scalar|Param|null, // Default: null
- *             projectId?: scalar|Param|null, // Default: null
- *             apiVersion?: scalar|Param|null, // Default: null
- *             deploymentId?: scalar|Param|null, // Default: null
- *             label?: scalar|Param|null, // Human-readable label used in dynamic prompts (defaults to indexName) // Default: null
- *             curatorName?: scalar|Param|null, // Optional explicit curator display name for this workspace template // Default: null
- *             curatorNameByIndex?: list<scalar|Param|null>,
- *             detailUrlPattern?: scalar|Param|null, // URL pattern for item detail pages; use {id} as placeholder e.g. /product/{id} // Default: null
- *             schemaUrl?: scalar|Param|null, // Optional OpenAPI schema URL used to explain field meanings in collection overview responses // Default: null
- *             examples?: list<scalar|Param|null>,
- *             examplesByIndex?: list<list<scalar|Param|null>>,
- *             prompts?: array{ // Static prompt overrides — these win over dynamic template rendering
- *                 system?: scalar|Param|null, // Default: null
- *                 searchFilterParam?: scalar|Param|null, // Default: null
- *                 searchDescription?: scalar|Param|null, // Default: null
- *                 searchQParam?: scalar|Param|null, // Default: null
- *                 searchIndexUidParam?: scalar|Param|null, // Pin the index UID — prevents Meilisearch generating a full enum of all indexes, which blows the OpenAI context limit. // Default: null
- *             },
- *             indexes?: list<scalar|Param|null>,
- *         }>,
- *     },
- * }
  * @psalm-type SurvosStateConfig = array{
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/state"
  *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  *     queue_prefix?: scalar|Param|null, // Default: ""
  *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
- *     enable_dynamic_routing?: bool|Param, // Default: true
+ *     enable_dynamic_routing?: bool|Param, // Inert as of 2026-09-12: transition routing comes from AsyncQueueLocator::stamps() at the dispatch site, not from middleware. See SurvosStateBundle::loadExtension(). // Default: true
+ *     batch_size?: int|Param, // Default size for #[Transition(batch: true-ish)] groups; a transition's own batch: N wins // Default: 100
+ *     batch_idle_timeout?: int|Param, // Seconds of worker idleness after which a partial batch is flushed // Default: 5
+ *     batch_enabled?: bool|Param, // Off: #[Transition(batch: N)] transitions travel as plain TransitionMessages, one at a time, exactly as if unbatched. Env-able: '%env(bool:APP_BATCH)%' // Default: true
+ *     allow_force_place?: scalar|Param|null, // Default: "%kernel.debug%"
  *     workflow_paths?: list<scalar|Param|null>,
  *     async_transport_dsn?: scalar|Param|null, // Default: "doctrine://default"
  *     queue_driver?: "doctrine"|"rabbitmq"|Param, // Default: "doctrine"
+ *     retry_strategy?: array{
+ *         max_retries?: int|Param, // Default: 3
+ *         delay?: int|Param, // Default: 1000
+ *         multiplier?: float|Param, // Default: 2
+ *         max_delay?: int|Param, // Default: 0
+ *     },
  * }
  * @psalm-type ZenstruckMessengerMonitorConfig = array{
  *     storage?: array{
@@ -2240,6 +2167,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * }
  * @psalm-type SurvosEzConfig = array{
  *     enabled?: bool|Param, // Default: true
+ * }
+ * @psalm-type SurvosKitConfig = array{
+ *     webhook?: array{
+ *         http_client?: scalar|Param|null, // Default: null
+ *         transports?: list<scalar|Param|null>,
+ *     },
  * }
  * @psalm-type SurvosFieldConfig = array{
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
@@ -2283,6 +2216,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
  *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  *     default_adapter?: scalar|Param|null, // Default: "default"
+ *     public_searches?: list<scalar|Param|null>,
+ *     entity_adapters?: array<string, scalar|Param|null>,
  *     index_prefix?: scalar|Param|null, // Prefix applied to every Elasticsearch index name, once, by ElasticIndexNameResolver. Reuses MEILI_PREFIX so one app has one index namespace across both engines. Leaving it unset is an error the first time a name is resolved: bare index names share a flat cluster namespace with every other app on the node. Set it to an empty string to share deliberately. // Default: "%env(default::MEILI_PREFIX)%"
  *     adapters?: array<string, Param|string|array{ // Default: {"default":{"dsn":"doctrine://default"}}
  *         dsn?: scalar|Param|null,
@@ -2301,7 +2236,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  *     index_pattern?: scalar|Param|null, // Which cluster indices the admin page considers this app's, e.g. "kpa_*". The cluster index namespace is flat and shared by every app pointed at the node, so this is how the page finds indices this app owns but never declared -- a leftover from a rename, a locale variant. Defaults to survos_search.index_prefix + "*", so it tracks exactly what this app writes; set it only to widen or narrow that deliberately. // Default: null
  *     elasticvue_url?: scalar|Param|null, // Elasticvue (https://elasticvue.com) — the closest equivalent to the riccox Meilisearch UI. Point this at a self-hosted instance (docker run -p 8080:8080 cars10/elasticvue) or https://app.elasticvue.com. Null hides the menu link. Note that Elasticvue talks to Elasticsearch from the browser, so the node needs http.cors.enabled unless it is proxied. // Default: null
- *     kibana_url?: scalar|Param|null, // Kibana, if one is running. Null hides the menu link. // Default: null
+ *     kibana_url?: scalar|Param|null, // Browser-facing Kibana base URL (including any space/base path). In debug, null defaults to localhost:5601 only when all ES connections are loopback; otherwise the link is hidden. // Default: null
  *     server_url?: scalar|Param|null, // The Elasticsearch node itself, for a direct link in the admin menu. Null hides it. // Default: null
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/admin/elastic"
@@ -2340,10 +2275,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *     survos_js_twig?: SurvosJsTwigConfig,
  *     fos_js_routing?: FosJsRoutingConfig,
- *     survos_meili?: SurvosMeiliConfig,
  *     survos_state?: SurvosStateConfig,
  *     zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *     survos_ez?: SurvosEzConfig,
+ *     survos_kit?: SurvosKitConfig,
  *     survos_field?: SurvosFieldConfig,
  *     survos_api_grid?: SurvosApiGridConfig,
  *     live_component?: LiveComponentConfig,
@@ -2383,10 +2318,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         fos_js_routing?: FosJsRoutingConfig,
  *         survos_code?: SurvosCodeConfig,
- *         survos_meili?: SurvosMeiliConfig,
  *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *         survos_ez?: SurvosEzConfig,
+ *         survos_kit?: SurvosKitConfig,
  *         survos_field?: SurvosFieldConfig,
  *         survos_supervisor?: SurvosSupervisorConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
@@ -2425,10 +2360,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         fos_js_routing?: FosJsRoutingConfig,
- *         survos_meili?: SurvosMeiliConfig,
  *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *         survos_ez?: SurvosEzConfig,
+ *         survos_kit?: SurvosKitConfig,
  *         survos_field?: SurvosFieldConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
  *         live_component?: LiveComponentConfig,
@@ -2467,10 +2402,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         fos_js_routing?: FosJsRoutingConfig,
  *         survos_code?: SurvosCodeConfig,
- *         survos_meili?: SurvosMeiliConfig,
  *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *         survos_ez?: SurvosEzConfig,
+ *         survos_kit?: SurvosKitConfig,
  *         survos_field?: SurvosFieldConfig,
  *         survos_supervisor?: SurvosSupervisorConfig,
  *         survos_api_grid?: SurvosApiGridConfig,

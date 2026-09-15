@@ -6,5 +6,4 @@ zenstruck_messenger_monitor:
 
             # Message classes to disable monitoring for (can be abstract/interface)
             exclude:
-#                - Survos\MeiliBundle\Message\BatchIndexEntitiesMessage
 #                - Survos\StateBundle\Message\TransitionMessage
