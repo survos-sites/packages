@@ -19,13 +19,28 @@ bin/console list
 #bin/load-database.sh
 
 bin/console app:load-data
-bin/console state:iterate Package --marking=new --transition=load --limit 3
 bin/console mess:stats
 
 bin/console mess:consume bundle.load --limit 1 -vv
 ```
 
-It takes a while because of scraping packagist.
+New Package rows start automatically after persistence using the initial place's
+`next: [load]`. Do not follow setup with a second `state:iterate ... --transition=load`
+dispatch: it would duplicate the queued work. `--dispatch` remains a compatibility
+option on `app:load-data` but no longer redispatches existing rows. `--sync` applies
+before insertion so it also controls the automatic kickoff.
+
+When a Symfony bundle completes `valid`, its missing runtime `require` packages
+are inserted into the same catalogue and start through the same mechanism.
+Platform requirements and `require-dev` are excluded. Libraries do not recursively
+discover their dependencies. Composer `type` determines whether Symfony 8 compatibility
+checks apply; Symfony 7-only bundles do not pass the catalogue gate, while PHP-compatible libraries can reach `valid` without a Symfony requirement.
+`valid` is terminal. Refresh/reset and README fetching are separate future work.
+
+For deliberate recovery of stranded existing rows, inspect the queues first and
+use `state:iterate Package --marking=new --transition=load` explicitly.
+
+It takes a while because of fetching Packagist metadata.
 
 ## Notes
 

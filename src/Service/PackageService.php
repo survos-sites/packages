@@ -9,6 +9,7 @@ use App\Entity\Package;
 use App\Entity\Package as SurvosPackage;
 use App\Workflow\BundleWorkflowInterface;
 use Composer\Semver\VersionParser;
+use Composer\Semver\Intervals;
 use Packagist\Api\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -29,24 +30,6 @@ class PackageService
 
     public function constraintComplies(string $versionConstraintString, array $versions, ?string $dependency = null): array
     {
-        // skip php, since >= 8.1 is so common
-        if ($dependency && str_contains($dependency, '/')) {
-            //            assert(str_contains($dependency, '/'), $dependency);
-            [$vendor, $shortName] = explode('/', $dependency);
-            if ('symfony' === $vendor) {
-                // don't allow >=, too many >= 2.1
-                if (str_starts_with($versionConstraintString, '>')) {
-                    // @todo: replace with ^<version>
-                    $versionConstraintString = preg_replace('/>=?/', '', $versionConstraintString);
-                    //                    dd($versionConstraintString);
-                }
-                if ('*' === $versionConstraintString) {
-                    $this->logger->warning($dependency." $versionConstraintString does not comply with packagist.org");
-
-                    return [];
-                }
-            }
-        }
         $parser = new VersionParser();
         try {
             $constraint = $parser->parseConstraints($versionConstraintString);
@@ -62,8 +45,9 @@ class PackageService
         }
         $matches = [];
         foreach ($versions as $version) {
-            $actualVersionConstraint = $parser->parseConstraints($version);
-            if ($constraint->matches($actualVersionConstraint)) {
+            [$major, $minor] = array_map('intval', explode('.', $version));
+            $actualVersionConstraint = $parser->parseConstraints(sprintf('>=%d.%d.0 <%d.%d.0', $major, $minor, $major, $minor + 1));
+            if (Intervals::haveIntersections($constraint, $actualVersionConstraint)) {
                 $this->logger->info("$actualVersionConstraint matches $version!");
                 $matches[] = $version;
             }
@@ -74,80 +58,52 @@ class PackageService
         return $matches;
     }
 
-    public function populateFromComposerData(Package $survosPackage)
+    public function populateFromComposerData(Package $package): void
     {
-        // given the composer data, populate the php and other relevant values
-        $survosPackage->phpVersionString = null;
-        $survosPackage->symfonyVersionString = null;
-        $survosPackage->symfonyVersions = [];
-        $survosPackage->phpUnitVersions = [];
-        $survosPackage
-            ->setMarking(BundleWorkflowInterface::PLACE_NEW) // ??
-        ;
-
-        $data = new Dot($survosPackage->data);
-
-        // https://github.com/adbario/php-dot-notation?tab=readme-ov-file#get
-        $survosPackage->sourceUrl = $data->get('source.url');
-        $survosPackage->sourceType = $data->get('source.type');
-        $requires = $data->get('require', []);
-        if ($data['abandoned'] || (0 == count($requires))) {
-            $survosPackage->setMarking(BundleWorkflowInterface::PLACE_ABANDONED);
+        // Metadata extraction must never change the workflow marking.
+        $package->phpVersionString = null;
+        $package->symfonyVersionString = null;
+        $package->phpUnitVersionString = null;
+        $package->phpVersions = [];
+        $package->symfonyVersions = [];
+        $package->phpUnitVersions = [];
+        $data = new Dot($package->data ?? []);
+        $package->sourceUrl = $data->get('source.url');
+        $package->sourceType = $data->get('source.type');
+        if ($package->isAbandoned) {
             return;
         }
 
-        if ($phpVersionStr = $data['require.php'] ?? false) {
-            $matches = $this->constraintComplies($phpVersionStr, ['8.3', '8.4', '8.5']);
-
-            $survosPackage->phpVersionString = $phpVersionStr;
-            $survosPackage->phpVersions = $matches;
-            $survosPackage
-                ->setMarking(count($matches) ? BundleWorkflowInterface::PLACE_PHP_OKAY : BundleWorkflowInterface::PLACE_OUTDATED_PHP);
-        } else {
-            // missing PHP, this is usually bad.
-            $survosPackage
-                ->setMarking(BundleWorkflowInterface::PLACE_OUTDATED_PHP);
+        if ($constraint = $data->get('require.php')) {
+            $package->phpVersionString = $constraint;
+            $package->phpVersions = $this->constraintComplies($constraint, ['8.3', '8.4', '8.5']);
         }
 
-        if (empty($survosPackage->phpVersions)) {
-            return;
-        }
-
-        $distribution = []; // for tracking bundle counts ??? should be elsewhere.
-//        dd($data['keywords']);
-//        $survosPackage->setKeywords($data['keywords']); // could also get this from the json directly!
-        //        dd($data['keywords'], $survosPackage->getKeywords());
-
-        // find the first package that matches and use it for the symfony version.  This isn't very good.
-        foreach (['symfony/runtime', 'symfony/config', 'symfony/http-kernel', 'symfony/dependency-injection',
-                     'symfony/framework-bundle', 'symfony/http-client', 'symfony/console'] as $dependency) {
-            if ($symfonyVersionStr = $data['require.' . $dependency] ?? false) {
-                break;
+        if ($package->isSymfonyBundle) {
+            // These dependencies share Symfony's release versions. Packages such
+            // as contracts, polyfills, Flex and UX have independent versions.
+            $requirements = [];
+            $matches = ['8.0', '8.1', '8.2'];
+            foreach (['runtime', 'config', 'http-kernel', 'dependency-injection',
+                'framework-bundle', 'http-client', 'console', 'event-dispatcher',
+                'routing', 'serializer', 'form', 'validator', 'workflow', 'messenger',
+                'security-bundle', 'twig-bundle', 'cache', 'translation'] as $component) {
+                $dependency = 'symfony/'.$component;
+                if ($constraint = $data->get('require.'.$dependency)) {
+                    $requirements[] = $constraint.' ('.$dependency.')';
+                    $matches = array_values(array_intersect($matches,
+                        $this->constraintComplies($constraint, ['8.0', '8.1', '8.2'], $dependency)));
+                }
+            }
+            if ($requirements !== []) {
+                $package->symfonyVersions = $matches;
+                $package->symfonyVersionString = mb_strimwidth(implode('; ', $requirements), 0, 255, '…');
             }
         }
-        if ($symfonyVersionStr) {
-            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['6.4', '7.4', '8.0'], $dependency);
-            if (count($symfonyVersions)) {
-//                dd($symfonyVersions, $symfonyVersionStr);
-            }
-            $survosPackage->symfonyVersions = $symfonyVersions;
-            $survosPackage->symfonyVersionString = $symfonyVersionStr." ($dependency)";
-            $survosPackage
-                ->setMarking(count($symfonyVersions) ? BundleWorkflowInterface::PLACE_SYMFONY_OKAY : BundleWorkflowInterface::PLACE_SYMFONY_OUTDATED);
-        } else {
-            // no valid symfony, warn?
 
-            // no! Do this in the workflow
-//            $survosPackage->setMarking(SurvosPackage::PLACE_SYMFONY_OUTDATED);
-
-            return;
-        }
-
-        if ($phpUnitVersionStr = $data['requireDev.phpunit/phpunit'] ?? null) {
-            $matches = $this->constraintComplies($phpUnitVersionStr, ['9.4', '10.3', '11.4', '12.0'],
-                'phpunit/phpunit');
-            $survosPackage->phpUnitVersions = $matches;
-            $survosPackage->phpUnitVersionString = $phpUnitVersionStr;
+        if ($constraint = $data->get('requireDev.phpunit/phpunit')) {
+            $package->phpUnitVersionString = $constraint;
+            $package->phpUnitVersions = $this->constraintComplies($constraint, ['9.4', '10.3', '11.4', '12.0'], 'phpunit/phpunit');
         }
     }
 

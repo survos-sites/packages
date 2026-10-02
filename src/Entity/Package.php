@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
@@ -135,12 +137,25 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     #[Groups(['package.read'])]
     #[ApiProperty("null if unknown (e.g. marking=new), other boolean")]
     public ?bool $hasValidSymfonyVersion {
-        get => is_null($this->symfonyVersions) ? null : !empty($this->symfonyVersions);
+        get => $this->symfonyVersions === null ? null : array_any($this->symfonyVersions, static fn (string $version): bool => str_starts_with($version, '8.'));
     }
     #[Groups(['package.read'])]
     #[ApiProperty("null if unknown (e.g. marking=new), other boolean")]
     public ?bool $hasValidPhpVersion {
         get => is_null($this->phpVersions) ? null : !empty($this->phpVersions);
+    }
+
+    #[Groups(['package.read'])]
+    public ?string $type {
+        get => $this->data === null ? null : ($this->data['type'] ?? 'library');
+    }
+
+    public bool $isSymfonyBundle {
+        get => $this->type === 'symfony-bundle';
+    }
+
+    public bool $isAbandoned {
+        get => (bool) ($this->data['abandoned'] ?? false);
     }
 
     #[Groups(['package.facets', 'package.read'])]

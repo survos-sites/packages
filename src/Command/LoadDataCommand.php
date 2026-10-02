@@ -1,33 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\Package as SurvosPackage;
-use App\Message\FetchComposer;
 use App\Repository\PackageRepository;
-use App\Service\PackageService;
-use App\Workflow\BundleWorkflow;
 use App\Workflow\BundleWorkflowInterface;
 use Castor\Attribute\AsSymfonyTask;
 use Doctrine\ORM\EntityManagerInterface;
-use Packagist\Api\Client;
-use Packagist\Api\Result\Package;
-use Packagist\Api\Result\Result;
 use Psr\Cache\InvalidArgumentException;
-use Psr\Log\LoggerInterface;
-use Survos\StateBundle\Message\TransitionMessage;
 use Survos\StateBundle\Service\AsyncQueueLocator;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\Attribute\Target;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsCommand('app:load-data', 'Search and Load repos from packagist')]
@@ -44,12 +33,6 @@ final class LoadDataCommand
         private CacheInterface             $cache,
         private AsyncQueueLocator $asyncQueueLocator,
 
-        private SerializerInterface        $serializer,
-        private LoggerInterface            $logger,
-        private MessageBusInterface        $messageBus,
-        private PackageService             $packageService,
-        #[Target(BundleWorkflowInterface::WORKFLOW_NAME)]
-        private readonly WorkflowInterface $workflow,
     )
     {
     }
@@ -61,7 +44,7 @@ final class LoadDataCommand
         SymfonyStyle                                                             $io,
         #[Argument('search query for packages, e.g.type=symfony-bundle')] string $q = 'type=symfony-bundle',
         #[Option('load the bundle names and vendors')] bool                      $setup = true,
-        #[Option('Dispatch the load request')] bool                              $dispatch = false,
+        #[Option('Deprecated: persistence starts new packages automatically')] bool                              $dispatch = false,
         #[Option('Dispatch sync')] bool                              $sync = false,
 
 
@@ -78,14 +61,16 @@ final class LoadDataCommand
 //        #[Option('Dispatch a load transition for new packages')] ?bool $dispatch = null,
     ): int
     {
-        //        // note: we are handling abandoned earlier
+        // Apply sync routing before the first flush: kickoff runs during postFlush.
+        $this->asyncQueueLocator->sync = $sync;
+
+        // Newly persisted rows are started by InitialPlaceKickoffListener.
 
         if ($reset) {
             $this->entityManager->createQuery('DELETE FROM App\Entity\Package p')->execute();
             $this->entityManager->flush();
         }
         $this->io = $io;
-        $client = new Client();
         //        'fields' => ['abandoned','repository','type'],
 
         if ($setup)
@@ -137,17 +122,7 @@ final class LoadDataCommand
             $io->writeln('total bundles in database: ' . $this->packageRepository->count([]));
         }
         if ($dispatch) {
-            if ($sync) {
-                $this->asyncQueueLocator->sync = true;
-            }
-            foreach ($this->packageRepository->findBy(['marking' => BundleWorkflowInterface::PLACE_NEW], ['id' => 'ASC'], $limit ?: null) as $package) {
-                $msg = new TransitionMessage($package->id, $package::class,
-                    BundleWorkflowInterface::TRANSITION_LOAD,
-                BundleWorkflowInterface::WORKFLOW_NAME
-                );
-                $stamps = $this->asyncQueueLocator->stamps($msg);
-                $this->messageBus->dispatch($msg, $stamps);
-            }
+            $io->note('--dispatch is no longer needed: newly persisted packages start automatically. Existing rows are not redispatched.');
         }
 
         $where = [];

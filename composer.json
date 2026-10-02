@@ -164,7 +164,7 @@
             "php -d memory_limit=4048M bin/console app:load-data"
         ],
         "load": [
-            "php -d memory_limit=4048M bin/console workflow:iterate App\\\\Entity\\\\Package --marking=new --transition=load"
+            "php -d memory_limit=4048M bin/console app:load-data"
         ],
         "index": [
             "php -d memory_limit=2048M bin/console elastic:index:rebuild app_package"

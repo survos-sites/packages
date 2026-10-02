@@ -52,7 +52,7 @@
                 "enabled": true,
                 "fetch": "lazy",
                 "autoimport": {
-                    "@survos/simple-datatables/style.css": true
+                    "@survos/simple-datatables-bundle/style.css": true
                 }
             }
         },
