@@ -60,7 +60,10 @@ COPY . .
 # bundle-provided asset 404s: EasyAdmin's own CSS/JS, api-platform's, tabler's.
 # AssetMapper's output is unaffected (it goes to public/assets/), which is what
 # makes the failure confusing -- /assets/* serves fine while /bundles/* is gone.
-RUN composer dump-autoload --classmap-authoritative --no-dev --no-interaction \
+# Cache warmers instantiate services that require a secret. Generate a build-only
+# value without baking it into ENV; Dokku supplies the runtime APP_SECRET.
+RUN export APP_SECRET="$(php -r 'echo bin2hex(random_bytes(32));')" \
+    && composer dump-autoload --classmap-authoritative --no-dev --no-interaction \
     && php bin/console cache:clear --env=prod --no-debug \
     && php bin/console assets:install public --env=prod \
     && php bin/console importmap:install --env=prod \
