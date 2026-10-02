@@ -61,7 +61,7 @@ class BundleWorkflowInterface
     #[Transition(
         from: [self::PLACE_PHP_OKAY, self::PLACE_SYMFONY_OKAY],
         to: self::PLACE_VALID_REQUIREMENTS,
-        guard: "subject.hasValidPhpVersion and not subject.isAbandoned and (not subject.isSymfonyBundle or subject.hasValidSymfonyVersion)")
+        guard: "subject.hasValidPhpVersion and not subject.isAbandoned and (subject.type != 'symfony-bundle' or subject.hasValidSymfonyVersion)")
     ]
     final public const TRANSITION_VALID = 'valid';
 
@@ -77,12 +77,12 @@ class BundleWorkflowInterface
 
     #[Transition([self::PLACE_PHP_OKAY], self::PLACE_SYMFONY_OUTDATED,
         info: "Bundle does not support Symfony 8",
-        guard: "subject.isSymfonyBundle and subject.hasValidSymfonyVersion === false")]
+        guard: "subject.type == 'symfony-bundle' and subject.hasValidSymfonyVersion === false")]
     final public const TRANSITION_OUTDATED = 'symfony_outdated';
 
     #[Transition([self::PLACE_PHP_OKAY], self::PLACE_SYMFONY_OKAY,
         info: "Bundle supports Symfony 8",
-        guard: "subject.isSymfonyBundle and subject.hasValidSymfonyVersion")]
+        guard: "subject.type == 'symfony-bundle' and subject.hasValidSymfonyVersion")]
     final public const TRANSITION_SYMFONY_OKAY = 'symfony_okay';
 
 
