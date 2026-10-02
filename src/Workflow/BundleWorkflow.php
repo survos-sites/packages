@@ -149,65 +149,40 @@ final class BundleWorkflow
     }
 
     //    #[Cache('1 day')]
-    private function loadLatestVersionData(Package $package)
+    private function loadLatestVersionData(Package $package): void
     {
-        $packageName = $package->name;
-        $this->logger->warning($package->name);
-        try {
-            $composer = $this->packagistClient->getComposer($packageName);
-        } catch (\Exception $exception) {
-            $this->logger->error($packageName.' '.$exception->getMessage());
-
-            return; // @todo: not_found state/
-            throw $exception;
-        }
-        // slower, but more data
-        /**
-         * @var PackagistPackage $packagistPackage
-         */
-        $packagistPackage = $this->packagistClient->get($packageName);
-
-        // get the default branch
-        $versionCode = null;
-        foreach ($packagistPackage->getVersions() as $version) {
+        // One detailed request provides everything we need. Let HTTP failures reach
+        // Messenger so retries and the Doctrine failure transport can handle them.
+        $result = $this->packagistClient->get($package->name);
+        $selected = null;
+        $latestRelease = null;
+        $latestBranch = null;
+        foreach ($result->getVersions() as $version) {
             if ($version->getDefaultBranch()) {
-                $versionCode = $version->getVersion();
+                $selected = $version;
+                break;
+            }
+            if (!str_contains(strtolower($version->getVersion()), 'dev')
+                && ($latestRelease === null || version_compare($version->getVersion(), $latestRelease->getVersion(), '>'))) {
+                $latestRelease = $version;
+            }
+            if ($latestBranch === null || $version->getTime() > $latestBranch->getTime()) {
+                $latestBranch = $version;
             }
         }
-        $package->version = $versionCode;
-        if (!$versionCode) {
-            return; // OnCompleted should check for no version and transition to a new state
-            dd($packagistPackage);
+        // Archived branches can disappear while published releases remain usable.
+        $selected ??= $latestRelease ?? $latestBranch;
+        if ($selected === null) {
+            throw new \UnexpectedValueException(sprintf('No versions in Packagist metadata for %s.', $package->name));
         }
-        assert($versionCode, "No default version?");
 
-        $lastUpdated = $version->getTime();
-        if (str_contains($packageName, 'media')) {
-//            dd($packagistPackage, $lastUpdated);
-        }
-        $package->setLastUpdatedOnPackagist($lastUpdated);
-        $package->version = $versionCode; // could also be an array of the version data.
-        // @todo: skip if no new data
-
-        $package->lastUpdated = new \DateTimeImmutable(); // now
-
-        /**
-         * @var PackagistPackage\Version $version
-        */
-//            foreach ($packagistPackage->getVersions() as $versionCode => $version) {
-                // need a different API call for github stars.
-                //                if ($package->getFavers() || $package->getGithubStars()) {
-                //                    dd($package->getFavers(), $package);
-                //                }
-                //                dd($composer, $package);
-                //                $package->getDescription(); //
-                //                assert($package->getDescription() == $version->getDescription(), $package->getDescription() . '<>' . $version->getDescription());
-                $json = $this->serializer->serialize($version, 'json');
-
-                $package->stars = $packagistPackage->getFavers();
-                $package->downloads = $packagistPackage->getDownloads()->getTotal();
-                $package->description = $version->getDescription();
-                $package->data = json_decode($json, true);
+        $package->version = $selected->getVersion();
+        $package->setLastUpdatedOnPackagist($selected->getTime());
+        $package->lastUpdated = new \DateTimeImmutable();
+        $package->stars = $result->getFavers();
+        $package->downloads = $result->getDownloads()?->getTotal();
+        $package->description = $selected->getDescription();
+        $package->data = json_decode($this->serializer->serialize($selected, 'json'), true, flags: JSON_THROW_ON_ERROR);
     }
 
     #[AsMessageHandler]

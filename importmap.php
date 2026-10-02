@@ -199,4 +199,12 @@ return [
     'simple-datatables' => ['version' => '10.3.0'],
     'simple-datatables/dist/style.min.css' => ['version' => '10.3.0', 'type' => 'css'],
     '@symfony/ux-live-component' => ['path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js'],
+    '@survos/simple-datatables-bundle/style.css' => [
+        'path' => './vendor/survos/simple-datatables-bundle/assets/style.css',
+        'type' => 'css',
+    ],
+    'datatables.net-dt/css/dataTables.dataTables.min.css' => [
+        'version' => '3.1.2',
+        'type' => 'css',
+    ],
 ];

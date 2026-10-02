@@ -16,8 +16,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 use Survos\FieldBundle\Attribute\EntityMeta;
-use Survos\CoreBundle\Entity\RouteParametersInterface;
-use Survos\CoreBundle\Entity\RouteParametersTrait;
+use Survos\FieldBundle\Entity\RouteParametersInterface;
+use Survos\FieldBundle\Entity\RouteIdentityTrait;
+use Survos\FieldBundle\Attribute\RouteIdentity;
 use Survos\StateBundle\Traits\MarkingInterface;
 use Survos\SchemaOrgBundle\Attribute\SchemaOrg;
 use Survos\SchemaOrgBundle\Attribute\SchemaProperty;
@@ -54,9 +55,10 @@ use Symfony\Component\Serializer\Attribute\Groups;
  * SoftwareApplication. See App\Schema\PackageSchema for the rest of the graph.
  */
 #[SchemaOrg('SoftwareSourceCode')]
+#[RouteIdentity(field: 'id')]
 class Package implements RouteParametersInterface, MarkingInterface, \Stringable
 {
-    use RouteParametersTrait;
+    use RouteIdentityTrait;
     use MarkingTrait;
 
     private const SORTABLE = [

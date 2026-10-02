@@ -9,7 +9,6 @@ use Survos\TablerBundle\Traits\KnpMenuHelperTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 // other available slots: MenuEvent::SIDEBAR, MenuEvent::BREADCRUMB, MenuEvent::PAGE_NAV, MenuEvent::PAGE_ACTIONS
 
@@ -21,7 +20,6 @@ final class AppMenu implements KnpMenuHelperInterface
         #[Autowire('%kernel.environment%')] protected string $env,
         private MenuService                                  $menuService,
         private Security                                     $security,
-        private ?AuthorizationCheckerInterface               $authorizationChecker = null,
     ) {
     }
 

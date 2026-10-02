@@ -3,21 +3,35 @@ framework:
         failure_transport: failed
 
         transports:
-            elastic:
-                dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
+            bundle.load:
                 options:
-                    queue_name: elastic
+                    prefetch_count: 16
+                    delay:
+                        durable: true
+            elastic:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%'
+                options:
+                    prefetch_count: 50
+                    exchange:
+                        name: packages.elastic
+                    queues:
+                        packages.elastic: ~
+                    delay:
+                        durable: true
                 retry_strategy:
                     max_retries: 3
                     multiplier: 2
 
-            failed: 'doctrine://default?queue_name=failed'
+            failed: 'doctrine://default?queue_name=failed&auto_setup=true'
             sync: 'sync://'
 
         default_bus: messenger.bus.default
 
         buses:
-            messenger.bus.default: []
+            messenger.bus.default:
+                middleware:
+                    - logging
+                    - App\Messenger\PackageTransitionLockMiddleware
 
         routing:
 #            Symfony\Component\Mailer\Messenger\SendEmailMessage: async

@@ -126,7 +126,7 @@ class PackageService
             }
         }
         if ($symfonyVersionStr) {
-            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['6.4', '7.4', '8.0'], $dependency);
+            $symfonyVersions = $this->constraintComplies($symfonyVersionStr, ['7.4', '8.0'], $dependency);
             if (count($symfonyVersions)) {
 //                dd($symfonyVersions, $symfonyVersionStr);
             }

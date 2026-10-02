@@ -42,3 +42,11 @@ services:
 ##            $logger: '@logger'
 #        tags:
 #            - { name: 'api_platform.filter', id: 'test_dto.search_filter' }
+
+    packages.transition_lock.store:
+        class: Symfony\Component\Lock\Store\DoctrineDbalPostgreSqlStore
+        arguments: ['@doctrine.dbal.default_connection']
+
+    packages.transition_lock.factory:
+        class: Symfony\Component\Lock\LockFactory
+        arguments: ['@packages.transition_lock.store']
