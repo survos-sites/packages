@@ -7955,16 +7955,16 @@
         },
         {
             "name": "survos/state-bundle",
-            "version": "2.34.29",
+            "version": "2.34.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/state-bundle.git",
-                "reference": "7f7b6e2802a90c0317b68ac411cbc92ce70405d5"
+                "reference": "5bb63e048ccdbbe8112a4acfb135b50c3b559e15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/state-bundle/zipball/7f7b6e2802a90c0317b68ac411cbc92ce70405d5",
-                "reference": "7f7b6e2802a90c0317b68ac411cbc92ce70405d5",
+                "url": "https://api.github.com/repos/survos/state-bundle/zipball/5bb63e048ccdbbe8112a4acfb135b50c3b559e15",
+                "reference": "5bb63e048ccdbbe8112a4acfb135b50c3b559e15",
                 "shasum": ""
             },
             "require": {
@@ -8030,7 +8030,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/state-bundle/issues",
-                "source": "https://github.com/survos/state-bundle/tree/2.34.29"
+                "source": "https://github.com/survos/state-bundle/tree/2.34.30"
             },
             "funding": [
                 {
@@ -8038,7 +8038,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-01T17:15:36+00:00"
+            "time": "2026-10-02T12:39:53+00:00"
         },
         {
             "name": "survos/tabler-bundle",
@@ -9253,12 +9253,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/doctrine-messenger.git",
-                "reference": "3c60c64cf384dc7318c1a7bc99938a44fa8e4d89"
+                "reference": "82337d9c43e422c20487e289949b0ed1bea13f58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/doctrine-messenger/zipball/3c60c64cf384dc7318c1a7bc99938a44fa8e4d89",
-                "reference": "3c60c64cf384dc7318c1a7bc99938a44fa8e4d89",
+                "url": "https://api.github.com/repos/symfony/doctrine-messenger/zipball/82337d9c43e422c20487e289949b0ed1bea13f58",
+                "reference": "82337d9c43e422c20487e289949b0ed1bea13f58",
                 "shasum": ""
             },
             "require": {
@@ -9321,7 +9321,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-24T08:15:59+00:00"
+            "time": "2026-10-02T14:14:21+00:00"
         },
         {
             "name": "symfony/dom-crawler",

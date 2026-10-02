@@ -75,7 +75,9 @@ final class BundleWorkflowTest extends TestCase
     private function handler(Client $client, SerializerInterface $serializer): BundleWorkflow
     {
         return new BundleWorkflow($this->createStub(MessageBusInterface::class), $this->createStub(UrlGeneratorInterface::class), $serializer,
-            new NullLogger(), $this->createStub(PackageService::class), $this->createStub(EntityManagerInterface::class),
+            new NullLogger(), $this->createStub(PackageService::class),
+            new \App\Service\RequiredPackageDiscovery($this->createStub(PackageRepository::class), $this->createStub(EntityManagerInterface::class)),
+            $this->createStub(EntityManagerInterface::class),
             $this->createStub(PackageRepository::class), $client, $this->createStub(WorkflowInterface::class));
     }
 }

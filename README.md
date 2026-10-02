@@ -19,13 +19,28 @@ bin/console list
 #bin/load-database.sh
 
 bin/console app:load-data
-bin/console state:iterate Package --marking=new --transition=load --limit 3
 bin/console mess:stats
 
 bin/console mess:consume bundle.load --limit 1 -vv
 ```
 
-It takes a while because of scraping packagist.
+New Package rows start automatically after persistence using the initial place's
+`next: [load]`. Do not follow setup with a second `state:iterate ... --transition=load`
+dispatch: it would duplicate the queued work. `--dispatch` remains a compatibility
+option on `app:load-data` but no longer redispatches existing rows. `--sync` applies
+before insertion so it also controls the automatic kickoff.
+
+When a Symfony bundle completes `valid`, its missing runtime `require` packages
+are inserted into the same catalogue and start through the same mechanism.
+Platform requirements and `require-dev` are excluded. Libraries do not recursively
+discover their dependencies. Composer `type` determines whether Symfony 8 compatibility
+checks apply; Symfony 7-only bundles do not pass the catalogue gate, while PHP-compatible libraries can reach `valid` without a Symfony requirement.
+`valid` is terminal. Refresh/reset and README fetching are separate future work.
+
+For deliberate recovery of stranded existing rows, inspect the queues first and
+use `state:iterate Package --marking=new --transition=load` explicitly.
+
+It takes a while because of fetching Packagist metadata.
 
 ## Notes
 
@@ -109,3 +124,27 @@ requests — so nothing is ever emitted twice.
 
 To see what any page collected, open the **Schema.org** panel in the web debug
 toolbar.
+
+## Symfony 8.2 development setup
+
+Core Symfony requirements remain `^8.1`, with Flex selecting `^8.2` and
+`minimum-stability: dev`. Work queues (`bundle.load` and `elastic`) use RabbitMQ;
+set `MESSENGER_TRANSPORT_DSN_RABBITMQ` to an `amqp://` URL for Symfony's native
+AMQP transport. Failed messages use `doctrine://default` in the app database;
+a separate Messenger database is no longer needed. Consumers remain serial in
+`Procfile`; installing Amp does not itself enable concurrency.
+
+The metadata loader propagates request failures for retry and selects the default
+branch, falling back to the highest release or latest branch if necessary. Apply
+migration `Version20261002113900` for the updated command bundle's caller column.
+
+Validation on October 2: container and schema checks, production boot, application
+tests, homepage and Elasticsearch search passed. `debug:container --deprecations`
+still reports legacy API Platform filters and upstream compatibility declarations;
+these have not been suppressed. Missing Packagist packages remain inspectable in
+the Doctrine failure transport.
+
+The older README fetcher is in `survos/repo`,
+`src/Services/AppService.php::syncProjectWithGithub()` (`files: ['readme']`). It
+uses GitHub's contents/readme API and stores the base64-decoded body on Project.
+It is not connected to this catalogue's workflow.

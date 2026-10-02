@@ -23,6 +23,7 @@
  * }>
  */
 return [
+    '@survos/simple-datatables-bundle/style.css' => ['path' => './vendor/survos/simple-datatables-bundle/assets/style.css', 'type' => 'css'],
     'app' => ['path' => './assets/app.js', 'entrypoint' => true],
     'admin' => ['path' => './assets/admin.js', 'entrypoint' => true],
     '@survos/js-twig/generated/fos_routes.js' => ['path' => '@survos/js-twig/generated/fos_routes.js'],
@@ -207,4 +208,17 @@ return [
         'version' => '3.1.2',
         'type' => 'css',
     ],
+    'd3-graphviz' => ['version' => '5.6.0'],
+    'd3-selection' => ['version' => '3.0.0'],
+    'd3-dispatch' => ['version' => '3.0.1'],
+    'd3-transition' => ['version' => '3.0.1'],
+    'd3-timer' => ['version' => '3.0.1'],
+    'd3-interpolate' => ['version' => '3.0.1'],
+    'd3-zoom' => ['version' => '3.0.0'],
+    '@hpcc-js/wasm/graphviz' => ['version' => '2.20.0'],
+    'd3-format' => ['version' => '3.1.0'],
+    'd3-path' => ['version' => '3.1.0'],
+    'd3-color' => ['version' => '3.0.1'],
+    'd3-ease' => ['version' => '3.0.1'],
+    'd3-drag' => ['version' => '3.0.0'],
 ];

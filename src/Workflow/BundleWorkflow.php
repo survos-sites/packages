@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Workflow;
 
 use App\Entity\Package;
 use App\Message\FetchComposer;
 use App\Repository\PackageRepository;
 use App\Service\PackageService;
+use App\Service\RequiredPackageDiscovery;
 use Doctrine\ORM\EntityManagerInterface;
 use Packagist\Api\Client;
 use Packagist\Api\Result\Package as PackagistPackage;
@@ -36,6 +39,7 @@ final class BundleWorkflow
         private SerializerInterface $serializer,
         private LoggerInterface $logger,
         private PackageService $packageService,
+        private RequiredPackageDiscovery $requiredPackageDiscovery,
         private EntityManagerInterface $entityManager,
         private PackageRepository $packageRepository,
         private Client $packagistClient,
@@ -136,15 +140,19 @@ final class BundleWorkflow
 //        }
 //    }
 
+    #[AsCompletedListener(WF::WORKFLOW_NAME, WF::TRANSITION_VALID)]
+    public function onValidCompleted(CompletedEvent $event): void
+    {
+        $this->requiredPackageDiscovery->discover($this->getPackage($event));
+    }
+
     #[AsTransitionListener(WF::WORKFLOW_NAME, WF::TRANSITION_LOAD)]
     public function onLoadComposer(TransitionEvent $event): void
     {
         $package = $this->getPackage($event);
         // @todo: check updatedAt
         // https://packagist.org/apidoc#track-package-updates
-        if (true || !$data = $package->data) {
-            $this->loadLatestVersionData($package);
-        }
+        $this->loadLatestVersionData($package);
         $this->packageService->populateFromComposerData($package);
     }
 

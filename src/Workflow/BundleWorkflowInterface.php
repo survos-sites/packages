@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Workflow;
 
 use App\Command\LoadDataCommand;
 use App\Entity\Package;
-use App\Workflow\BundleWorkflowInterface as WF;
 use Survos\StateBundle\Attribute\Place;
 use Survos\StateBundle\Attribute\Transition;
 use Survos\StateBundle\Attribute\Workflow;
@@ -15,38 +16,28 @@ class BundleWorkflowInterface
     // This name is used for injecting the workflow into a controller!
     public const WORKFLOW_NAME = 'BundleWorkflow';
 
-    #[Place(initial: true,
+    #[Place(initial: true, metadata: ['label' => 'Discovered'],
         description: "load from " . LoadDataCommand::BASE_URL,
         info: "basic from app:load",
-        // Start the machine on persist. state-bundle's InitialPlaceKickoffListener
-        // dispatches the first of these whose guard passes when a Package row is
-        // created, so `state:iterate Package --marking=new --transition=load` is
-        // no longer something anyone has to remember — it was in castor.php,
-        // README.md and bin/load-database.sh, three copies of a step the flow
-        // already knew about. Every later place already chains via its own
-        // `next`; `new` was the only one without a starter.
-        //
-        // TRANSITION_ABANDON is deliberately not listed: its guard reads
-        // subject.abandoned, which Package does not have — LoadDataCommand tests
-        // that on the Packagist API response and simply skips those, so no
-        // abandoned row is ever created.
+        // Persisting a new package queues load once, after its insert is flushed.
         next: [self::TRANSITION_LOAD])]
     final public const PLACE_NEW = 'new';
-    #[Place(info: "composer.json", description: "Loaded from /packages/%s.json on " . LoadDataCommand::BASE_URL,
-        next: [self::TRANSITION_PHP_OKAY, self::TRANSITION_PHP_TOO_OLD]
+    #[Place(metadata: ['label' => 'Metadata loaded'], info: "composer.json", description: "Loaded from /packages/%s.json on " . LoadDataCommand::BASE_URL,
+        next: [self::TRANSITION_ABANDON, self::TRANSITION_PHP_OKAY, self::TRANSITION_PHP_TOO_OLD]
     )]
     final public const string PLACE_COMPOSER_LOADED = 'composer_loaded';
 
-    #[Place(info: "outdated symfony")]
+    #[Place(metadata: ['label' => 'Symfony unsupported'], info: "Does not support Symfony 8")]
     final public const PLACE_SYMFONY_OUTDATED = 'outdated_symfony';
-    #[Place(info: "works with supported Symfony")]
+    #[Place(metadata: ['label' => 'Symfony 8 compatible'], info: "Supports Symfony 8", next: [self::TRANSITION_VALID])]
     final public const PLACE_SYMFONY_OKAY = 'symfony_ok';
 
-    #[Place(info: "outdated PHP")]
+    #[Place(metadata: ['label' => 'PHP unsupported'], info: "outdated PHP")]
     final public const PLACE_OUTDATED_PHP = 'php_is_too_old';
     #[Place(
+        metadata: ['label' => 'PHP compatible'],
         info: "php okay",
-        next: [self::TRANSITION_SYMFONY_OKAY, self::TRANSITION_OUTDATED]
+        next: [self::TRANSITION_SYMFONY_OKAY, self::TRANSITION_VALID]
     )]
     final public const PLACE_PHP_OKAY = 'php_ok';
     #[Place(info: "abandoned or misconfigured")]
@@ -56,7 +47,7 @@ class BundleWorkflowInterface
     final public const PLACE_VALID_REQUIREMENTS = 'valid';
 
     #[Transition(
-        [self::PLACE_NEW, self::PLACE_SYMFONY_OKAY, self::PLACE_VALID_REQUIREMENTS],
+        [self::PLACE_NEW, self::PLACE_SYMFONY_OKAY],
         self::PLACE_COMPOSER_LOADED,
         description: "Slow but detailed API call",
         info: "details from packagist API",
@@ -64,34 +55,34 @@ class BundleWorkflowInterface
     )]
     final public const TRANSITION_LOAD = 'load';
 
-    #[Transition([self::PLACE_NEW], self::PLACE_ABANDONED, guard: 'subject.abandoned')]
+    #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_ABANDONED, guard: 'subject.isAbandoned')]
     final public const TRANSITION_ABANDON = 'abandon';
 
     #[Transition(
-        from: [self::PLACE_SYMFONY_OKAY],
+        from: [self::PLACE_PHP_OKAY, self::PLACE_SYMFONY_OKAY],
         to: self::PLACE_VALID_REQUIREMENTS,
-        guard: "subject.hasValidSymfonyVersion")
+        guard: "subject.hasValidPhpVersion and not subject.isAbandoned and (not subject.isSymfonyBundle or subject.hasValidSymfonyVersion)")
     ]
     final public const TRANSITION_VALID = 'valid';
 
     #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_OUTDATED_PHP,
-        info: "PHP < 8.1?",
-        guard: "!subject.hasValidPhpVersion")]
+        info: "No supported PHP version",
+        guard: "not subject.isAbandoned and subject.hasValidPhpVersion === false")]
     final public const TRANSITION_PHP_TOO_OLD = 'php_too_old';
 
     #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_PHP_OKAY,
-        info: "PHP >= 8.1?",
-        guard: "subject.hasValidPhpVersion")]
+        info: "Supports a current PHP version",
+        guard: "not subject.isAbandoned and subject.hasValidPhpVersion")]
     final public const TRANSITION_PHP_OKAY = 'php_okay';
 
     #[Transition([self::PLACE_PHP_OKAY], self::PLACE_SYMFONY_OUTDATED,
-        info: "Symfony < 5.4?",
-        guard: "!subject.hasValidSymfonyVersion")]
+        info: "Bundle does not support Symfony 8",
+        guard: "subject.isSymfonyBundle and subject.hasValidSymfonyVersion === false")]
     final public const TRANSITION_OUTDATED = 'symfony_outdated';
 
     #[Transition([self::PLACE_PHP_OKAY], self::PLACE_SYMFONY_OKAY,
-        info: "Symfony > 5.4",
-        guard: "subject.hasValidSymfonyVersion")]
+        info: "Bundle supports Symfony 8",
+        guard: "subject.isSymfonyBundle and subject.hasValidSymfonyVersion")]
     final public const TRANSITION_SYMFONY_OKAY = 'symfony_okay';
 
 

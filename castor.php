@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Castor\Attribute\AsTask;
 
 use function Castor\{io,run,capture,import};
@@ -11,11 +13,11 @@ function hello(): void
     io()->title(sprintf('Hello %s!', $currentUser));
 }
 
-#[AsTask(description: 'dispatch detailed load')]
+#[AsTask(description: 'Discover bundles and automatically start newly inserted packages')]
 function dispatch(): void
 {
-    if (io()->confirm('Do you want to dispatch the load transition?')) {
-        run('bin/console state:iterate Package --marking=new --transition=load');
+    if (io()->confirm('Discover new bundles and start their workflows?')) {
+        run('bin/console app:load-data');
         run('bin/console mess:stats');
     }
 }
