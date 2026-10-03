@@ -55,34 +55,40 @@ class BundleWorkflowInterface
     )]
     final public const TRANSITION_LOAD = 'load';
 
-    #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_ABANDONED, guard: 'subject.isAbandoned')]
+    #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_ABANDONED, guard: 'subject.isAbandoned',
+        guardLabel: "Abandoned")]
     final public const TRANSITION_ABANDON = 'abandon';
 
     #[Transition(
         from: [self::PLACE_PHP_OKAY, self::PLACE_SYMFONY_OKAY],
         to: self::PLACE_VALID_REQUIREMENTS,
-        guard: "subject.hasValidPhpVersion and not subject.isAbandoned and (subject.type != 'symfony-bundle' or subject.hasValidSymfonyVersion)")
+        guard: "subject.hasValidPhpVersion and not subject.isAbandoned and (subject.type != 'symfony-bundle' or subject.hasValidSymfonyVersion)",
+        guardLabel: "Not abandoned; compatible PHP; Symfony 8 if a bundle")
     ]
     final public const TRANSITION_VALID = 'valid';
 
     #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_OUTDATED_PHP,
         info: "No supported PHP version",
-        guard: "not subject.isAbandoned and subject.hasValidPhpVersion === false")]
+        guard: "not subject.isAbandoned and subject.hasValidPhpVersion === false",
+        guardLabel: "Not abandoned; unsupported PHP")]
     final public const TRANSITION_PHP_TOO_OLD = 'php_too_old';
 
     #[Transition([self::PLACE_COMPOSER_LOADED], self::PLACE_PHP_OKAY,
         info: "Supports a current PHP version",
-        guard: "not subject.isAbandoned and subject.hasValidPhpVersion")]
+        guard: "not subject.isAbandoned and subject.hasValidPhpVersion",
+        guardLabel: "Not abandoned; compatible PHP")]
     final public const TRANSITION_PHP_OKAY = 'php_okay';
 
     #[Transition([self::PLACE_PHP_OKAY], self::PLACE_SYMFONY_OUTDATED,
         info: "Bundle does not support Symfony 8",
-        guard: "subject.type == 'symfony-bundle' and subject.hasValidSymfonyVersion === false")]
+        guard: "subject.type == 'symfony-bundle' and subject.hasValidSymfonyVersion === false",
+        guardLabel: "Bundle without Symfony 8 support")]
     final public const TRANSITION_OUTDATED = 'symfony_outdated';
 
     #[Transition([self::PLACE_PHP_OKAY], self::PLACE_SYMFONY_OKAY,
         info: "Bundle supports Symfony 8",
-        guard: "subject.type == 'symfony-bundle' and subject.hasValidSymfonyVersion")]
+        guard: "subject.type == 'symfony-bundle' and subject.hasValidSymfonyVersion",
+        guardLabel: "Symfony 8 compatible bundle")]
     final public const TRANSITION_SYMFONY_OKAY = 'symfony_okay';
 
 
