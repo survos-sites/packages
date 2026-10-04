@@ -7,7 +7,6 @@ survos_tabler:
     theme: tabler
   menu_options:
     showAppMenu: true
-    repo: null
 #    frontPage: false
 #    showAppMenu: true
   app:
