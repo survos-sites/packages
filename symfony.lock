@@ -246,6 +246,9 @@
     "survos/field-bundle": {
         "version": "2.10.19"
     },
+    "survos/grid-bundle": {
+        "version": "2.34.39"
+    },
     "survos/js-twig-bundle": {
         "version": "1.6.0"
     },

@@ -50,4 +50,5 @@ return [
     Survos\JsonlBundle\SurvosJsonlBundle::class => ['all' => true],
     Survos\TuiExtrasBundle\SurvosTuiExtrasBundle::class => ['dev' => true, 'test' => true],
     Pentiminax\UX\DataTables\PentiminaxDataTablesBundle::class => ['all' => true],
+    Survos\Grid\SurvosGridBundle::class => ['all' => true],
 ];
