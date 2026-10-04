@@ -1,17 +1,18 @@
 {% extends 'base.html.twig' %}
 {% block title %}Symfony bundles{% endblock %}
-{% block page_title %}Search{% endblock %}
+{# The page IS the search, so no 'Search' page header: the results start right under the navbar. #}
+{% do page({show_page_header: false}) %}
 {% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('styles/search.css') }}">{% endblock %}
 {% block page_content %}
 {% set sc = survos_stimulus('search-bundle', 'instantsearch') %}
 <div class="pk-shell" {{ stimulus_controller(sc, {endpoint: path('survos_search_instant'), name: name, template: path('app_search_template'), sorts: sorts}) }}>
     <header class="pk-heading">
-        <div>
+        <div class="pk-title">
             <h1>Symfony bundles</h1>
-            <p>Bundles harvested from Packagist, filterable by the Symfony and PHP versions they support.</p>
+            <p>Harvested from Packagist, filterable by the Symfony and PHP versions they support.</p>
         </div>
+        <div class="pk-searchbox" {{ stimulus_target(sc, 'query') }}></div>
     </header>
-    <div class="pk-searchbox" {{ stimulus_target(sc, 'query') }}></div>
     <div class="pk-error" hidden role="alert" {{ stimulus_target(sc, 'error') }}></div>
     <div class="pk-workspace">
         <aside class="pk-sidebar" aria-label="Search filters">
