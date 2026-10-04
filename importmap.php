@@ -176,7 +176,6 @@ return [
     'qs' => ['version' => '6.15.3'],
     'instantsearch.js/es/widgets' => ['version' => '4.110.0'],
     'instantsearch-ui-components' => ['version' => '0.34.0'],
-    'instantsearch.css/themes/algolia.min.css' => ['version' => '8.19.0', 'type' => 'css'],
     'dexie' => ['version' => '4.4.4'],
     '@floating-ui/dom' => ['version' => '1.8.0'],
     '@floating-ui/core' => ['version' => '1.8.0'],

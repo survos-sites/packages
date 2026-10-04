@@ -7,7 +7,6 @@ import './stimulus_bootstrap.js';
  */
 // any CSS you import will output into a single css file (app.css in this case)
 
-import 'instantsearch.css/themes/algolia.min.css';
 import '@survos/search-bundle/styles/ux-search.css';
 
 import './styles/app.css';
