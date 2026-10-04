@@ -3,6 +3,6 @@
  * and ensure Stimulus + Symfony UX components load as expected.
  */
 import './stimulus_bootstrap.js';
-import 'bootstrap';
+import '@tabler/core';
 // Optional: JSON viewer (requires importmap/npm dependency)
 // import "@andypf/json-viewer";
