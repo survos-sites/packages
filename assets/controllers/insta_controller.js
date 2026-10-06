@@ -1,8 +1,7 @@
 import {Controller} from '@hotwired/stimulus';
 
 
-import Routing from "fos-routing";
-import RoutingData from "/js/fos_js_routes.js";
+import { path } from '@survos/js-twig/routing';
 import {prettyPrintJson} from 'pretty-print-json';
 import Twig from 'twig';
 import instantsearch from 'instantsearch.js'
@@ -22,8 +21,6 @@ import 'pretty-print-json/dist/css/pretty-print-json.min.css';
 import './../styles/hack.css';
 import 'flag-icons/css/flag-icons.min.css';
 
-Routing.setData(RoutingData);
-
 
 Twig.extend(function (Twig) {
     // Twig.setFilter('json_pretty', function(data, options={}) {
@@ -40,7 +37,7 @@ Twig.extend(function (Twig) {
             // if(routeParams.hasOwnProperty('_keys')){
             delete routeParams._keys; // seems to be added by twigjs
         }
-        return Routing.generate(route, routeParams);
+        return path(route, routeParams);
     });
 
     Twig._function.extend(

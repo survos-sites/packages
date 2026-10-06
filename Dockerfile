@@ -50,9 +50,9 @@ RUN --mount=type=cache,target=/root/.cache/composer \
 COPY . .
 
 # cache:clear (which warms up by default) must run before asset-map:compile:
-# survos/js-twig-bundle's FosRoutingCacheWarmer is what generates
-# var/js_twig_bundle/generated/fos_routes.js, and asset-map:compile fails
-# without it already on disk (known recurring gap on every upgrade).
+# survos/js-twig-bundle's cache warmer generates
+# var/js_twig_bundle/generated/routes.json, which AssetMapper picks up for
+# @survos/js-twig/routing. Never add a routing entry to importmap.php.
 # assets:install is NOT optional here. It is normally run by composer's
 # auto-scripts, but `composer install --no-scripts` above skips those, and
 # public/bundles/ is gitignored -- so it is absent from the build context dokku

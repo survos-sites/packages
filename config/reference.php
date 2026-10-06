@@ -2276,7 +2276,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     ignore_messages?: list<scalar|Param|null>,
  * }
  * @psalm-type SurvosSimpleDatatablesConfig = array{
- *     backend?: "simple"|"ux"|Param, // Default: "simple"
  *     stimulus_controller?: scalar|Param|null, // Default: "@survos/simple-datatables-bundle/table"
  *     per_page?: int|Param, // Default: 10
  *     searchable?: bool|Param, // Default: true
@@ -2296,19 +2295,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         url?: scalar|Param|null, // the API to use to load if empty. json-ld iterates through pages
  *         response_key?: scalar|Param|null, // key if API returns an object response, e.g. dummyjson returns {'products': [...]}
  *     }>,
- * }
- * @psalm-type FosJsRoutingConfig = array{
- *     serializer?: scalar|Param|null,
- *     routes_to_expose?: list<scalar|Param|null>,
- *     router?: scalar|Param|null, // Default: "router"
- *     request_context_base_url?: scalar|Param|null, // Default: null
- *     cache_control?: array{
- *         public?: bool|Param, // Default: false
- *         expires?: scalar|Param|null, // Default: null
- *         maxage?: scalar|Param|null, // Default: null
- *         smaxage?: scalar|Param|null, // Default: null
- *         vary?: list<scalar|Param|null>,
- *     },
  * }
  * @psalm-type SurvosCodeConfig = array{
  *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
@@ -2438,38 +2424,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SurvosJsonlConfig = array{
  *     compression_level?: int|Param, // Default: 1
  * }
- * @psalm-type DataTablesConfig = array{
- *     max_page_length?: int|Param, // Upper bound applied to the DataTables "length" parameter on Ajax requests. "length=-1" (show all) is honored only when the table declares -1 in lengthMenu(); otherwise it is capped to this value. // Default: 1000
- *     options?: array{
- *         language?: scalar|Param|null, // Default: "en-GB"
- *         stateSave?: bool|Param,
- *         showHeaderResetButton?: bool|Param,
- *         layout?: mixed, // Default: {"topStart":"pageLength","topEnd":"search","bottomStart":"info","bottomEnd":"paging"}
- *         lengthMenu?: list<scalar|Param|null>,
- *         pageLength?: int|Param,
- *         paging?: array{
- *             boundaryNumbers?: bool|Param, // Default: true
- *             buttons?: int|Param, // Default: 7
- *             firstLast?: bool|Param, // Default: true
- *             numbers?: bool|Param, // Default: true
- *             previousNext?: bool|Param, // Default: true
- *         },
- *     },
- *     table_attributes?: array{
- *         class?: scalar|Param|null, // Default: "table"
- *     },
- *     extensions?: array{
- *         buttons?: list<scalar|Param|null>,
- *         select?: array{
- *             style?: scalar|Param|null, // Default: "single"
- *         },
- *     },
- *     edit_modal?: array{
- *         template?: scalar|Param|null, // Default: "@PentiminaxDataTables/modal/datatables/edit_modal.html.twig"
- *         body_template?: scalar|Param|null, // Default: "@PentiminaxDataTables/modal/datatables/_form_body.html.twig"
- *         default_title?: scalar|Param|null, // Default: "Edit"
- *     },
- * }
  * @psalm-type SurvosGridConfig = array{
  *     stimulus_controller?: scalar|Param|null, // Default: "survos--grid-bundle--grid"
  * }
@@ -2519,7 +2473,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     inspector?: InspectorConfig,
  *     survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *     survos_js_twig?: SurvosJsTwigConfig,
- *     fos_js_routing?: FosJsRoutingConfig,
  *     survos_state?: SurvosStateConfig,
  *     zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *     survos_ez?: SurvosEzConfig,
@@ -2531,7 +2484,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_elastic?: SurvosElasticConfig,
  *     survos_schema_org?: SurvosSchemaOrgConfig,
  *     survos_jsonl?: SurvosJsonlConfig,
- *     data_tables?: DataTablesConfig,
  *     survos_grid?: SurvosGridConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
@@ -2582,7 +2534,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         inspector?: InspectorConfig,
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
- *         fos_js_routing?: FosJsRoutingConfig,
  *         survos_code?: SurvosCodeConfig,
  *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
@@ -2596,7 +2547,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_elastic?: SurvosElasticConfig,
  *         survos_schema_org?: SurvosSchemaOrgConfig,
  *         survos_jsonl?: SurvosJsonlConfig,
- *         data_tables?: DataTablesConfig,
  *         survos_grid?: SurvosGridConfig,
  *     },
  *     "when@prod"?: array{
@@ -2646,7 +2596,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         inspector?: InspectorConfig,
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
- *         fos_js_routing?: FosJsRoutingConfig,
  *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *         survos_ez?: SurvosEzConfig,
@@ -2658,7 +2607,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_elastic?: SurvosElasticConfig,
  *         survos_schema_org?: SurvosSchemaOrgConfig,
  *         survos_jsonl?: SurvosJsonlConfig,
- *         data_tables?: DataTablesConfig,
  *         survos_grid?: SurvosGridConfig,
  *     },
  *     "when@test"?: array{
@@ -2708,7 +2656,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         inspector?: InspectorConfig,
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
- *         fos_js_routing?: FosJsRoutingConfig,
  *         survos_code?: SurvosCodeConfig,
  *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
@@ -2722,7 +2669,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_elastic?: SurvosElasticConfig,
  *         survos_schema_org?: SurvosSchemaOrgConfig,
  *         survos_jsonl?: SurvosJsonlConfig,
- *         data_tables?: DataTablesConfig,
  *         survos_grid?: SurvosGridConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
