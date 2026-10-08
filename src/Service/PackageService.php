@@ -132,13 +132,13 @@ class PackageService
         foreach ($composer as $packageName => $package) {
             // if it's abandoned, don't even add it. Actually, we've already added it. :-(
             if ($package->isAbandoned()) {
-                $survosPackage->setMarking($survosPackage::PLACE_ABANDONED);
+                $survosPackage->setMarking(BundleWorkflowInterface::PLACE_ABANDONED);
                 continue;
             }
             /** @var \Packagist\Api\Result\Package\Version $version */
             foreach ($package->getVersions() as $versionCode => $version) {
                 if ($version->isAbandoned()) {
-                    $survosPackage->setMarking($survosPackage::PLACE_ABANDONED);
+                    $survosPackage->setMarking(BundleWorkflowInterface::PLACE_ABANDONED);
 
                     return; // is this true?
                     continue;

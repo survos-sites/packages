@@ -18,18 +18,13 @@ jobs:
 #          php php-cs-fixer.phar fix --dry-run --diff
 
   phpunit:
-    name: PHPUnit (PHP ${{ matrix.php-version }} - Symfony ${{ matrix.symfony-version }})
+    name: PHPUnit (PHP ${{ matrix.php-version }})
     runs-on: ubuntu-latest
-    env:
-      SYMFONY_REQUIRE: ${{ matrix.symfony-version }}
 
     strategy:
       matrix:
         php-version:
-          - '8.3'
-          - '8.4'
-        symfony-version:
-          - '7.2.*'
+          - '8.5'
 #        include:
 #          - php-version: '8.3'
 #            symfony-version: '6.4.*'
@@ -46,14 +41,8 @@ jobs:
           coverage: none
           php-version: ${{ matrix.php-version }}
 
-      - name: Install Symfony Flex
-        run: |
-          composer config --global --no-plugins allow-plugins.symfony/flex true
-          composer global require --no-progress --no-scripts --no-plugins symfony/flex
-
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v3
 
-# can't do this until we install a test database.
-#      - name: Run PHPUnit
-#        run: vendor/bin/phpunit
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit
