@@ -14,7 +14,7 @@ use Symfony\Component\Scheduler\ScheduleProviderInterface;
 
 /**
  * Polls Packagist's changes feed. Consumed as the `scheduler_packagist` transport,
- * alongside the work queues it feeds (see doc/scheduler.md):
+ * alongside the work queues it feeds (see docs/scheduler.md):
  *
  *     bin/console messenger:consume scheduler_packagist bundle.load bundle.fetch.docs --concurrency=4
  */

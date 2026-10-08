@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a91ae79032c15e3bda603754c7ac0ef9",
+    "content-hash": "dec5920d8d12e91bb52a6329f55d437e",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -7857,16 +7857,16 @@
         },
         {
             "name": "survos/state-bundle",
-            "version": "2.35.6",
+            "version": "2.35.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/state-bundle.git",
-                "reference": "041c3d141ab2ad935001186d339b0797abdb4c79"
+                "reference": "8bf491b931680ad3bff8e7eca95adf251098a886"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/state-bundle/zipball/041c3d141ab2ad935001186d339b0797abdb4c79",
-                "reference": "041c3d141ab2ad935001186d339b0797abdb4c79",
+                "url": "https://api.github.com/repos/survos/state-bundle/zipball/8bf491b931680ad3bff8e7eca95adf251098a886",
+                "reference": "8bf491b931680ad3bff8e7eca95adf251098a886",
                 "shasum": ""
             },
             "require": {
@@ -7932,7 +7932,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/state-bundle/issues",
-                "source": "https://github.com/survos/state-bundle/tree/2.35.6"
+                "source": "https://github.com/survos/state-bundle/tree/2.35.14"
             },
             "funding": [
                 {
@@ -7940,20 +7940,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-05T11:51:08+00:00"
+            "time": "2026-10-06T16:43:36+00:00"
         },
         {
             "name": "survos/tabler-bundle",
-            "version": "2.34.38",
+            "version": "2.35.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/tabler-bundle.git",
-                "reference": "c661251e6e41136d2a27437910909b1ad8d2667b"
+                "reference": "e03890d7a5e6354cde728c4a0e3e163195978bdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/c661251e6e41136d2a27437910909b1ad8d2667b",
-                "reference": "c661251e6e41136d2a27437910909b1ad8d2667b",
+                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/e03890d7a5e6354cde728c4a0e3e163195978bdf",
+                "reference": "e03890d7a5e6354cde728c4a0e3e163195978bdf",
                 "shasum": ""
             },
             "require": {
@@ -8036,7 +8036,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/tabler-bundle/issues",
-                "source": "https://github.com/survos/tabler-bundle/tree/2.34.38"
+                "source": "https://github.com/survos/tabler-bundle/tree/2.35.14"
             },
             "funding": [
                 {
@@ -8044,7 +8044,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-04T18:03:15+00:00"
+            "time": "2026-10-06T20:24:30+00:00"
         },
         {
             "name": "symfony/amqp-messenger",
@@ -16369,6 +16369,61 @@
             "time": "2024-05-06T16:37:16+00:00"
         },
         {
+            "name": "davidbadura/markdown-builder",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DavidBadura/markdown-builder.git",
+                "reference": "cdc1a29eb14f3202efb0e59ac80c2acb6f883af0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DavidBadura/markdown-builder/zipball/cdc1a29eb14f3202efb0e59ac80c2acb6f883af0",
+                "reference": "cdc1a29eb14f3202efb0e59ac80c2acb6f883af0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "infection/infection": "^0.22.1",
+                "patchlevel/coding-standard": "^1.0.0",
+                "phpstan/phpstan": "^0.12.85",
+                "phpunit/phpunit": "^9.5.4",
+                "symfony/var-dumper": "^5.2.3",
+                "vimeo/psalm": "^4.7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DavidBadura\\MarkdownBuilder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "DavidBadura",
+                    "email": "d.badura@gmx.de"
+                }
+            ],
+            "description": "Markdown Builder",
+            "keywords": [
+                "builder",
+                "markdown",
+                "render",
+                "writer"
+            ],
+            "support": {
+                "issues": "https://github.com/DavidBadura/markdown-builder/issues",
+                "source": "https://github.com/DavidBadura/markdown-builder/tree/1.1.1"
+            },
+            "time": "2021-10-23T09:22:02+00:00"
+        },
+        {
             "name": "dflydev/dot-access-data",
             "version": "v3.0.3",
             "source": {
@@ -20834,6 +20889,80 @@
                 }
             ],
             "time": "2026-09-18T11:32:15+00:00"
+        },
+        {
+            "name": "survos/doc-bundle",
+            "version": "2.34.25",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/survos/doc-bundle.git",
+                "reference": "df3afb59649c2edccfa1c03b89792b58f00784e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/survos/doc-bundle/zipball/df3afb59649c2edccfa1c03b89792b58f00784e7",
+                "reference": "df3afb59649c2edccfa1c03b89792b58f00784e7",
+                "shasum": ""
+            },
+            "require": {
+                "davidbadura/markdown-builder": "^1.1",
+                "nadar/php-composer-reader": "^2.0",
+                "php": "^8.5",
+                "survos/kit-bundle": "^2.5",
+                "symfony/config": "^8.1",
+                "symfony/console": "^8.1",
+                "symfony/dependency-injection": "^8.1",
+                "symfony/filesystem": "^8.1",
+                "symfony/finder": "^8.1",
+                "symfony/http-kernel": "^8.1",
+                "symfony/options-resolver": "^8.1",
+                "twig/twig": "^3.4|^4.0"
+            },
+            "require-dev": {
+                "doctrine/orm": "^3.0",
+                "jawira/doctrine-diagram-bundle": "^2.0",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^13.0",
+                "symfony/framework-bundle": "^8.1",
+                "symfony/panther": "^2.2",
+                "symfony/routing": "^8.1"
+            },
+            "suggest": {
+                "behat/behat": "For running the Behat feature tests (no Symfony 8 compatible release yet)",
+                "friends-of-behat/symfony-extension": "Symfony integration for Behat (requires behat/behat)",
+                "survos/state-bundle": "Richer doc:workflows diagrams that honor Survos place/transition metadata",
+                "symfony/process": "Lets doc:workflows render .svg diagrams via graphviz \"dot\"",
+                "symfony/workflow": "Required by the doc:workflows command to document registered workflows"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Survos\\DocBundle\\": "src/",
+                    "Survos\\DocBundle\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tac Tacelosky",
+                    "email": "tacman@gmail.com"
+                }
+            ],
+            "description": "Build Sphinx documentation for a Symfony project, using Twig templates",
+            "support": {
+                "issues": "https://github.com/survos/doc-bundle/issues",
+                "source": "https://github.com/survos/doc-bundle/tree/2.34.25"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kbond",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-01T11:47:36+00:00"
         },
         {
             "name": "survos/supervisor-bundle",

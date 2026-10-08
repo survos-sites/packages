@@ -41,7 +41,7 @@ source repository and settles in `documented`.
 Packages are kept fresh from Packagist's changes feed: a Symfony Scheduler schedule
 runs `app:packagist:changes` every 5 minutes and queues `load` only for tracked
 packages that changed. One worker consumes the schedule and the work queues with
-Symfony 8.2's `--concurrency`; see [doc/scheduler.md](doc/scheduler.md).
+Symfony 8.2's `--concurrency`; see [docs/scheduler.md](docs/scheduler.md).
 
 ```bash
 bin/console app:packagist:changes        # first run stores the feed cursor

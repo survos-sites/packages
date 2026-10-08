@@ -99,6 +99,7 @@
         "rector/rector": "^2.0",
         "roave/security-advisories": "dev-latest",
         "survos/code-bundle": "^2.0|dev-main",
+        "survos/doc-bundle": "^2.34",
         "survos/supervisor-bundle": "^2.10",
         "symfony/browser-kit": "^8.1",
         "symfony/css-selector": "^8.1",

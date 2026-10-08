@@ -222,6 +222,9 @@
             "config/routes/survos_crawler.yaml"
         ]
     },
+    "survos/doc-bundle": {
+        "version": "2.34.25"
+    },
     "survos/elastic-bundle": {
         "version": "2.24.2"
     },

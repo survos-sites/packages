@@ -10711,6 +10711,50 @@
                 },
                 "additionalProperties": false
             },
+            "survos_doc": {
+                "$ref": "#/$defs/types/object_null",
+                "properties": {
+                    "routes_enabled": {
+                        "$ref": "#/$defs/types/boolean",
+                        "default": true,
+                        "description": "Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off."
+                    },
+                    "route_prefix": {
+                        "$ref": "#/$defs/types/scalar",
+                        "default": "/doc",
+                        "description": "URL prefix applied to all routes from this bundle."
+                    },
+                    "locale_prefix": {
+                        "$ref": "#/$defs/types/boolean",
+                        "default": false,
+                        "description": "Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param."
+                    },
+                    "user_provider": {
+                        "$ref": "#/$defs/types/scalar",
+                        "default": null
+                    },
+                    "user_class": {
+                        "$ref": "#/$defs/types/scalar",
+                        "default": "App\\Entity\\User"
+                    },
+                    "console": {
+                        "$ref": "#/$defs/types/object_null",
+                        "properties": {
+                            "include": {
+                                "$ref": "#/$defs/types/array_null",
+                                "items": {
+                                    "$ref": "#/$defs/types/scalar"
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "default": {
+                            "include": []
+                        }
+                    }
+                },
+                "additionalProperties": false
+            },
             "survos_elastic": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
@@ -13681,6 +13725,9 @@
                 "survos_crawler": {
                     "$ref": "#/$defs/nodes/survos_crawler"
                 },
+                "survos_doc": {
+                    "$ref": "#/$defs/nodes/survos_doc"
+                },
                 "survos_elastic": {
                     "$ref": "#/$defs/nodes/survos_elastic"
                 },
@@ -14034,6 +14081,9 @@
                 },
                 "survos_crawler": {
                     "$ref": "#/$defs/nodes/survos_crawler"
+                },
+                "survos_doc": {
+                    "$ref": "#/$defs/nodes/survos_doc"
                 },
                 "survos_elastic": {
                     "$ref": "#/$defs/nodes/survos_elastic"

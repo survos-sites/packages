@@ -49,4 +49,5 @@ return [
     Survos\JsonlBundle\SurvosJsonlBundle::class => ['all' => true],
     Survos\TuiExtrasBundle\SurvosTuiExtrasBundle::class => ['dev' => true, 'test' => true],
     Survos\Grid\SurvosGridBundle::class => ['all' => true],
+    Survos\DocBundle\SurvosDocBundle::class => ['dev' => true, 'test' => true],
 ];

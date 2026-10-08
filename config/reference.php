@@ -2437,6 +2437,16 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SurvosGridConfig = array{
  *     stimulus_controller?: scalar|Param|null, // Default: "survos--grid-bundle--grid"
  * }
+ * @psalm-type SurvosDocConfig = array{
+ *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
+ *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/doc"
+ *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
+ *     user_provider?: scalar|Param|null, // Default: null
+ *     user_class?: scalar|Param|null, // Default: "App\\Entity\\User"
+ *     console?: array{
+ *         include?: list<scalar|Param|null>,
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -2560,6 +2570,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_schema_org?: SurvosSchemaOrgConfig,
  *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_grid?: SurvosGridConfig,
+ *         survos_doc?: SurvosDocConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -2684,6 +2695,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_schema_org?: SurvosSchemaOrgConfig,
  *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_grid?: SurvosGridConfig,
+ *         survos_doc?: SurvosDocConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
