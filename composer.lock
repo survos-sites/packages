@@ -7093,16 +7093,16 @@
         },
         {
             "name": "survos/elastic-bundle",
-            "version": "2.35.10",
+            "version": "2.35.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/elastic-bundle.git",
-                "reference": "08c76456bd0ac1abe121d0fdad12d46963e157d6"
+                "reference": "628a401fc97e1a2d0360391697989c7408696c19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/elastic-bundle/zipball/08c76456bd0ac1abe121d0fdad12d46963e157d6",
-                "reference": "08c76456bd0ac1abe121d0fdad12d46963e157d6",
+                "url": "https://api.github.com/repos/survos/elastic-bundle/zipball/628a401fc97e1a2d0360391697989c7408696c19",
+                "reference": "628a401fc97e1a2d0360391697989c7408696c19",
                 "shasum": ""
             },
             "require": {
@@ -7150,7 +7150,7 @@
             "description": "Elasticsearch index lifecycle for Symfony: create/populate/status, and Doctrine change spooling. The query and faceted-UI half lives in survos/search-bundle.",
             "support": {
                 "issues": "https://github.com/survos/elastic-bundle/issues",
-                "source": "https://github.com/survos/elastic-bundle/tree/2.35.10"
+                "source": "https://github.com/survos/elastic-bundle/tree/2.35.20"
             },
             "funding": [
                 {
@@ -7158,7 +7158,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-05T17:26:27+00:00"
+            "time": "2026-10-08T18:52:42+00:00"
         },
         {
             "name": "survos/ez-bundle",
@@ -7682,16 +7682,16 @@
         },
         {
             "name": "survos/search-bundle",
-            "version": "2.35.10",
+            "version": "2.35.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/search-bundle.git",
-                "reference": "4753dd888f642d5ae348395016ffa501221965a4"
+                "reference": "dbbcbf95edf4bfbbb6d54b059eb153c84149b10c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/search-bundle/zipball/4753dd888f642d5ae348395016ffa501221965a4",
-                "reference": "4753dd888f642d5ae348395016ffa501221965a4",
+                "url": "https://api.github.com/repos/survos/search-bundle/zipball/dbbcbf95edf4bfbbb6d54b059eb153c84149b10c",
+                "reference": "dbbcbf95edf4bfbbb6d54b059eb153c84149b10c",
                 "shasum": ""
             },
             "require": {
@@ -7769,7 +7769,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/search-bundle/issues",
-                "source": "https://github.com/survos/search-bundle/tree/2.35.10"
+                "source": "https://github.com/survos/search-bundle/tree/2.35.20"
             },
             "funding": [
                 {
@@ -7777,7 +7777,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-05T17:26:27+00:00"
+            "time": "2026-10-08T18:52:51+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
