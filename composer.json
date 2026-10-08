@@ -31,6 +31,7 @@
         "jwage/phpamqplib-messenger": "dev-main@dev",
         "knplabs/knp-time-bundle": "^2.2",
         "knplabs/packagist-api": "^3.0",
+        "league/commonmark": "^2.10",
         "nadar/cebe-php-openapi": "^1.0",
         "nadar/php-composer-reader": "^2.0",
         "nelmio/cors-bundle": "^2.4",

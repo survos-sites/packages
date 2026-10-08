@@ -10,6 +10,7 @@ import './stimulus_bootstrap.js';
 import '@survos/search-bundle/styles/ux-search.css';
 
 import './styles/app.css';
+import './agents_dialog.js';
 
 import '@tabler/core';
 import '@tabler/core/dist/css/tabler.min.css';

@@ -31,4 +31,4 @@ elastic: php -d memory_limit=512M bin/console messenger:consume elastic --time-l
 # --concurrency the parent fetches and up to 4 child processes handle messages in
 # parallel (Symfony 8.2, needs amphp/parallel). The process type keeps its old name
 # so existing `ps:scale bundle-load=1` settings still apply.
-bundle-load: php -d memory_limit=512M bin/console messenger:consume scheduler_packagist bundle.load bundle.fetch.docs --concurrency=4 --time-limit=3600 --memory-limit=256M
+bundle-load: php -d memory_limit=512M bin/console messenger:consume scheduler_packagist bundle.load bundle.fetch.docs --time-limit=3600 --memory-limit=256M

@@ -11,6 +11,7 @@
     <footer class="pk-card-footer">
         <span>{{ hit.marking|default('')|e }}{% if hit.stars %} · ★ {{ hit.stars|e }}{% endif %}{% if hit.downloads %} · {{ hit.downloads|e }} downloads{% endif %}</span>
         <span>
+            {% if hit.agentsMd %}<button type="button" class="pk-agents-btn" data-agents-url="/package/{{ hit.id|e }}/agents" data-agents-title="{{ hit.name|e }}" title="Ships an AGENTS.md — click to read it">A</button>{% endif %}
             {% if hit.repo %}<a href="{{ hit.repo|e }}" target="_blank" rel="noopener">Repo</a>{% endif %}
             <a href="https://packagist.org/packages/{{ hit.name|e }}" target="_blank" rel="noopener">Packagist <span aria-hidden="true">↗</span></a>
         </span>

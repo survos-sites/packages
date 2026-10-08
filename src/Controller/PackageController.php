@@ -10,6 +10,7 @@ use App\Workflow\BundleWorkflow;
 use App\Workflow\BundleWorkflowInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
+use League\CommonMark\CommonMarkConverter;
 use Nadar\PhpComposerReader\ComposerReader;
 use Survos\StateBundle\Controller\HandleTransitionsInterface;
 use Survos\StateBundle\Traits\HandleTransitionsTrait;
@@ -66,6 +67,24 @@ class PackageController extends AbstractController implements HandleTransitionsI
         return $this->render('package/show.html.twig', [
             'package' => $package,
             'composer' => $package->data,
+        ]);
+    }
+
+    /** The bundle's AGENTS.md as an HTML fragment, for the "A" dialog on search results. */
+    #[Route('/agents', name: 'package_agents', options: ['expose' => true], methods: [Request::METHOD_GET])]
+    public function agents(string $packageId): Response
+    {
+        $package = $this->entityManager->getRepository(Package::class)->find($packageId);
+        if (!$package instanceof Package || $package->agentsMd === null) {
+            throw $this->createNotFoundException(sprintf('No AGENTS.md for %s', $packageId));
+        }
+
+        // Third-party Markdown: escape any raw HTML and drop javascript:/data: links.
+        $converter = new CommonMarkConverter(['html_input' => 'escape', 'allow_unsafe_links' => false]);
+
+        return new Response((string) $converter->convert($package->agentsMd), headers: [
+            'Content-Type' => 'text/html; charset=UTF-8',
+            'Cache-Control' => 'public, max-age=3600',
         ]);
     }
 }
