@@ -19,7 +19,7 @@ final class CompiledPackageWorkflowTest extends KernelTestCase
         $package->phpVersions = ['8.4'];
         $package->symfonyVersions = [];
         $workflow = self::getContainer()->get('workflow.registry')->get($package, WF::WORKFLOW_NAME);
-        self::assertSame([WF::TRANSITION_SYMFONY_OKAY, WF::TRANSITION_VALID], $workflow->getMetadataStore()->getPlaceMetadata(WF::PLACE_PHP_OKAY)['next']);
+        self::assertSame([WF::TRANSITION_SYMFONY_OKAY, WF::TRANSITION_OUTDATED, WF::TRANSITION_VALID], $workflow->getMetadataStore()->getPlaceMetadata(WF::PLACE_PHP_OKAY)['next']);
         self::assertFalse($workflow->can($package, WF::TRANSITION_SYMFONY_OKAY));
         self::assertTrue($workflow->can($package, WF::TRANSITION_VALID));
         $package->data['type'] = 'symfony-bundle';

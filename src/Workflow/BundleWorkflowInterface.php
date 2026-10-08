@@ -37,7 +37,8 @@ class BundleWorkflowInterface
     #[Place(
         metadata: ['label' => 'PHP compatible'],
         info: "php okay",
-        next: [self::TRANSITION_SYMFONY_OKAY, self::TRANSITION_VALID]
+        // Guards are exclusive: a bundle goes to symfony_ok or outdated_symfony, a library to valid.
+        next: [self::TRANSITION_SYMFONY_OKAY, self::TRANSITION_OUTDATED, self::TRANSITION_VALID]
     )]
     final public const PLACE_PHP_OKAY = 'php_ok';
     #[Place(info: "abandoned or misconfigured")]
