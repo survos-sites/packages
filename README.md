@@ -35,7 +35,18 @@ are inserted into the same catalogue and start through the same mechanism.
 Platform requirements and `require-dev` are excluded. Libraries do not recursively
 discover their dependencies. Composer `type` determines whether Symfony 8 compatibility
 checks apply; Symfony 7-only bundles do not pass the catalogue gate, while PHP-compatible libraries can reach `valid` without a Symfony requirement.
-`valid` is terminal. Refresh/reset and README fetching are separate future work.
+`valid` continues to `fetch_docs`, which stores README.md and AGENTS.md from the
+source repository and settles in `documented`.
+
+Packages are kept fresh from Packagist's changes feed: a Symfony Scheduler schedule
+runs `app:packagist:changes` every 5 minutes and queues `load` only for tracked
+packages that changed. One worker consumes the schedule and the work queues with
+Symfony 8.2's `--concurrency`; see [doc/scheduler.md](doc/scheduler.md).
+
+```bash
+bin/console app:packagist:changes        # first run stores the feed cursor
+bin/console messenger:consume scheduler_packagist bundle.load bundle.fetch.docs --concurrency=4 -vv
+```
 
 For deliberate recovery of stranded existing rows, inspect the queues first and
 use `state:iterate Package --marking=new --transition=load` explicitly.
