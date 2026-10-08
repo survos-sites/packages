@@ -43,8 +43,10 @@ class BundleWorkflowInterface
     #[Place(info: "abandoned or misconfigured")]
     final public const PLACE_ABANDONED = 'abandoned';
 //    final public const PLACE_NOT_FOUND = 'not_found';
-    #[Place(info: "usable!")]
+    #[Place(info: "usable!", next: [self::TRANSITION_FETCH_DOCS])]
     final public const PLACE_VALID_REQUIREMENTS = 'valid';
+    #[Place(metadata: ['label' => 'Docs fetched'], info: "README / AGENTS.md fetch attempted; either may be null")]
+    final public const PLACE_DOCUMENTED = 'documented';
 
     #[Transition(
         [self::PLACE_NEW, self::PLACE_SYMFONY_OKAY],
@@ -90,6 +92,12 @@ class BundleWorkflowInterface
         guard: "subject.type == 'symfony-bundle' and subject.hasValidSymfonyVersion",
         guardLabel: "Symfony 8 compatible bundle")]
     final public const TRANSITION_SYMFONY_OKAY = 'symfony_okay';
+
+    #[Transition([self::PLACE_VALID_REQUIREMENTS], self::PLACE_DOCUMENTED,
+        description: "README.md and AGENTS.md from the source repo at the loaded reference",
+        info: "raw.githubusercontent.com",
+        async: true)]
+    final public const TRANSITION_FETCH_DOCS = 'fetch_docs';
 
 
 }

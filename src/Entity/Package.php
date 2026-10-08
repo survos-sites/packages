@@ -217,6 +217,22 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     /** $downloads now Stored in the database */
     public ?int $downloads = null;
 
+    // Not in package.read: READMEs are large. Set by the fetch_docs transition.
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    public ?string $readme = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    public ?string $agentsMd = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['package.read'])]
+    public ?\DateTimeImmutable $docsFetchedAt = null;
+
+    #[Groups(['package.facets', 'package.read'])]
+    public ?bool $hasAgentsMd {
+        get => $this->docsFetchedAt === null ? null : $this->agentsMd !== null;
+    }
+
     public function __construct(
         #[ORM\Column(type: Types::STRING, length: 255)]
         #[Groups(['browse'])]

@@ -78,6 +78,7 @@ final class BundleWorkflowTest extends TestCase
             new NullLogger(), $this->createStub(PackageService::class),
             new \App\Service\RequiredPackageDiscovery($this->createStub(PackageRepository::class), $this->createStub(EntityManagerInterface::class)),
             $this->createStub(EntityManagerInterface::class),
-            $this->createStub(PackageRepository::class), $client, $this->createStub(WorkflowInterface::class));
+            $this->createStub(PackageRepository::class), $client, $this->createStub(WorkflowInterface::class),
+            new \App\Service\PackageDocsFetcher(new \Symfony\Component\HttpClient\MockHttpClient()));
     }
 }

@@ -7,6 +7,7 @@ namespace App\Workflow;
 use App\Entity\Package;
 use App\Message\FetchComposer;
 use App\Repository\PackageRepository;
+use App\Service\PackageDocsFetcher;
 use App\Service\PackageService;
 use App\Service\RequiredPackageDiscovery;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,6 +45,7 @@ final class BundleWorkflow
         private PackageRepository $packageRepository,
         private Client $packagistClient,
         #[Target(WF::WORKFLOW_NAME)] private WorkflowInterface $workflow,
+        private PackageDocsFetcher $docsFetcher,
     ) {
     }
 
@@ -144,6 +146,12 @@ final class BundleWorkflow
     public function onValidCompleted(CompletedEvent $event): void
     {
         $this->requiredPackageDiscovery->discover($this->getPackage($event));
+    }
+
+    #[AsTransitionListener(WF::WORKFLOW_NAME, WF::TRANSITION_FETCH_DOCS)]
+    public function onFetchDocs(TransitionEvent $event): void
+    {
+        $this->docsFetcher->fetch($this->getPackage($event));
     }
 
     #[AsTransitionListener(WF::WORKFLOW_NAME, WF::TRANSITION_LOAD)]

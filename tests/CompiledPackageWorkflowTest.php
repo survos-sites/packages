@@ -30,6 +30,9 @@ final class CompiledPackageWorkflowTest extends KernelTestCase
         $package->symfonyVersions = ['8.0'];
         self::assertTrue($workflow->can($package, WF::TRANSITION_SYMFONY_OKAY));
         $package->marking = WF::PLACE_VALID_REQUIREMENTS;
+        self::assertSame([WF::TRANSITION_FETCH_DOCS], $workflow->getMetadataStore()->getPlaceMetadata(WF::PLACE_VALID_REQUIREMENTS)['next']);
+        self::assertTrue($workflow->can($package, WF::TRANSITION_FETCH_DOCS));
+        $package->marking = WF::PLACE_DOCUMENTED;
         self::assertSame([], $workflow->getEnabledTransitions($package));
     }
 }
