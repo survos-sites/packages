@@ -48,8 +48,11 @@ class BundleWorkflowInterface
     #[Place(metadata: ['label' => 'Docs fetched'], info: "README / AGENTS.md fetch attempted; either may be null")]
     final public const PLACE_DOCUMENTED = 'documented';
 
+    // Settled places can be reloaded: PackagistChangesRefresher dispatches load for
+    // packages Packagist reports as updated, and the chain re-evaluates from there.
     #[Transition(
-        [self::PLACE_NEW, self::PLACE_SYMFONY_OKAY],
+        [self::PLACE_NEW, self::PLACE_SYMFONY_OKAY, self::PLACE_SYMFONY_OUTDATED, self::PLACE_OUTDATED_PHP,
+            self::PLACE_ABANDONED, self::PLACE_VALID_REQUIREMENTS, self::PLACE_DOCUMENTED],
         self::PLACE_COMPOSER_LOADED,
         description: "Slow but detailed API call",
         info: "details from packagist API",

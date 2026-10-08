@@ -33,6 +33,6 @@ final class CompiledPackageWorkflowTest extends KernelTestCase
         self::assertSame([WF::TRANSITION_FETCH_DOCS], $workflow->getMetadataStore()->getPlaceMetadata(WF::PLACE_VALID_REQUIREMENTS)['next']);
         self::assertTrue($workflow->can($package, WF::TRANSITION_FETCH_DOCS));
         $package->marking = WF::PLACE_DOCUMENTED;
-        self::assertSame([], $workflow->getEnabledTransitions($package));
+        self::assertSame([WF::TRANSITION_LOAD], array_map(static fn ($t) => $t->getName(), $workflow->getEnabledTransitions($package)));
     }
 }

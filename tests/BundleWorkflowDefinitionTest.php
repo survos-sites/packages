@@ -10,21 +10,25 @@ use Survos\StateBundle\Attribute\Transition;
 
 final class BundleWorkflowDefinitionTest extends TestCase
 {
-    public function testDocumentedIsTerminalAndOnlyReachedFromValid(): void
+    public function testSettledPlacesLeaveOnlyByReloadAndDocumentedFollowsValid(): void
     {
         $incoming = false;
         foreach ((new \ReflectionClass(WF::class))->getReflectionConstants() as $constant) {
             foreach ($constant->getAttributes(Transition::class) as $attribute) {
                 $transition = $attribute->newInstance();
-                self::assertNotContains(WF::PLACE_DOCUMENTED, (array) $transition->from);
+                $name = $constant->getValue();
+                if (in_array(WF::PLACE_DOCUMENTED, (array) $transition->from, true)) {
+                    self::assertSame(WF::TRANSITION_LOAD, $name, 'documented is settled: only a refresh leaves it.');
+                }
                 if (in_array(WF::PLACE_VALID_REQUIREMENTS, (array) $transition->from, true)) {
-                    self::assertSame(WF::TRANSITION_FETCH_DOCS, $constant->getValue());
+                    self::assertContains($name, [WF::TRANSITION_FETCH_DOCS, WF::TRANSITION_LOAD]);
                 }
                 $incoming = $incoming || in_array(WF::PLACE_DOCUMENTED, (array) $transition->to, true);
             }
         }
         self::assertTrue($incoming, 'Documented must remain reachable.');
     }
+
     public function testBundleAndComponentTakeDifferentGuardedPaths(): void
     {
         $package = new \App\Entity\Package('acme/component');
