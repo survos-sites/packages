@@ -17,7 +17,6 @@ use Psr\Log\LoggerInterface;
 use Survos\StateBundle\Attribute\Transition;
 use Survos\StateBundle\Attribute\Workflow;
 use Symfony\Component\DependencyInjection\Attribute\Target;
-use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -158,13 +157,13 @@ final class BundleWorkflow
     public function onLoadComposer(TransitionEvent $event): void
     {
         $package = $this->getPackage($event);
-        // @todo: check updatedAt
-        // https://packagist.org/apidoc#track-package-updates
+        // `load` always loads: whether a package needs reloading is decided before the
+        // transition is dispatched (https://packagist.org/apidoc#track-package-updates),
+        // not here. Repeat fetches are absorbed by the caching packagist.client.
         $this->loadLatestVersionData($package);
         $this->packageService->populateFromComposerData($package);
     }
 
-    //    #[Cache('1 day')]
     private function loadLatestVersionData(Package $package): void
     {
         // One detailed request provides everything we need. Let HTTP failures reach

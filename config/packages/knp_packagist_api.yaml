@@ -1,2 +1,8 @@
 services:
-    Packagist\Api\Client: null
+    packagist.psr18_client:
+        class: Symfony\Component\HttpClient\Psr18Client
+        arguments: ['@packagist.client']
+
+    Packagist\Api\Client:
+        arguments:
+            $httpClient: '@packagist.psr18_client'

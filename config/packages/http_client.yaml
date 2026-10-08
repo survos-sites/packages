@@ -1,0 +1,14 @@
+framework:
+    http_client:
+        scoped_clients:
+            # Packagist's /packages/{name}.json sends `public, s-maxage=43200` and no
+            # validators, so a shared cache can reuse it for 12h; /p2/ metadata sends
+            # max-age=900 plus ETag/Last-Modified and revalidates to a 304. Caching
+            # here makes re-running `load` (after --reset, a retry, a debug run) cheap
+            # without the workflow having to decide whether to skip it.
+            packagist.client:
+                base_uri: 'https://packagist.org'
+                caching:
+                    enabled: true
+                    shared: true
+                    max_ttl: 43200
