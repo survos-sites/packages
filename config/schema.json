@@ -3948,7 +3948,7 @@
                                                 "sign": {
                                                     "$ref": "#/$defs/types/boolean",
                                                     "default": false,
-                                                    "description": "Whether to sign every message sent to this transport with its trust level, and to refuse any message received from it that is unsigned, or signed as unverified when this is not a failure transport. When false, only the messages whose handlers ask for it are signed."
+                                                    "description": "Whether to sign every message sent to this transport with its trust level, and to refuse any message received from it that is unsigned, or signed as unverified when this is not a failure transport. Handlers with the \"sign\" option require it on the transports their messages come from."
                                                 },
                                                 "claim_check": {
                                                     "$ref": "#/$defs/types/object_null",
@@ -9133,6 +9133,10 @@
                             },
                             "send_default_pii": {
                                 "$ref": "#/$defs/types/boolean"
+                            },
+                            "data_collection": {
+                                "$ref": "#/$defs/types/variable",
+                                "description": "Opts into the data collection options, which replace legacy options such as \"send_default_pii\". An empty array applies the default of every option, null keeps the legacy options even if an earlier config file opted in."
                             },
                             "max_value_length": {
                                 "$ref": "#/$defs/types/integer",
