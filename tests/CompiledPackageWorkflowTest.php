@@ -19,6 +19,13 @@ final class CompiledPackageWorkflowTest extends KernelTestCase
         $package->phpVersions = ['8.4'];
         $package->symfonyVersions = [];
         $workflow = self::getContainer()->get('workflow.registry')->get($package, WF::WORKFLOW_NAME);
+        self::assertSame([Package::class], self::getContainer()->get(\Survos\StateBundle\Service\WorkflowHelperService::class)->getSupports(WF::WORKFLOW_NAME));
+        foreach ($workflow->getDefinition()->getPlaces() as $place) {
+            self::assertNotEmpty($workflow->getMetadataStore()->getPlaceMetadata($place)['description']);
+        }
+        foreach ($workflow->getDefinition()->getTransitions() as $transition) {
+            self::assertNotEmpty($workflow->getMetadataStore()->getTransitionMetadata($transition)['description']);
+        }
         self::assertSame([WF::TRANSITION_SYMFONY_OKAY, WF::TRANSITION_OUTDATED, WF::TRANSITION_VALID], $workflow->getMetadataStore()->getPlaceMetadata(WF::PLACE_PHP_OKAY)['next']);
         self::assertFalse($workflow->can($package, WF::TRANSITION_SYMFONY_OKAY));
         self::assertTrue($workflow->can($package, WF::TRANSITION_VALID));

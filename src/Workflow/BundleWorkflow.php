@@ -14,8 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Packagist\Api\Client;
 use Packagist\Api\Result\Package as PackagistPackage;
 use Psr\Log\LoggerInterface;
-use Survos\StateBundle\Attribute\Transition;
-use Survos\StateBundle\Attribute\Workflow;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;

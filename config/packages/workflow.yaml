@@ -1,2 +1,2 @@
-framework:
-    workflows: null
+# Native attributes are discovered on App services.
+workflow: ~

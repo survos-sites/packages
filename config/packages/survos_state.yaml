@@ -1,8 +1,8 @@
 survos_state:
     base_layout: base.html.twig
     enable_dynamic_routing: true
-    workflow_paths:
-        - '%kernel.project_dir%/src/Workflow'
+    # Legacy explorer and message classes only; Symfony owns registration.
+    workflow_paths: ['%kernel.project_dir%/src/Workflow']
 
     # One RabbitMQ queue per async workflow transition. Use Symfony's native AMQP
     # transport for 8.2 prefetch and parallel child-process support.

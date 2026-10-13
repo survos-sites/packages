@@ -9,10 +9,9 @@ use App\Entity\Package;
 use App\Repository\PackageRepository;
 use App\Workflow\BundleWorkflowInterface as WF;
 use Doctrine\ORM\EntityManagerInterface;
-use Survos\StateBundle\Message\TransitionMessage;
-use Survos\StateBundle\Service\AsyncQueueLocator;
+use Survos\WorkflowAsyncBundle\Service\TransitionDispatcher;
+use App\Workflow\PackagePipeline;
 use Symfony\Component\DependencyInjection\Attribute\Target;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -27,8 +26,7 @@ final class PackagistChangesRefresher
         private HttpClientInterface $packagistClient,
         private EntityManagerInterface $entityManager,
         private PackageRepository $packages,
-        private MessageBusInterface $bus,
-        private AsyncQueueLocator $asyncQueueLocator,
+        private TransitionDispatcher $dispatcher,
         #[Target(WF::WORKFLOW_NAME)] private WorkflowInterface $workflow,
     ) {
     }
@@ -73,8 +71,7 @@ final class PackagistChangesRefresher
                     $result->skipped[] = $name;
                     continue;
                 }
-                $message = new TransitionMessage($package->id, Package::class, WF::TRANSITION_LOAD, WF::WORKFLOW_NAME);
-                $this->bus->dispatch($message, $this->asyncQueueLocator->stamps($message));
+                $this->dispatcher->dispatch(WF::WORKFLOW_NAME, PackagePipeline::reference($package), WF::TRANSITION_LOAD);
                 $result->queued[] = $name;
             }
             $cursor->advance($data['timestamp']);

@@ -267,6 +267,12 @@
     "survos/tui-extras-bundle": {
         "version": "2.24.24"
     },
+    "survos/workflow-async-bundle": {
+        "version": "dev-main"
+    },
+    "survos/workflow-extras-bundle": {
+        "version": "dev-main"
+    },
     "symfony/asset-mapper": {
         "version": "7.3",
         "recipe": {

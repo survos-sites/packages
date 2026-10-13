@@ -52,6 +52,8 @@
         "survos/simple-datatables-bundle": "^2.19",
         "survos/state-bundle": "^2.0",
         "survos/tabler-bundle": "^2.19",
+        "survos/workflow-async-bundle": "dev-main",
+        "survos/workflow-extras-bundle": "dev-main",
         "symfony/amqp-messenger": "^8.1",
         "symfony/asset": "^8.1",
         "symfony/asset-mapper": "^8.1",

@@ -57,6 +57,18 @@ final class PackageTransitionLockMiddlewareTest extends TestCase
         self::assertTrue($locks->createLock('packages:package:acme--demo')->acquire(), 'Lock must be released afterwards.');
     }
 
+    public function testNativeRequestUsesTheSamePackageLock(): void
+    {
+        $locks = new LockFactory(new InMemoryStore());
+        $held = $locks->createLock('packages:package:acme--demo');
+        $held->acquire();
+        $middleware = new PackageTransitionLockMiddleware($locks, $this->createStub(EntityManagerInterface::class));
+        $this->expectException(RecoverableMessageHandlingException::class);
+        $middleware->handle(new Envelope(new \Survos\WorkflowAsyncBundle\Message\TransitionRequest(
+            'BundleWorkflow', new \Survos\WorkflowAsyncBundle\Message\SubjectReference('package', 'acme--demo'), 'load', [], 'test',
+        ), [new ReceivedStamp('bundle.load')]), new StackMiddleware());
+    }
+
     public function testAnotherHolderStillBlocks(): void
     {
         $locks = new LockFactory(new InMemoryStore());

@@ -7,6 +7,7 @@ namespace App\Messenger;
 use App\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use Survos\StateBundle\Message\TransitionMessage;
+use Survos\WorkflowAsyncBundle\Message\TransitionRequest;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Messenger\Envelope;
@@ -37,12 +38,16 @@ final class PackageTransitionLockMiddleware implements MiddlewareInterface
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
         $message = $envelope->getMessage();
-        if (!$envelope->last(ReceivedStamp::class) || !$message instanceof TransitionMessage
-            || $message->getClassName() !== Package::class) {
+        $id = match (true) {
+            $message instanceof TransitionRequest && $message->subject->type === 'package' => $message->subject->id,
+            $message instanceof TransitionMessage && $message->getClassName() === Package::class => (string) $message->getId(),
+            default => null,
+        };
+        if (!$envelope->last(ReceivedStamp::class) || $id === null) {
             return $stack->next()->handle($envelope, $stack);
         }
 
-        $resource = 'packages:package:'.$message->getId();
+        $resource = 'packages:package:'.$id;
         if (($this->depth[$resource] ?? 0) > 0) {
             ++$this->depth[$resource];
             try {
@@ -64,9 +69,12 @@ final class PackageTransitionLockMiddleware implements MiddlewareInterface
             };
             $acquire($resource);
             $this->depth[$resource] = 1;
-            $package = $this->em->find(Package::class, $message->getId());
-            if ($package instanceof Package) {
-                $this->em->refresh($package);
+            // Native requests refresh in PackageSubjectStore, inside this lock.
+            if ($message instanceof TransitionMessage) {
+                $package = $this->em->find(Package::class, $id);
+                if ($package instanceof Package) {
+                    $this->em->refresh($package);
+                }
             }
             // Hold through the handler's final flush and postFlush follow-up dispatch.
             return $stack->next()->handle($envelope, $stack);

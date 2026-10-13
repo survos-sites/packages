@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // uses Survos Param Converter, from the UniqueIdentifiers method of the entity.
 
 namespace App\Controller;
@@ -12,8 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use League\CommonMark\CommonMarkConverter;
 use Nadar\PhpComposerReader\ComposerReader;
-use Survos\StateBundle\Controller\HandleTransitionsInterface;
-use Survos\StateBundle\Traits\HandleTransitionsTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,12 +22,13 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 #[Route('/package/{packageId}')]
-class PackageController extends AbstractController implements HandleTransitionsInterface
+class PackageController extends AbstractController
 {
-    use HandleTransitionsTrait;
+
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly \App\Workflow\PackagePipeline $pipeline,
     ) {
     }
 
@@ -48,7 +49,16 @@ class PackageController extends AbstractController implements HandleTransitionsI
     ): Response {
         $package = $this->entityManager->getRepository(Package::class)->find($packageId);
         assert($package instanceof Package, "wrong id $packageId");
-        if ($flashMessage = $this->handleTransitionButtons($workflow, $transition, $package)) {
+        if ($transition !== null) {
+            if ($transition === '_reset') {
+                $package->marking = BundleWorkflowInterface::PLACE_NEW;
+                $this->entityManager->flush();
+                $this->pipeline->kickoff($package);
+            } else {
+                $transition = str_ends_with($transition, '_async') ? substr($transition, 0, -6) : $transition;
+                $this->pipeline->dispatch($package, $transition);
+            }
+            $flashMessage = $transition.' requested.';
             // this could be done in a .leave listener too.
             $this->addFlash('info', $flashMessage);
             $this->entityManager->flush(); // to save the marking

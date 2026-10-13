@@ -6,7 +6,7 @@ namespace App\Tests;
 
 use App\Workflow\BundleWorkflowInterface as WF;
 use PHPUnit\Framework\TestCase;
-use Survos\StateBundle\Attribute\Transition;
+use Survos\WorkflowExtrasBundle\Attribute\Transition;
 
 final class BundleWorkflowDefinitionTest extends TestCase
 {

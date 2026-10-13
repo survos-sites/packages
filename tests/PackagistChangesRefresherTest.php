@@ -11,7 +11,15 @@ use App\Service\PackagistChangesRefresher;
 use App\Workflow\BundleWorkflowInterface as WF;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
-use Survos\StateBundle\Message\TransitionMessage;
+use Survos\WorkflowAsyncBundle\Message\TransitionRequest;
+use Survos\WorkflowAsyncBundle\Service\TransitionDispatcher;
+use Survos\WorkflowAsyncBundle\Service\TransitionRouter;
+use Survos\WorkflowAsyncBundle\Service\WorkflowLocator;
+use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Component\Workflow\StateMachine;
+use Symfony\Component\Workflow\Definition;
+use Symfony\Component\Workflow\Transition;
+use Symfony\Component\Workflow\Metadata\InMemoryMetadataStore;
 use Survos\StateBundle\Service\AsyncQueueLocator;
 use Survos\StateBundle\Util\QueueNameUtil;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -59,8 +67,8 @@ final class PackagistChangesRefresherTest extends TestCase
         $workflow->method('can')->willReturn(true);
         $dispatched = [];
         $bus = $this->createStub(MessageBusInterface::class);
-        $bus->method('dispatch')->willReturnCallback(function (TransitionMessage $m, array $stamps) use (&$dispatched): Envelope {
-            $dispatched[] = [$m->id, $m->transitionName, $stamps[0]->getTransportNames()];
+        $bus->method('dispatch')->willReturnCallback(function (TransitionRequest $m, array $stamps) use (&$dispatched): Envelope {
+            $dispatched[] = [$m->subject->id, $m->transition, $stamps[0]->getTransportNames()];
 
             return new Envelope($m);
         });
@@ -101,9 +109,12 @@ final class PackagistChangesRefresherTest extends TestCase
 
     private function refresher(MockHttpClient $http, EntityManagerInterface $em, PackageRepository $packages, MessageBusInterface $bus, WorkflowInterface $workflow): PackagistChangesRefresher
     {
-        [$workflowKey, $transitionKey] = QueueNameUtil::normalizePair(WF::WORKFLOW_NAME, WF::TRANSITION_LOAD);
-        $locator = new AsyncQueueLocator([$workflowKey => [$transitionKey => 'bundle.load']], [], $em);
+        $transition = new Transition(WF::TRANSITION_LOAD, WF::PLACE_DOCUMENTED, WF::PLACE_COMPOSER_LOADED);
+        $metadata = new \SplObjectStorage();
+        $metadata[$transition] = ['async' => true, 'transport' => 'bundle.load'];
+        $routingWorkflow = new StateMachine(new Definition([WF::PLACE_DOCUMENTED, WF::PLACE_COMPOSER_LOADED], [$transition], WF::PLACE_DOCUMENTED, new InMemoryMetadataStore([], [], $metadata)));
+        $dispatcher = new TransitionDispatcher($bus, new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $routingWorkflow])), new TransitionRouter(null, ['bundle.load']));
 
-        return new PackagistChangesRefresher($http, $em, $packages, $bus, $locator, $workflow);
+        return new PackagistChangesRefresher($http, $em, $packages, $dispatcher, $workflow);
     }
 }

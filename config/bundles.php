@@ -50,4 +50,6 @@ return [
     Survos\TuiExtrasBundle\SurvosTuiExtrasBundle::class => ['dev' => true, 'test' => true],
     Survos\Grid\SurvosGridBundle::class => ['all' => true],
     Survos\DocBundle\SurvosDocBundle::class => ['dev' => true, 'test' => true],
+    Survos\WorkflowAsyncBundle\SurvosWorkflowAsyncBundle::class => ['all' => true],
+    Survos\WorkflowExtrasBundle\SurvosWorkflowExtrasBundle::class => ['all' => true],
 ];

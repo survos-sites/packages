@@ -4,7 +4,12 @@ framework:
 
         transports:
             bundle.load:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%'
                 options:
+                    exchange:
+                        name: bundle.load
+                    queues:
+                        bundle.load: ~
                     # Keep at 1. The 8.2 AMQP transport prefetches max(prefetch_count,
                     # --fetch-size), and --fetch-size defaults to --concurrency, so a
                     # --concurrency=4 worker still gets 4. A larger value lets the broker push
@@ -14,6 +19,22 @@ framework:
                     prefetch_count: 1
                     delay:
                         durable: true
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
+            bundle.fetch.docs:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%'
+                options:
+                    prefetch_count: 1
+                    exchange:
+                        name: bundle.fetch.docs
+                    queues:
+                        bundle.fetch.docs: ~
+                    delay:
+                        durable: true
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
             elastic:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%'
                 options:
