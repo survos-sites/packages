@@ -282,7 +282,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         },
  *         options?: array<string, mixed>,
  *         failure_transport?: scalar|Param|null, // Transport name to send failed messages to (after all retries have failed). // Default: null
- *         outbox?: scalar|Param|null, // Name of the transport that stores the messages inside the current database transaction; consume that transport to forward them to this one. // Default: null
+ *         outbox?: scalar|Param|null, // Name or DSN of the transport that stores the messages inside the current database transaction; consume that transport to forward them to this one. A value that is not the name of a configured transport is a DSN, used to create the "orders.outbox" transport for an "orders" transport. // Default: null
  *         retry_strategy?: Param|string|array{
  *             service?: scalar|Param|null, // Service id to override the retry strategy entirely. // Default: null
  *             max_retries?: int|Param, // Default: 3
@@ -703,7 +703,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     json_streamer?: mixed,
  *     session?: bool|array{ // Session configuration
  *         enabled?: bool|Param, // Default: false
- *         storage_factory_id?: scalar|Param|null, // Default: "session.storage.factory.native"
+ *         storage_factory_id?: scalar|Param|null, // Defaults to "session.storage.factory.mock_file" when "framework.test" is true, to "session.storage.factory.native" otherwise. // Default: null
  *         handler_id?: scalar|Param|null, // Defaults to using the native session handler, or to the native *file* session handler if "save_path" is not null.
  *         name?: scalar|Param|null,
  *         cookie_lifetime?: scalar|Param|null,

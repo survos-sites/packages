@@ -1859,7 +1859,8 @@
                                     },
                                     "storage_factory_id": {
                                         "$ref": "#/$defs/types/scalar",
-                                        "default": "session.storage.factory.native"
+                                        "default": null,
+                                        "description": "Defaults to \"session.storage.factory.mock_file\" when \"framework.test\" is true, to \"session.storage.factory.native\" otherwise."
                                     },
                                     "handler_id": {
                                         "$ref": "#/$defs/types/scalar",
@@ -1949,7 +1950,7 @@
                         ],
                         "default": {
                             "enabled": false,
-                            "storage_factory_id": "session.storage.factory.native",
+                            "storage_factory_id": null,
                             "cookie_secure": "auto",
                             "cookie_httponly": true,
                             "cookie_samesite": "lax",
@@ -3978,7 +3979,7 @@
                                                 "outbox": {
                                                     "$ref": "#/$defs/types/scalar",
                                                     "default": null,
-                                                    "description": "Name of the transport that stores the messages inside the current database transaction; consume that transport to forward them to this one."
+                                                    "description": "Name or DSN of the transport that stores the messages inside the current database transaction; consume that transport to forward them to this one. A value that is not the name of a configured transport is a DSN, used to create the \"orders.outbox\" transport for an \"orders\" transport."
                                                 },
                                                 "retry_strategy": {
                                                     "anyOf": [

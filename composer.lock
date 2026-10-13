@@ -8383,12 +8383,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/workflow-async-bundle.git",
-                "reference": "54ee0451ceee3d2ab739e69f6a904fc71a6818dc"
+                "reference": "76fd7bc44b2bafa30b9ec196ae6ac2df59daf67d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/workflow-async-bundle/zipball/54ee0451ceee3d2ab739e69f6a904fc71a6818dc",
-                "reference": "54ee0451ceee3d2ab739e69f6a904fc71a6818dc",
+                "url": "https://api.github.com/repos/survos/workflow-async-bundle/zipball/76fd7bc44b2bafa30b9ec196ae6ac2df59daf67d",
+                "reference": "76fd7bc44b2bafa30b9ec196ae6ac2df59daf67d",
                 "shasum": ""
             },
             "require": {
@@ -8439,7 +8439,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-13T11:48:09+00:00"
+            "time": "2026-10-13T12:15:56+00:00"
         },
         {
             "name": "survos/workflow-extras-bundle",
@@ -8447,12 +8447,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/workflow-extras-bundle.git",
-                "reference": "3663ff4900ef624e479df05b2cd9eb5b1c5e52e4"
+                "reference": "322f62f8c23bbf3ebc89d3c75b8bc6cdf3ddbe22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/workflow-extras-bundle/zipball/3663ff4900ef624e479df05b2cd9eb5b1c5e52e4",
-                "reference": "3663ff4900ef624e479df05b2cd9eb5b1c5e52e4",
+                "url": "https://api.github.com/repos/survos/workflow-extras-bundle/zipball/322f62f8c23bbf3ebc89d3c75b8bc6cdf3ddbe22",
+                "reference": "322f62f8c23bbf3ebc89d3c75b8bc6cdf3ddbe22",
                 "shasum": ""
             },
             "require": {
@@ -8501,7 +8501,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-13T11:48:13+00:00"
+            "time": "2026-10-13T12:16:05+00:00"
         },
         {
             "name": "symfony/amqp-messenger",
@@ -10474,12 +10474,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "308644c50100f927b4a101c554c545c8f99894d2"
+                "reference": "14e2868d4ad96d6f0c382df7da1a1c35fd1ba286"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/308644c50100f927b4a101c554c545c8f99894d2",
-                "reference": "308644c50100f927b4a101c554c545c8f99894d2",
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/14e2868d4ad96d6f0c382df7da1a1c35fd1ba286",
+                "reference": "14e2868d4ad96d6f0c382df7da1a1c35fd1ba286",
                 "shasum": ""
             },
             "require": {
@@ -10634,7 +10634,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-13T08:36:15+00:00"
+            "time": "2026-10-13T09:08:32+00:00"
         },
         {
             "name": "symfony/http-client",
@@ -11296,12 +11296,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/messenger.git",
-                "reference": "b8c6931926f51e502f1c300e2177b2a80230b1bd"
+                "reference": "e7bcf1d6cd11a30a3f07affd613e00d8ffbe13a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/messenger/zipball/b8c6931926f51e502f1c300e2177b2a80230b1bd",
-                "reference": "b8c6931926f51e502f1c300e2177b2a80230b1bd",
+                "url": "https://api.github.com/repos/symfony/messenger/zipball/e7bcf1d6cd11a30a3f07affd613e00d8ffbe13a7",
+                "reference": "e7bcf1d6cd11a30a3f07affd613e00d8ffbe13a7",
                 "shasum": ""
             },
             "require": {
@@ -11389,7 +11389,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-13T10:17:51+00:00"
+            "time": "2026-10-13T12:04:02+00:00"
         },
         {
             "name": "symfony/mime",
@@ -15495,12 +15495,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/workflow.git",
-                "reference": "b325663c1e4aeae85861709660703fe4f84f56b9"
+                "reference": "8f527c5ccf2221ab4ef0f7cca7fdd08ce1119ad1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/workflow/zipball/b325663c1e4aeae85861709660703fe4f84f56b9",
-                "reference": "b325663c1e4aeae85861709660703fe4f84f56b9",
+                "url": "https://api.github.com/repos/symfony/workflow/zipball/8f527c5ccf2221ab4ef0f7cca7fdd08ce1119ad1",
+                "reference": "8f527c5ccf2221ab4ef0f7cca7fdd08ce1119ad1",
                 "shasum": ""
             },
             "require": {
@@ -15584,7 +15584,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-13T11:49:27+00:00"
+            "time": "2026-10-13T12:11:50+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -21668,12 +21668,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/web-profiler-bundle.git",
-                "reference": "218474a38c43b0c3e4f87acc489e63869bf20963"
+                "reference": "99d2e43d5b20fa6e807075851f97db8f3043bc91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/218474a38c43b0c3e4f87acc489e63869bf20963",
-                "reference": "218474a38c43b0c3e4f87acc489e63869bf20963",
+                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/99d2e43d5b20fa6e807075851f97db8f3043bc91",
+                "reference": "99d2e43d5b20fa6e807075851f97db8f3043bc91",
                 "shasum": ""
             },
             "require": {
@@ -21749,7 +21749,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-13T11:49:27+00:00"
+            "time": "2026-10-13T12:11:50+00:00"
         },
         {
             "name": "tempest/highlight",
