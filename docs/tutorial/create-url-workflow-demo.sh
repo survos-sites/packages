@@ -12,7 +12,7 @@ fi
 symfony new "$app" --version=next --webapp --no-git --no-interaction
 cd "$app"
 php bin/console make:entity Url --no-interaction
-composer require survos/workflow-extras-bundle:dev-main --no-interaction
+composer require survos/workflow-extras-bundle:^2.42.6 --no-interaction
 # This demo owns only its fresh SQLite database, never the packages app database.
 cat > .env.local <<'END'
 DATABASE_URL="sqlite:///%kernel.project_dir%/var/url-demo.db"
@@ -124,46 +124,6 @@ final class UrlWorkflow
         } catch (TransportExceptionInterface $exception) {
             $url->error = $exception->getMessage();
         }
-    }
-}
-END
-# Persistence policy is app-owned; kickoff and next selection are bundle-owned.
-# The bundle calls this adapter after insertion and each committed transition.
-cat > src/Workflow/UrlContinuation.php <<'END'
-<?php
-namespace App\Workflow;
-
-use App\Entity\Url;
-use Doctrine\ORM\EntityManagerInterface;
-use Survos\WorkflowExtrasBundle\Contract\WorkflowContinuationInterface;
-use Survos\WorkflowExtrasBundle\Service\NextTransitionRunner;
-use Symfony\Component\Workflow\Registry;
-use Symfony\Component\Workflow\Transition;
-
-final class UrlContinuation implements WorkflowContinuationInterface
-{
-    public function __construct(
-        private Registry $registry,
-        private NextTransitionRunner $runner,
-        private EntityManagerInterface $manager,
-    ) {}
-
-    public function supports(object $subject, ?string $workflowName = null): bool
-    {
-        return $subject instanceof Url && ($workflowName === null || $workflowName === UrlWorkflow::NAME);
-    }
-
-    public function kickoff(object $subject): void
-    {
-        if ($subject->marking === UrlPlace::Discovered) {
-            $this->continueAfterFlush($subject);
-        }
-    }
-
-    public function continueAfterFlush(object $subject, array $context = [], ?Transition $previous = null): void
-    {
-        $this->runner->continue($this->registry->get($subject, UrlWorkflow::NAME), $subject, $context, $previous);
-        $this->manager->flush();
     }
 }
 END

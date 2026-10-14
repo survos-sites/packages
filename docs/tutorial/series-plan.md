@@ -61,9 +61,9 @@ loader, and homepage. Insertion triggers `discovered → validated → fetched`,
 `discovered → invalid`. A fetch is an attempt: HTTP errors retain their status and
 body byte count; transport failures populate `error`. `next: []` means stop.
 
-`UrlContinuation` supplies the application's persistence policy. The bundle owns
-the Doctrine kickoff listener and next-transition selection; the loader only
-persists and flushes. This is an extras-only example: no workflow-messenger bundle,
+Workflow-extras 2.42.6 or newer owns Doctrine kickoff, persistence, and
+next-transition selection; no application continuation adapter is needed. The
+loader only persists and flushes. This is an extras-only example: no workflow-messenger bundle,
 queue, or worker. SQLite stores enum backing strings; this example does not create
 a native database enum. Run `symfony server:start` in the generated directory to
 view the saved results.
