@@ -8126,12 +8126,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/workflow-extras-bundle.git",
-                "reference": "9ba7a0fa7004a11af9342ba9faeba4527bd8dbec"
+                "reference": "a5448ddc56058e7b63bb7022ae1961a4e1821068"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/workflow-extras-bundle/zipball/9ba7a0fa7004a11af9342ba9faeba4527bd8dbec",
-                "reference": "9ba7a0fa7004a11af9342ba9faeba4527bd8dbec",
+                "url": "https://api.github.com/repos/survos/workflow-extras-bundle/zipball/a5448ddc56058e7b63bb7022ae1961a4e1821068",
+                "reference": "a5448ddc56058e7b63bb7022ae1961a4e1821068",
                 "shasum": ""
             },
             "require": {
@@ -8181,7 +8181,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-14T12:04:40+00:00"
+            "time": "2026-10-14T12:37:49+00:00"
         },
         {
             "name": "survos/workflow-messenger-bundle",
@@ -8189,12 +8189,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/workflow-messenger-bundle.git",
-                "reference": "bde020dd6877d1e3ce69f90994ebbe2c15f2a911"
+                "reference": "6d6a34c0947b4565823bd0f7a52bbb2a1086e86e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/workflow-messenger-bundle/zipball/bde020dd6877d1e3ce69f90994ebbe2c15f2a911",
-                "reference": "bde020dd6877d1e3ce69f90994ebbe2c15f2a911",
+                "url": "https://api.github.com/repos/survos/workflow-messenger-bundle/zipball/6d6a34c0947b4565823bd0f7a52bbb2a1086e86e",
+                "reference": "6d6a34c0947b4565823bd0f7a52bbb2a1086e86e",
                 "shasum": ""
             },
             "require": {
@@ -8246,7 +8246,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-14T12:04:43+00:00"
+            "time": "2026-10-14T12:37:51+00:00"
         },
         {
             "name": "symfony/amqp-messenger",
