@@ -10964,7 +10964,9 @@
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
                     "subject_store": {
-                        "$ref": "#/$defs/types/scalar"
+                        "$ref": "#/$defs/types/scalar",
+                        "default": null,
+                        "description": "Service implementing SubjectStoreInterface; defaults to the Doctrine store when DoctrineBundle is installed."
                     },
                     "default_transport": {
                         "$ref": "#/$defs/types/scalar",

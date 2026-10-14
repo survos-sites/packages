@@ -7,79 +7,53 @@ namespace App\Tests;
 use App\Command\LoadDataCommand;
 use App\Entity\Package;
 use App\Repository\PackageRepository;
-use App\Workflow\PackageWorkflow as WF;
+use App\Tests\Support\RemoteFixtures;
+use App\Workflow\PackagePlace;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\PostFlushEventArgs;
-use Doctrine\ORM\Event\PostPersistEventArgs;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Survos\WorkflowExtrasBundle\EventListener\WorkflowKickoffListener;
-use App\Workflow\PackagePipeline;
-use Survos\WorkflowExtrasBundle\Service\NextTransitionResolver;
-use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
-use Survos\WorkflowMessengerBundle\Service\TransitionRouter;
-use Survos\WorkflowMessengerBundle\Service\WorkflowLocator;
-use Symfony\Component\DependencyInjection\ServiceLocator;
-use Doctrine\DBAL\Connection;
+use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
+use Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Workflow\Definition;
-use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
-use Symfony\Component\Workflow\Metadata\InMemoryMetadataStore;
-use Symfony\Component\Workflow\StateMachine;
-use Symfony\Component\Workflow\Transition;
 use Symfony\Contracts\Cache\CacheInterface;
 
-final class PackageKickoffTest extends TestCase
+/** LoadDataCommand only persists; the workflow bundles start each new package exactly once. */
+final class PackageKickoffTest extends KernelTestCase
 {
-    public static function nestedDependencies(): array
+    public static function modes(): array
     {
-        return ['ordinary flush' => [false], 'dependency created during sync kickoff' => [true]];
+        return ['queued' => [false], 'sync, with dependencies created during kickoff' => [true]];
     }
 
-    #[DataProvider('nestedDependencies')]
-    public function testSetupWithLegacyDispatchStartsEachNewPackageOnlyOnce(bool $nested): void
+    #[DataProvider('modes')]
+    public function testSetupStartsEachNewPackageOnce(bool $sync): void
     {
-        $load = new Transition('load', 'discovered', 'metadata_loaded');
-        $transitions = new \SplObjectStorage();
-        $transitions[$load] = ['async' => true, 'transport' => 'bundle.load'];
-        $metadata = new InMemoryMetadataStore([], ['discovered' => ['next' => ['load']]], $transitions);
-        $workflow = new StateMachine(new Definition(['discovered', 'metadata_loaded'], [$load], 'discovered', $metadata), new MethodMarkingStore(true, 'marking'), null, WF::WORKFLOW_NAME);
-        $em = $this->createMock(EntityManagerInterface::class);
-        $connection = $this->createStub(Connection::class);
-        $connection->method('isTransactionActive')->willReturn(false);
-        $em->method('getConnection')->willReturn($connection);
-        $bus = $this->createMock(MessageBusInterface::class);
-        $dispatcher = new TransitionDispatcher($bus, new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $workflow])), new TransitionRouter(null, ['bundle.load']));
-        $store = new \App\Workflow\PackageSubjectStore($em);
-        $runner = new \Survos\WorkflowExtrasBundle\Service\NextTransitionRunner(new NextTransitionResolver(), new \Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor($dispatcher, $store));
-        $pipeline = new PackagePipeline($workflow, $runner, $dispatcher, $em);
-        $listener = new WorkflowKickoffListener([$pipeline]);
-        $dispatched = [];
-        $bus->expects(self::exactly($nested ? 2 : 1))->method('dispatch')->willReturnCallback(function ($message) use ($listener, $em, $nested, &$dispatched) {
-            self::assertSame('load', $message->transition);
-            self::assertNotContains($message->subject->id, $dispatched);
-            $dispatched[] = $message->subject->id;
-            if ($nested && count($dispatched) === 1) {
-                $listener->postPersist(new PostPersistEventArgs(new Package('acme/component'), $em));
-            }
-            // Even a nested postFlush during dispatch must not dispatch again.
-            $listener->postFlush(new PostFlushEventArgs($em));
-            return new Envelope($message);
-        });
-        $em->expects(self::once())->method('persist')->willReturnCallback(fn ($package) => $listener->postPersist(new PostPersistEventArgs($package, $em)));
-        $em->expects(self::atLeastOnce())->method('flush')->willReturnCallback(fn () => $listener->postFlush(new PostFlushEventArgs($em)));
-        $repository = $this->createStub(PackageRepository::class);
-        $repository->method('findOneBy')->willReturn(null);
-        $repository->method('count')->willReturn(1);
+        self::bootKernel();
+        $em = self::getContainer()->get(EntityManagerInterface::class);
+        $em->createQuery('DELETE FROM '.Package::class.' p')->execute();
         $cache = $this->createStub(CacheInterface::class);
-        $cache->method('get')->willReturn(['acme/bundle' => (object) ['abandoned' => false, 'repository' => 'https://github.com/acme/bundle']]);
-        $command = new LoadDataCommand($repository, $em, $cache, $pipeline);
-        $result = $command(new SymfonyStyle(new ArrayInput([]), new BufferedOutput()), dispatch: true, batch: 1);
-        self::assertSame(0, $result);
+        $cache->method('get')->willReturn([RemoteFixtures::PACKAGE => (object) ['abandoned' => false, 'repository' => 'https://github.com/symfony/monolog-bundle']]);
+        $command = new LoadDataCommand(self::getContainer()->get(PackageRepository::class), $em, $cache, self::getContainer()->get(MessengerTransitionExecutor::class));
+
+        self::assertSame(0, $command(new SymfonyStyle(new ArrayInput([]), new BufferedOutput()), sync: $sync, batch: 1));
+
+        $loads = array_map(static fn ($envelope) => $envelope->getMessage()->subject->id, array_filter(
+            self::getContainer()->get('messenger.transport.bundle.load')->getSent(),
+            static fn ($envelope) => $envelope->getMessage() instanceof TransitionRequest,
+        ));
+        self::assertSame(array_values(array_unique($loads)), array_values($loads), 'a package was started twice');
+        $em->clear();
+        $package = $em->find(Package::class, Package::idFromName(RemoteFixtures::PACKAGE));
+        if ($sync) {
+            self::assertSame([], $loads);
+            self::assertSame(PackagePlace::Documented, $package->marking);
+            // Dependencies persisted inside the sync chain were started and finished too.
+            self::assertGreaterThan(1, $em->getRepository(Package::class)->count(['marking' => PackagePlace::RequirementsCompatible]));
+        } else {
+            self::assertSame([$package->id], array_values($loads));
+            self::assertSame(PackagePlace::Discovered, $package->marking);
+        }
     }
 }

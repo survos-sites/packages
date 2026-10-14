@@ -57,7 +57,7 @@ class Package implements RouteParametersInterface, \Stringable
 
     #[ORM\Column(type: \App\Doctrine\Type\PackagePlaceType::NAME, enumType: PackagePlace::class)]
     #[Groups(['marking', 'package.read', 'browse'])]
-    public PackagePlace $marking = PackagePlace::Discovered;
+    public ?PackagePlace $marking = null; // the workflow sets its initial place on persist
 
     #[ORM\Column]
     #[Groups(['package.read'])]

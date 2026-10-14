@@ -12,3 +12,9 @@ framework:
                     enabled: true
                     shared: true
                     max_ttl: 43200
+
+when@test:
+    framework:
+        http_client:
+            # Recorded Packagist/GitHub responses; any other request fails the test.
+            mock_response_factory: App\Tests\Support\RemoteFixtures

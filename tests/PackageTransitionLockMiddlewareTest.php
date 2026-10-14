@@ -44,7 +44,7 @@ final class PackageTransitionLockMiddlewareTest extends TestCase
 
             public static function envelope(string $transition): Envelope
             {
-                return new Envelope(new TransitionRequest('PackageWorkflow', new SubjectReference('package', 'acme--demo'), $transition, [], 'test'), [new ReceivedStamp('sync')]);
+                return new Envelope(new TransitionRequest('PackageWorkflow', new SubjectReference(\App\Entity\Package::class, 'acme--demo'), $transition, [], 'test'), [new ReceivedStamp('sync')]);
             }
         };
 
@@ -62,7 +62,7 @@ final class PackageTransitionLockMiddlewareTest extends TestCase
         $middleware = new PackageTransitionLockMiddleware($locks);
         $this->expectException(RecoverableMessageHandlingException::class);
         $middleware->handle(new Envelope(new \Survos\WorkflowMessengerBundle\Message\TransitionRequest(
-            'PackageWorkflow', new \Survos\WorkflowMessengerBundle\Message\SubjectReference('package', 'acme--demo'), 'load', [], 'test',
+            'PackageWorkflow', new \Survos\WorkflowMessengerBundle\Message\SubjectReference(\App\Entity\Package::class, 'acme--demo'), 'load', [], 'test',
         ), [new ReceivedStamp('bundle.load')]), new StackMiddleware());
     }
 
@@ -75,7 +75,7 @@ final class PackageTransitionLockMiddlewareTest extends TestCase
 
         $this->expectException(RecoverableMessageHandlingException::class);
         $middleware->handle(
-            new Envelope(new TransitionRequest('PackageWorkflow', new SubjectReference('package', 'acme--demo'), 'load', [], 'test'), [new ReceivedStamp('bundle.load')]),
+            new Envelope(new TransitionRequest('PackageWorkflow', new SubjectReference(\App\Entity\Package::class, 'acme--demo'), 'load', [], 'test'), [new ReceivedStamp('bundle.load')]),
             new StackMiddleware(),
         );
     }

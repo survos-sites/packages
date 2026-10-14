@@ -1,0 +1,106 @@
+{
+ "package": {
+  "name": "symfony/monolog-bundle",
+  "description": "Symfony MonologBundle",
+  "time": "2011-11-18T17:30:30+00:00",
+  "maintainers": [],
+  "versions": {
+   "4.x-dev": {
+    "name": "symfony/monolog-bundle",
+    "description": "Symfony MonologBundle",
+    "keywords": [
+     "log",
+     "logging"
+    ],
+    "homepage": "https://symfony.com",
+    "version": "4.x-dev",
+    "version_normalized": "4.9999999.9999999.9999999-dev",
+    "license": [
+     "MIT"
+    ],
+    "authors": [
+     {
+      "name": "Fabien Potencier",
+      "email": "fabien@symfony.com"
+     },
+     {
+      "name": "Symfony Community",
+      "homepage": "https://symfony.com/contributors"
+     }
+    ],
+    "source": {
+     "url": "https://github.com/symfony/monolog-bundle.git",
+     "type": "git",
+     "reference": "a22de65db405738364af77310761fdd0dce7a40e"
+    },
+    "dist": {
+     "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/a22de65db405738364af77310761fdd0dce7a40e",
+     "type": "zip",
+     "shasum": "",
+     "reference": "a22de65db405738364af77310761fdd0dce7a40e"
+    },
+    "type": "symfony-bundle",
+    "support": {
+     "issues": "https://github.com/symfony/monolog-bundle/issues",
+     "source": "https://github.com/symfony/monolog-bundle/tree/4.x"
+    },
+    "funding": [
+     {
+      "url": "https://symfony.com/sponsor",
+      "type": "custom"
+     },
+     {
+      "url": "https://github.com/fabpot",
+      "type": "github"
+     },
+     {
+      "url": "https://github.com/nicolas-grekas",
+      "type": "github"
+     },
+     {
+      "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+      "type": "tidelift"
+     }
+    ],
+    "time": "2026-09-10T19:32:07+00:00",
+    "published-time": "2026-09-10T19:32:15+00:00",
+    "autoload": {
+     "psr-4": {
+      "Symfony\\Bundle\\MonologBundle\\": "src"
+     }
+    },
+    "default-branch": true,
+    "require": {
+     "composer-runtime-api": "^2.0",
+     "php": ">=8.2",
+     "symfony/polyfill-php84": "^1.30",
+     "symfony/config": "^7.3 || ^8.0",
+     "symfony/dependency-injection": "^7.3 || ^8.0",
+     "symfony/http-kernel": "^7.3 || ^8.0",
+     "symfony/monolog-bridge": "^7.3 || ^8.0",
+     "monolog/monolog": "^3.12"
+    },
+    "require-dev": {
+     "symfony/console": "^7.3 || ^8.0",
+     "symfony/yaml": "^7.3 || ^8.0",
+     "phpunit/phpunit": "^11.5.41 || ^12.3"
+    }
+   }
+  },
+  "type": "symfony-bundle",
+  "repository": "https://github.com/symfony/monolog-bundle",
+  "github_stars": 2912,
+  "github_watchers": 31,
+  "github_forks": 240,
+  "github_open_issues": 18,
+  "language": "PHP",
+  "dependents": 2010,
+  "suggesters": 73,
+  "downloads": {
+   "total": 281858703,
+   "monthly": 6265377,
+   "daily": 271845
+  },
+  "favers": 2928
+ }
+}

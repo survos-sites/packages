@@ -1,2 +1,2 @@
-survos_workflow_messenger:
-    subject_store: App\Workflow\PackageSubjectStore
+# Doctrine subject store is the default; no application adapter needed.
+survos_workflow_messenger: ~

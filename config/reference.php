@@ -2454,7 +2454,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  * }
  * @psalm-type SurvosWorkflowMessengerConfig = array{
- *     subject_store?: scalar|Param|null,
+ *     subject_store?: scalar|Param|null, // Service implementing SubjectStoreInterface; defaults to the Doctrine store when DoctrineBundle is installed. // Default: null
  *     default_transport?: scalar|Param|null, // Default: null
  * }
  * @psalm-type ConfigType = array{

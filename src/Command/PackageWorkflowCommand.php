@@ -7,7 +7,7 @@ namespace App\Command;
 use App\Entity\Package;
 use App\Repository\PackageRepository;
 use App\Workflow\PackageWorkflow as WF;
-use App\Workflow\PackagePipeline;
+use Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor;
 use App\Workflow\PackagePlace;
 use Doctrine\ORM\EntityManagerInterface;
 use Survos\WorkflowExtrasBundle\Service\WorkflowCatalog;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final readonly class PackageWorkflowCommand
 {
-    public function __construct(private PackageRepository $packages, private PackagePipeline $pipeline, private WorkflowCatalog $catalog, private EntityManagerInterface $em) {}
+    public function __construct(private PackageRepository $packages, private MessengerTransitionExecutor $executor, private WorkflowCatalog $catalog, private EntityManagerInterface $em) {}
 
     #[AsCommand('state:iterate', 'Apply or queue a transition for matching packages.')]
     public function iterate(
@@ -56,14 +56,14 @@ final readonly class PackageWorkflowCommand
             $query->andWhere('p.'.$field.' = :'.$field)->setParameter($field, $field === 'abandoned' ? filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : $value);
         }
         $count = $skipped = 0;
-        $previousSync = $this->pipeline->sync;
-        $this->pipeline->sync = $sync;
+        $previousSync = $this->executor->sync;
+        $this->executor->sync = $sync;
         try {
             foreach ($query->getQuery()->toIterable() as $package) {
                 if (!$workflow->can($package, $transition)) {
                     ++$skipped;
                 } else {
-                    $this->pipeline->dispatch($package, $transition, ['cascade' => $cascade]);
+                    $this->executor->execute($workflow, $package, $transition, ['cascade' => $cascade]);
                     ++$count;
                 }
                 $this->em->clear();
@@ -72,7 +72,7 @@ final readonly class PackageWorkflowCommand
                 }
             }
         } finally {
-            $this->pipeline->sync = $previousSync;
+            $this->executor->sync = $previousSync;
         }
         $io->success(sprintf('%d transitions %s; %d packages skipped.', $count, $sync ? 'applied' : 'requested', $skipped));
         return 0;

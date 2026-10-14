@@ -53,7 +53,8 @@ final class PackageMetadataTest extends TestCase
         $service->populateFromComposerData($package);
         self::assertTrue($package->isAbandoned);
         self::assertTrue($package->hasValidPhpVersion);
-        self::assertSame(\App\Workflow\PackagePlace::Discovered, $package->marking);
+        // Metadata never sets the marking; the workflow does when the package is persisted.
+        self::assertNull($package->marking);
     }
 
     public function testSymfonyEightGateUsesAllDeclaredCoreRequirements(): void

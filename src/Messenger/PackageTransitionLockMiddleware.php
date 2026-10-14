@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Messenger;
 
+use App\Entity\Package;
 use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Lock\LockFactory;
@@ -35,7 +36,7 @@ final class PackageTransitionLockMiddleware implements MiddlewareInterface
     {
         $message = $envelope->getMessage();
         $id = match (true) {
-            $message instanceof TransitionRequest && $message->subject->type === 'package' => $message->subject->id,
+            $message instanceof TransitionRequest && $message->subject->type === Package::class => $message->subject->id,
             default => null,
         };
         if (!$envelope->last(ReceivedStamp::class) || $id === null) {
@@ -64,7 +65,7 @@ final class PackageTransitionLockMiddleware implements MiddlewareInterface
             };
             $acquire($resource);
             $this->depth[$resource] = 1;
-            // Native requests refresh in PackageSubjectStore, inside this lock.
+            // The bundle's Doctrine subject store refreshes the package inside this lock.
             // Hold through the handler's final flush and postFlush follow-up dispatch.
             return $stack->next()->handle($envelope, $stack);
         } finally {

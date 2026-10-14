@@ -13,7 +13,10 @@ use App\Service\PackagistChangesRefresher;
 use App\Workflow\PackageWorkflow as WF;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Survos\WorkflowMessengerBundle\Contract\SubjectStoreInterface;
+use Survos\WorkflowMessengerBundle\Message\SubjectReference;
 use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
+use Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor;
 use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
 use Survos\WorkflowMessengerBundle\Service\TransitionRouter;
 use Survos\WorkflowMessengerBundle\Service\WorkflowLocator;
@@ -112,9 +115,11 @@ final class PackagistChangesRefresherTest extends TestCase
         $transition = new Transition(WF::TRANSITION_LOAD, PackagePlace::Documented->value, PackagePlace::MetadataLoaded->value);
         $metadata = new \SplObjectStorage();
         $metadata[$transition] = ['async' => true, 'transport' => 'bundle.load'];
-        $routingWorkflow = new StateMachine(new Definition([PackagePlace::Documented->value, PackagePlace::MetadataLoaded->value], [$transition], PackagePlace::Documented->value, new InMemoryMetadataStore([], [], $metadata)));
+        $routingWorkflow = new StateMachine(new Definition([PackagePlace::Documented->value, PackagePlace::MetadataLoaded->value], [$transition], PackagePlace::Documented->value, new InMemoryMetadataStore([], [], $metadata)), name: WF::WORKFLOW_NAME);
         $dispatcher = new TransitionDispatcher($bus, new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $routingWorkflow])), new TransitionRouter(null, ['bundle.load']));
+        $store = $this->createStub(SubjectStoreInterface::class);
+        $store->method('reference')->willReturnCallback(static fn (Package $package) => new SubjectReference(Package::class, $package->id));
 
-        return new PackagistChangesRefresher($http, $em, $packages, $dispatcher, $workflow);
+        return new PackagistChangesRefresher($http, $em, $packages, new MessengerTransitionExecutor($dispatcher, $store), $routingWorkflow);
     }
 }
