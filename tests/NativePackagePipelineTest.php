@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\Workflow\PackagePlace;
+
 use App\Entity\Package;
 use App\Workflow\BundleWorkflowInterface as WF;
 use App\Workflow\PackagePipeline;
@@ -41,21 +43,21 @@ final class NativePackagePipelineTest extends KernelTestCase
     {
         [$pipeline, $package, $transports, $bus, $state] = $this->pipeline();
         $pipeline->kickoff($package);
-        self::assertSame(WF::PLACE_NEW, $package->marking);
+        self::assertSame(PackagePlace::New->value, $package->marking);
         self::assertCount(1, $transports['bundle.load']->getSent());
         self::assertCount(0, $transports['bundle.fetch.docs']->getSent());
         $this->work('bundle.load', $transports, $bus);
-        self::assertSame(WF::PLACE_VALID_REQUIREMENTS, $state->package->marking);
+        self::assertSame(PackagePlace::ValidRequirements->value, $state->package->marking);
         self::assertCount(1, $transports['bundle.fetch.docs']->getSent());
         $queuedDocs = $transports['bundle.fetch.docs']->getSent()[0];
         $this->work('bundle.fetch.docs', $transports, $bus);
-        self::assertSame(WF::PLACE_DOCUMENTED, $state->package->marking);
+        self::assertSame(PackagePlace::Documented->value, $state->package->marking);
         self::assertSame('# Package README', $state->package->readme);
         // A redelivery after the successful commit is acknowledged without re-running work.
         $transports['bundle.fetch.docs']->send($queuedDocs);
         $this->work('bundle.fetch.docs', $transports, $bus);
         self::assertCount(2, $transports['bundle.fetch.docs']->getAcknowledged());
-        self::assertSame(WF::PLACE_DOCUMENTED, $state->package->marking);
+        self::assertSame(PackagePlace::Documented->value, $state->package->marking);
     }
 
     public function testCascadeNoneContextSurvivesWorkerPersistence(): void
@@ -63,7 +65,7 @@ final class NativePackagePipelineTest extends KernelTestCase
         [$pipeline, $package, $transports, $bus, $state] = $this->pipeline();
         $pipeline->dispatch($package, WF::TRANSITION_LOAD, ['cascade' => 'none']);
         $this->work('bundle.load', $transports, $bus);
-        self::assertSame(WF::PLACE_COMPOSER_LOADED, $state->package->marking);
+        self::assertSame(PackagePlace::ComposerLoaded->value, $state->package->marking);
         self::assertCount(0, $transports['bundle.fetch.docs']->getSent());
     }
 
@@ -72,7 +74,7 @@ final class NativePackagePipelineTest extends KernelTestCase
         [$pipeline, $package, $transports, , $state] = $this->pipeline();
         $pipeline->sync = true;
         $pipeline->kickoff($package);
-        self::assertSame(WF::PLACE_DOCUMENTED, $state->package->marking);
+        self::assertSame(PackagePlace::Documented->value, $state->package->marking);
         self::assertCount(0, $transports['bundle.load']->getSent());
         self::assertCount(0, $transports['bundle.fetch.docs']->getSent());
     }
@@ -81,10 +83,10 @@ final class NativePackagePipelineTest extends KernelTestCase
     {
         [, $package, $transports, , $state, $workflow, $em] = $this->pipeline();
         $workflow->apply($package, WF::TRANSITION_LOAD, ['cascade' => 'sync']);
-        self::assertSame(WF::PLACE_COMPOSER_LOADED, $package->marking);
-        self::assertSame(WF::PLACE_NEW, $state->package->marking);
+        self::assertSame(PackagePlace::ComposerLoaded->value, $package->marking);
+        self::assertSame(PackagePlace::New->value, $state->package->marking);
         $em->flush();
-        self::assertSame(WF::PLACE_DOCUMENTED, $state->package->marking);
+        self::assertSame(PackagePlace::Documented->value, $state->package->marking);
         self::assertCount(0, $transports['bundle.fetch.docs']->getSent());
     }
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\Workflow\PackagePlace;
+
 use App\Workflow\BundleWorkflowInterface as WF;
 use PHPUnit\Framework\TestCase;
 use Survos\WorkflowExtrasBundle\Attribute\Transition;
@@ -17,13 +19,13 @@ final class BundleWorkflowDefinitionTest extends TestCase
             foreach ($constant->getAttributes(Transition::class) as $attribute) {
                 $transition = $attribute->newInstance();
                 $name = $constant->getValue();
-                if (in_array(WF::PLACE_DOCUMENTED, (array) $transition->from, true)) {
+                if (in_array(PackagePlace::Documented, (is_array($transition->from) ? $transition->from : [$transition->from]), true)) {
                     self::assertSame(WF::TRANSITION_LOAD, $name, 'documented is settled: only a refresh leaves it.');
                 }
-                if (in_array(WF::PLACE_VALID_REQUIREMENTS, (array) $transition->from, true)) {
+                if (in_array(PackagePlace::ValidRequirements, (is_array($transition->from) ? $transition->from : [$transition->from]), true)) {
                     self::assertContains($name, [WF::TRANSITION_FETCH_DOCS, WF::TRANSITION_LOAD]);
                 }
-                $incoming = $incoming || in_array(WF::PLACE_DOCUMENTED, (array) $transition->to, true);
+                $incoming = $incoming || in_array(PackagePlace::Documented, (is_array($transition->to) ? $transition->to : [$transition->to]), true);
             }
         }
         self::assertTrue($incoming, 'Documented must remain reachable.');

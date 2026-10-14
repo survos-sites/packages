@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\Workflow\PackagePlace;
+
 use App\Entity\FeedCursor;
 use App\Entity\Package;
 use App\Repository\PackageRepository;
@@ -58,9 +60,9 @@ final class PackagistChangesRefresherTest extends TestCase
         $em = $this->createStub(EntityManagerInterface::class);
         $em->method('find')->willReturn($cursor);
         $settled = new Package('acme/settled-bundle');
-        $settled->marking = WF::PLACE_DOCUMENTED;
+        $settled->marking = PackagePlace::Documented->value;
         $busy = new Package('acme/busy-bundle');
-        $busy->marking = WF::PLACE_NEW;
+        $busy->marking = PackagePlace::New->value;
         $packages = $this->createStub(PackageRepository::class);
         $packages->method('find')->willReturnCallback(static fn (string $id): ?Package => ['acme--settled-bundle' => $settled, 'acme--busy-bundle' => $busy][$id] ?? null);
         $workflow = $this->createStub(WorkflowInterface::class);
@@ -109,10 +111,10 @@ final class PackagistChangesRefresherTest extends TestCase
 
     private function refresher(MockHttpClient $http, EntityManagerInterface $em, PackageRepository $packages, MessageBusInterface $bus, WorkflowInterface $workflow): PackagistChangesRefresher
     {
-        $transition = new Transition(WF::TRANSITION_LOAD, WF::PLACE_DOCUMENTED, WF::PLACE_COMPOSER_LOADED);
+        $transition = new Transition(WF::TRANSITION_LOAD, PackagePlace::Documented->value, PackagePlace::ComposerLoaded->value);
         $metadata = new \SplObjectStorage();
         $metadata[$transition] = ['async' => true, 'transport' => 'bundle.load'];
-        $routingWorkflow = new StateMachine(new Definition([WF::PLACE_DOCUMENTED, WF::PLACE_COMPOSER_LOADED], [$transition], WF::PLACE_DOCUMENTED, new InMemoryMetadataStore([], [], $metadata)));
+        $routingWorkflow = new StateMachine(new Definition([PackagePlace::Documented->value, PackagePlace::ComposerLoaded->value], [$transition], PackagePlace::Documented->value, new InMemoryMetadataStore([], [], $metadata)));
         $dispatcher = new TransitionDispatcher($bus, new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $routingWorkflow])), new TransitionRouter(null, ['bundle.load']));
 
         return new PackagistChangesRefresher($http, $em, $packages, $dispatcher, $workflow);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Workflow\PackagePlace;
+
 use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
@@ -236,7 +238,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     {
         [$this->vendor, $this->shortName] = explode('/', $this->name);
         $this->id = self::idFromName($this->name);
-        $this->marking = BundleWorkflowInterface::PLACE_NEW;
+        $this->marking = PackagePlace::New->value;
     }
 
     public static function idFromName(string $name): string

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\Workflow\PackagePlace;
+
 use App\Entity\Package;
 use App\Workflow\BundleWorkflowInterface as WF;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -15,7 +17,7 @@ final class CompiledPackageWorkflowTest extends KernelTestCase
         self::bootKernel();
         $package = new Package('acme/component');
         $package->data = ['type' => 'library'];
-        $package->marking = WF::PLACE_PHP_OKAY;
+        $package->marking = PackagePlace::PhpOkay->value;
         $package->phpVersions = ['8.4'];
         $package->symfonyVersions = [];
         $workflow = self::getContainer()->get('workflow.registry')->get($package, WF::WORKFLOW_NAME);
@@ -26,7 +28,7 @@ final class CompiledPackageWorkflowTest extends KernelTestCase
         foreach ($workflow->getDefinition()->getTransitions() as $transition) {
             self::assertNotEmpty($workflow->getMetadataStore()->getTransitionMetadata($transition)['description']);
         }
-        self::assertSame([WF::TRANSITION_SYMFONY_OKAY, WF::TRANSITION_OUTDATED, WF::TRANSITION_VALID], $workflow->getMetadataStore()->getPlaceMetadata(WF::PLACE_PHP_OKAY)['next']);
+        self::assertSame([WF::TRANSITION_SYMFONY_OKAY, WF::TRANSITION_OUTDATED, WF::TRANSITION_VALID], $workflow->getMetadataStore()->getPlaceMetadata(PackagePlace::PhpOkay->value)['next']);
         self::assertFalse($workflow->can($package, WF::TRANSITION_SYMFONY_OKAY));
         self::assertTrue($workflow->can($package, WF::TRANSITION_VALID));
         $package->data['type'] = 'symfony-bundle';
@@ -36,10 +38,10 @@ final class CompiledPackageWorkflowTest extends KernelTestCase
         self::assertFalse($package->hasValidSymfonyVersion);
         $package->symfonyVersions = ['8.0'];
         self::assertTrue($workflow->can($package, WF::TRANSITION_SYMFONY_OKAY));
-        $package->marking = WF::PLACE_VALID_REQUIREMENTS;
-        self::assertSame([WF::TRANSITION_FETCH_DOCS], $workflow->getMetadataStore()->getPlaceMetadata(WF::PLACE_VALID_REQUIREMENTS)['next']);
+        $package->marking = PackagePlace::ValidRequirements->value;
+        self::assertSame([WF::TRANSITION_FETCH_DOCS], $workflow->getMetadataStore()->getPlaceMetadata(PackagePlace::ValidRequirements->value)['next']);
         self::assertTrue($workflow->can($package, WF::TRANSITION_FETCH_DOCS));
-        $package->marking = WF::PLACE_DOCUMENTED;
+        $package->marking = PackagePlace::Documented->value;
         self::assertSame([WF::TRANSITION_LOAD], array_map(static fn ($t) => $t->getName(), $workflow->getEnabledTransitions($package)));
     }
 }

@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Workflow\PackagePlace;
+
 use App\Entity\Package;
 use App\Schema\PackageSchema;
 use App\Workflow\BundleWorkflow;
@@ -51,7 +53,7 @@ class PackageController extends AbstractController
         assert($package instanceof Package, "wrong id $packageId");
         if ($transition !== null) {
             if ($transition === '_reset') {
-                $package->marking = BundleWorkflowInterface::PLACE_NEW;
+                $package->marking = PackagePlace::New->value;
                 $this->entityManager->flush();
                 $this->pipeline->kickoff($package);
             } else {

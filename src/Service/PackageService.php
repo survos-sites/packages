@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Workflow\PackagePlace;
+
 use Adbar\Dot;
 use App\Entity\Package;
 use App\Entity\Package as SurvosPackage;
@@ -132,13 +134,13 @@ class PackageService
         foreach ($composer as $packageName => $package) {
             // if it's abandoned, don't even add it. Actually, we've already added it. :-(
             if ($package->isAbandoned()) {
-                $survosPackage->setMarking(BundleWorkflowInterface::PLACE_ABANDONED);
+                $survosPackage->setMarking(PackagePlace::Abandoned->value);
                 continue;
             }
             /** @var \Packagist\Api\Result\Package\Version $version */
             foreach ($package->getVersions() as $versionCode => $version) {
                 if ($version->isAbandoned()) {
-                    $survosPackage->setMarking(BundleWorkflowInterface::PLACE_ABANDONED);
+                    $survosPackage->setMarking(PackagePlace::Abandoned->value);
 
                     return; // is this true?
                     continue;

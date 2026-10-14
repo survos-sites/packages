@@ -71,7 +71,7 @@ final class PackagePipeline
 
     public function kickoff(Package $package): void
     {
-        if ($package->marking !== BundleWorkflowInterface::PLACE_NEW) {
+        if ($package->marking !== PackagePlace::New->value) {
             return;
         }
         $this->continueAfterFlush($package);
