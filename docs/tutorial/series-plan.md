@@ -47,3 +47,23 @@ Deliver the series introduction, chapter drafts with repository-relative source,
 ## Acceptance criteria
 
 A reader can progress from native Workflow to concurrent processing without unexplained bundle behavior; every checkpoint builds and tests; commands and expected results are verified; boundaries between native/extras/async/app responsibilities are explicit; no production-scale or compatibility claim exceeds measured evidence. Present the outline for editorial review before drafting the full series.
+
+### Runnable synchronous URL demo
+
+Run `bash docs/tutorial/create-url-workflow-demo.sh /tmp/url-workflow` to build a
+fresh Symfony next webapp with the published workflow-extras bundle. Requires
+Symfony CLI, Composer, PHP 8.5+, and PDO SQLite. An existing destination is refused.
+Optional trailing arguments replace the default URLs; use trusted URLs because
+this command makes real HTTP requests.
+
+The script creates a backed enum, native attribute workflow, SQLite migration,
+loader, and homepage. Insertion triggers `discovered → validated → fetched`, or
+`discovered → invalid`. A fetch is an attempt: HTTP errors retain their status and
+body byte count; transport failures populate `error`. `next: []` means stop.
+
+`UrlContinuation` supplies the application's persistence policy. The bundle owns
+the Doctrine kickoff listener and next-transition selection; the loader only
+persists and flushes. This is an extras-only example: no workflow-messenger bundle,
+queue, or worker. SQLite stores enum backing strings; this example does not create
+a native database enum. Run `symfony server:start` in the generated directory to
+view the saved results.
