@@ -49,7 +49,7 @@
         "survos/search-bundle": "^2.24",
         "survos/simple-datatables-bundle": "^2.19",
         "survos/tabler-bundle": "^2.19",
-        "survos/workflow-async-bundle": "dev-main",
+        "survos/workflow-messenger-bundle": "dev-main",
         "survos/workflow-extras-bundle": "dev-main",
         "symfony/amqp-messenger": "^8.1",
         "symfony/asset": "^8.1",

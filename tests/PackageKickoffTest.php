@@ -14,12 +14,12 @@ use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use App\Workflow\PackageKickoffListener;
+use Survos\WorkflowExtrasBundle\EventListener\WorkflowKickoffListener;
 use App\Workflow\PackagePipeline;
 use Survos\WorkflowExtrasBundle\Service\NextTransitionResolver;
-use Survos\WorkflowAsyncBundle\Service\TransitionDispatcher;
-use Survos\WorkflowAsyncBundle\Service\TransitionRouter;
-use Survos\WorkflowAsyncBundle\Service\WorkflowLocator;
+use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
+use Survos\WorkflowMessengerBundle\Service\TransitionRouter;
+use Survos\WorkflowMessengerBundle\Service\WorkflowLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -56,7 +56,7 @@ final class PackageKickoffTest extends TestCase
         $bus = $this->createMock(MessageBusInterface::class);
         $dispatcher = new TransitionDispatcher($bus, new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $workflow])), new TransitionRouter(null, ['bundle.load']));
         $pipeline = new PackagePipeline($workflow, new NextTransitionResolver(), $dispatcher, $em);
-        $listener = new PackageKickoffListener($pipeline);
+        $listener = new WorkflowKickoffListener([$pipeline]);
         $dispatched = [];
         $bus->expects(self::exactly($nested ? 2 : 1))->method('dispatch')->willReturnCallback(function ($message) use ($listener, $em, $nested, &$dispatched) {
             self::assertSame('load', $message->transition);

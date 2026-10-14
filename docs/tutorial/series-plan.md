@@ -2,7 +2,7 @@
 
 ## Assignment
 
-Create a multi-part, reproducible tutorial using this repository as the application readers build. Start with native Symfony Workflow only; introduce workflow-extras and workflow-async only after readers understand the problems they solve. Finish with safe concurrent processing and an optional searchable catalog using search-bundle. Prepare publication-ready drafts, not automatic publication. Medium, Substack, or both remain an editorial decision.
+Create a multi-part, reproducible tutorial using this repository as the application readers build. Start with native Symfony Workflow only; introduce workflow-extras and workflow-messenger only after readers understand the problems they solve. Finish with safe concurrent processing and an optional searchable catalog using search-bundle. Prepare publication-ready drafts, not automatic publication. Medium, Substack, or both remain an editorial decision.
 
 Teach in an approachable, incremental workshop style with the precision of a framework book: short explanations, concrete examples, visible results, deliberate exercises, and explicit checkpoints. Use original prose rather than copying SymfonyCasts or Symfony documentation. Assume readers know basic PHP, Composer, Symfony services and Doctrine, but not Workflow or Messenger concurrency.
 

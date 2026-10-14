@@ -1,2 +1,2 @@
-survos_workflow_async:
+survos_workflow_messenger:
     subject_store: App\Workflow\PackageSubjectStore

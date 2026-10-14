@@ -82,6 +82,12 @@
                 "fetch": "lazy"
             }
         },
+        "@survos/workflow-extras-bundle": {
+            "workflow": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        },
         "@symfony/ux-chartjs": {
             "chart": {
                 "enabled": true,
@@ -107,12 +113,6 @@
             },
             "mercure-turbo-stream": {
                 "enabled": false,
-                "fetch": "eager"
-            }
-        },
-        "@survos/workflow-extras-bundle": {
-            "workflow": {
-                "enabled": true,
                 "fetch": "eager"
             }
         }

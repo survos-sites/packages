@@ -2,7 +2,7 @@
 
 The packages pipeline uses Symfony's native attribute registrar, with
 `survos/workflow-extras-bundle` for descriptions and ordered `next` metadata and
-`survos/workflow-async-bundle` for queued execution. Every place and transition is
+`survos/workflow-messenger-bundle` for queued execution. Every place and transition is
 explicitly declared: places in `PackagePlace`, transitions in `PackageWorkflow`.
 
 The local database is `packages`. `Package::marking` is a non-null `PackagePlace`

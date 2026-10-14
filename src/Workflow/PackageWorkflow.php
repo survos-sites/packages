@@ -11,7 +11,7 @@ use App\Service\RequiredPackageDiscovery;
 use Packagist\Api\Client;
 use Survos\WorkflowExtrasBundle\Attribute\AsWorkflow;
 use Survos\WorkflowExtrasBundle\Attribute\Transition;
-use Survos\WorkflowAsyncBundle\Attribute\Transition as AsyncTransition;
+use Survos\WorkflowMessengerBundle\Attribute\Transition as AsyncTransition;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Workflow\Attribute\AsCompletedListener;
 use Symfony\Component\Workflow\Attribute\AsTransitionListener;

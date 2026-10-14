@@ -10960,7 +10960,7 @@
                 },
                 "additionalProperties": false
             },
-            "survos_workflow_async": {
+            "survos_workflow_messenger": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
                     "subject_store": {
@@ -14534,8 +14534,8 @@
         "survos_tabler": {
             "$ref": "#/$defs/nodes/survos_tabler"
         },
-        "survos_workflow_async": {
-            "$ref": "#/$defs/nodes/survos_workflow_async"
+        "survos_workflow_messenger": {
+            "$ref": "#/$defs/nodes/survos_workflow_messenger"
         },
         "translation": {
             "$ref": "#/$defs/nodes/translation"
@@ -14711,8 +14711,8 @@
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
                 },
-                "survos_workflow_async": {
-                    "$ref": "#/$defs/nodes/survos_workflow_async"
+                "survos_workflow_messenger": {
+                    "$ref": "#/$defs/nodes/survos_workflow_messenger"
                 },
                 "translation": {
                     "$ref": "#/$defs/nodes/translation"
@@ -14888,8 +14888,8 @@
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
                 },
-                "survos_workflow_async": {
-                    "$ref": "#/$defs/nodes/survos_workflow_async"
+                "survos_workflow_messenger": {
+                    "$ref": "#/$defs/nodes/survos_workflow_messenger"
                 },
                 "translation": {
                     "$ref": "#/$defs/nodes/translation"
@@ -15065,8 +15065,8 @@
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
                 },
-                "survos_workflow_async": {
-                    "$ref": "#/$defs/nodes/survos_workflow_async"
+                "survos_workflow_messenger": {
+                    "$ref": "#/$defs/nodes/survos_workflow_messenger"
                 },
                 "translation": {
                     "$ref": "#/$defs/nodes/translation"
@@ -15238,8 +15238,8 @@
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
                 },
-                "survos_workflow_async": {
-                    "$ref": "#/$defs/nodes/survos_workflow_async"
+                "survos_workflow_messenger": {
+                    "$ref": "#/$defs/nodes/survos_workflow_messenger"
                 },
                 "translation": {
                     "$ref": "#/$defs/nodes/translation"

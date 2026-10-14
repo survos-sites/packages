@@ -11,7 +11,7 @@ use App\Entity\Package;
 use App\Repository\PackageRepository;
 use App\Workflow\PackageWorkflow as WF;
 use Doctrine\ORM\EntityManagerInterface;
-use Survos\WorkflowAsyncBundle\Service\TransitionDispatcher;
+use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
 use App\Workflow\PackagePipeline;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Workflow\WorkflowInterface;

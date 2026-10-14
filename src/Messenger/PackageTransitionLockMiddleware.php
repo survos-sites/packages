@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Messenger;
 
-use Survos\WorkflowAsyncBundle\Message\TransitionRequest;
+use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Messenger\Envelope;

@@ -6,8 +6,8 @@ namespace App\Workflow;
 
 use App\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
-use Survos\WorkflowAsyncBundle\Contract\SubjectStoreInterface;
-use Survos\WorkflowAsyncBundle\Message\SubjectReference;
+use Survos\WorkflowMessengerBundle\Contract\SubjectStoreInterface;
+use Survos\WorkflowMessengerBundle\Message\SubjectReference;
 
 final readonly class PackageSubjectStore implements SubjectStoreInterface
 {

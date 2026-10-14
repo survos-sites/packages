@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11ef5ba982b480281c876424f4963773",
+    "content-hash": "0d6883fa5b953ad8451d6f0cf5049cdd",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -8121,81 +8121,17 @@
             "time": "2026-10-13T13:10:19+00:00"
         },
         {
-            "name": "survos/workflow-async-bundle",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/workflow-async-bundle.git",
-                "reference": "e2f73472a06db504ef38956ea7b5f10ca81255c0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/workflow-async-bundle/zipball/e2f73472a06db504ef38956ea7b5f10ca81255c0",
-                "reference": "e2f73472a06db504ef38956ea7b5f10ca81255c0",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.5",
-                "psr/container": "^2.0",
-                "survos/kit-bundle": "^2.5",
-                "symfony/config": "8.2.*@dev",
-                "symfony/dependency-injection": "8.2.*@dev",
-                "symfony/event-dispatcher": "8.2.*@dev",
-                "symfony/http-kernel": "8.2.*@dev",
-                "symfony/messenger": "8.2.*@dev",
-                "symfony/service-contracts": "^3.8",
-                "symfony/workflow": "8.2.*@dev"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^13.0"
-            },
-            "default-branch": true,
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "0.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Survos\\WorkflowAsyncBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Queued native Symfony workflow transitions through Messenger",
-            "keywords": [
-                "Messenger",
-                "async",
-                "symfony",
-                "workflow"
-            ],
-            "support": {
-                "issues": "https://github.com/survos/workflow-async-bundle/issues",
-                "source": "https://github.com/survos/workflow-async-bundle/tree/main"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-13T13:10:20+00:00"
-        },
-        {
             "name": "survos/workflow-extras-bundle",
             "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/workflow-extras-bundle.git",
-                "reference": "1ad0228608bf9b1f9e03822f40d4f0336f4efd96"
+                "reference": "9ba7a0fa7004a11af9342ba9faeba4527bd8dbec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/workflow-extras-bundle/zipball/1ad0228608bf9b1f9e03822f40d4f0336f4efd96",
-                "reference": "1ad0228608bf9b1f9e03822f40d4f0336f4efd96",
+                "url": "https://api.github.com/repos/survos/workflow-extras-bundle/zipball/9ba7a0fa7004a11af9342ba9faeba4527bd8dbec",
+                "reference": "9ba7a0fa7004a11af9342ba9faeba4527bd8dbec",
                 "shasum": ""
             },
             "require": {
@@ -8210,7 +8146,7 @@
                 "phpunit/phpunit": "^13.0"
             },
             "suggest": {
-                "survos/workflow-async-bundle": "Execute transitions marked async through Symfony Messenger"
+                "survos/workflow-messenger-bundle": "Execute transitions marked async through Symfony Messenger"
             },
             "default-branch": true,
             "type": "symfony-bundle",
@@ -8232,6 +8168,7 @@
             "keywords": [
                 "attributes",
                 "symfony",
+                "symfony-ux",
                 "workflow"
             ],
             "support": {
@@ -8244,7 +8181,72 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-13T13:10:42+00:00"
+            "time": "2026-10-14T12:04:40+00:00"
+        },
+        {
+            "name": "survos/workflow-messenger-bundle",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/survos/workflow-messenger-bundle.git",
+                "reference": "bde020dd6877d1e3ce69f90994ebbe2c15f2a911"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/survos/workflow-messenger-bundle/zipball/bde020dd6877d1e3ce69f90994ebbe2c15f2a911",
+                "reference": "bde020dd6877d1e3ce69f90994ebbe2c15f2a911",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.5",
+                "psr/container": "^2.0",
+                "survos/kit-bundle": "^2.5",
+                "survos/workflow-extras-bundle": "^0.1@dev",
+                "symfony/config": "8.2.*@dev",
+                "symfony/dependency-injection": "8.2.*@dev",
+                "symfony/event-dispatcher": "8.2.*@dev",
+                "symfony/http-kernel": "8.2.*@dev",
+                "symfony/messenger": "8.2.*@dev",
+                "symfony/service-contracts": "^3.8",
+                "symfony/workflow": "8.2.*@dev"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.0"
+            },
+            "default-branch": true,
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Survos\\WorkflowMessengerBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Queued native Symfony workflow transitions through Messenger",
+            "keywords": [
+                "Messenger",
+                "async",
+                "symfony",
+                "workflow"
+            ],
+            "support": {
+                "issues": "https://github.com/survos/workflow-messenger-bundle/issues",
+                "source": "https://github.com/survos/workflow-messenger-bundle/tree/main"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kbond",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-14T12:04:43+00:00"
         },
         {
             "name": "symfony/amqp-messenger",
@@ -21234,8 +21236,8 @@
     "stability-flags": {
         "jwage/phpamqplib-messenger": 20,
         "roave/security-advisories": 20,
-        "survos/workflow-async-bundle": 20,
-        "survos/workflow-extras-bundle": 20
+        "survos/workflow-extras-bundle": 20,
+        "survos/workflow-messenger-bundle": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

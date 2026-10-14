@@ -8,8 +8,8 @@ use App\Entity\Package;
 use App\Messenger\PackageTransitionLockMiddleware;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
-use Survos\WorkflowAsyncBundle\Message\TransitionRequest;
-use Survos\WorkflowAsyncBundle\Message\SubjectReference;
+use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
+use Survos\WorkflowMessengerBundle\Message\SubjectReference;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\InMemoryStore;
 use Symfony\Component\Messenger\Envelope;
@@ -61,8 +61,8 @@ final class PackageTransitionLockMiddlewareTest extends TestCase
         $held->acquire();
         $middleware = new PackageTransitionLockMiddleware($locks);
         $this->expectException(RecoverableMessageHandlingException::class);
-        $middleware->handle(new Envelope(new \Survos\WorkflowAsyncBundle\Message\TransitionRequest(
-            'PackageWorkflow', new \Survos\WorkflowAsyncBundle\Message\SubjectReference('package', 'acme--demo'), 'load', [], 'test',
+        $middleware->handle(new Envelope(new \Survos\WorkflowMessengerBundle\Message\TransitionRequest(
+            'PackageWorkflow', new \Survos\WorkflowMessengerBundle\Message\SubjectReference('package', 'acme--demo'), 'load', [], 'test',
         ), [new ReceivedStamp('bundle.load')]), new StackMiddleware());
     }
 

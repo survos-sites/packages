@@ -6,14 +6,14 @@ namespace App\Workflow;
 
 use App\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
-use Survos\WorkflowAsyncBundle\Message\SubjectReference;
-use Survos\WorkflowAsyncBundle\Service\TransitionDispatcher;
+use Survos\WorkflowMessengerBundle\Message\SubjectReference;
+use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
 use Survos\WorkflowExtrasBundle\Service\NextTransitionResolver;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 /** App-owned persistence and ordered continuation policy around the native workflow. */
-final class PackagePipeline
+final class PackagePipeline implements \Survos\WorkflowExtrasBundle\Contract\WorkflowContinuationInterface
 {
     public bool $sync = false;
 
@@ -69,7 +69,12 @@ final class PackagePipeline
         $this->em->flush();
     }
 
-    public function kickoff(Package $package): void
+    public function supports(object $subject, ?string $workflowName = null): bool
+    {
+        return $subject instanceof Package && ($workflowName === null || $workflowName === PackageWorkflow::WORKFLOW_NAME);
+    }
+
+    public function kickoff(object $package): void
     {
         if ($package->marking !== PackagePlace::Discovered) {
             return;
@@ -78,7 +83,7 @@ final class PackagePipeline
     }
 
     /** Also supports direct native apply() callers, including the legacy CLI. */
-    public function continueAfterFlush(Package $package, array $context = []): void
+    public function continueAfterFlush(object $package, array $context = []): void
     {
         if ( ($context['cascade'] ?? null) === 'none') {
             return;

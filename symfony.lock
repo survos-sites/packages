@@ -246,7 +246,7 @@
     "survos/tui-extras-bundle": {
         "version": "2.24.24"
     },
-    "survos/workflow-async-bundle": {
+    "survos/workflow-messenger-bundle": {
         "version": "dev-main"
     },
     "survos/workflow-extras-bundle": {

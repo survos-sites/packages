@@ -2453,7 +2453,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         include?: list<scalar|Param|null>,
  *     },
  * }
- * @psalm-type SurvosWorkflowAsyncConfig = array{
+ * @psalm-type SurvosWorkflowMessengerConfig = array{
  *     subject_store?: scalar|Param|null,
  *     default_transport?: scalar|Param|null, // Default: null
  * }
@@ -2514,7 +2514,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_schema_org?: SurvosSchemaOrgConfig,
  *     survos_jsonl?: SurvosJsonlConfig,
  *     survos_grid?: SurvosGridConfig,
- *     survos_workflow_async?: SurvosWorkflowAsyncConfig,
+ *     survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -2576,7 +2576,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_grid?: SurvosGridConfig,
  *         survos_doc?: SurvosDocConfig,
- *         survos_workflow_async?: SurvosWorkflowAsyncConfig,
+ *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -2636,7 +2636,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_schema_org?: SurvosSchemaOrgConfig,
  *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_grid?: SurvosGridConfig,
- *         survos_workflow_async?: SurvosWorkflowAsyncConfig,
+ *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -2698,7 +2698,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_grid?: SurvosGridConfig,
  *         survos_doc?: SurvosDocConfig,
- *         survos_workflow_async?: SurvosWorkflowAsyncConfig,
+ *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
