@@ -178,19 +178,6 @@
     "survos/auth-bundle": {
         "version": "1.5.255"
     },
-    "survos/command-bundle": {
-        "version": "2.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "1.5",
-            "ref": "2ae59ea83b8aeb1c288a149af0f594ee9ff52524"
-        },
-        "files": [
-            "config/packages/survos_command.yaml",
-            "config/routes/survos_command.yaml"
-        ]
-    },
     "survos/core-bundle": {
         "version": "1.5.156"
     },
@@ -246,10 +233,10 @@
     "survos/tui-extras-bundle": {
         "version": "2.24.24"
     },
-    "survos/workflow-messenger-bundle": {
+    "survos/workflow-extras-bundle": {
         "version": "dev-main"
     },
-    "survos/workflow-extras-bundle": {
+    "survos/workflow-messenger-bundle": {
         "version": "dev-main"
     },
     "symfony/asset-mapper": {
@@ -496,15 +483,6 @@
             "config/packages/twig.yaml",
             "templates/base.html.twig"
         ]
-    },
-    "symfony/uid": {
-        "version": "7.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "7.0",
-            "ref": "0df5844274d871b37fc3816c57a768ffc60a43a5"
-        }
     },
     "symfony/ux-chartjs": {
         "version": "v2.31.0"

@@ -9,7 +9,8 @@ doctrine:
                 logging: false
                 profiling_collect_backtrace: '%kernel.debug%'
                 url: '%env(resolve:DATABASE_URL)%'
-                schema_filter: '~^(?!(?:messenger_messages$|_timescaledb_|timescaledb_|toolkit_))~'
+                # Retain historical command logs after removing command-bundle.
+                schema_filter: '~^(?!(?:messenger_messages$|command_process$|_timescaledb_|timescaledb_|toolkit_))~'
 
     orm:
         validate_xml_mapping: true

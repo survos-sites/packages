@@ -1834,7 +1834,7 @@
                         "$ref": "#/$defs/types/variable"
                     },
                     "uid": {
-                        "$ref": "#/$defs/nodes/uid"
+                        "$ref": "#/$defs/types/variable"
                     },
                     "html_sanitizer": {
                         "$ref": "#/$defs/types/variable"
@@ -9756,140 +9756,6 @@
                 },
                 "additionalProperties": false
             },
-            "survos_command": {
-                "$ref": "#/$defs/types/object_null",
-                "properties": {
-                    "routes_enabled": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": false,
-                        "description": "Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off."
-                    },
-                    "route_prefix": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "/admin/commands",
-                        "description": "URL prefix applied to all routes from this bundle."
-                    },
-                    "locale_prefix": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": false,
-                        "description": "Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param."
-                    },
-                    "base_layout": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": null
-                    },
-                    "subdomain_variable": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "subdomain"
-                    },
-                    "track": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": true,
-                        "description": "Record each (namespaced) command run as a CommandProcess row for monitoring."
-                    },
-                    "namespaces": {
-                        "$ref": "#/$defs/types/array_null",
-                        "items": {
-                            "$ref": "#/$defs/types/scalar"
-                        }
-                    },
-                    "agent_tools": {
-                        "$ref": "#/$defs/types/array_null",
-                        "items": {
-                            "anyOf": [
-                                {
-                                    "$ref": "#/$defs/types/object_null",
-                                    "properties": {
-                                        "command": {
-                                            "$ref": "#/$defs/types/scalar"
-                                        },
-                                        "name": {
-                                            "$ref": "#/$defs/types/scalar",
-                                            "default": null
-                                        },
-                                        "description": {
-                                            "$ref": "#/$defs/types/scalar",
-                                            "default": null,
-                                            "description": "Agent-facing description; default: the command's one-line description (its CLI help is never sent)"
-                                        },
-                                        "title": {
-                                            "$ref": "#/$defs/types/scalar",
-                                            "default": null
-                                        },
-                                        "readOnly": {
-                                            "$ref": "#/$defs/types/boolean",
-                                            "default": false
-                                        },
-                                        "destructive": {
-                                            "$ref": "#/$defs/types/boolean",
-                                            "default": false
-                                        },
-                                        "idempotent": {
-                                            "$ref": "#/$defs/types/boolean",
-                                            "default": false
-                                        },
-                                        "public": {
-                                            "$ref": "#/$defs/types/boolean",
-                                            "default": false,
-                                            "description": "no sign-in needed; readOnly tools only"
-                                        },
-                                        "role": {
-                                            "$ref": "#/$defs/types/scalar",
-                                            "default": null,
-                                            "description": "checked unless public; null = ROLE_ADMIN"
-                                        }
-                                    },
-                                    "required": [
-                                        "command"
-                                    ],
-                                    "additionalProperties": false
-                                },
-                                {
-                                    "type": [
-                                        "string"
-                                    ]
-                                }
-                            ]
-                        },
-                        "description": "Commands exposed as MCP tools that cannot carry #[AsAgentTool] (vendor commands). Explicit opt-in only.",
-                        "examples": [
-                            [
-                                {
-                                    "command": "messenger:stats",
-                                    "readOnly": true,
-                                    "public": true
-                                },
-                                {
-                                    "command": "app:purge",
-                                    "destructive": true
-                                }
-                            ]
-                        ]
-                    },
-                    "agent": {
-                        "$ref": "#/$defs/types/object_null",
-                        "properties": {
-                            "token": {
-                                "$ref": "#/$defs/types/scalar",
-                                "default": null,
-                                "description": "e.g. %env(default::AGENT_TOKEN)%; unset = no token accepted"
-                            },
-                            "user": {
-                                "$ref": "#/$defs/types/scalar",
-                                "default": null,
-                                "description": "user identifier the token signs in as, e.g. an admin email"
-                            }
-                        },
-                        "additionalProperties": false,
-                        "default": {
-                            "token": null,
-                            "user": null
-                        },
-                        "description": "Bearer-token sign-in for /mcp (see Survos\\CommandBundle\\Security\\AgentTokenHandler)."
-                    }
-                },
-                "additionalProperties": false
-            },
             "survos_core": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
@@ -11904,88 +11770,6 @@
                 "default": {
                     "enabled": true,
                     "aliases": []
-                }
-            },
-            "uid": {
-                "anyOf": [
-                    {
-                        "$ref": "#/$defs/types/object_null",
-                        "properties": {
-                            "enabled": {
-                                "$ref": "#/$defs/types/boolean",
-                                "default": true
-                            },
-                            "default_uuid_version": {
-                                "anyOf": [
-                                    {
-                                        "enum": [
-                                            7,
-                                            6,
-                                            4,
-                                            1
-                                        ]
-                                    },
-                                    {
-                                        "$ref": "#/$defs/types/param"
-                                    }
-                                ],
-                                "default": 7
-                            },
-                            "name_based_uuid_version": {
-                                "anyOf": [
-                                    {
-                                        "enum": [
-                                            5,
-                                            3
-                                        ]
-                                    },
-                                    {
-                                        "$ref": "#/$defs/types/param"
-                                    }
-                                ],
-                                "default": 5
-                            },
-                            "name_based_uuid_namespace": {
-                                "$ref": "#/$defs/types/scalar"
-                            },
-                            "time_based_uuid_version": {
-                                "anyOf": [
-                                    {
-                                        "enum": [
-                                            7,
-                                            6,
-                                            1
-                                        ]
-                                    },
-                                    {
-                                        "$ref": "#/$defs/types/param"
-                                    }
-                                ],
-                                "default": 7
-                            },
-                            "time_based_uuid_node": {
-                                "$ref": "#/$defs/types/scalar"
-                            },
-                            "uuid47_secret": {
-                                "$ref": "#/$defs/types/scalar",
-                                "default": null,
-                                "description": "A high-entropy secret used by the \"uuid47_transformer\" service. Defaults to the \"kernel.secret\" parameter; the service is not registered when neither is defined."
-                            }
-                        },
-                        "additionalProperties": false
-                    },
-                    {
-                        "type": [
-                            "boolean"
-                        ]
-                    }
-                ],
-                "default": {
-                    "enabled": true,
-                    "default_uuid_version": 7,
-                    "name_based_uuid_version": 5,
-                    "time_based_uuid_version": 7,
-                    "uuid47_secret": null
                 }
             },
             "ux_icons": {
@@ -14523,9 +14307,6 @@
         "survos_auth": {
             "$ref": "#/$defs/nodes/survos_auth"
         },
-        "survos_command": {
-            "$ref": "#/$defs/nodes/survos_command"
-        },
         "survos_core": {
             "$ref": "#/$defs/nodes/survos_core"
         },
@@ -14585,9 +14366,6 @@
         },
         "type_info": {
             "$ref": "#/$defs/nodes/type_info"
-        },
-        "uid": {
-            "$ref": "#/$defs/nodes/uid"
         },
         "ux_icons": {
             "$ref": "#/$defs/nodes/ux_icons"
@@ -14697,9 +14475,6 @@
                 "survos_auth": {
                     "$ref": "#/$defs/nodes/survos_auth"
                 },
-                "survos_command": {
-                    "$ref": "#/$defs/nodes/survos_command"
-                },
                 "survos_core": {
                     "$ref": "#/$defs/nodes/survos_core"
                 },
@@ -14765,9 +14540,6 @@
                 },
                 "type_info": {
                     "$ref": "#/$defs/nodes/type_info"
-                },
-                "uid": {
-                    "$ref": "#/$defs/nodes/uid"
                 },
                 "ux_icons": {
                     "$ref": "#/$defs/nodes/ux_icons"
@@ -14883,9 +14655,6 @@
                 "survos_auth": {
                     "$ref": "#/$defs/nodes/survos_auth"
                 },
-                "survos_command": {
-                    "$ref": "#/$defs/nodes/survos_command"
-                },
                 "survos_core": {
                     "$ref": "#/$defs/nodes/survos_core"
                 },
@@ -14945,9 +14714,6 @@
                 },
                 "type_info": {
                     "$ref": "#/$defs/nodes/type_info"
-                },
-                "uid": {
-                    "$ref": "#/$defs/nodes/uid"
                 },
                 "ux_icons": {
                     "$ref": "#/$defs/nodes/ux_icons"
@@ -15057,9 +14823,6 @@
                 "survos_auth": {
                     "$ref": "#/$defs/nodes/survos_auth"
                 },
-                "survos_command": {
-                    "$ref": "#/$defs/nodes/survos_command"
-                },
                 "survos_core": {
                     "$ref": "#/$defs/nodes/survos_core"
                 },
@@ -15125,9 +14888,6 @@
                 },
                 "type_info": {
                     "$ref": "#/$defs/nodes/type_info"
-                },
-                "uid": {
-                    "$ref": "#/$defs/nodes/uid"
                 },
                 "ux_icons": {
                     "$ref": "#/$defs/nodes/ux_icons"
@@ -15239,9 +14999,6 @@
                 "survos_auth": {
                     "$ref": "#/$defs/nodes/survos_auth"
                 },
-                "survos_command": {
-                    "$ref": "#/$defs/nodes/survos_command"
-                },
                 "survos_core": {
                     "$ref": "#/$defs/nodes/survos_core"
                 },
@@ -15301,9 +15058,6 @@
                 },
                 "type_info": {
                     "$ref": "#/$defs/nodes/type_info"
-                },
-                "uid": {
-                    "$ref": "#/$defs/nodes/uid"
                 },
                 "ux_icons": {
                     "$ref": "#/$defs/nodes/ux_icons"

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4761d57f80658aaf376ff200782d2cb",
+    "content-hash": "b2adfb968624af77de856ba0587b0a06",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -7027,90 +7027,6 @@
                 }
             ],
             "time": "2026-10-13T13:44:32+00:00"
-        },
-        {
-            "name": "survos/command-bundle",
-            "version": "2.41.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/command-bundle.git",
-                "reference": "96f58f410dbb6e8e66b7a81b42a15473a75626a9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/command-bundle/zipball/96f58f410dbb6e8e66b7a81b42a15473a75626a9",
-                "reference": "96f58f410dbb6e8e66b7a81b42a15473a75626a9",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/orm": "^3.7",
-                "php": "^8.5",
-                "survos/field-bundle": "^2.5",
-                "survos/kit-bundle": "^2.5",
-                "symfony/config": "^7.4||^8.1",
-                "symfony/console": "^7.4||^8.1",
-                "symfony/dependency-injection": "^7.4||^8.1",
-                "symfony/form": "^7.4||^8.1",
-                "symfony/framework-bundle": "^7.4||^8.1",
-                "symfony/http-kernel": "^7.4||^8.1",
-                "symfony/messenger": "^7.4||^8.1",
-                "symfony/uid": "^7.4||^8.1",
-                "twig/twig": "^3.4|^4.0"
-            },
-            "conflict": {
-                "mcp/sdk": "<0.8"
-            },
-            "require-dev": {
-                "mcp/sdk": "^0.8",
-                "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^13.0",
-                "rector/rector": "^2.0",
-                "survos/tui-extras-bundle": "^2.8",
-                "symfony/security-bundle": "^7.4||^8.1",
-                "symfony/test-pack": "^1.0",
-                "symfony/yaml": "^7.4||^8.1"
-            },
-            "suggest": {
-                "survos/tui-extras-bundle": "Enables the `command:monitor` live TUI (symfony/tui widgets).",
-                "symfony/mcp-bundle": "Exposes #[AsAgentTool] commands (and survos_command.agent_tools) as MCP tools.",
-                "symfony/security-bundle": "Per-tool role checks and the /mcp bearer-token handler (AgentTokenHandler)."
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Survos\\CommandBundle\\": "src/",
-                    "Survos\\CommandBundle\\Tests\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tac Tacelosky",
-                    "email": "tacman@gmail.com"
-                }
-            ],
-            "description": "Run Symfony console commands from a web interface, in the background, or as MCP tools for agents",
-            "keywords": [
-                "Agent",
-                "cli",
-                "dev",
-                "mcp",
-                "symfony-console"
-            ],
-            "support": {
-                "issues": "https://github.com/survos/command-bundle/issues",
-                "source": "https://github.com/survos/command-bundle/tree/2.41.9"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-13T13:09:51+00:00"
         },
         {
             "name": "survos/core-bundle",
@@ -14317,90 +14233,6 @@
                 }
             ],
             "time": "2026-10-13T18:03:32+00:00"
-        },
-        {
-            "name": "symfony/uid",
-            "version": "8.2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/uid.git",
-                "reference": "92109b0733b6c11d910f5f39d293ce338d89e2ee"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/uid/zipball/92109b0733b6c11d910f5f39d293ce338d89e2ee",
-                "reference": "92109b0733b6c11d910f5f39d293ce338d89e2ee",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.4.1"
-            },
-            "conflict": {
-                "symfony/dependency-injection": "<8.1"
-            },
-            "require-dev": {
-                "symfony/config": "^7.4|^8.0",
-                "symfony/console": "^7.4|^8.0",
-                "symfony/dependency-injection": "^8.1",
-                "symfony/http-kernel": "^7.4|^8.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Uid\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Grégoire Pineau",
-                    "email": "lyrixx@lyrixx.info"
-                },
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Provides an object-oriented API to generate and represent UIDs",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "UID",
-                "ulid",
-                "uuid"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/uid/tree/8.2"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2026-10-12T16:03:08+00:00"
         },
         {
             "name": "symfony/ux-chartjs",
