@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Menu;
 
+use Survos\MenuBundle\Attribute\AsMenuListener;
+use Survos\MenuBundle\MenuSlot;
 use Survos\TablerBundle\Event\MenuEvent;
 use Survos\TablerBundle\Menu\MenuBuilderTrait;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
  * The home page is the faceted search, so the navbar has no links of its own: the logo is Home, GitHub sits in the top
@@ -17,7 +18,7 @@ final class AppMenu
 {
     use MenuBuilderTrait;
 
-    #[AsEventListener(event: MenuEvent::ADMIN_NAVBAR_MENU)]
+    #[AsMenuListener(MenuSlot::ADMIN_NAVBAR_MENU)]
     public function workflows(MenuEvent $event): void
     {
         $this->add($event->getMenu(), route: 'survos_workflow_extras', rp: ['flowCode' => \App\Workflow\PackageWorkflow::WORKFLOW_NAME], label: 'Workflow', icon: 'tabler:git-branch', translationDomain: false);
@@ -25,14 +26,14 @@ final class AppMenu
 
     private const GITHUB = 'https://github.com/survos-sites/packages';
 
-    #[AsEventListener(event: MenuEvent::NAVBAR_END)]
+    #[AsMenuListener(MenuSlot::NAVBAR_END)]
     public function github(MenuEvent $event): void
     {
         $this->add($event->getMenu(), uri: self::GITHUB, label: 'GitHub', icon: 'tabler:brand-github', external: true, translationDomain: false)
             ->setExtra('tooltip', 'Source on GitHub');
     }
 
-    #[AsEventListener(event: MenuEvent::FOOTER)]
+    #[AsMenuListener(MenuSlot::FOOTER)]
     public function footer(MenuEvent $event): void
     {
         $this->add($event->getMenu(), uri: self::GITHUB, label: 'GitHub', translationDomain: false);

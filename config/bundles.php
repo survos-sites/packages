@@ -18,7 +18,6 @@ return [
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
     Knp\Bundle\MenuBundle\KnpMenuBundle::class => ['all' => true],
     Survos\TablerBundle\SurvosTablerBundle::class => ['all' => true],
-    Survos\CommandBundle\SurvosCommandBundle::class => ['all' => true],
     Survos\CrawlerBundle\SurvosCrawlerBundle::class => ['all' => true],
     Knp\Bundle\TimeBundle\KnpTimeBundle::class => ['all' => true],
     Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
@@ -47,4 +46,5 @@ return [
     Survos\DocBundle\SurvosDocBundle::class => ['dev' => true, 'test' => true],
     Survos\WorkflowMessengerBundle\SurvosWorkflowMessengerBundle::class => ['all' => true],
     Survos\WorkflowExtrasBundle\SurvosWorkflowExtrasBundle::class => ['all' => true],
+    Survos\MenuBundle\SurvosMenuBundle::class => ['all' => true],
 ];

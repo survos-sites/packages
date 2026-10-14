@@ -371,15 +371,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     enabled?: bool|Param, // Default: true
  *     with_constructor_extractor?: bool|Param, // Registers the constructor extractor. // Default: true
  * }
- * @psalm-type UidConfig = bool|array{
- *     enabled?: bool|Param, // Default: true
- *     default_uuid_version?: 7|6|4|1|Param, // Default: 7
- *     name_based_uuid_version?: 5|3|Param, // Default: 5
- *     name_based_uuid_namespace?: scalar|Param|null,
- *     time_based_uuid_version?: 7|6|1|Param, // Default: 7
- *     time_based_uuid_node?: scalar|Param|null,
- *     uuid47_secret?: scalar|Param|null, // A high-entropy secret used by the "uuid47_transformer" service. Defaults to the "kernel.secret" parameter; the service is not registered when neither is defined. // Default: null
- * }
  * @psalm-type SchedulerConfig = bool|array{
  *     enabled?: bool|Param, // Default: true
  *     use_messenger_routing?: bool|Param|null, // Whether scheduled messages are routed to the Messenger senders configured for their class, as any other dispatched message is. A class with no sender configured still runs in the scheduler worker, and a "transports" option set on a task still wins. // Default: null
@@ -696,7 +687,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     mailer?: MailerConfig,
  *     notifier?: NotifierConfig,
  *     rate_limiter?: mixed,
- *     uid?: UidConfig,
+ *     uid?: mixed,
  *     html_sanitizer?: mixed,
  *     webhook?: mixed,
  *     remote_event?: mixed,
@@ -2088,35 +2079,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         show_locale_dropdown?: bool|Param, // Default: true
  *     },
  *     auto_breadcrumbs?: bool|Param, // Build the BREADCRUMB slot from the page's entities: each object option whose class has a #[RouteMeta(entity:, purpose: Show)] route becomes a crumb. See BreadcrumbMenuSubscriber. // Default: false
+ *     menu_renderer?: "knp"|"survos"|Param, // How tabler_menu() draws menus. knp: KnpMenu templates (@SurvosTabler/menu/*). survos: survos/menu-bundle themes (@SurvosTabler/menu_theme/*); register SurvosMenuBundle first. Same listeners either way. // Default: "knp"
+ *     menu_themes?: array<string, scalar|Param|null>,
  *     menu_options?: array<string, scalar|Param|null>,
  *     impersonate?: array<string, scalar|Param|null>,
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
  *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
- * }
- * @psalm-type SurvosCommandConfig = array{
- *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: false
- *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/admin/commands"
- *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
- *     base_layout?: scalar|Param|null, // Default: null
- *     subdomain_variable?: scalar|Param|null, // Default: "subdomain"
- *     track?: bool|Param, // Record each (namespaced) command run as a CommandProcess row for monitoring. // Default: true
- *     namespaces?: list<scalar|Param|null>,
- *     agent_tools?: list<Param|string|array{ // Default: []
- *         command?: scalar|Param|null,
- *         name?: scalar|Param|null, // Default: null
- *         description?: scalar|Param|null, // Agent-facing description; default: the command's one-line description (its CLI help is never sent) // Default: null
- *         title?: scalar|Param|null, // Default: null
- *         readOnly?: bool|Param, // Default: false
- *         destructive?: bool|Param, // Default: false
- *         idempotent?: bool|Param, // Default: false
- *         public?: bool|Param, // no sign-in needed; readOnly tools only // Default: false
- *         role?: scalar|Param|null, // checked unless public; null = ROLE_ADMIN // Default: null
- *     }>,
- *     agent?: array{ // Bearer-token sign-in for /mcp (see Survos\CommandBundle\Security\AgentTokenHandler).
- *         token?: scalar|Param|null, // e.g. %env(default::AGENT_TOKEN)%; unset = no token accepted // Default: null
- *         user?: scalar|Param|null, // user identifier the token signs in as, e.g. an admin email // Default: null
- *     },
  * }
  * @psalm-type SurvosCrawlerConfig = array{
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
@@ -2454,8 +2423,14 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  * }
  * @psalm-type SurvosWorkflowMessengerConfig = array{
- *     subject_store?: scalar|Param|null,
+ *     subject_store?: scalar|Param|null, // Service implementing SubjectStoreInterface; defaults to the Doctrine store when DoctrineBundle is installed. // Default: null
  *     default_transport?: scalar|Param|null, // Default: null
+ *     lock_factory?: scalar|Param|null, // LockFactory serializing transitions per subject across workers. Use a store shared by every worker host. // Default: "lock.factory"
+ * }
+ * @psalm-type SurvosWorkflowExtrasConfig = array{
+ *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
+ *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/workflow"
+ *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
@@ -2474,7 +2449,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     type_info?: TypeInfoConfig,
  *     property_access?: PropertyAccessConfig,
  *     property_info?: PropertyInfoConfig,
- *     uid?: UidConfig,
  *     scheduler?: SchedulerConfig,
  *     asset_mapper?: AssetMapperConfig,
  *     http_client?: HttpClientConfig,
@@ -2495,7 +2469,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     nelmio_cors?: NelmioCorsConfig,
  *     knp_menu?: KnpMenuConfig,
  *     survos_tabler?: SurvosTablerConfig,
- *     survos_command?: SurvosCommandConfig,
  *     survos_crawler?: SurvosCrawlerConfig,
  *     ux_icons?: UxIconsConfig,
  *     zenstruck_twig_service?: ZenstruckTwigServiceConfig,
@@ -2515,6 +2488,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_jsonl?: SurvosJsonlConfig,
  *     survos_grid?: SurvosGridConfig,
  *     survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
+ *     survos_workflow_extras?: SurvosWorkflowExtrasConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -2532,7 +2506,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         type_info?: TypeInfoConfig,
  *         property_access?: PropertyAccessConfig,
  *         property_info?: PropertyInfoConfig,
- *         uid?: UidConfig,
  *         scheduler?: SchedulerConfig,
  *         asset_mapper?: AssetMapperConfig,
  *         http_client?: HttpClientConfig,
@@ -2555,7 +2528,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         nelmio_cors?: NelmioCorsConfig,
  *         knp_menu?: KnpMenuConfig,
  *         survos_tabler?: SurvosTablerConfig,
- *         survos_command?: SurvosCommandConfig,
  *         survos_crawler?: SurvosCrawlerConfig,
  *         ux_icons?: UxIconsConfig,
  *         zenstruck_twig_service?: ZenstruckTwigServiceConfig,
@@ -2577,6 +2549,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_grid?: SurvosGridConfig,
  *         survos_doc?: SurvosDocConfig,
  *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
+ *         survos_workflow_extras?: SurvosWorkflowExtrasConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -2595,7 +2568,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         type_info?: TypeInfoConfig,
  *         property_access?: PropertyAccessConfig,
  *         property_info?: PropertyInfoConfig,
- *         uid?: UidConfig,
  *         scheduler?: SchedulerConfig,
  *         asset_mapper?: AssetMapperConfig,
  *         http_client?: HttpClientConfig,
@@ -2616,7 +2588,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         nelmio_cors?: NelmioCorsConfig,
  *         knp_menu?: KnpMenuConfig,
  *         survos_tabler?: SurvosTablerConfig,
- *         survos_command?: SurvosCommandConfig,
  *         survos_crawler?: SurvosCrawlerConfig,
  *         sentry?: SentryConfig,
  *         ux_icons?: UxIconsConfig,
@@ -2637,6 +2608,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_grid?: SurvosGridConfig,
  *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
+ *         survos_workflow_extras?: SurvosWorkflowExtrasConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -2655,7 +2627,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         type_info?: TypeInfoConfig,
  *         property_access?: PropertyAccessConfig,
  *         property_info?: PropertyInfoConfig,
- *         uid?: UidConfig,
  *         scheduler?: SchedulerConfig,
  *         asset_mapper?: AssetMapperConfig,
  *         http_client?: HttpClientConfig,
@@ -2677,7 +2648,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         nelmio_cors?: NelmioCorsConfig,
  *         knp_menu?: KnpMenuConfig,
  *         survos_tabler?: SurvosTablerConfig,
- *         survos_command?: SurvosCommandConfig,
  *         survos_crawler?: SurvosCrawlerConfig,
  *         ux_icons?: UxIconsConfig,
  *         zenstruck_twig_service?: ZenstruckTwigServiceConfig,
@@ -2699,6 +2669,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_grid?: SurvosGridConfig,
  *         survos_doc?: SurvosDocConfig,
  *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
+ *         survos_workflow_extras?: SurvosWorkflowExtrasConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
