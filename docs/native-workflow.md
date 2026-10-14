@@ -3,7 +3,7 @@
 The packages pipeline uses Symfony's native attribute registrar, with
 `survos/workflow-extras-bundle` for descriptions and ordered `next` metadata and
 `survos/workflow-async-bundle` for queued execution. Every place and transition is
-an explicitly declared, described constant in `BundleWorkflowInterface`.
+explicitly declared: places in `PackagePlace`, transitions in `BundleWorkflowInterface`.
 
 The existing place values, workflow name, Doctrine marking field and RabbitMQ
 queue names are preserved. No database migration is required by this change.
@@ -101,3 +101,15 @@ not inside a completion listener while the async handler still owns the subject.
 Once that path is implemented and existing abandoned rows are handled, remove the
 Abandoned place and transition from this example. Until then the current workflow
 continues to retain abandoned packages.
+
+## Labels and planned translation
+
+Extras supplies a missing label from the PHP case/constant name during container
+compilation. `PackagePlace::Discovered` retains backing value `new`; its default
+label is Discovered. Explicit labels remain useful for a different presentation.
+
+Proposed follow-up: `survos_workflow_extras.translation_domain: false` by default,
+or a domain string to translate labels and descriptions when rendering. Resolve
+translations at request time using the current locale, never during compilation.
+The current label/description serves as the key and fallback text. This setting is
+not implemented yet; extras should remain usable without Translator when disabled.

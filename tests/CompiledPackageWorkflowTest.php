@@ -22,6 +22,7 @@ final class CompiledPackageWorkflowTest extends KernelTestCase
         $package->symfonyVersions = [];
         $workflow = self::getContainer()->get('workflow.registry')->get($package, WF::WORKFLOW_NAME);
         self::assertSame([Package::class], self::getContainer()->get(\Survos\StateBundle\Service\WorkflowHelperService::class)->getSupports(WF::WORKFLOW_NAME));
+        self::assertSame('Discovered', $workflow->getMetadataStore()->getPlaceMetadata('new')['label']);
         foreach ($workflow->getDefinition()->getPlaces() as $place) {
             self::assertNotEmpty($workflow->getMetadataStore()->getPlaceMetadata($place)['description']);
         }

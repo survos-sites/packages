@@ -67,7 +67,7 @@ final class PackagistChangesRefresher
                 if (!$package) {
                     continue;
                 }
-                if ($package->marking === PackagePlace::New->value || !$this->workflow->can($package, WF::TRANSITION_LOAD)) {
+                if ($package->marking === PackagePlace::Discovered->value || !$this->workflow->can($package, WF::TRANSITION_LOAD)) {
                     // Mid-flight: `new` already has its kickoff load queued, and composer_loaded /
                     // php_ok are inside a chain that started from fresh data.
                     $result->skipped[] = $name;

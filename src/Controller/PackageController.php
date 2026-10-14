@@ -53,7 +53,7 @@ class PackageController extends AbstractController
         assert($package instanceof Package, "wrong id $packageId");
         if ($transition !== null) {
             if ($transition === '_reset') {
-                $package->marking = PackagePlace::New->value;
+                $package->marking = PackagePlace::Discovered->value;
                 $this->entityManager->flush();
                 $this->pipeline->kickoff($package);
             } else {

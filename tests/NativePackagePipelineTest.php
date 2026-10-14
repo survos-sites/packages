@@ -43,7 +43,7 @@ final class NativePackagePipelineTest extends KernelTestCase
     {
         [$pipeline, $package, $transports, $bus, $state] = $this->pipeline();
         $pipeline->kickoff($package);
-        self::assertSame(PackagePlace::New->value, $package->marking);
+        self::assertSame(PackagePlace::Discovered->value, $package->marking);
         self::assertCount(1, $transports['bundle.load']->getSent());
         self::assertCount(0, $transports['bundle.fetch.docs']->getSent());
         $this->work('bundle.load', $transports, $bus);
@@ -84,7 +84,7 @@ final class NativePackagePipelineTest extends KernelTestCase
         [, $package, $transports, , $state, $workflow, $em] = $this->pipeline();
         $workflow->apply($package, WF::TRANSITION_LOAD, ['cascade' => 'sync']);
         self::assertSame(PackagePlace::ComposerLoaded->value, $package->marking);
-        self::assertSame(PackagePlace::New->value, $state->package->marking);
+        self::assertSame(PackagePlace::Discovered->value, $state->package->marking);
         $em->flush();
         self::assertSame(PackagePlace::Documented->value, $state->package->marking);
         self::assertCount(0, $transports['bundle.fetch.docs']->getSent());

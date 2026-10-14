@@ -238,7 +238,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     {
         [$this->vendor, $this->shortName] = explode('/', $this->name);
         $this->id = self::idFromName($this->name);
-        $this->marking = PackagePlace::New->value;
+        $this->marking = PackagePlace::Discovered->value;
     }
 
     public static function idFromName(string $name): string

@@ -17,7 +17,7 @@ class BundleWorkflowInterface
 
     // Settled places can be reloaded: PackagistChangesRefresher dispatches load for
     // packages Packagist reports as updated, and the chain re-evaluates from there.
-    #[AsyncTransition(PackagePlace::New, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
+    #[AsyncTransition(PackagePlace::Discovered, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
         async: true, transport: 'bundle.load')]
     #[AsyncTransition(PackagePlace::SymfonyOkay, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
         async: true, transport: 'bundle.load')]

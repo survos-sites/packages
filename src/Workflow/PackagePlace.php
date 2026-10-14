@@ -9,10 +9,10 @@ use Survos\WorkflowExtrasBundle\Attribute\Place;
 /** Places in the package workflow; backing values are persisted marking identifiers. */
 enum PackagePlace: string
 {
-    #[Place('Package discovered; load metadata from Packagist', initial: true, label: 'Discovered',
+    #[Place('Package discovered; load metadata from Packagist', initial: true,
         // Persisting a new package queues load once, after its insert is flushed.
         next: BundleWorkflowInterface::TRANSITION_LOAD)]
-    case New = 'new';
+    case Discovered = 'new';
     #[Place('Package metadata loaded from Packagist', label: 'Metadata loaded',
         next: [BundleWorkflowInterface::TRANSITION_ABANDON, BundleWorkflowInterface::TRANSITION_PHP_OKAY, BundleWorkflowInterface::TRANSITION_PHP_TOO_OLD]
     )]

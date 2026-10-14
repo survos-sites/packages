@@ -71,7 +71,7 @@ final class PackagePipeline
 
     public function kickoff(Package $package): void
     {
-        if ($package->marking !== PackagePlace::New->value) {
+        if ($package->marking !== PackagePlace::Discovered->value) {
             return;
         }
         $this->continueAfterFlush($package);

@@ -62,7 +62,7 @@ final class PackagistChangesRefresherTest extends TestCase
         $settled = new Package('acme/settled-bundle');
         $settled->marking = PackagePlace::Documented->value;
         $busy = new Package('acme/busy-bundle');
-        $busy->marking = PackagePlace::New->value;
+        $busy->marking = PackagePlace::Discovered->value;
         $packages = $this->createStub(PackageRepository::class);
         $packages->method('find')->willReturnCallback(static fn (string $id): ?Package => ['acme--settled-bundle' => $settled, 'acme--busy-bundle' => $busy][$id] ?? null);
         $workflow = $this->createStub(WorkflowInterface::class);
