@@ -10240,29 +10240,6 @@
                 },
                 "additionalProperties": false
             },
-            "survos_simple_datatables": {
-                "$ref": "#/$defs/types/object_null",
-                "properties": {
-                    "stimulus_controller": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "@survos/simple-datatables-bundle/table"
-                    },
-                    "per_page": {
-                        "$ref": "#/$defs/types/integer",
-                        "minimum": 1,
-                        "default": 10
-                    },
-                    "searchable": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": true
-                    },
-                    "fixed_height": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": true
-                    }
-                },
-                "additionalProperties": false
-            },
             "survos_supervisor": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
@@ -14359,9 +14336,6 @@
         "survos_search": {
             "$ref": "#/$defs/nodes/survos_search"
         },
-        "survos_simple_datatables": {
-            "$ref": "#/$defs/nodes/survos_simple_datatables"
-        },
         "survos_tabler": {
             "$ref": "#/$defs/nodes/survos_tabler"
         },
@@ -14529,9 +14503,6 @@
                 },
                 "survos_search": {
                     "$ref": "#/$defs/nodes/survos_search"
-                },
-                "survos_simple_datatables": {
-                    "$ref": "#/$defs/nodes/survos_simple_datatables"
                 },
                 "survos_supervisor": {
                     "$ref": "#/$defs/nodes/survos_supervisor"
@@ -14707,9 +14678,6 @@
                 "survos_search": {
                     "$ref": "#/$defs/nodes/survos_search"
                 },
-                "survos_simple_datatables": {
-                    "$ref": "#/$defs/nodes/survos_simple_datatables"
-                },
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
                 },
@@ -14877,9 +14845,6 @@
                 },
                 "survos_search": {
                     "$ref": "#/$defs/nodes/survos_search"
-                },
-                "survos_simple_datatables": {
-                    "$ref": "#/$defs/nodes/survos_simple_datatables"
                 },
                 "survos_supervisor": {
                     "$ref": "#/$defs/nodes/survos_supervisor"
@@ -15050,9 +15015,6 @@
                 },
                 "survos_search": {
                     "$ref": "#/$defs/nodes/survos_search"
-                },
-                "survos_simple_datatables": {
-                    "$ref": "#/$defs/nodes/survos_simple_datatables"
                 },
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"

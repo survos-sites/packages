@@ -224,9 +224,6 @@
     "survos/search-bundle": {
         "version": "2.24.1"
     },
-    "survos/simple-datatables-bundle": {
-        "version": "1.5.446"
-    },
     "survos/supervisor-bundle": {
         "version": "2.10.20"
     },

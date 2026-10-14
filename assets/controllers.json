@@ -47,15 +47,6 @@
                 "fetch": "eager"
             }
         },
-        "@survos/simple-datatables-bundle": {
-            "table": {
-                "enabled": true,
-                "fetch": "lazy",
-                "autoimport": {
-                    "@survos/simple-datatables-bundle/style.css": true
-                }
-            }
-        },
         "@survos/tabler-bundle": {
             "accordion": {
                 "enabled": true,

@@ -5,8 +5,8 @@
 
 {% block body %}
     Note: only {{ packages|length }} packages loaded
-    <twig:simple_datatables :data="packages" :columns="['id','name','description']">
+    <twig:grid :data="packages" :columns="['id','name','description']">
 
-    </twig:simple_datatables>
+    </twig:grid>
 
 {% endblock %}

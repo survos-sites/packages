@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "db5f5ca38246b37e14824ce68aceaf19",
+    "content-hash": "904f603eccef0eeebd63581412ea37ff",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -7928,82 +7928,6 @@
                 }
             ],
             "time": "2026-10-13T13:10:10+00:00"
-        },
-        {
-            "name": "survos/simple-datatables-bundle",
-            "version": "2.41.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/simple-datatables-bundle.git",
-                "reference": "fee62defee8f4de9c719fd70e89e57c0f35a440f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/simple-datatables-bundle/zipball/fee62defee8f4de9c719fd70e89e57c0f35a440f",
-                "reference": "fee62defee8f4de9c719fd70e89e57c0f35a440f",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.5",
-                "survos/kit-bundle": "^2.5",
-                "symfony/config": "^7.4||^8.1",
-                "symfony/dependency-injection": "^7.4||^8.1",
-                "symfony/http-kernel": "^7.4||^8.1",
-                "symfony/options-resolver": "^7.4||^8.1",
-                "symfony/stimulus-bundle": "^2.32 || ^3.0",
-                "symfony/ux-twig-component": "^2.32 || ^3.0",
-                "twig/twig": "^3.4|^4.0"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^13.0",
-                "rector/rector": "^2.0",
-                "symfony/browser-kit": "^7.4||^8.1",
-                "symfony/framework-bundle": "^7.4||^8.1",
-                "symfony/phpunit-bridge": "^7.4||^8.1",
-                "symfony/twig-bundle": "^7.4||^8.1",
-                "symfony/var-dumper": "^7.4||^8.1"
-            },
-            "suggest": {
-                "monolog/monolog": "Allows more advanced logging of the application flow"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.6-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Survos\\SimpleDatatables\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tac Tacelosky",
-                    "email": "tacman@gmail.com"
-                }
-            ],
-            "description": "incorporate simple datatables, using twig and stimulus",
-            "keywords": [
-                "symfony-ux",
-                "symfony6"
-            ],
-            "support": {
-                "issues": "https://github.com/survos/simple-datatables-bundle/issues",
-                "source": "https://github.com/survos/simple-datatables-bundle/tree/2.41.9"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-13T13:10:32+00:00"
         },
         {
             "name": "survos/tabler-bundle",

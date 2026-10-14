@@ -45,7 +45,6 @@ return [
     '@stimulus-components/reveal' => ['version' => '5.0.0'],
     '@stimulus-components/timeago' => ['version' => '5.0.2'],
     '@survos/search-bundle/styles/ux-search.css' => ['path' => '@survos/search-bundle/styles/ux-search.css', 'type' => 'css'],
-    '@survos/simple-datatables-bundle/style.css' => ['path' => './vendor/survos/simple-datatables-bundle/assets/style.css', 'type' => 'css'],
     '@swc/helpers/cjs/_call_super.cjs' => ['version' => '0.5.23'],
     '@swc/helpers/cjs/_class_call_check.cjs' => ['version' => '0.5.23'],
     '@swc/helpers/cjs/_create_class.cjs' => ['version' => '0.5.23'],
@@ -299,8 +298,6 @@ return [
     'side-channel-list' => ['version' => '1.0.1'],
     'side-channel-map' => ['version' => '1.0.1'],
     'side-channel-weakmap' => ['version' => '1.0.2'],
-    'simple-datatables' => ['version' => '10.3.0'],
-    'simple-datatables/dist/style.min.css' => ['version' => '10.3.0', 'type' => 'css'],
     'stimulus-attributes' => ['version' => '1.0.2'],
     'twig' => ['version' => '3.0.0'],
 ];

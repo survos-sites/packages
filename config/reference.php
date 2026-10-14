@@ -2293,12 +2293,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     ignore_commands?: list<scalar|Param|null>,
  *     ignore_messages?: list<scalar|Param|null>,
  * }
- * @psalm-type SurvosSimpleDatatablesConfig = array{
- *     stimulus_controller?: scalar|Param|null, // Default: "@survos/simple-datatables-bundle/table"
- *     per_page?: int|Param, // Default: 10
- *     searchable?: bool|Param, // Default: true
- *     fixed_height?: scalar|Param|null, // Default: true
- * }
  * @psalm-type SurvosJsTwigConfig = array{
  *     debug?: bool|Param, // Default: false
  *     version?: scalar|Param|null, // Default: 1
@@ -2475,7 +2469,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     knpu_oauth2_client?: KnpuOauth2ClientConfig,
  *     survos_auth?: SurvosAuthConfig,
  *     inspector?: InspectorConfig,
- *     survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *     survos_js_twig?: SurvosJsTwigConfig,
  *     zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *     survos_kit?: SurvosKitConfig,
@@ -2534,7 +2527,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         knpu_oauth2_client?: KnpuOauth2ClientConfig,
  *         survos_auth?: SurvosAuthConfig,
  *         inspector?: InspectorConfig,
- *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *         survos_kit?: SurvosKitConfig,
@@ -2595,7 +2587,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         knpu_oauth2_client?: KnpuOauth2ClientConfig,
  *         survos_auth?: SurvosAuthConfig,
  *         inspector?: InspectorConfig,
- *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *         survos_kit?: SurvosKitConfig,
@@ -2654,7 +2645,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         knpu_oauth2_client?: KnpuOauth2ClientConfig,
  *         survos_auth?: SurvosAuthConfig,
  *         inspector?: InspectorConfig,
- *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *         survos_kit?: SurvosKitConfig,
