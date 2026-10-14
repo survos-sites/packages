@@ -8,10 +8,14 @@ use App\Workflow\PackagePlace;
 
 use App\Entity\Package;
 use App\Workflow\PackageWorkflow as WF;
-use App\Workflow\PackagePipeline;
-use App\Workflow\PackageSubjectStore;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Survos\WorkflowExtrasBundle\EventListener\WorkflowKickoffListener;
+use Survos\WorkflowExtrasBundle\Service\NextTransitionRunner;
+use Survos\WorkflowExtrasBundle\Service\WorkflowCatalog;
+use Survos\WorkflowMessengerBundle\Contract\SubjectStoreInterface;
+use Survos\WorkflowMessengerBundle\Message\SubjectReference;
+use Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor;
 use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
 use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
 use Survos\WorkflowMessengerBundle\Service\TransitionHandler;
@@ -22,6 +26,8 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\InMemoryStore;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
@@ -41,8 +47,8 @@ final class NativePackagePipelineTest extends KernelTestCase
 {
     public function testWorkersPersistValidationBeforeDispatchingDocsAndStaleDocsAreBlocked(): void
     {
-        [$pipeline, $package, $transports, $bus, $state] = $this->pipeline();
-        $pipeline->kickoff($package);
+        [$runner, , $package, $transports, $bus, $state, $workflow] = $this->pipeline();
+        $runner->start($workflow, $package);
         self::assertSame(PackagePlace::Discovered, $package->marking);
         self::assertCount(1, $transports['bundle.load']->getSent());
         self::assertCount(0, $transports['bundle.fetch.docs']->getSent());
@@ -62,8 +68,8 @@ final class NativePackagePipelineTest extends KernelTestCase
 
     public function testCascadeNoneContextSurvivesWorkerPersistence(): void
     {
-        [$pipeline, $package, $transports, $bus, $state] = $this->pipeline();
-        $pipeline->dispatch($package, WF::TRANSITION_LOAD, ['cascade' => 'none']);
+        [, $executor, $package, $transports, $bus, $state, $workflow] = $this->pipeline();
+        $executor->execute($workflow, $package, WF::TRANSITION_LOAD, ['cascade' => 'none']);
         $this->work('bundle.load', $transports, $bus);
         self::assertSame(PackagePlace::MetadataLoaded, $state->package->marking);
         self::assertCount(0, $transports['bundle.fetch.docs']->getSent());
@@ -71,9 +77,8 @@ final class NativePackagePipelineTest extends KernelTestCase
 
     public function testSyncPipelineUsesNoQueues(): void
     {
-        [$pipeline, $package, $transports, , $state] = $this->pipeline();
-        $pipeline->sync = true;
-        $pipeline->kickoff($package);
+        [$runner, $executor, $package, $transports, , $state, $workflow] = $this->pipeline();
+        $executor->synchronously(fn () => $runner->start($workflow, $package));
         self::assertSame(PackagePlace::Documented, $state->package->marking);
         self::assertCount(0, $transports['bundle.load']->getSent());
         self::assertCount(0, $transports['bundle.fetch.docs']->getSent());
@@ -81,7 +86,7 @@ final class NativePackagePipelineTest extends KernelTestCase
 
     public function testDirectNativeApplyContinuesOnlyAfterFlush(): void
     {
-        [, $package, $transports, , $state, $workflow, $em] = $this->pipeline();
+        [, , $package, $transports, , $state, $workflow, $em] = $this->pipeline();
         $workflow->apply($package, WF::TRANSITION_LOAD, ['cascade' => 'sync']);
         self::assertSame(PackagePlace::MetadataLoaded, $package->marking);
         self::assertSame(PackagePlace::Discovered, $state->package->marking);
@@ -136,13 +141,22 @@ final class NativePackagePipelineTest extends KernelTestCase
         $locator = new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => static fn () => $workflow]));
         $router = new TransitionRouter(null, array_keys($transports));
         $dispatcher = new TransitionDispatcher($bus, $locator, $router);
-        $store = new \App\Workflow\PackageSubjectStore($em);
-        $runner = new \Survos\WorkflowExtrasBundle\Service\NextTransitionRunner(new NextTransitionResolver(), new \Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor($dispatcher, $store));
-        $pipeline = new PackagePipeline($workflow, $runner, $dispatcher, $em);
-        $listener = new \Survos\WorkflowExtrasBundle\EventListener\WorkflowKickoffListener([$pipeline]);
+        // DoctrineSubjectStore's contract over the stubbed EntityManager.
+        $store = new class($em) implements SubjectStoreInterface {
+            public function __construct(private EntityManagerInterface $em) {}
+            public function reference(object $subject): SubjectReference { return new SubjectReference(Package::class, $subject->id); }
+            public function load(SubjectReference $reference): ?object { return $this->em->find($reference->type, $reference->id); }
+            public function save(SubjectReference $reference, object $subject, array $context = []): void { $this->em->flush(); }
+        };
+        $executor = new MessengerTransitionExecutor($dispatcher, $store);
+        $runner = new NextTransitionRunner(new NextTransitionResolver(), $executor);
+        $catalog = new WorkflowCatalog(new ServiceLocator([WF::WORKFLOW_NAME => static fn () => $workflow]), [
+            WF::WORKFLOW_NAME => ['supports' => [Package::class], 'support_strategy' => null, 'source_class' => WF::class, 'type' => 'state_machine', 'marking_property' => 'marking'],
+        ]);
+        $listener = new WorkflowKickoffListener($catalog, $runner, $executor);
         $events->addListener('workflow.'.WF::WORKFLOW_NAME.'.completed', $listener->completed(...));
-        $handler = new TransitionHandler(new PackageSubjectStore($em), $locator, $router, $runner);
-        return [$pipeline, $package, $transports, $bus, $state, $workflow, $em];
+        $handler = new TransitionHandler($store, $locator, $router, new LockFactory(new InMemoryStore()), $runner);
+        return [$runner, $executor, $package, $transports, $bus, $state, $workflow, $em];
     }
 
     private function work(string $name, array $transports, MessageBus $bus): void

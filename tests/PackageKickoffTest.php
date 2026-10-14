@@ -15,8 +15,12 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Survos\WorkflowExtrasBundle\EventListener\WorkflowKickoffListener;
-use App\Workflow\PackagePipeline;
 use Survos\WorkflowExtrasBundle\Service\NextTransitionResolver;
+use Survos\WorkflowExtrasBundle\Service\NextTransitionRunner;
+use Survos\WorkflowExtrasBundle\Service\WorkflowCatalog;
+use Survos\WorkflowMessengerBundle\Contract\SubjectStoreInterface;
+use Survos\WorkflowMessengerBundle\Message\SubjectReference;
+use Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor;
 use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
 use Survos\WorkflowMessengerBundle\Service\TransitionRouter;
 use Survos\WorkflowMessengerBundle\Service\WorkflowLocator;
@@ -55,10 +59,16 @@ final class PackageKickoffTest extends TestCase
         $em->method('getConnection')->willReturn($connection);
         $bus = $this->createMock(MessageBusInterface::class);
         $dispatcher = new TransitionDispatcher($bus, new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $workflow])), new TransitionRouter(null, ['bundle.load']));
-        $store = new \App\Workflow\PackageSubjectStore($em);
-        $runner = new \Survos\WorkflowExtrasBundle\Service\NextTransitionRunner(new NextTransitionResolver(), new \Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor($dispatcher, $store));
-        $pipeline = new PackagePipeline($workflow, $runner, $dispatcher, $em);
-        $listener = new WorkflowKickoffListener([$pipeline]);
+        $store = new class implements SubjectStoreInterface {
+            public function reference(object $subject): SubjectReference { return new SubjectReference(Package::class, $subject->id); }
+            public function load(SubjectReference $reference): ?object { return null; }
+            public function save(SubjectReference $reference, object $subject, array $context = []): void {}
+        };
+        $executor = new MessengerTransitionExecutor($dispatcher, $store);
+        $catalog = new WorkflowCatalog(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $workflow]), [
+            WF::WORKFLOW_NAME => ['supports' => [Package::class], 'support_strategy' => null, 'source_class' => WF::class, 'type' => 'state_machine', 'marking_property' => 'marking'],
+        ]);
+        $listener = new WorkflowKickoffListener($catalog, new NextTransitionRunner(new NextTransitionResolver(), $executor), $executor);
         $dispatched = [];
         $bus->expects(self::exactly($nested ? 2 : 1))->method('dispatch')->willReturnCallback(function ($message) use ($listener, $em, $nested, &$dispatched) {
             self::assertSame('load', $message->transition);
@@ -78,7 +88,7 @@ final class PackageKickoffTest extends TestCase
         $repository->method('count')->willReturn(1);
         $cache = $this->createStub(CacheInterface::class);
         $cache->method('get')->willReturn(['acme/bundle' => (object) ['abandoned' => false, 'repository' => 'https://github.com/acme/bundle']]);
-        $command = new LoadDataCommand($repository, $em, $cache, $pipeline);
+        $command = new LoadDataCommand($repository, $em, $cache, $executor);
         $result = $command(new SymfonyStyle(new ArrayInput([]), new BufferedOutput()), dispatch: true, batch: 1);
         self::assertSame(0, $result);
     }

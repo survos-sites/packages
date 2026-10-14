@@ -13,7 +13,10 @@ use App\Service\PackagistChangesRefresher;
 use App\Workflow\PackageWorkflow as WF;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Survos\WorkflowMessengerBundle\Contract\SubjectStoreInterface;
+use Survos\WorkflowMessengerBundle\Message\SubjectReference;
 use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
+use Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor;
 use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
 use Survos\WorkflowMessengerBundle\Service\TransitionRouter;
 use Survos\WorkflowMessengerBundle\Service\WorkflowLocator;
@@ -114,7 +117,13 @@ final class PackagistChangesRefresherTest extends TestCase
         $metadata[$transition] = ['async' => true, 'transport' => 'bundle.load'];
         $routingWorkflow = new StateMachine(new Definition([PackagePlace::Documented->value, PackagePlace::MetadataLoaded->value], [$transition], PackagePlace::Documented->value, new InMemoryMetadataStore([], [], $metadata)));
         $dispatcher = new TransitionDispatcher($bus, new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $routingWorkflow])), new TransitionRouter(null, ['bundle.load']));
+        $store = new class implements SubjectStoreInterface {
+            public function reference(object $subject): SubjectReference { return new SubjectReference(Package::class, $subject->id); }
+            public function load(SubjectReference $reference): ?object { return null; }
+            public function save(SubjectReference $reference, object $subject, array $context = []): void {}
+        };
+        $workflow->method('getName')->willReturn(WF::WORKFLOW_NAME);
 
-        return new PackagistChangesRefresher($http, $em, $packages, $dispatcher, $workflow);
+        return new PackagistChangesRefresher($http, $em, $packages, new MessengerTransitionExecutor($dispatcher, $store), $workflow);
     }
 }

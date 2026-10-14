@@ -1,2 +1,4 @@
 survos_workflow_messenger:
-    subject_store: App\Workflow\PackageSubjectStore
+    # Workers run in several containers: serialize per-subject transitions with
+    # PostgreSQL advisory locks, not the host-local default.
+    lock_factory: packages.transition_lock.factory

@@ -14,6 +14,8 @@ use App\Workflow\PackageWorkflow;
 use Doctrine\ORM\EntityManagerInterface;
 use League\CommonMark\CommonMarkConverter;
 use Nadar\PhpComposerReader\ComposerReader;
+use Survos\WorkflowExtrasBundle\Contract\TransitionExecutorInterface;
+use Survos\WorkflowExtrasBundle\Service\NextTransitionRunner;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +30,8 @@ class PackageController extends AbstractController
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly \App\Workflow\PackagePipeline $pipeline,
+        private readonly NextTransitionRunner $next,
+        private readonly TransitionExecutorInterface $executor,
     ) {
     }
 
@@ -39,7 +42,7 @@ class PackageController extends AbstractController
 //        Package $package,
         Request $request,
         PackageSchema $packageSchema,
-        #[Target(PackageWorkflow::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
+        #[Target(PackageWorkflow::WORKFLOW_NAME)] WorkflowInterface $workflow,
         ?string $transition = null,
     ): Response {
         $package = $this->entityManager->getRepository(Package::class)->find($packageId);
@@ -52,10 +55,10 @@ class PackageController extends AbstractController
             if ($transition === '_reset') {
                 $package->marking = PackagePlace::Discovered;
                 $this->entityManager->flush();
-                $this->pipeline->kickoff($package);
+                $this->next->start($workflow, $package);
             } else {
                 $transition = str_ends_with($transition, '_async') ? substr($transition, 0, -6) : $transition;
-                $this->pipeline->dispatch($package, $transition);
+                $this->executor->execute($workflow, $package, $transition);
             }
             $flashMessage = $transition.' requested.';
             // this could be done in a .leave listener too.

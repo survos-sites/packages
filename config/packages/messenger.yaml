@@ -58,7 +58,8 @@ framework:
             messenger.bus.default:
                 middleware:
                     - logging
-                    - App\Messenger\PackageTransitionLockMiddleware
+                    # Temporary: requests queued before DoctrineSubjectStore used type 'package'.
+                    - App\Messenger\LegacyPackageReferenceMiddleware
 
         routing:
 #            Symfony\Component\Mailer\Messenger\SendEmailMessage: async

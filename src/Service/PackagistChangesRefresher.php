@@ -11,8 +11,7 @@ use App\Entity\Package;
 use App\Repository\PackageRepository;
 use App\Workflow\PackageWorkflow as WF;
 use Doctrine\ORM\EntityManagerInterface;
-use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
-use App\Workflow\PackagePipeline;
+use Survos\WorkflowExtrasBundle\Contract\TransitionExecutorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -28,7 +27,7 @@ final class PackagistChangesRefresher
         #[Target('packagist.client')] private HttpClientInterface $packagistClient,
         private EntityManagerInterface $entityManager,
         private PackageRepository $packages,
-        private TransitionDispatcher $dispatcher,
+        private TransitionExecutorInterface $executor,
         #[Target(WF::WORKFLOW_NAME)] private WorkflowInterface $workflow,
     ) {
     }
@@ -73,7 +72,7 @@ final class PackagistChangesRefresher
                     $result->skipped[] = $name;
                     continue;
                 }
-                $this->dispatcher->dispatch(WF::WORKFLOW_NAME, PackagePipeline::reference($package), WF::TRANSITION_LOAD);
+                $this->executor->execute($this->workflow, $package, WF::TRANSITION_LOAD);
                 $result->queued[] = $name;
             }
             $cursor->advance($data['timestamp']);

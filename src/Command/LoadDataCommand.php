@@ -10,7 +10,7 @@ use App\Workflow\PackageWorkflow;
 use Castor\Attribute\AsSymfonyTask;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\InvalidArgumentException;
-use App\Workflow\PackagePipeline;
+use Survos\WorkflowExtrasBundle\Contract\TransitionExecutorInterface;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -31,7 +31,7 @@ final class LoadDataCommand
         private PackageRepository          $packageRepository,
         private EntityManagerInterface     $entityManager,
         private CacheInterface             $cache,
-        private PackagePipeline $pipeline,
+        private TransitionExecutorInterface $executor,
 
     )
     {
@@ -61,10 +61,15 @@ final class LoadDataCommand
 //        #[Option('Dispatch a load transition for new packages')] ?bool $dispatch = null,
     ): int
     {
-        // Apply sync routing before the first flush: kickoff runs during postFlush.
-        $this->pipeline->sync = $sync;
+        if ($sync) {
+            // Kickoff runs during postFlush, so the whole load must run synchronously.
+            return $this->executor->synchronously(fn (): int => $this->__invoke(
+                $io, $q, $setup, $dispatch, false, $refresh, $fetch, $process, $reset,
+                $pageSize, $limit, $batch, $marking, $vendorFilter, $name,
+            ));
+        }
 
-        // Newly persisted rows are started by PackageKickoffListener.
+        // Newly persisted rows are started by workflow-extras' WorkflowKickoffListener.
 
         if ($reset) {
             $this->entityManager->createQuery('DELETE FROM App\Entity\Package p')->execute();
