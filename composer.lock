@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "919222ae05afe703ac1c3fad634404b5",
+    "content-hash": "11ef5ba982b480281c876424f4963773",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -2698,116 +2698,6 @@
                 "source": "https://github.com/doctrine/sql-formatter/tree/1.5.4"
             },
             "time": "2026-02-08T16:21:46+00:00"
-        },
-        {
-            "name": "easycorp/easyadmin-bundle",
-            "version": "v5.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/EasyCorp/EasyAdminBundle.git",
-                "reference": "0b34965c9c8b7b82a6bbeefd892078b29e027614"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/0b34965c9c8b7b82a6bbeefd892078b29e027614",
-                "reference": "0b34965c9c8b7b82a6bbeefd892078b29e027614",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/dbal": "^3.10|^4.4",
-                "doctrine/doctrine-bundle": "^2.18|^3.2",
-                "doctrine/orm": "^2.20|^3.6",
-                "php": ">=8.2",
-                "symfony/asset": "^6.4|^7.0|^8.0",
-                "symfony/cache": "^6.4.33|^7.0|^8.0",
-                "symfony/config": "^6.4.32|^7.0|^8.0",
-                "symfony/dependency-injection": "^6.4.32|^7.0|^8.0",
-                "symfony/deprecation-contracts": "^3.0",
-                "symfony/doctrine-bridge": "^6.4.32|^7.0|^8.0",
-                "symfony/event-dispatcher": "^6.4.32|^7.0|^8.0",
-                "symfony/filesystem": "^6.4.30|^7.0|^8.0",
-                "symfony/form": "^6.4.32|^7.0|^8.0",
-                "symfony/framework-bundle": "^6.4.33|^7.0|^8.0",
-                "symfony/http-foundation": "^6.4.33|^7.0|^8.0",
-                "symfony/http-kernel": "^6.4.33|^7.0|^8.0",
-                "symfony/intl": "^6.4.32|^7.0|^8.0",
-                "symfony/property-access": "^6.4.32|^7.0|^8.0",
-                "symfony/security-bundle": "^6.4.32|^7.0|^8.0",
-                "symfony/string": "^6.4.30|^7.0|^8.0",
-                "symfony/translation": "^6.4.32|^7.0|^8.0",
-                "symfony/twig-bridge": "^6.4.32|^7.1.9|^7.2|^8.0",
-                "symfony/twig-bundle": "^6.4.32|^7.0|^8.0",
-                "symfony/uid": "^6.4.32|^7.0|^8.0",
-                "symfony/ux-twig-component": "^2.32|^3.0",
-                "symfony/validator": "^6.4.33|^7.0|^8.0",
-                "twig/extra-bundle": "^3.23",
-                "twig/html-extra": "^3.23",
-                "twig/twig": "^3.23"
-            },
-            "require-dev": {
-                "dama/doctrine-test-bundle": "^8.2",
-                "doctrine/doctrine-fixtures-bundle": "^3.4|3.5.x-dev|^4.0",
-                "league/flysystem": "^3.10",
-                "moneyphp/money": "^4.8",
-                "phpstan/extension-installer": "^1.4",
-                "phpstan/phpstan": "^2.0",
-                "phpstan/phpstan-phpunit": "^2.0",
-                "phpstan/phpstan-strict-rules": "^2.0",
-                "phpstan/phpstan-symfony": "^2.0",
-                "psr/log": "^1.0|^2.0|^3.0",
-                "symfony/browser-kit": "^6.4.32|^7.0|^8.0",
-                "symfony/css-selector": "^6.4.24|^7.0|^8.0",
-                "symfony/debug-bundle": "^6.4.27|^7.0|^8.0",
-                "symfony/dom-crawler": "^6.4.32|^7.0|^8.0",
-                "symfony/expression-language": "^6.4.32|^7.0|^8.0",
-                "symfony/phpunit-bridge": "^6.4.26|^7.0|^8.0",
-                "symfony/process": "^6.4.33|^7.0|^8.0",
-                "symfony/web-link": "^6.4.32|^7.0|^8.0",
-                "vincentlanglet/twig-cs-fixer": "^3.10",
-                "zenstruck/foundry": "^2.3"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "EasyCorp\\Bundle\\EasyAdminBundle\\": "src/"
-                },
-                "exclude-from-classmap": [
-                    "/tests/Functional/Apps/*/config/reference.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Project Contributors",
-                    "homepage": "https://github.com/EasyCorp/EasyAdminBundle/graphs/contributors"
-                }
-            ],
-            "description": "Admin generator for Symfony applications",
-            "homepage": "https://github.com/EasyCorp/EasyAdminBundle",
-            "keywords": [
-                "admin",
-                "backend",
-                "generator"
-            ],
-            "support": {
-                "issues": "https://github.com/EasyCorp/EasyAdminBundle/issues",
-                "source": "https://github.com/EasyCorp/EasyAdminBundle/tree/v5.6.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/javiereguiluz",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-09-30T05:59:24+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -7493,67 +7383,6 @@
             "time": "2026-10-13T13:09:54+00:00"
         },
         {
-            "name": "survos/ez-bundle",
-            "version": "2.41.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/ez-bundle.git",
-                "reference": "cded9c8c64311bc4308c6588ed5bba81bd2073c5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/ez-bundle/zipball/cded9c8c64311bc4308c6588ed5bba81bd2073c5",
-                "reference": "cded9c8c64311bc4308c6588ed5bba81bd2073c5",
-                "shasum": ""
-            },
-            "require": {
-                "easycorp/easyadmin-bundle": "^4.25|^5.0",
-                "php": "^8.5",
-                "symfony/config": "^7.4||^8.1",
-                "symfony/console": "^7.4||^8.1",
-                "symfony/dependency-injection": "^7.4||^8.1",
-                "symfony/framework-bundle": "^7.4||^8.1",
-                "symfony/http-kernel": "^7.4||^8.1"
-            },
-            "require-dev": {
-                "nette/php-generator": "^4.2",
-                "phpstan/phpstan-symfony": "^2.0",
-                "symfony/phpunit-bridge": "^7.4||^8.1"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Survos\\EzBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tac Tacelosky",
-                    "email": "tacman@gmail.com"
-                }
-            ],
-            "description": "configure EasyAdmin with attributes",
-            "keywords": [
-                "symfony",
-                "symfony-ux"
-            ],
-            "support": {
-                "issues": "https://github.com/survos/ez-bundle/issues",
-                "source": "https://github.com/survos/ez-bundle/tree/2.41.9"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-13T13:09:50+00:00"
-        },
-        {
             "name": "survos/field-bundle",
             "version": "2.41.9",
             "source": {
@@ -8186,93 +8015,6 @@
                 }
             ],
             "time": "2026-10-13T13:10:32+00:00"
-        },
-        {
-            "name": "survos/state-bundle",
-            "version": "2.41.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/state-bundle.git",
-                "reference": "36835d685403d822c84f761c6fe349ebdc3807aa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/state-bundle/zipball/36835d685403d822c84f761c6fe349ebdc3807aa",
-                "reference": "36835d685403d822c84f761c6fe349ebdc3807aa",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/orm": "^3.7",
-                "php": "^8.5",
-                "survos/kit-bundle": "^2.5",
-                "symfony/console": "^7.4||^8.1",
-                "symfony/http-kernel": "^7.4||^8.1",
-                "symfony/messenger": "^7.4||^8.1",
-                "symfony/process": "^7.4||^8.1",
-                "symfony/string": "^7.4||^8.1",
-                "symfony/workflow": "^7.4||^8.1",
-                "symfony/yaml": "^7.4||^8.1"
-            },
-            "require-dev": {
-                "nette/php-generator": "^4.1",
-                "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^13.0",
-                "psr/log": "^3.0",
-                "roave/better-reflection": "^6.0",
-                "survos/tabler-bundle": "^2.5",
-                "symfony/browser-kit": "^7.4||^8.1",
-                "symfony/config": "^7.4||^8.1",
-                "symfony/dependency-injection": "^7.4||^8.1",
-                "symfony/form": "^7.4||^8.1",
-                "symfony/framework-bundle": "^7.4||^8.1",
-                "symfony/maker-bundle": "^1.5",
-                "symfony/twig-bundle": "^7.4||^8.1",
-                "symfony/ux-chartjs": "^3",
-                "symfony/var-dumper": "^7.4||^8.1",
-                "zenstruck/class-metadata": "^1.1",
-                "zenstruck/messenger-monitor-bundle": "^v0.6.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "symfony": {
-                    "allow-contrib": true
-                },
-                "branch-alias": {
-                    "dev-master": "2.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Survos\\StateBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tac Tacelosky",
-                    "email": "tacman@gmail.com"
-                }
-            ],
-            "description": "Add some tools managing state machines using the Symfony Workflow Component",
-            "keywords": [
-                "symfony",
-                "symfony-ux",
-                "workflow"
-            ],
-            "support": {
-                "issues": "https://github.com/survos/state-bundle/issues",
-                "source": "https://github.com/survos/state-bundle/tree/2.41.9"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-13T13:10:19+00:00"
         },
         {
             "name": "survos/tabler-bundle",
@@ -10912,12 +10654,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "750c7eb06acafd88220781fb6aa379cf804050d4"
+                "reference": "0f99ed4a753c36d9c803356537c4bc609ff39c07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/750c7eb06acafd88220781fb6aa379cf804050d4",
-                "reference": "750c7eb06acafd88220781fb6aa379cf804050d4",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/0f99ed4a753c36d9c803356537c4bc609ff39c07",
+                "reference": "0f99ed4a753c36d9c803356537c4bc609ff39c07",
                 "shasum": ""
             },
             "require": {
@@ -10945,8 +10687,10 @@
                 "psr/log-implementation": "1.0|2.0|3.0"
             },
             "require-dev": {
+                "phpstan/phpdoc-parser": "^1.0|^2.0",
                 "psr/cache": "^1.0|^2.0|^3.0",
                 "symfony/browser-kit": "^7.4|^8.0",
+                "symfony/cache": "^8.2",
                 "symfony/clock": "^7.4|^8.0",
                 "symfony/config": "^7.4|^8.0",
                 "symfony/console": "^7.4|^8.0",
@@ -11022,7 +10766,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-13T16:20:45+00:00"
+            "time": "2026-10-14T07:57:21+00:00"
         },
         {
             "name": "symfony/intl",
@@ -11965,16 +11709,16 @@
         },
         {
             "name": "symfony/polyfill-deepclone",
-            "version": "v1.43.1",
+            "version": "v1.43.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-deepclone.git",
-                "reference": "aaba44b6ee7299ae65717811c55b57ab9bc0fedd"
+                "reference": "82274308b59f6e96f53a3fb37fc40877d843e5a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-deepclone/zipball/aaba44b6ee7299ae65717811c55b57ab9bc0fedd",
-                "reference": "aaba44b6ee7299ae65717811c55b57ab9bc0fedd",
+                "url": "https://api.github.com/repos/symfony/polyfill-deepclone/zipball/82274308b59f6e96f53a3fb37fc40877d843e5a5",
+                "reference": "82274308b59f6e96f53a3fb37fc40877d843e5a5",
                 "shasum": ""
             },
             "require": {
@@ -12028,7 +11772,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-deepclone/tree/v1.43.1"
+                "source": "https://github.com/symfony/polyfill-deepclone/tree/v1.43.2"
             },
             "funding": [
                 {
@@ -12048,7 +11792,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-06T19:46:18+00:00"
+            "time": "2026-10-14T07:17:09+00:00"
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
@@ -17187,50 +16931,6 @@
             "time": "2026-09-22T09:54:55+00:00"
         },
         {
-            "name": "jetbrains/phpstorm-stubs",
-            "version": "v2026.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JetBrains/phpstorm-stubs",
-                "reference": "709e512210784a7c0a677b3a89d35def844a59b9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/709e512210784a7c0a677b3a89d35def844a59b9",
-                "reference": "709e512210784a7c0a677b3a89d35def844a59b9",
-                "shasum": ""
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^v3.86",
-                "nikic/php-parser": "^v5.6",
-                "phpdocumentor/reflection-docblock": "^5.6",
-                "phpunit/phpunit": "^12.3"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "PhpStormStubsMap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "PHP runtime & extensions header files for PhpStorm",
-            "homepage": "https://www.jetbrains.com/phpstorm",
-            "keywords": [
-                "autocomplete",
-                "code",
-                "inference",
-                "inspection",
-                "jetbrains",
-                "phpstorm",
-                "stubs",
-                "type"
-            ],
-            "time": "2026-06-12T13:19:10+00:00"
-        },
-        {
             "name": "myclabs/deep-copy",
             "version": "1.14.0",
             "source": {
@@ -18586,75 +18286,6 @@
                 }
             ],
             "time": "2026-10-06T08:46:45+00:00"
-        },
-        {
-            "name": "roave/better-reflection",
-            "version": "6.73.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "a6a93a3bd7681627f2750bfa8f41e586d32dc67d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/a6a93a3bd7681627f2750bfa8f41e586d32dc67d",
-                "reference": "a6a93a3bd7681627f2750bfa8f41e586d32dc67d",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "jetbrains/phpstorm-stubs": "2026.2",
-                "nikic/php-parser": "^5.8.0",
-                "php": "~8.4.1 || ~8.5.0"
-            },
-            "conflict": {
-                "thecodingmachine/safe": "<1.1.3"
-            },
-            "require-dev": {
-                "phpbench/phpbench": "^1.7.0",
-                "phpunit/phpunit": "^13.3.2"
-            },
-            "suggest": {
-                "composer/composer": "Required to use the ComposerSourceLocator"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Roave\\BetterReflection\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "James Titcumb",
-                    "email": "james@asgrim.com",
-                    "homepage": "https://github.com/asgrim"
-                },
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com",
-                    "homepage": "https://ocramius.github.io/"
-                },
-                {
-                    "name": "Gary Hockin",
-                    "email": "gary@roave.com",
-                    "homepage": "https://github.com/geeh"
-                },
-                {
-                    "name": "Jaroslav Hanslík",
-                    "email": "kukulich@kukulich.cz",
-                    "homepage": "https://github.com/kukulich"
-                }
-            ],
-            "description": "Better Reflection - an improved code reflection API",
-            "support": {
-                "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.73.0"
-            },
-            "time": "2026-09-09T19:57:09+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -20972,134 +20603,6 @@
             "time": "2024-10-20T05:08:20+00:00"
         },
         {
-            "name": "survos/code-bundle",
-            "version": "2.41.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/code-bundle.git",
-                "reference": "16446d1f331cad0bcc80a3592b37ce25d0e4b261"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/code-bundle/zipball/16446d1f331cad0bcc80a3592b37ce25d0e4b261",
-                "reference": "16446d1f331cad0bcc80a3592b37ce25d0e4b261",
-                "shasum": ""
-            },
-            "require": {
-                "nette/php-generator": "^4.1",
-                "nikic/php-parser": "^5.6",
-                "php": "^8.5",
-                "roave/better-reflection": "^6.0",
-                "survos/data-contracts": "^2.32",
-                "symfony/config": "^8.1",
-                "symfony/dependency-injection": "^8.1",
-                "symfony/http-kernel": "^8.1",
-                "twig/twig": "^3.4|^4.0"
-            },
-            "require-dev": {
-                "api-platform/core": "^5.0",
-                "doctrine/doctrine-bundle": "^2.7|^3.0",
-                "doctrine/orm": "^3.7",
-                "easycorp/easyadmin-bundle": "^4.0",
-                "league/csv": "^9.9",
-                "openai-php/client": "^0.18.0",
-                "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^13.0",
-                "survos/babel-bundle": "^2.5",
-                "survos/ez-bundle": "^2.5",
-                "survos/jsonl-bundle": "^2.5",
-                "survos/meili-bundle": "^2.5",
-                "survos/state-bundle": "^2.5",
-                "symfony/browser-kit": "^8.1",
-                "symfony/console": "^8.1",
-                "symfony/framework-bundle": "^8.1",
-                "symfony/http-client-contracts": "^3.5",
-                "symfony/routing": "^8.1",
-                "symfony/security-bundle": "^8.1",
-                "symfony/twig-bundle": "^8.1",
-                "symfony/var-dumper": "^8.1"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Survos\\CodeBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "generate PHP code for Symfony applications. Like maker-bundle, but with nette/php-generator",
-            "keywords": [
-                "code",
-                "dev",
-                "generator",
-                "php"
-            ],
-            "support": {
-                "issues": "https://github.com/survos/code-bundle/issues",
-                "source": "https://github.com/survos/code-bundle/tree/2.41.9"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-13T13:09:57+00:00"
-        },
-        {
-            "name": "survos/data-contracts",
-            "version": "2.41.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/data-contracts.git",
-                "reference": "cc97cc2944c5ccaa2f2f8ef66f1908489cc38bc6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/data-contracts/zipball/cc97cc2944c5ccaa2f2f8ef66f1908489cc38bc6",
-                "reference": "cc97cc2944c5ccaa2f2f8ef66f1908489cc38bc6",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.5",
-                "survos/lingua-contracts": "^2.5",
-                "symfony/filesystem": "^8.0",
-                "voku/stop-words": "^2.0"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^13.0",
-                "symplify/easy-coding-standard": "^13.0"
-            },
-            "suggest": {
-                "survos/schema-org-bundle": "Reads the #[SchemaOrg]/#[SchemaProperty] attributes on these DTOs to emit JSON-LD. The attributes are inert without it."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Survos\\DataContracts\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Shared data vocabularies, content metadata, and item DTO contracts for Survos data/media/import packages.",
-            "support": {
-                "issues": "https://github.com/survos/data-contracts/issues",
-                "source": "https://github.com/survos/data-contracts/tree/2.41.9"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-13T13:10:24+00:00"
-        },
-        {
             "name": "survos/doc-bundle",
             "version": "2.41.9",
             "source": {
@@ -21172,50 +20675,6 @@
                 }
             ],
             "time": "2026-10-13T13:09:47+00:00"
-        },
-        {
-            "name": "survos/lingua-contracts",
-            "version": "2.41.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/lingua-contracts.git",
-                "reference": "718899cac6f247dc82534dbf322518103287b91a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/lingua-contracts/zipball/718899cac6f247dc82534dbf322518103287b91a",
-                "reference": "718899cac6f247dc82534dbf322518103287b91a",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.5"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^13.0",
-                "symplify/easy-coding-standard": "^13.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Survos\\Lingua\\Contracts\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Shared DTOs and API surface (routes/headers) for Survos Lingua client/server interoperability.",
-            "support": {
-                "issues": "https://github.com/survos/lingua-contracts/issues",
-                "source": "https://github.com/survos/lingua-contracts/tree/2.41.9"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-13T13:10:09+00:00"
         },
         {
             "name": "survos/supervisor-bundle",
@@ -21768,53 +21227,6 @@
                 }
             ],
             "time": "2025-12-08T11:19:18+00:00"
-        },
-        {
-            "name": "voku/stop-words",
-            "version": "2.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/voku/stop-words.git",
-                "reference": "8e63c0af20f800b1600783764e0ce19e53969f71"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/voku/stop-words/zipball/8e63c0af20f800b1600783764e0ce19e53969f71",
-                "reference": "8e63c0af20f800b1600783764e0ce19e53969f71",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "voku\\": "src/voku/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Lars Moelleken",
-                    "homepage": "http://www.moelleken.org/"
-                }
-            ],
-            "description": "Stop-Words via PHP",
-            "keywords": [
-                "stop words",
-                "stop-words"
-            ],
-            "support": {
-                "issues": "https://github.com/voku/stop-words/issues",
-                "source": "https://github.com/voku/stop-words/tree/master"
-            },
-            "time": "2018-11-23T01:37:27+00:00"
         }
     ],
     "aliases": [],
@@ -21822,7 +21234,6 @@
     "stability-flags": {
         "jwage/phpamqplib-messenger": 20,
         "roave/security-advisories": 20,
-        "survos/code-bundle": 20,
         "survos/workflow-async-bundle": 20,
         "survos/workflow-extras-bundle": 20
     },

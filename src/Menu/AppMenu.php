@@ -17,6 +17,12 @@ final class AppMenu
 {
     use MenuBuilderTrait;
 
+    #[AsEventListener(event: MenuEvent::ADMIN_NAVBAR_MENU)]
+    public function workflows(MenuEvent $event): void
+    {
+        $this->add($event->getMenu(), route: 'survos_workflow_extras', rp: ['flowCode' => \App\Workflow\PackageWorkflow::WORKFLOW_NAME], label: 'Workflow', icon: 'tabler:git-branch', translationDomain: false);
+    }
+
     private const GITHUB = 'https://github.com/survos-sites/packages';
 
     #[AsEventListener(event: MenuEvent::NAVBAR_END)]

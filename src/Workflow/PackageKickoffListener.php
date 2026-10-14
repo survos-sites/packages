@@ -30,7 +30,7 @@ final class PackageKickoffListener implements ResetInterface
         }
     }
 
-    #[AsCompletedListener(BundleWorkflowInterface::WORKFLOW_NAME)]
+    #[AsCompletedListener(PackageWorkflow::WORKFLOW_NAME)]
     public function completed(CompletedEvent $event): void
     {
         $package = $event->getSubject();

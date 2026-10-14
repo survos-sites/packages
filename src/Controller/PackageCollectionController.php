@@ -8,7 +8,6 @@ use App\Entity\Package;
 use App\Schema\PackageSchema;
 use App\Repository\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Survos\StateBundle\Traits\HandleTransitionsTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +16,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/packages')]
 class PackageCollectionController extends AbstractController
 {
-    use HandleTransitionsTrait;
 
     public function __construct(
     )
@@ -28,8 +26,6 @@ class PackageCollectionController extends AbstractController
     public function browse(
         string $style = 'normal', //  'simple', //  'normal'
     ): Response {
-        // WorkflowInterface $projectStateMachine
-        $markingData = []; // $this->workflowHelperService->getMarkingData($projectStateMachine, $class);
 
         return $this->render('package/browse.html.twig', [
             'packageClass' => Package::class,

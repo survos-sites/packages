@@ -49,18 +49,6 @@
             "migrations/.gitignore"
         ]
     },
-    "easycorp/easyadmin-bundle": {
-        "version": "4.24",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "4.14",
-            "ref": "13b3e524d1038a6861ad6c7fc64e31b644ba0c54"
-        },
-        "files": [
-            "config/routes/easyadmin.yaml"
-        ]
-    },
     "friendsofphp/php-cs-fixer": {
         "version": "3.65",
         "recipe": {
@@ -190,9 +178,6 @@
     "survos/auth-bundle": {
         "version": "1.5.255"
     },
-    "survos/code-bundle": {
-        "version": "dev-main"
-    },
     "survos/command-bundle": {
         "version": "2.0",
         "recipe": {
@@ -228,9 +213,6 @@
     "survos/elastic-bundle": {
         "version": "2.24.2"
     },
-    "survos/ez-bundle": {
-        "version": "2.0.94"
-    },
     "survos/field-bundle": {
         "version": "2.10.19"
     },
@@ -254,9 +236,6 @@
     },
     "survos/simple-datatables-bundle": {
         "version": "1.5.446"
-    },
-    "survos/state-bundle": {
-        "version": "1.5.600"
     },
     "survos/supervisor-bundle": {
         "version": "2.10.20"

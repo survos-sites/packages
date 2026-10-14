@@ -18,7 +18,7 @@ final class PackagePipeline
     public bool $sync = false;
 
     public function __construct(
-        #[Target(BundleWorkflowInterface::WORKFLOW_NAME)] private readonly WorkflowInterface $workflow,
+        #[Target(PackageWorkflow::WORKFLOW_NAME)] private readonly WorkflowInterface $workflow,
         private readonly NextTransitionResolver $next,
         private readonly TransitionDispatcher $dispatcher,
         private readonly EntityManagerInterface $em,
@@ -28,7 +28,7 @@ final class PackagePipeline
     {
         $this->requireCommittedBoundary();
         if (!$this->sync && ($context['cascade'] ?? null) !== 'sync' && $this->isAsync($transition)) {
-            $this->dispatcher->dispatch(BundleWorkflowInterface::WORKFLOW_NAME, self::reference($package), $transition, $context);
+            $this->dispatcher->dispatch(PackageWorkflow::WORKFLOW_NAME, self::reference($package), $transition, $context);
             return;
         }
         if ($this->sync) {
@@ -50,13 +50,13 @@ final class PackagePipeline
         $this->requireCommittedBoundary();
         $pending = null;
         $visited = [];
-        while (($context['cascade'] ?? null) !== 'none') {
-            $candidates = $this->workflow->getMetadataStore()->getPlaceMetadata($package->marking)['next'] ?? [];
+        while ( ($context['cascade'] ?? null) !== 'none') {
+            $candidates = $this->workflow->getMetadataStore()->getPlaceMetadata($package->marking->value)['next'] ?? [];
             $pending = $this->next->firstEnabled($this->workflow, $package, $candidates);
             if ($pending === null || (!$this->sync && ($context['cascade'] ?? null) !== 'sync' && $this->isAsync($pending))) {
                 break;
             }
-            $key = $package->marking.':'.$pending;
+            $key = $package->marking->value.':'.$pending;
             if (isset($visited[$key])) {
                 throw new \LogicException('A synchronous package continuation cycle was detected.');
             }
@@ -71,7 +71,7 @@ final class PackagePipeline
 
     public function kickoff(Package $package): void
     {
-        if ($package->marking !== PackagePlace::Discovered->value) {
+        if ($package->marking !== PackagePlace::Discovered) {
             return;
         }
         $this->continueAfterFlush($package);
@@ -80,10 +80,10 @@ final class PackagePipeline
     /** Also supports direct native apply() callers, including the legacy CLI. */
     public function continueAfterFlush(Package $package, array $context = []): void
     {
-        if (($context['cascade'] ?? null) === 'none') {
+        if ( ($context['cascade'] ?? null) === 'none') {
             return;
         }
-        $candidates = $this->workflow->getMetadataStore()->getPlaceMetadata($package->marking)['next'] ?? [];
+        $candidates = $this->workflow->getMetadataStore()->getPlaceMetadata($package->marking->value)['next'] ?? [];
         if (null !== $transition = $this->next->firstEnabled($this->workflow, $package, $candidates)) {
             $this->dispatch($package, $transition, $context);
         }

@@ -1,5 +1,0 @@
-easyadmin:
-    resource: .
-    type: easyadmin.routes
-    options:
-        expose: true

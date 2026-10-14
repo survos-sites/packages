@@ -10,5 +10,3 @@ survos_crawler:
         - 'zenstruck_messenger_monitor_schedule'
     paths_to_ignore:
         - '^/_profiler'
-        # EasyAdmin autocomplete endpoints need originatingPage/propertyName from a form
-        - '^/admin/[a-z_]+/autocomplete$'

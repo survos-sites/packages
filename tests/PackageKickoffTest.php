@@ -7,7 +7,7 @@ namespace App\Tests;
 use App\Command\LoadDataCommand;
 use App\Entity\Package;
 use App\Repository\PackageRepository;
-use App\Workflow\BundleWorkflowInterface as WF;
+use App\Workflow\PackageWorkflow as WF;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostPersistEventArgs;
@@ -22,8 +22,6 @@ use Survos\WorkflowAsyncBundle\Service\TransitionRouter;
 use Survos\WorkflowAsyncBundle\Service\WorkflowLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Doctrine\DBAL\Connection;
-use Survos\StateBundle\Service\AsyncQueueLocator;
-use Survos\StateBundle\Service\WorkflowHelperService;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -46,11 +44,11 @@ final class PackageKickoffTest extends TestCase
     #[DataProvider('nestedDependencies')]
     public function testSetupWithLegacyDispatchStartsEachNewPackageOnlyOnce(bool $nested): void
     {
-        $load = new Transition('load', 'new', 'composer_loaded');
+        $load = new Transition('load', 'discovered', 'metadata_loaded');
         $transitions = new \SplObjectStorage();
         $transitions[$load] = ['async' => true, 'transport' => 'bundle.load'];
-        $metadata = new InMemoryMetadataStore([], ['new' => ['next' => ['load']]], $transitions);
-        $workflow = new StateMachine(new Definition(['new', 'composer_loaded'], [$load], 'new', $metadata), new MethodMarkingStore(true, 'marking'), null, WF::WORKFLOW_NAME);
+        $metadata = new InMemoryMetadataStore([], ['discovered' => ['next' => ['load']]], $transitions);
+        $workflow = new StateMachine(new Definition(['discovered', 'metadata_loaded'], [$load], 'discovered', $metadata), new MethodMarkingStore(true, 'marking'), null, WF::WORKFLOW_NAME);
         $em = $this->createMock(EntityManagerInterface::class);
         $connection = $this->createStub(Connection::class);
         $connection->method('isTransactionActive')->willReturn(false);

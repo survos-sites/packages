@@ -1,7 +1,11 @@
 doctrine:
     dbal:
+        types:
+            package_place: App\Doctrine\Type\PackagePlaceType
         connections:
             default:
+                mapping_types:
+                    package_place: package_place
                 logging: false
                 profiling_collect_backtrace: '%kernel.debug%'
                 url: '%env(resolve:DATABASE_URL)%'

@@ -56,12 +56,6 @@
                 }
             }
         },
-        "@survos/state-bundle": {
-            "workflow": {
-                "enabled": true,
-                "fetch": "eager"
-            }
-        },
         "@survos/tabler-bundle": {
             "accordion": {
                 "enabled": true,
@@ -113,6 +107,12 @@
             },
             "mercure-turbo-stream": {
                 "enabled": false,
+                "fetch": "eager"
+            }
+        },
+        "@survos/workflow-extras-bundle": {
+            "workflow": {
+                "enabled": true,
                 "fetch": "eager"
             }
         }

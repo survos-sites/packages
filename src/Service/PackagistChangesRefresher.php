@@ -9,7 +9,7 @@ use App\Workflow\PackagePlace;
 use App\Entity\FeedCursor;
 use App\Entity\Package;
 use App\Repository\PackageRepository;
-use App\Workflow\BundleWorkflowInterface as WF;
+use App\Workflow\PackageWorkflow as WF;
 use Doctrine\ORM\EntityManagerInterface;
 use Survos\WorkflowAsyncBundle\Service\TransitionDispatcher;
 use App\Workflow\PackagePipeline;
@@ -67,7 +67,7 @@ final class PackagistChangesRefresher
                 if (!$package) {
                     continue;
                 }
-                if ($package->marking === PackagePlace::Discovered->value || !$this->workflow->can($package, WF::TRANSITION_LOAD)) {
+                if ($package->marking === PackagePlace::Discovered || !$this->workflow->can($package, WF::TRANSITION_LOAD)) {
                     // Mid-flight: `new` already has its kickoff load queued, and composer_loaded /
                     // php_ok are inside a chain that started from fresh data.
                     $result->skipped[] = $name;

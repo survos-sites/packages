@@ -2345,36 +2345,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         response_key?: scalar|Param|null, // key if API returns an object response, e.g. dummyjson returns {'products': [...]}
  *     }>,
  * }
- * @psalm-type SurvosCodeConfig = array{
- *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
- * }
- * @psalm-type SurvosStateConfig = array{
- *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
- *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/state"
- *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
- *     queue_prefix?: scalar|Param|null, // Default: ""
- *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
- *     enable_dynamic_routing?: bool|Param, // Inert as of 2026-09-12: transition routing comes from AsyncQueueLocator::stamps() at the dispatch site, not from middleware. See SurvosStateBundle::loadExtension(). // Default: true
- *     batch_size?: int|Param, // Default size for #[Transition(batch: true-ish)] groups; a transition's own batch: N wins // Default: 100
- *     batch_idle_timeout?: int|Param, // Seconds of worker idleness after which a partial batch is flushed // Default: 5
- *     batch_enabled?: bool|Param, // Off: #[Transition(batch: N)] transitions travel as plain TransitionMessages, one at a time, exactly as if unbatched. Env-able: '%env(bool:APP_BATCH)%' // Default: true
- *     allow_force_place?: scalar|Param|null, // Default: "%kernel.debug%"
- *     workflow_paths?: list<scalar|Param|null>,
- *     async_transport_dsn?: scalar|Param|null, // Default: "doctrine://default"
- *     queue_driver?: "doctrine"|"rabbitmq"|Param, // Default: "doctrine"
- *     max_priority?: int|Param, // Default: null
- *     prefetch_count?: int|Param, // Default: null
- *     queue_options?: array<string, array{ // Default: []
- *         max_priority?: int|Param,
- *         prefetch_count?: int|Param,
- *     }>,
- *     retry_strategy?: array{
- *         max_retries?: int|Param, // Default: 3
- *         delay?: int|Param, // Default: 1000
- *         multiplier?: float|Param, // Default: 2
- *         max_delay?: int|Param, // Default: 0
- *     },
- * }
  * @psalm-type ZenstruckMessengerMonitorConfig = array{
  *     storage?: array{
  *         exclude?: list<scalar|Param|null>,
@@ -2386,9 +2356,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         pool?: scalar|Param|null, // Cache pool to use for worker cache. // Default: "cache.app"
  *         expired_worker_ttl?: int|Param, // How long to keep expired workers in cache (in seconds). // Default: 3600
  *     },
- * }
- * @psalm-type SurvosEzConfig = array{
- *     enabled?: bool|Param, // Default: true
  * }
  * @psalm-type SurvosKitConfig = array{
  *     webhook?: array{
@@ -2537,9 +2504,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     inspector?: InspectorConfig,
  *     survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *     survos_js_twig?: SurvosJsTwigConfig,
- *     survos_state?: SurvosStateConfig,
  *     zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
- *     survos_ez?: SurvosEzConfig,
  *     survos_kit?: SurvosKitConfig,
  *     survos_field?: SurvosFieldConfig,
  *     survos_api_grid?: SurvosApiGridConfig,
@@ -2599,10 +2564,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         inspector?: InspectorConfig,
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
- *         survos_code?: SurvosCodeConfig,
- *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
- *         survos_ez?: SurvosEzConfig,
  *         survos_kit?: SurvosKitConfig,
  *         survos_field?: SurvosFieldConfig,
  *         survos_supervisor?: SurvosSupervisorConfig,
@@ -2664,9 +2626,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         inspector?: InspectorConfig,
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
- *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
- *         survos_ez?: SurvosEzConfig,
  *         survos_kit?: SurvosKitConfig,
  *         survos_field?: SurvosFieldConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
@@ -2726,10 +2686,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         inspector?: InspectorConfig,
  *         survos_simple_datatables?: SurvosSimpleDatatablesConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
- *         survos_code?: SurvosCodeConfig,
- *         survos_state?: SurvosStateConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
- *         survos_ez?: SurvosEzConfig,
  *         survos_kit?: SurvosKitConfig,
  *         survos_field?: SurvosFieldConfig,
  *         survos_supervisor?: SurvosSupervisorConfig,

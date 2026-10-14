@@ -29,7 +29,7 @@ final class RequiredPackageDiscoveryTest extends TestCase
         $em->method('getUnitOfWork')->willReturn($uow);
         $em->expects(self::once())->method('persist')->willReturnCallback(function (Package $package) use (&$pending) {
             self::assertSame('acme/component', $package->name);
-            self::assertSame('new', $package->getMarking());
+            self::assertSame(\App\Workflow\PackagePlace::Discovered, $package->marking);
             $pending[] = $package;
         });
         $em->expects(self::never())->method('flush');

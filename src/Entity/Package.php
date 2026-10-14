@@ -15,8 +15,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\PackageRepository;
-use App\Workflow\BundleWorkflow;
-use App\Workflow\BundleWorkflowInterface;
+use App\Workflow\PackageWorkflow;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,10 +23,8 @@ use Survos\FieldBundle\Attribute\EntityMeta;
 use Survos\FieldBundle\Entity\RouteParametersInterface;
 use Survos\FieldBundle\Entity\RouteIdentityTrait;
 use Survos\FieldBundle\Attribute\RouteIdentity;
-use Survos\StateBundle\Traits\MarkingInterface;
 use Survos\SchemaOrgBundle\Attribute\SchemaOrg;
 use Survos\SchemaOrgBundle\Attribute\SchemaProperty;
-use Survos\StateBundle\Traits\MarkingTrait;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
@@ -54,10 +51,17 @@ use Symfony\Component\Serializer\Attribute\Groups;
  */
 #[SchemaOrg('SoftwareSourceCode')]
 #[RouteIdentity(field: 'id')]
-class Package implements RouteParametersInterface, MarkingInterface, \Stringable
+class Package implements RouteParametersInterface, \Stringable
 {
     use RouteIdentityTrait;
-    use MarkingTrait;
+
+    #[ORM\Column(type: \App\Doctrine\Type\PackagePlaceType::NAME, enumType: PackagePlace::class)]
+    #[Groups(['marking', 'package.read', 'browse'])]
+    public PackagePlace $marking = PackagePlace::Discovered;
+
+    #[ORM\Column]
+    #[Groups(['package.read'])]
+    public bool $abandoned = false;
 
     private const SORTABLE = [
         'marking', 'vendor', 'name', 'stars',
@@ -133,14 +137,41 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     public ?array $symfonyVersions = null;
 
     #[Groups(['package.read'])]
-    #[ApiProperty("null if unknown (e.g. marking=new), other boolean")]
+    #[ApiProperty("null if unknown (e.g. marking=discovered), other boolean")]
     public ?bool $hasValidSymfonyVersion {
         get => $this->symfonyVersions === null ? null : array_any($this->symfonyVersions, static fn (string $version): bool => str_starts_with($version, '8.'));
     }
     #[Groups(['package.read'])]
-    #[ApiProperty("null if unknown (e.g. marking=new), other boolean")]
+    #[ApiProperty("null if unknown (e.g. marking=discovered), other boolean")]
     public ?bool $hasValidPhpVersion {
         get => is_null($this->phpVersions) ? null : !empty($this->phpVersions);
+    }
+
+    #[Groups(['package.read'])]
+    public string $phpCompatibility {
+        get => $this->phpVersions === null ? 'unknown' : ($this->phpVersionString === null ? 'not_applicable' : ($this->hasValidPhpVersion ? 'compatible' : 'incompatible'));
+    }
+
+    #[Groups(['package.read'])]
+    public string $symfonyCompatibility {
+        get => $this->symfonyVersions === null ? 'unknown' : ($this->symfonyVersionString === null ? 'not_applicable' : ($this->hasValidSymfonyVersion ? 'compatible' : 'incompatible'));
+    }
+
+    #[ORM\Column(length: 32, nullable: true)]
+    #[Groups(['package.read'])]
+    public ?string $requirementsFailureReason = null;
+
+    public ?string $requirementsFailureLabel {
+        get => match ($this->requirementsFailureReason) {
+            'php_incompatible' => 'PHP constraint excludes supported versions',
+            'symfony_incompatible' => 'Symfony constraints exclude supported versions',
+            default => null,
+        };
+    }
+
+    public ?bool $requirementsCompatible {
+        get => in_array('unknown', [$this->phpCompatibility, $this->symfonyCompatibility], true) ? null
+            : !in_array('incompatible', [$this->phpCompatibility, $this->symfonyCompatibility], true);
     }
 
     #[Groups(['package.read'])]
@@ -153,7 +184,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     }
 
     public bool $isAbandoned {
-        get => (bool) ($this->data['abandoned'] ?? false);
+        get => $this->abandoned || (bool) ($this->data['abandoned'] ?? false);
     }
 
     #[Groups(['package.facets', 'package.read'])]
@@ -238,7 +269,7 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     {
         [$this->vendor, $this->shortName] = explode('/', $this->name);
         $this->id = self::idFromName($this->name);
-        $this->marking = PackagePlace::Discovered->value;
+
     }
 
     public static function idFromName(string $name): string
@@ -262,10 +293,6 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
         return $this->symfonyVersions ?? [];
     }
 
-    public function getFlowCode(): string
-    {
-        return BundleWorkflowInterface::WORKFLOW_NAME;
-    }
 
     public function __toString(): string
     {

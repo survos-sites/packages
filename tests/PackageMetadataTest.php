@@ -15,19 +15,47 @@ final class PackageMetadataTest extends TestCase
     public function testMetadataDoesNotChangeWorkflowStateAndClearsOldCompatibility(): void
     {
         $package = new Package('acme/component');
-        $package->marking = 'composer_loaded';
+        $package->marking = \App\Workflow\PackagePlace::MetadataLoaded;
         $package->data = ['type' => 'library', 'require' => ['php' => '^8.3']];
         $service = new PackageService(new NullLogger(), $this->createStub(SerializerInterface::class));
         $service->populateFromComposerData($package);
-        self::assertSame('composer_loaded', $package->marking);
+        self::assertSame(\App\Workflow\PackagePlace::MetadataLoaded, $package->marking);
         self::assertTrue($package->hasValidPhpVersion);
         self::assertFalse($package->isSymfonyBundle);
         self::assertFalse($package->hasValidSymfonyVersion);
         $package->data['require']['php'] = '^5.6';
         $service->populateFromComposerData($package);
-        self::assertSame('composer_loaded', $package->marking);
+        self::assertSame(\App\Workflow\PackagePlace::MetadataLoaded, $package->marking);
         self::assertFalse($package->hasValidPhpVersion);
     }
+    public function testFirstFailurePrioritizesPhpAndClearsOnRefresh(): void
+    {
+        $service = new PackageService(new NullLogger(), $this->createStub(SerializerInterface::class));
+        $package = new Package('acme/example');
+        $package->data = ['require' => ['php' => '^5.6', 'symfony/config' => '^7.0']];
+        $service->populateFromComposerData($package);
+        self::assertSame('php_incompatible', $package->requirementsFailureReason);
+        $package->data['require']['php'] = '^8.4';
+        $service->populateFromComposerData($package);
+        self::assertSame('symfony_incompatible', $package->requirementsFailureReason);
+        $package->data['require'] = [];
+        $service->populateFromComposerData($package);
+        self::assertNull($package->requirementsFailureReason);
+        self::assertTrue($package->requirementsCompatible);
+    }
+
+    public function testAbandonmentDoesNotPreventMetadataProcessing(): void
+    {
+        $package = new Package('acme/component');
+        $package->abandoned = true;
+        $package->data = ['type' => 'library', 'require' => ['php' => '^8.3']];
+        $service = new PackageService(new NullLogger(), $this->createStub(SerializerInterface::class));
+        $service->populateFromComposerData($package);
+        self::assertTrue($package->isAbandoned);
+        self::assertTrue($package->hasValidPhpVersion);
+        self::assertSame(\App\Workflow\PackagePlace::Discovered, $package->marking);
+    }
+
     public function testSymfonyEightGateUsesAllDeclaredCoreRequirements(): void
     {
         $service = new PackageService(new NullLogger(), $this->createStub(SerializerInterface::class));

@@ -1,26 +1,26 @@
-{% extends '@EasyAdmin/layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}{{ package.name }}{% endblock %}
 
-{% block content_header %}
+{% block page_header %}
     <div class="content-header-title">
         <h1 class="title">{{ package.name }}</h1>
     </div>
 
     <div class="page-actions">
-        <a href="{{ path('admin_package_index') }}" class="btn btn-secondary">
+        <a href="{{ path('package_browse') }}" class="btn btn-secondary">
             <i class="fa fa-arrow-left"></i> Back to list
         </a>
     </div>
 {% endblock %}
 
-{% block main %}
+{% block body %}
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="mb-3">
-                        <code class="badge badge-secondary">{{ package.marking }}</code>
+                        <code class="badge badge-secondary">{{ package.marking.value }}</code>
                     </div>
 
                     {% if package.description %}
@@ -44,9 +44,12 @@
 
                         <div class="col-md-6">
                             <h5>Requirements</h5>
+                            {% if package.requirementsFailureReason %}
+                                <p class="text-danger">{{ package.requirementsFailureLabel }}</p>
+                            {% endif %}
                             <ul class="list-unstyled">
-                                <li><strong>Symfony:</strong> <code>{{ package.symfonyVersionString }}</code></li>
-                                <li><strong>PHP:</strong> <code>{{ package.phpVersionString }}</code></li>
+                                <li><strong>Symfony:</strong> <code>{{ package.symfonyVersionString ?? 'No declared core constraint' }}</code> — {{ package.symfonyCompatibility|replace({'_': ' '}) }}</li>
+                                <li><strong>PHP:</strong> <code>{{ package.phpVersionString ?? 'No declared constraint' }}</code> — {{ package.phpCompatibility|replace({'_': ' '}) }}</li>
                                 {% if package.phpUnitVersionString %}
                                     <li><strong>PHPUnit:</strong> <code>{{ package.phpUnitVersionString }}</code></li>
                                 {% endif %}
@@ -69,10 +72,12 @@
                                 <h5 class="card-title mb-0">Admin Actions</h5>
                             </div>
                             <div class="card-body">
-                                {{ include('@SurvosWorkflow/_entity_transitions.html.twig', {
-                                    transition_path: 'package_transition',
-                                    entity: package
-                                }) }}
+                                {% for transition in workflow_transitions(package) %}
+                                    <form method="post" action="{{ path('package_transition', {packageId: package.id, transition: transition.name}) }}" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('package_transition_' ~ package.id) }}">
+                                        <button class="btn btn-outline-primary">{{ transition.name|humanize }}</button>
+                                    </form>
+                                {% endfor %}
                             </div>
                         </div>
                     {% endif %}

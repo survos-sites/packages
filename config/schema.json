@@ -9756,16 +9756,6 @@
                 },
                 "additionalProperties": false
             },
-            "survos_code": {
-                "$ref": "#/$defs/types/object_null",
-                "properties": {
-                    "base_layout": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "base.html.twig"
-                    }
-                },
-                "additionalProperties": false
-            },
             "survos_command": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
@@ -10136,16 +10126,6 @@
                 },
                 "additionalProperties": false
             },
-            "survos_ez": {
-                "$ref": "#/$defs/types/object_null",
-                "properties": {
-                    "enabled": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": true
-                    }
-                },
-                "additionalProperties": false
-            },
             "survos_field": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
@@ -10413,147 +10393,6 @@
                     "fixed_height": {
                         "$ref": "#/$defs/types/scalar",
                         "default": true
-                    }
-                },
-                "additionalProperties": false
-            },
-            "survos_state": {
-                "$ref": "#/$defs/types/object_null",
-                "properties": {
-                    "routes_enabled": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": true,
-                        "description": "Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off."
-                    },
-                    "route_prefix": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "/state",
-                        "description": "URL prefix applied to all routes from this bundle."
-                    },
-                    "locale_prefix": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": false,
-                        "description": "Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param."
-                    },
-                    "queue_prefix": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": ""
-                    },
-                    "base_layout": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "base.html.twig"
-                    },
-                    "enable_dynamic_routing": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": true,
-                        "description": "Inert as of 2026-09-12: transition routing comes from AsyncQueueLocator::stamps() at the dispatch site, not from middleware. See SurvosStateBundle::loadExtension()."
-                    },
-                    "batch_size": {
-                        "$ref": "#/$defs/types/integer",
-                        "default": 100,
-                        "description": "Default size for #[Transition(batch: true-ish)] groups; a transition's own batch: N wins"
-                    },
-                    "batch_idle_timeout": {
-                        "$ref": "#/$defs/types/integer",
-                        "default": 5,
-                        "description": "Seconds of worker idleness after which a partial batch is flushed"
-                    },
-                    "batch_enabled": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": true,
-                        "description": "Off: #[Transition(batch: N)] transitions travel as plain TransitionMessages, one at a time, exactly as if unbatched. Env-able: '%env(bool:APP_BATCH)%'"
-                    },
-                    "allow_force_place": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "%kernel.debug%"
-                    },
-                    "workflow_paths": {
-                        "$ref": "#/$defs/types/array_null",
-                        "items": {
-                            "$ref": "#/$defs/types/scalar"
-                        },
-                        "default": [
-                            "%kernel.project_dir%/src/Workflow"
-                        ]
-                    },
-                    "async_transport_dsn": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "doctrine://default"
-                    },
-                    "queue_driver": {
-                        "anyOf": [
-                            {
-                                "enum": [
-                                    "doctrine",
-                                    "rabbitmq"
-                                ]
-                            },
-                            {
-                                "$ref": "#/$defs/types/param"
-                            }
-                        ],
-                        "default": "doctrine"
-                    },
-                    "max_priority": {
-                        "$ref": "#/$defs/types/integer_null",
-                        "minimum": 1,
-                        "maximum": 255,
-                        "default": null
-                    },
-                    "prefetch_count": {
-                        "$ref": "#/$defs/types/integer_null",
-                        "minimum": 1,
-                        "default": null
-                    },
-                    "queue_options": {
-                        "$ref": "#/$defs/types/object_null",
-                        "additionalProperties": {
-                            "$ref": "#/$defs/types/object_null",
-                            "properties": {
-                                "max_priority": {
-                                    "$ref": "#/$defs/types/integer",
-                                    "minimum": 1,
-                                    "maximum": 255
-                                },
-                                "prefetch_count": {
-                                    "$ref": "#/$defs/types/integer",
-                                    "minimum": 1
-                                }
-                            },
-                            "additionalProperties": false
-                        }
-                    },
-                    "retry_strategy": {
-                        "$ref": "#/$defs/types/object_null",
-                        "properties": {
-                            "max_retries": {
-                                "$ref": "#/$defs/types/integer",
-                                "minimum": 0,
-                                "default": 3
-                            },
-                            "delay": {
-                                "$ref": "#/$defs/types/integer",
-                                "minimum": 0,
-                                "default": 1000
-                            },
-                            "multiplier": {
-                                "$ref": "#/$defs/types/number",
-                                "minimum": 1,
-                                "default": 2
-                            },
-                            "max_delay": {
-                                "$ref": "#/$defs/types/integer",
-                                "minimum": 0,
-                                "default": 0
-                            }
-                        },
-                        "additionalProperties": false,
-                        "default": {
-                            "max_retries": 3,
-                            "delay": 1000,
-                            "multiplier": 2,
-                            "max_delay": 0
-                        }
                     }
                 },
                 "additionalProperties": false
@@ -14668,9 +14507,6 @@
         "survos_elastic": {
             "$ref": "#/$defs/nodes/survos_elastic"
         },
-        "survos_ez": {
-            "$ref": "#/$defs/nodes/survos_ez"
-        },
         "survos_field": {
             "$ref": "#/$defs/nodes/survos_field"
         },
@@ -14694,9 +14530,6 @@
         },
         "survos_simple_datatables": {
             "$ref": "#/$defs/nodes/survos_simple_datatables"
-        },
-        "survos_state": {
-            "$ref": "#/$defs/nodes/survos_state"
         },
         "survos_tabler": {
             "$ref": "#/$defs/nodes/survos_tabler"
@@ -14833,9 +14666,6 @@
                 "survos_auth": {
                     "$ref": "#/$defs/nodes/survos_auth"
                 },
-                "survos_code": {
-                    "$ref": "#/$defs/nodes/survos_code"
-                },
                 "survos_command": {
                     "$ref": "#/$defs/nodes/survos_command"
                 },
@@ -14850,9 +14680,6 @@
                 },
                 "survos_elastic": {
                     "$ref": "#/$defs/nodes/survos_elastic"
-                },
-                "survos_ez": {
-                    "$ref": "#/$defs/nodes/survos_ez"
                 },
                 "survos_field": {
                     "$ref": "#/$defs/nodes/survos_field"
@@ -14877,9 +14704,6 @@
                 },
                 "survos_simple_datatables": {
                     "$ref": "#/$defs/nodes/survos_simple_datatables"
-                },
-                "survos_state": {
-                    "$ref": "#/$defs/nodes/survos_state"
                 },
                 "survos_supervisor": {
                     "$ref": "#/$defs/nodes/survos_supervisor"
@@ -15037,9 +14861,6 @@
                 "survos_elastic": {
                     "$ref": "#/$defs/nodes/survos_elastic"
                 },
-                "survos_ez": {
-                    "$ref": "#/$defs/nodes/survos_ez"
-                },
                 "survos_field": {
                     "$ref": "#/$defs/nodes/survos_field"
                 },
@@ -15063,9 +14884,6 @@
                 },
                 "survos_simple_datatables": {
                     "$ref": "#/$defs/nodes/survos_simple_datatables"
-                },
-                "survos_state": {
-                    "$ref": "#/$defs/nodes/survos_state"
                 },
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
@@ -15202,9 +15020,6 @@
                 "survos_auth": {
                     "$ref": "#/$defs/nodes/survos_auth"
                 },
-                "survos_code": {
-                    "$ref": "#/$defs/nodes/survos_code"
-                },
                 "survos_command": {
                     "$ref": "#/$defs/nodes/survos_command"
                 },
@@ -15219,9 +15034,6 @@
                 },
                 "survos_elastic": {
                     "$ref": "#/$defs/nodes/survos_elastic"
-                },
-                "survos_ez": {
-                    "$ref": "#/$defs/nodes/survos_ez"
                 },
                 "survos_field": {
                     "$ref": "#/$defs/nodes/survos_field"
@@ -15246,9 +15058,6 @@
                 },
                 "survos_simple_datatables": {
                     "$ref": "#/$defs/nodes/survos_simple_datatables"
-                },
-                "survos_state": {
-                    "$ref": "#/$defs/nodes/survos_state"
                 },
                 "survos_supervisor": {
                     "$ref": "#/$defs/nodes/survos_supervisor"
@@ -15402,9 +15211,6 @@
                 "survos_elastic": {
                     "$ref": "#/$defs/nodes/survos_elastic"
                 },
-                "survos_ez": {
-                    "$ref": "#/$defs/nodes/survos_ez"
-                },
                 "survos_field": {
                     "$ref": "#/$defs/nodes/survos_field"
                 },
@@ -15428,9 +15234,6 @@
                 },
                 "survos_simple_datatables": {
                     "$ref": "#/$defs/nodes/survos_simple_datatables"
-                },
-                "survos_state": {
-                    "$ref": "#/$defs/nodes/survos_state"
                 },
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"

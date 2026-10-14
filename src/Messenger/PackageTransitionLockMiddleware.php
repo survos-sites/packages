@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Messenger;
 
-use App\Entity\Package;
-use Doctrine\ORM\EntityManagerInterface;
-use Survos\StateBundle\Message\TransitionMessage;
 use Survos\WorkflowAsyncBundle\Message\TransitionRequest;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Lock\LockFactory;
@@ -32,7 +29,6 @@ final class PackageTransitionLockMiddleware implements MiddlewareInterface
 
     public function __construct(
         #[Autowire(service: 'packages.transition_lock.factory')] private readonly LockFactory $locks,
-        private readonly EntityManagerInterface $em,
     ) {}
 
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
@@ -40,7 +36,6 @@ final class PackageTransitionLockMiddleware implements MiddlewareInterface
         $message = $envelope->getMessage();
         $id = match (true) {
             $message instanceof TransitionRequest && $message->subject->type === 'package' => $message->subject->id,
-            $message instanceof TransitionMessage && $message->getClassName() === Package::class => (string) $message->getId(),
             default => null,
         };
         if (!$envelope->last(ReceivedStamp::class) || $id === null) {
@@ -70,12 +65,6 @@ final class PackageTransitionLockMiddleware implements MiddlewareInterface
             $acquire($resource);
             $this->depth[$resource] = 1;
             // Native requests refresh in PackageSubjectStore, inside this lock.
-            if ($message instanceof TransitionMessage) {
-                $package = $this->em->find(Package::class, $id);
-                if ($package instanceof Package) {
-                    $this->em->refresh($package);
-                }
-            }
             // Hold through the handler's final flush and postFlush follow-up dispatch.
             return $stack->next()->handle($envelope, $stack);
         } finally {

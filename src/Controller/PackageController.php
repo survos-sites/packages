@@ -10,10 +10,8 @@ use App\Workflow\PackagePlace;
 
 use App\Entity\Package;
 use App\Schema\PackageSchema;
-use App\Workflow\BundleWorkflow;
-use App\Workflow\BundleWorkflowInterface;
+use App\Workflow\PackageWorkflow;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use League\CommonMark\CommonMarkConverter;
 use Nadar\PhpComposerReader\ComposerReader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,26 +32,25 @@ class PackageController extends AbstractController
     ) {
     }
 
-    #[Route('/transition/{transition}', name: 'package_transition', options: ['expose' => true], methods: [Request::METHOD_GET])]
+    #[Route('/transition/{transition}', name: 'package_transition', options: ['expose' => true], methods: [Request::METHOD_POST])]
     #[Route('/', name: 'package_show', options: ['expose' => true], methods: [Request::METHOD_GET])]
-    #[AdminRoute('/bundle/{packageId}', name: 'bundle_show',
-        options: ['options' => ['expose' => true]]
-        // https://github.com/EasyCorp/EasyAdminBundle/issues/7092#issuecomment-3496033443
-//        options: ['expose' => true]
-    )]
     public function show(
         string $packageId,
 //        Package $package,
         Request $request,
         PackageSchema $packageSchema,
-        #[Target(BundleWorkflowInterface::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
+        #[Target(PackageWorkflow::WORKFLOW_NAME)] ?WorkflowInterface $workflow = null,
         ?string $transition = null,
     ): Response {
         $package = $this->entityManager->getRepository(Package::class)->find($packageId);
         assert($package instanceof Package, "wrong id $packageId");
         if ($transition !== null) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+            if (!$this->isCsrfTokenValid('package_transition_'.$package->id, $request->request->get('_token'))) {
+                throw $this->createAccessDeniedException('Invalid transition token.');
+            }
             if ($transition === '_reset') {
-                $package->marking = PackagePlace::Discovered->value;
+                $package->marking = PackagePlace::Discovered;
                 $this->entityManager->flush();
                 $this->pipeline->kickoff($package);
             } else {

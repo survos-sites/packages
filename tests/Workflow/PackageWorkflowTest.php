@@ -5,7 +5,7 @@ namespace App\Tests\Workflow;
 use App\Entity\Package;
 use App\Repository\PackageRepository;
 use App\Service\PackageService;
-use App\Workflow\BundleWorkflow;
+use App\Workflow\PackageWorkflow;
 use Doctrine\ORM\EntityManagerInterface;
 use Packagist\Api\Client;
 use Packagist\Api\Result\Package as Metadata;
@@ -20,7 +20,7 @@ use Symfony\Component\Workflow\Marking;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-final class BundleWorkflowTest extends TestCase
+final class PackageWorkflowTest extends TestCase
 {
     public function testDefaultBranchMetadataIsUsedEvenWhenAnotherVersionIsLast(): void
     {
@@ -69,16 +69,15 @@ final class BundleWorkflowTest extends TestCase
 
     private function event(Package $package): TransitionEvent
     {
-        return new TransitionEvent($package, new Marking(['new' => 1]), new Transition('load', 'new', 'composer_loaded'));
+        return new TransitionEvent($package, new Marking(['discovered' => 1]), new Transition('load', 'discovered', 'metadata_loaded'));
     }
 
-    private function handler(Client $client, SerializerInterface $serializer): BundleWorkflow
+    private function handler(Client $client, SerializerInterface $serializer): PackageWorkflow
     {
-        return new BundleWorkflow($this->createStub(MessageBusInterface::class), $this->createStub(UrlGeneratorInterface::class), $serializer,
-            new NullLogger(), $this->createStub(PackageService::class),
+        return new PackageWorkflow($serializer,
+            $this->createStub(PackageService::class),
             new \App\Service\RequiredPackageDiscovery($this->createStub(PackageRepository::class), $this->createStub(EntityManagerInterface::class)),
-            $this->createStub(EntityManagerInterface::class),
-            $this->createStub(PackageRepository::class), $client, $this->createStub(WorkflowInterface::class),
+            $client,
             new \App\Service\PackageDocsFetcher(new \Symfony\Component\HttpClient\MockHttpClient()));
     }
 }

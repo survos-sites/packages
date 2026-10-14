@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Entity\Package as SurvosPackage;
 use App\Repository\PackageRepository;
-use App\Workflow\BundleWorkflowInterface;
+use App\Workflow\PackageWorkflow;
 use Castor\Attribute\AsSymfonyTask;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\InvalidArgumentException;
@@ -86,11 +86,11 @@ final class LoadDataCommand
             });
 
             foreach ($packages as $packageName => $package) {
-                if (true === $package->abandoned) {
+                if (true === ($package->abandoned ?? false)) {
                     continue; // no replacement
                 }
                 // at this point, we don't care that much to replace it.
-                if (is_string($package->abandoned)) {
+                if (is_string(($package->abandoned ?? false))) {
                     continue; // no replacement
                 }
 
@@ -111,6 +111,7 @@ final class LoadDataCommand
                 $survosPackage->repo = $package->repository;
                 if ((++$idx % $batch) == 0) {
                     $this->entityManager->flush();
+                    $this->entityManager->clear();
                     $this->io->writeln("flushing $idx");
                 }
 
