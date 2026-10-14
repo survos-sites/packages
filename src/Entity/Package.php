@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
+use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -31,25 +32,18 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[EntityMeta(icon: 'tabler:package', group: 'Content', order: 10, label: 'Packages', description: 'Composer packages harvested from Packagist.')]
 #[ApiResource(
     operations: [new Get(), new GetCollection(
-        name: 'doctrine-packages'
+        name: 'doctrine-packages',
+        parameters: [
+            'marking' => new QueryParameter(filter: new ExactFilter()),
+            'name' => new QueryParameter(filter: new PartialSearchFilter(caseSensitive: true)),
+            'description' => new QueryParameter(filter: new PartialSearchFilter(caseSensitive: true)),
+            'order[:property]' => new QueryParameter(filter: new SortFilter(), properties: self::SORTABLE),
+        ],
     )],
     normalizationContext: ['groups' => ['package.read', 'marking', 'browse', 'transitions', 'rp']],
     denormalizationContext: ['groups' => ['Default', 'minimum', 'browse']],
 )]
 
-#[ApiFilter(OrderFilter::class, properties: self::SORTABLE, arguments: ['orderParameterName' => 'order'])]
-#[ApiFilter(SearchFilter::class, properties: [
-    'marking' => 'exact',
-    'name' => 'partial',
-    'description' => 'partial',
-])]
-
-
-//#[ApiFilter(
-//    MultiFieldSearchFilter::class,
-//    properties: ['name', 'description'],
-//    arguments: ['searchParameterName' => 'search']
-//)]
 // #[Groups(['package.read'])] // NO! The embedded json data is too big
 /**
  * A published Symfony bundle: source code you compose into an app, not an
@@ -66,12 +60,12 @@ class Package implements RouteParametersInterface, MarkingInterface, \Stringable
     private const SORTABLE = [
         'marking', 'vendor', 'name', 'stars',
         'lastUpdatedOnPackagist',
-        'favers', 'downloads'];
+        'downloads'];
 
     /**
      * Read by survos/search-bundle's AutoEntitySearch::applyConstantFields() to build the
      * faceted search at /entity/app_package/search. Separate from self::SORTABLE, which
-     * feeds API Platform's OrderFilter and includes fields (favers) that aren't columns.
+     * feeds API Platform's SortFilter.
      */
     public const array SEARCHABLE_FIELDS = ['id', 'shortName', 'vendor', 'description'];
 

@@ -3820,24 +3820,6 @@
                     }
                 }
             },
-            "maker": {
-                "$ref": "#/$defs/types/object_null",
-                "properties": {
-                    "root_namespace": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "App"
-                    },
-                    "generate_final_classes": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": true
-                    },
-                    "generate_final_entities": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": false
-                    }
-                },
-                "additionalProperties": false
-            },
             "messenger": {
                 "anyOf": [
                     {
@@ -14809,9 +14791,6 @@
                 },
                 "mailer": {
                     "$ref": "#/$defs/nodes/mailer"
-                },
-                "maker": {
-                    "$ref": "#/$defs/nodes/maker"
                 },
                 "messenger": {
                     "$ref": "#/$defs/nodes/messenger"

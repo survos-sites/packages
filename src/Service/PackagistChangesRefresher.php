@@ -23,7 +23,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 final class PackagistChangesRefresher
 {
     public function __construct(
-        private HttpClientInterface $packagistClient,
+        #[Target('packagist.client')] private HttpClientInterface $packagistClient,
         private EntityManagerInterface $entityManager,
         private PackageRepository $packages,
         private TransitionDispatcher $dispatcher,
