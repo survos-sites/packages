@@ -58,7 +58,6 @@ framework:
             messenger.bus.default:
                 middleware:
                     - logging
-                    - App\Messenger\PackageTransitionLockMiddleware
 
         routing:
 #            Symfony\Component\Mailer\Messenger\SendEmailMessage: async

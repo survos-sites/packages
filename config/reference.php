@@ -2456,6 +2456,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SurvosWorkflowMessengerConfig = array{
  *     subject_store?: scalar|Param|null, // Service implementing SubjectStoreInterface; defaults to the Doctrine store when DoctrineBundle is installed. // Default: null
  *     default_transport?: scalar|Param|null, // Default: null
+ *     lock_factory?: scalar|Param|null, // LockFactory serializing transitions per subject across workers; null disables. Use a store shared by every worker host. // Default: "lock.factory"
  * }
  * @psalm-type SurvosWorkflowExtrasConfig = array{
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true

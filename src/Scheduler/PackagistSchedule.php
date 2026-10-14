@@ -24,7 +24,7 @@ final class PackagistSchedule implements ScheduleProviderInterface
     public function __construct(
         // PostgreSQL, not LOCK_DSN (flock): every dokku container has its own filesystem,
         // and the lock must hold across `ps:scale bundle-load=2`.
-        #[Autowire(service: 'packages.transition_lock.factory')] private LockFactory $locks,
+        #[Autowire(service: 'lock.database.factory')] private LockFactory $locks,
     ) {
     }
 

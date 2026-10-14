@@ -1,2 +1,4 @@
 # Doctrine subject store is the default; no application adapter needed.
-survos_workflow_messenger: ~
+survos_workflow_messenger:
+    # Transitions of the same package never run concurrently across workers.
+    lock_factory: lock.database.factory

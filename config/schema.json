@@ -10992,6 +10992,11 @@
                     "default_transport": {
                         "$ref": "#/$defs/types/scalar",
                         "default": null
+                    },
+                    "lock_factory": {
+                        "$ref": "#/$defs/types/scalar",
+                        "default": "lock.factory",
+                        "description": "LockFactory serializing transitions per subject across workers; null disables. Use a store shared by every worker host."
                     }
                 },
                 "additionalProperties": false
