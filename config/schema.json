@@ -10795,6 +10795,28 @@
                         "default": false,
                         "description": "Build the BREADCRUMB slot from the page's entities: each object option whose class has a #[RouteMeta(entity:, purpose: Show)] route becomes a crumb. See BreadcrumbMenuSubscriber."
                     },
+                    "menu_renderer": {
+                        "anyOf": [
+                            {
+                                "enum": [
+                                    "knp",
+                                    "survos"
+                                ]
+                            },
+                            {
+                                "$ref": "#/$defs/types/param"
+                            }
+                        ],
+                        "default": "knp",
+                        "description": "How tabler_menu() draws menus. knp: KnpMenu templates (@SurvosTabler/menu/*). survos: survos/menu-bundle themes (@SurvosTabler/menu_theme/*); register SurvosMenuBundle first. Same listeners either way."
+                    },
+                    "menu_themes": {
+                        "$ref": "#/$defs/types/object_null",
+                        "additionalProperties": {
+                            "$ref": "#/$defs/types/scalar"
+                        },
+                        "description": "With menu_renderer: survos, a template per slot holding only the blocks the app changes, e.g. SIDEBAR: \"menu/sidebar.html.twig\"."
+                    },
                     "menu_options": {
                         "$ref": "#/$defs/types/object_null",
                         "additionalProperties": {

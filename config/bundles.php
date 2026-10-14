@@ -46,4 +46,5 @@ return [
     Survos\DocBundle\SurvosDocBundle::class => ['dev' => true, 'test' => true],
     Survos\WorkflowMessengerBundle\SurvosWorkflowMessengerBundle::class => ['all' => true],
     Survos\WorkflowExtrasBundle\SurvosWorkflowExtrasBundle::class => ['all' => true],
+    Survos\MenuBundle\SurvosMenuBundle::class => ['all' => true],
 ];

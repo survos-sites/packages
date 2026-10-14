@@ -1,4 +1,5 @@
 survos_tabler:
+  menu_renderer: survos
   routes:
     login: app_login
     logout: app_logout

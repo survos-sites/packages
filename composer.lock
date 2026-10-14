@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2adfb968624af77de856ba0587b0a06",
+    "content-hash": "db5f5ca38246b37e14824ce68aceaf19",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -7686,6 +7686,79 @@
             "time": "2026-10-13T13:10:10+00:00"
         },
         {
+            "name": "survos/menu-bundle",
+            "version": "2.42.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/survos/menu-bundle.git",
+                "reference": "2a5ae851152167754a036e271d4d7b9de8fa509a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/survos/menu-bundle/zipball/2a5ae851152167754a036e271d4d7b9de8fa509a",
+                "reference": "2a5ae851152167754a036e271d4d7b9de8fa509a",
+                "shasum": ""
+            },
+            "require": {
+                "knplabs/knp-menu": "^3.8",
+                "knplabs/knp-menu-bundle": "^3.8",
+                "php": "^8.5",
+                "survos/kit-bundle": "^2.5",
+                "symfony/config": "^8.1",
+                "symfony/dependency-injection": "^8.1",
+                "symfony/event-dispatcher": "^8.1",
+                "symfony/http-foundation": "^8.1",
+                "symfony/http-kernel": "^8.1",
+                "symfony/twig-bundle": "^8.1",
+                "symfony/ux-twig-component": "^3",
+                "twig/twig": "^3.29|^4.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^13.0",
+                "symfony/translation": "^8.1"
+            },
+            "suggest": {
+                "symfony/translation": "Menu labels are translated with each item's translation domain when a translator is available."
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Survos\\MenuBundle\\": "src/",
+                    "Survos\\MenuBundle\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tac Tacelosky",
+                    "email": "tacman@gmail.com"
+                }
+            ],
+            "description": "Menus built by event listeners and drawn by composable Twig themes (Twig BlockChain), on top of knplabs/knp-menu",
+            "keywords": [
+                "knp-menu",
+                "menu",
+                "navigation",
+                "symfony-ux",
+                "twig"
+            ],
+            "support": {
+                "issues": "https://github.com/survos/menu-bundle/issues",
+                "source": "https://github.com/survos/menu-bundle/tree/2.42.7"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kbond",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-14T16:57:08+00:00"
+        },
+        {
             "name": "survos/schema-org-bundle",
             "version": "2.41.9",
             "source": {
@@ -7934,16 +8007,16 @@
         },
         {
             "name": "survos/tabler-bundle",
-            "version": "2.41.9",
+            "version": "2.42.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/tabler-bundle.git",
-                "reference": "07ec35cc789d2656a014d6d50bbcdf21691bb823"
+                "reference": "45beb8c9687fcd1c574a245ae55bd87462028f7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/07ec35cc789d2656a014d6d50bbcdf21691bb823",
-                "reference": "07ec35cc789d2656a014d6d50bbcdf21691bb823",
+                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/45beb8c9687fcd1c574a245ae55bd87462028f7a",
+                "reference": "45beb8c9687fcd1c574a245ae55bd87462028f7a",
                 "shasum": ""
             },
             "require": {
@@ -7955,6 +8028,7 @@
                 "php": "^8.5",
                 "survos/field-bundle": "^2.5",
                 "survos/kit-bundle": "^2.5",
+                "survos/menu-bundle": "^2.42",
                 "symfony/config": "^7.4||^8.1",
                 "symfony/form": "^7.4||^8.1",
                 "symfony/mailer": "^7.4||^8.1",
@@ -8026,7 +8100,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/tabler-bundle/issues",
-                "source": "https://github.com/survos/tabler-bundle/tree/2.41.9"
+                "source": "https://github.com/survos/tabler-bundle/tree/2.42.9"
             },
             "funding": [
                 {
@@ -8034,7 +8108,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-13T13:10:19+00:00"
+            "time": "2026-10-14T17:57:48+00:00"
         },
         {
             "name": "survos/workflow-extras-bundle",

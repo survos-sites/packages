@@ -41,3 +41,6 @@ node_modules
 
 # Local agent lifecycle hooks
 /.codex/
+
+# Generated crawler results
+/tests/crawldata.json

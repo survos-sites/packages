@@ -1,9 +1,4 @@
-{# Overrides the `hit` block of survos/search-bundle's Hits component, which otherwise dumps
-   hit.data as JSON for debugging. Same mechanism zm and openfoto use. #}
-{% extends '@!SurvosSearch/Hits.html.twig' %}
-
-{% block hit %}
-    {% set doc = hit.data %}
+    {% set doc = hit %}
     <div class="ux-search-hits__item card">
         <div class="card-body py-2">
             <div class="d-flex justify-content-between align-items-start gap-3">
@@ -23,7 +18,7 @@
                             <span class="badge bg-purple-lt">php {{ v }}</span>
                         {% endfor %}
                         {% if doc.marking is defined and doc.marking %}
-                            <span class="badge bg-secondary-lt">{{ doc.marking }}</span>
+                            <span class="badge bg-secondary-lt">{{ doc.marking.value ?? doc.marking }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -38,4 +33,3 @@
             </div>
         </div>
     </div>
-{% endblock %}
