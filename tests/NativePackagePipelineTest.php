@@ -136,10 +136,12 @@ final class NativePackagePipelineTest extends KernelTestCase
         $locator = new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => static fn () => $workflow]));
         $router = new TransitionRouter(null, array_keys($transports));
         $dispatcher = new TransitionDispatcher($bus, $locator, $router);
-        $pipeline = new PackagePipeline($workflow, new NextTransitionResolver(), $dispatcher, $em);
+        $store = new \App\Workflow\PackageSubjectStore($em);
+        $runner = new \Survos\WorkflowExtrasBundle\Service\NextTransitionRunner(new NextTransitionResolver(), new \Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor($dispatcher, $store));
+        $pipeline = new PackagePipeline($workflow, $runner, $dispatcher, $em);
         $listener = new \Survos\WorkflowExtrasBundle\EventListener\WorkflowKickoffListener([$pipeline]);
         $events->addListener('workflow.'.WF::WORKFLOW_NAME.'.completed', $listener->completed(...));
-        $handler = new TransitionHandler(new PackageSubjectStore($em, $pipeline), $locator, $router);
+        $handler = new TransitionHandler(new PackageSubjectStore($em), $locator, $router, $runner);
         return [$pipeline, $package, $transports, $bus, $state, $workflow, $em];
     }
 

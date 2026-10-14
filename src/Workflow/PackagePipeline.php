@@ -8,18 +8,18 @@ use App\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use Survos\WorkflowMessengerBundle\Message\SubjectReference;
 use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
-use Survos\WorkflowExtrasBundle\Service\NextTransitionResolver;
+use Survos\WorkflowExtrasBundle\Service\NextTransitionRunner;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-/** App-owned persistence and ordered continuation policy around the native workflow. */
+/** Package persistence adapter; selection and execution live in the workflow bundles. */
 final class PackagePipeline implements \Survos\WorkflowExtrasBundle\Contract\WorkflowContinuationInterface
 {
     public bool $sync = false;
 
     public function __construct(
         #[Target(PackageWorkflow::WORKFLOW_NAME)] private readonly WorkflowInterface $workflow,
-        private readonly NextTransitionResolver $next,
+        private readonly NextTransitionRunner $next,
         private readonly TransitionDispatcher $dispatcher,
         private readonly EntityManagerInterface $em,
     ) {}
@@ -27,14 +27,8 @@ final class PackagePipeline implements \Survos\WorkflowExtrasBundle\Contract\Wor
     public function dispatch(Package $package, string $transition, array $context = []): void
     {
         $this->requireCommittedBoundary();
-        if (!$this->sync && ($context['cascade'] ?? null) !== 'sync' && $this->isAsync($transition)) {
-            $this->dispatcher->dispatch(PackageWorkflow::WORKFLOW_NAME, self::reference($package), $transition, $context);
-            return;
-        }
-        if ($this->sync) {
-            $context['cascade'] = 'sync';
-        }
-        $this->apply($package, $transition, $context);
+        if ($this->sync) $context['cascade'] = 'sync';
+        $this->dispatcher->dispatch(PackageWorkflow::WORKFLOW_NAME, self::reference($package), $transition, $context);
     }
 
     public function apply(Package $package, string $transition, array $context = []): void
@@ -44,28 +38,10 @@ final class PackagePipeline implements \Survos\WorkflowExtrasBundle\Contract\Wor
         $this->finish($package, $context);
     }
 
-    /** Called by the async subject store only after apply() and all its listeners finish. */
+    /** Persist a direct native apply after its listeners finish. */
     public function finish(Package $package, array $context = []): void
     {
         $this->requireCommittedBoundary();
-        $pending = null;
-        $visited = [];
-        while ( ($context['cascade'] ?? null) !== 'none') {
-            $candidates = $this->workflow->getMetadataStore()->getPlaceMetadata($package->marking->value)['next'] ?? [];
-            $pending = $this->next->firstEnabled($this->workflow, $package, $candidates);
-            if ($pending === null || (!$this->sync && ($context['cascade'] ?? null) !== 'sync' && $this->isAsync($pending))) {
-                break;
-            }
-            $key = $package->marking->value.':'.$pending;
-            if (isset($visited[$key])) {
-                throw new \LogicException('A synchronous package continuation cycle was detected.');
-            }
-            $visited[$key] = true;
-            $this->workflow->apply($package, $pending, $context);
-            $pending = null;
-        }
-        // No workflow-event flush: all sync guards/listeners finish first. Dependency
-        // insertions are flushed here too; their kickoff listener runs after commit.
         $this->em->flush();
     }
 
@@ -83,30 +59,18 @@ final class PackagePipeline implements \Survos\WorkflowExtrasBundle\Contract\Wor
     }
 
     /** Also supports direct native apply() callers, including the legacy CLI. */
-    public function continueAfterFlush(object $package, array $context = []): void
+    public function continueAfterFlush(object $package, array $context = [], ?\Symfony\Component\Workflow\Transition $previous = null): void
     {
         if ( ($context['cascade'] ?? null) === 'none') {
             return;
         }
-        $candidates = $this->workflow->getMetadataStore()->getPlaceMetadata($package->marking->value)['next'] ?? [];
-        if (null !== $transition = $this->next->firstEnabled($this->workflow, $package, $candidates)) {
-            $this->dispatch($package, $transition, $context);
-        }
+        if ($this->sync) $context['cascade'] = 'sync';
+        $this->next->continue($this->workflow, $package, $context, $previous);
     }
 
     public static function reference(Package $package): SubjectReference
     {
         return new SubjectReference('package', $package->id);
-    }
-
-    private function isAsync(string $name): bool
-    {
-        foreach ($this->workflow->getDefinition()->getTransitions() as $transition) {
-            if ($transition->getName() === $name) {
-                return ($this->workflow->getMetadataStore()->getTransitionMetadata($transition)['async'] ?? false) === true;
-            }
-        }
-        throw new \InvalidArgumentException('Unknown package transition: '.$name);
     }
 
     private function requireCommittedBoundary(): void

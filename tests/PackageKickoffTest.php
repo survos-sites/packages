@@ -55,7 +55,9 @@ final class PackageKickoffTest extends TestCase
         $em->method('getConnection')->willReturn($connection);
         $bus = $this->createMock(MessageBusInterface::class);
         $dispatcher = new TransitionDispatcher($bus, new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $workflow])), new TransitionRouter(null, ['bundle.load']));
-        $pipeline = new PackagePipeline($workflow, new NextTransitionResolver(), $dispatcher, $em);
+        $store = new \App\Workflow\PackageSubjectStore($em);
+        $runner = new \Survos\WorkflowExtrasBundle\Service\NextTransitionRunner(new NextTransitionResolver(), new \Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor($dispatcher, $store));
+        $pipeline = new PackagePipeline($workflow, $runner, $dispatcher, $em);
         $listener = new WorkflowKickoffListener([$pipeline]);
         $dispatched = [];
         $bus->expects(self::exactly($nested ? 2 : 1))->method('dispatch')->willReturnCallback(function ($message) use ($listener, $em, $nested, &$dispatched) {

@@ -11,7 +11,13 @@ use Survos\WorkflowMessengerBundle\Message\SubjectReference;
 
 final readonly class PackageSubjectStore implements SubjectStoreInterface
 {
-    public function __construct(private EntityManagerInterface $em, private PackagePipeline $pipeline) {}
+    public function __construct(private EntityManagerInterface $em) {}
+
+    public function reference(object $subject): SubjectReference
+    {
+        if (!$subject instanceof Package) throw new \InvalidArgumentException('Unsupported workflow subject.');
+        return PackagePipeline::reference($subject);
+    }
 
     public function load(SubjectReference $reference): ?object
     {
@@ -29,7 +35,10 @@ final readonly class PackageSubjectStore implements SubjectStoreInterface
         if (!$subject instanceof Package || $subject->id !== $reference->id) {
             throw new \InvalidArgumentException('Mismatched package subject reference.');
         }
-        $this->pipeline->finish($subject, $context);
+        if ($this->em->getConnection()->isTransactionActive()) {
+            throw new \LogicException('Workflow continuation requires committed storage; use an outbox for outer transactions.');
+        }
+        $this->em->flush();
     }
 
     private function validate(SubjectReference $reference): void
