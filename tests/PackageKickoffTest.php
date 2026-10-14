@@ -11,8 +11,8 @@ use App\Tests\Support\RemoteFixtures;
 use App\Workflow\PackagePlace;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Survos\WorkflowExtrasBundle\Contract\TransitionExecutorInterface;
 use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
-use Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -35,7 +35,7 @@ final class PackageKickoffTest extends KernelTestCase
         $em->createQuery('DELETE FROM '.Package::class.' p')->execute();
         $cache = $this->createStub(CacheInterface::class);
         $cache->method('get')->willReturn([RemoteFixtures::PACKAGE => (object) ['abandoned' => false, 'repository' => 'https://github.com/symfony/monolog-bundle']]);
-        $command = new LoadDataCommand(self::getContainer()->get(PackageRepository::class), $em, $cache, self::getContainer()->get(MessengerTransitionExecutor::class));
+        $command = new LoadDataCommand(self::getContainer()->get(PackageRepository::class), $em, $cache, self::getContainer()->get(TransitionExecutorInterface::class));
 
         self::assertSame(0, $command(new SymfonyStyle(new ArrayInput([]), new BufferedOutput()), sync: $sync, batch: 1));
 

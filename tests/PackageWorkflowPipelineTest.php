@@ -11,8 +11,9 @@ use App\Workflow\PackageWorkflow as WF;
 use Doctrine\ORM\EntityManagerInterface;
 use Survos\WorkflowExtrasBundle\Contract\TransitionExecutorInterface;
 use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
-use Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use Symfony\Component\Messenger\Worker;
@@ -70,9 +71,10 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
 
     public function testSyncRunFinishesInProcessWithoutQueues(): void
     {
-        self::getContainer()->get(MessengerTransitionExecutor::class)->sync = true;
-        $this->em->persist(new Package(RemoteFixtures::PACKAGE));
-        $this->em->flush();
+        self::getContainer()->get(TransitionExecutorInterface::class)->synchronously(function (): void {
+            $this->em->persist(new Package(RemoteFixtures::PACKAGE));
+            $this->em->flush();
+        });
 
         $package = $this->fresh();
         self::assertSame(PackagePlace::Documented, $package->marking);
@@ -91,6 +93,27 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         $this->em->flush();
         self::assertSame(PackagePlace::Documented, $this->fresh()->marking);
         self::assertCount(0, $this->sent('bundle.fetch.docs'));
+    }
+
+    public function testIterateRequeuesDiscoveredPackagesAndStatsCountsThem(): void
+    {
+        $this->packageWithoutKickoff();
+        $iterate = new CommandTester((new Application(self::$kernel))->find('state:iterate'));
+        $iterate->execute(['class-name' => 'Package', '--marking' => 'discovered']);
+        $iterate->assertCommandIsSuccessful();
+        self::assertStringContainsString('1 queued', $iterate->getDisplay());
+        self::assertCount(1, $this->sent('bundle.load'));
+
+        $this->transport('bundle.load')->reset();
+        $iterate->execute(['class-name' => Package::class, '--marking' => 'discovered', '--sync' => true]);
+        $iterate->assertCommandIsSuccessful();
+        self::assertSame(PackagePlace::Documented, $this->fresh()->marking);
+        self::assertCount(0, $this->sent('bundle.fetch.docs'));
+
+        $stats = new CommandTester((new Application(self::$kernel))->find('state:stats'));
+        $stats->execute(['class-name' => 'Package']);
+        $stats->assertCommandIsSuccessful();
+        self::assertMatchesRegularExpression('/documented\s+1\s/', $stats->getDisplay());
     }
 
     /** A package already in the database at `discovered`, as after an import. */

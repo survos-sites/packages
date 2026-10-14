@@ -25,7 +25,7 @@ bin/console mess:consume bundle.load --limit 1 -vv
 ```
 
 New Package rows start automatically after persistence using the initial place's
-`next: [load]`. Do not follow setup with a second `state:iterate ... --transition=load`
+`next: [load]`. Do not follow setup with a second `state:iterate ... --marking=discovered`
 dispatch: it would duplicate the queued work. `--dispatch` remains a compatibility
 option on `app:load-data` but no longer redispatches existing rows. `--sync` applies
 before insertion so it also controls the automatic kickoff.
@@ -49,7 +49,9 @@ bin/console messenger:consume scheduler_packagist bundle.load bundle.fetch.docs 
 ```
 
 For deliberate recovery of stranded existing rows, inspect the queues first and
-use `state:iterate Package --marking=new --transition=load` explicitly.
+use `state:iterate Package --marking=discovered`, which queues each row's `next`
+(`load`). `state:stats Package` counts rows by place. Both commands come from
+workflow-extras, as does the explorer at `/workflow/PackageWorkflow`.
 
 It takes a while because of fetching Packagist metadata.
 

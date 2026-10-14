@@ -10,7 +10,7 @@ use App\Workflow\PackageWorkflow;
 use Castor\Attribute\AsSymfonyTask;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\InvalidArgumentException;
-use Survos\WorkflowMessengerBundle\Service\MessengerTransitionExecutor;
+use Survos\WorkflowExtrasBundle\Contract\TransitionExecutorInterface;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -31,7 +31,7 @@ final class LoadDataCommand
         private PackageRepository          $packageRepository,
         private EntityManagerInterface     $entityManager,
         private CacheInterface             $cache,
-        private MessengerTransitionExecutor $executor,
+        private TransitionExecutorInterface $executor,
 
     )
     {
@@ -61,9 +61,13 @@ final class LoadDataCommand
 //        #[Option('Dispatch a load transition for new packages')] ?bool $dispatch = null,
     ): int
     {
-        // Apply before the first flush: the bundle's kickoff listener starts newly
-        // persisted packages during postFlush.
-        $this->executor->sync = $sync;
+        if ($sync) {
+            // Covers the whole run: the bundle's kickoff listener starts newly
+            // persisted packages during postFlush.
+            $arguments = ['sync' => false] + get_defined_vars();
+
+            return $this->executor->synchronously(fn (): int => $this(...$arguments));
+        }
 
         if ($reset) {
             $this->entityManager->createQuery('DELETE FROM App\Entity\Package p')->execute();

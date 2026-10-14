@@ -22,6 +22,7 @@ final class WorkflowCatalogTest extends KernelTestCase
             'support_strategy' => null,
             'source_class' => WF::class,
             'type' => 'state_machine',
+            'marking_property' => 'marking',
         ], $catalog->all()[WF::WORKFLOW_NAME]);
         self::assertSame(WF::WORKFLOW_NAME, $catalog->get(WF::WORKFLOW_NAME)->getName());
         self::assertArrayNotHasKey('SurvosStateBundle', self::$kernel->getBundles());

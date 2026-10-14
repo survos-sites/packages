@@ -10960,6 +10960,27 @@
                 },
                 "additionalProperties": false
             },
+            "survos_workflow_extras": {
+                "$ref": "#/$defs/types/object_null",
+                "properties": {
+                    "routes_enabled": {
+                        "$ref": "#/$defs/types/boolean",
+                        "default": true,
+                        "description": "Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off."
+                    },
+                    "route_prefix": {
+                        "$ref": "#/$defs/types/scalar",
+                        "default": "/workflow",
+                        "description": "URL prefix applied to all routes from this bundle."
+                    },
+                    "locale_prefix": {
+                        "$ref": "#/$defs/types/boolean",
+                        "default": false,
+                        "description": "Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param."
+                    }
+                },
+                "additionalProperties": false
+            },
             "survos_workflow_messenger": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
@@ -14536,6 +14557,9 @@
         "survos_tabler": {
             "$ref": "#/$defs/nodes/survos_tabler"
         },
+        "survos_workflow_extras": {
+            "$ref": "#/$defs/nodes/survos_workflow_extras"
+        },
         "survos_workflow_messenger": {
             "$ref": "#/$defs/nodes/survos_workflow_messenger"
         },
@@ -14712,6 +14736,9 @@
                 },
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
+                },
+                "survos_workflow_extras": {
+                    "$ref": "#/$defs/nodes/survos_workflow_extras"
                 },
                 "survos_workflow_messenger": {
                     "$ref": "#/$defs/nodes/survos_workflow_messenger"
@@ -14890,6 +14917,9 @@
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
                 },
+                "survos_workflow_extras": {
+                    "$ref": "#/$defs/nodes/survos_workflow_extras"
+                },
                 "survos_workflow_messenger": {
                     "$ref": "#/$defs/nodes/survos_workflow_messenger"
                 },
@@ -15067,6 +15097,9 @@
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
                 },
+                "survos_workflow_extras": {
+                    "$ref": "#/$defs/nodes/survos_workflow_extras"
+                },
                 "survos_workflow_messenger": {
                     "$ref": "#/$defs/nodes/survos_workflow_messenger"
                 },
@@ -15239,6 +15272,9 @@
                 },
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
+                },
+                "survos_workflow_extras": {
+                    "$ref": "#/$defs/nodes/survos_workflow_extras"
                 },
                 "survos_workflow_messenger": {
                     "$ref": "#/$defs/nodes/survos_workflow_messenger"

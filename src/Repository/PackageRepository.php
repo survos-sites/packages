@@ -23,21 +23,6 @@ class PackageRepository extends ServiceEntityRepository implements QueryBuilderH
         parent::__construct($registry, Package::class);
     }
 
-    /** @return array<string, int> */
-    public function countByMarking(): array
-    {
-        $rows = $this->createQueryBuilder('p')
-            ->select('p.marking AS marking, COUNT(p.id) AS total')
-            ->groupBy('p.marking')
-            ->getQuery()->getArrayResult();
-        $counts = [];
-        foreach ($rows as $row) {
-            $marking = $row['marking'];
-            $counts[$marking instanceof \BackedEnum ? $marking->value : $marking] = (int) $row['total'];
-        }
-        return $counts;
-    }
-
     // /**
     //  * @return Package[] Returns an array of Package objects
     //  */
