@@ -19,6 +19,22 @@ final class Version20261014104544 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        // The local catalog was rebuilt, but deployed installations still have
+        // the pre-enum schema. Preserve their rows and refresh their workflow
+        // results rather than trying to create the existing tables again.
+        if ($schema->hasTable('package')) {
+            $this->abortIf($schema->getTable('package')->hasColumn('abandoned'),
+                'Unexpected existing catalog schema; inspect it before upgrading.');
+            $this->addSql("CREATE TYPE package_place AS ENUM ('discovered', 'metadata_loaded', 'symfony_unsupported', 'symfony_compatible', 'php_unsupported', 'php_compatible', 'valid_requirements', 'documented')");
+            $this->addSql('ALTER TABLE package ADD abandoned BOOLEAN NOT NULL DEFAULT FALSE');
+            $this->addSql("UPDATE package SET abandoned = (COALESCE(marking = 'abandoned', FALSE) OR COALESCE(data->>'abandoned', 'false') NOT IN ('false', 'null', ''))");
+            $this->addSql('ALTER TABLE package ALTER COLUMN abandoned DROP DEFAULT');
+            $this->addSql('ALTER TABLE package ALTER COLUMN marking DROP DEFAULT');
+            $this->addSql("ALTER TABLE package ALTER COLUMN marking TYPE package_place USING 'discovered'::package_place");
+            $this->addSql('ALTER TABLE package ALTER COLUMN marking SET NOT NULL');
+
+            return;
+        }
         $this->addSql("CREATE TYPE package_place AS ENUM ('discovered', 'metadata_loaded', 'symfony_unsupported', 'symfony_compatible', 'php_unsupported', 'php_compatible', 'valid_requirements', 'documented')");
         $this->addSql('CREATE TABLE command_process (id VARCHAR(26) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, command VARCHAR(255) NOT NULL, cli TEXT DEFAULT NULL, mode VARCHAR(16) NOT NULL, host VARCHAR(128) DEFAULT NULL, pid INT DEFAULT NULL, status VARCHAR(16) NOT NULL, caller VARCHAR(180) DEFAULT NULL, started_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, finished_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, exit_code INT DEFAULT NULL, memory_bytes INT DEFAULT NULL, output TEXT DEFAULT NULL, failure_message TEXT DEFAULT NULL, slots JSON DEFAULT NULL, PRIMARY KEY (id))');
         $this->addSql('CREATE INDEX idx_command_process_status ON command_process (status)');
