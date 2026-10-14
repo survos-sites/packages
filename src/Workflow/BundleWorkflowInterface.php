@@ -6,6 +6,7 @@ namespace App\Workflow;
 
 use App\Entity\Package;
 use Survos\WorkflowExtrasBundle\Attribute\Transition;
+use Survos\WorkflowAsyncBundle\Attribute\Transition as AsyncTransition;
 use Survos\WorkflowExtrasBundle\Attribute\AsWorkflow;
 
 #[AsWorkflow(supports: [Package::class], name: self::WORKFLOW_NAME, places: PackagePlace::class, description: 'Load and validate package metadata, then fetch repository documentation')]
@@ -16,19 +17,19 @@ class BundleWorkflowInterface
 
     // Settled places can be reloaded: PackagistChangesRefresher dispatches load for
     // packages Packagist reports as updated, and the chain re-evaluates from there.
-    #[Transition(PackagePlace::New, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
+    #[AsyncTransition(PackagePlace::New, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
         async: true, transport: 'bundle.load')]
-    #[Transition(PackagePlace::SymfonyOkay, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
+    #[AsyncTransition(PackagePlace::SymfonyOkay, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
         async: true, transport: 'bundle.load')]
-    #[Transition(PackagePlace::SymfonyOutdated, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
+    #[AsyncTransition(PackagePlace::SymfonyOutdated, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
         async: true, transport: 'bundle.load')]
-    #[Transition(PackagePlace::OutdatedPhp, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
+    #[AsyncTransition(PackagePlace::OutdatedPhp, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
         async: true, transport: 'bundle.load')]
-    #[Transition(PackagePlace::Abandoned, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
+    #[AsyncTransition(PackagePlace::Abandoned, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
         async: true, transport: 'bundle.load')]
-    #[Transition(PackagePlace::ValidRequirements, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
+    #[AsyncTransition(PackagePlace::ValidRequirements, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
         async: true, transport: 'bundle.load')]
-    #[Transition(PackagePlace::Documented, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
+    #[AsyncTransition(PackagePlace::Documented, PackagePlace::ComposerLoaded, 'Fetch package metadata from Packagist',
         async: true, transport: 'bundle.load')]
     final public const TRANSITION_LOAD = 'load';
 
@@ -64,7 +65,7 @@ class BundleWorkflowInterface
         description: "Symfony 8 compatible bundle")]
     final public const TRANSITION_SYMFONY_OKAY = 'symfony_okay';
 
-    #[Transition(PackagePlace::ValidRequirements, PackagePlace::Documented,
+    #[AsyncTransition(PackagePlace::ValidRequirements, PackagePlace::Documented,
         description: "README.md and AGENTS.md from the source repo at the loaded reference",
         guard: "subject.type == 'symfony-bundle' and subject.hasValidSymfonyVersion",
         async: true, transport: 'bundle.fetch.docs')]

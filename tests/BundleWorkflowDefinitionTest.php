@@ -16,7 +16,7 @@ final class BundleWorkflowDefinitionTest extends TestCase
     {
         $incoming = false;
         foreach ((new \ReflectionClass(WF::class))->getReflectionConstants() as $constant) {
-            foreach ($constant->getAttributes(Transition::class) as $attribute) {
+            foreach ($constant->getAttributes(Transition::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $transition = $attribute->newInstance();
                 $name = $constant->getValue();
                 if (in_array(PackagePlace::Documented, (is_array($transition->from) ? $transition->from : [$transition->from]), true)) {
@@ -57,7 +57,7 @@ final class BundleWorkflowDefinitionTest extends TestCase
     {
         foreach ((new \ReflectionClass(WF::class))->getReflectionConstants() as $constant) {
             if ($constant->getValue() !== $name) continue;
-            $attributes = $constant->getAttributes(Transition::class);
+            $attributes = $constant->getAttributes(Transition::class, \ReflectionAttribute::IS_INSTANCEOF);
             if (!$attributes) continue;
             return (bool) (new \Symfony\Component\ExpressionLanguage\ExpressionLanguage())->evaluate(
                 $attributes[0]->newInstance()->guard, ['subject' => $subject]

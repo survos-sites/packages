@@ -76,3 +76,28 @@ feed refresh, locking for both payload types, serialized Messenger workers on bo
 queues, save-before-follow-up dispatch, stale docs delivery and synchronous/context
 behavior. The worker tests use deterministic I/O and a mocked persistence adapter;
 they do not drain the application's broker or alter its data.
+
+## Attribute ownership
+
+`PackagePlace` uses extras' `Place(description, label, next, initial, metadata)`.
+`next` accepts one transition name or an ordered list; both become list metadata.
+Extras' `Transition(from, to, description, label, next, guard, metadata)` describes
+synchronous paths. Queued paths use async's `Transition` imported as
+`AsyncTransition`: it extends extras with the same common arguments, then appends
+`async` and `transport`. Async requires extras; extras needs no Messenger runtime.
+Use named arguments after description. Native `apply()` still runs synchronously.
+
+## Planned catalog exclusion: abandoned packages
+
+Decision, not yet implemented: this catalog will exclude abandoned packages.
+Skip them during initial discovery when the response establishes abandonment.
+For tracked packages, change notifications trigger a metadata refresh; remove a
+package only after refreshed metadata confirms abandonment. Remove its search
+document as well as its database row, and handle already queued deliveries for a
+removed subject deliberately. Dependency discovery must honor the same policy.
+
+Removal belongs after transition processing and persistence/continuation decisions,
+not inside a completion listener while the async handler still owns the subject.
+Once that path is implemented and existing abandoned rows are handled, remove the
+Abandoned place and transition from this example. Until then the current workflow
+continues to retain abandoned packages.
