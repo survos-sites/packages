@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" data-dev3-artifact-template="v1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PackagePlace enum</title>
+  <link data-dev3-vendor="choices.js@11.2.3" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/choices.js/11.2.3/choices.min.css" referrerpolicy="no-referrer">
+  <link data-dev3-vendor="nouislider@15.8.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.css" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="app.css" data-dev3-artifact-shell>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <img src="dev3-icon.png" alt="dev3 logo">
+        <div>
+          <div class="eyebrow">DEV3 ARTIFACT · SOURCE CODE</div>
+          <h1>PackagePlace enum</h1>
+          <div class="muted">src/Workflow/PackagePlace.php · extras label and next API</div>
+        </div>
+      </div>
+      <div class="actions">
+
+        <div class="segmented text-size" role="group" aria-label="Text size">
+          <button type="button" data-font-step="-1" title="Smaller text" aria-label="Smaller text">A−</button>
+          <button class="text-size-value" id="fontScaleValue" type="button" data-font-step="0" title="Reset text size to 100%" aria-label="Reset text size">100%</button>
+          <button type="button" data-font-step="1" title="Larger text" aria-label="Larger text">A+</button>
+        </div>
+        <button class="ghost" id="artifactTheme" type="button" title="Theme: Follow host">◐ Auto</button>
+      </div>
+    </header>
+
+<section class="card section"><div class="section-head"><h2 class="section-title">Nine places, one enum</h2></div>
+<p class="prose">Cases carry the workflow metadata. There are no PLACE_ aliases; backing values remain unchanged and marking storage is still a string.</p>
+<details open><summary>Complete PHP source</summary><pre><code>&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Workflow;
+
+use Survos\WorkflowExtrasBundle\Attribute\Place;
+
+/** Places in the package workflow; backing values are persisted marking identifiers. */
+enum PackagePlace: string
+{
+    #[Place(&#x27;Package discovered; load metadata from Packagist&#x27;, initial: true,
+        // Persisting a new package queues load once, after its insert is flushed.
+        next: BundleWorkflowInterface::TRANSITION_LOAD)]
+    case Discovered = &#x27;new&#x27;;
+    #[Place(&#x27;Package metadata loaded from Packagist&#x27;, label: &#x27;Metadata loaded&#x27;,
+        next: [BundleWorkflowInterface::TRANSITION_ABANDON, BundleWorkflowInterface::TRANSITION_PHP_OKAY, BundleWorkflowInterface::TRANSITION_PHP_TOO_OLD]
+    )]
+    case ComposerLoaded = &#x27;composer_loaded&#x27;;
+
+    #[Place(&#x27;Does not support Symfony 8&#x27;, label: &#x27;Symfony unsupported&#x27;)]
+    case SymfonyOutdated = &#x27;outdated_symfony&#x27;;
+    #[Place(&#x27;Supports Symfony 8&#x27;, label: &#x27;Symfony 8 compatible&#x27;, next: BundleWorkflowInterface::TRANSITION_VALID)]
+    case SymfonyOkay = &#x27;symfony_ok&#x27;;
+
+    #[Place(&#x27;Does not support a current PHP version&#x27;, label: &#x27;PHP unsupported&#x27;)]
+    case OutdatedPhp = &#x27;php_is_too_old&#x27;;
+    #[Place(
+        &#x27;Package supports a current PHP version&#x27;,
+        label: &#x27;PHP compatible&#x27;,
+        // Guards are exclusive: a bundle goes to symfony_ok or outdated_symfony, a library to valid.
+        next: [BundleWorkflowInterface::TRANSITION_SYMFONY_OKAY, BundleWorkflowInterface::TRANSITION_OUTDATED, BundleWorkflowInterface::TRANSITION_VALID]
+    )]
+    case PhpOkay = &#x27;php_ok&#x27;;
+    #[Place(&#x27;Abandoned or misconfigured package&#x27;)]
+    case Abandoned = &#x27;abandoned&#x27;;
+    #[Place(&#x27;Package requirements are supported&#x27;, next: BundleWorkflowInterface::TRANSITION_FETCH_DOCS)]
+    case ValidRequirements = &#x27;valid&#x27;;
+    #[Place(&#x27;README / AGENTS.md fetch attempted; either may be null&#x27;, label: &#x27;Docs fetched&#x27;)]
+    case Documented = &#x27;documented&#x27;;
+}
+</code></pre></details></section>
+<section class="card section"><div class="section-head"><h2 class="section-title">At the boundary</h2></div><p class="prose">Workflow attributes accept PackagePlace::Discovered directly. String marking assignments use PackagePlace::Discovered-&gt;value. Enum-typed marking is a separate decision.</p></section>
+    <footer class="dev3-footer"><span><strong>Built with dev3 Artifacts</strong> · interactive reports that travel with the task</span><span>Template v1 · portable bundle</span></footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite">Scenario recalculated.</div>
+
+  <!-- Apache ECharts 6.1.0 (Apache-2.0) from cdnjs. Keep the versioned src exactly as-is.
+       Charts degrade to a notice while offline.
+       Extra libraries / fetch integrations are allowed too — see AUTHORING.md "Network access". -->
+  <script data-dev3-vendor="echarts@6.1.0" src="https://cdnjs.cloudflare.com/ajax/libs/echarts/6.1.0/echarts.min.js" referrerpolicy="no-referrer"></script>
+  <script data-dev3-vendor="choices.js@11.2.3" src="https://cdnjs.cloudflare.com/ajax/libs/choices.js/11.2.3/choices.min.js" referrerpolicy="no-referrer"></script>
+  <script data-dev3-vendor="nouislider@15.8.1" src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.js" referrerpolicy="no-referrer"></script>
+
+  <script src="app.js" data-dev3-artifact-shell></script>
+  <script src="report.js"></script>
+</body>
+</html>

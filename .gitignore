@@ -38,3 +38,6 @@ phpstan.neon
 .castor.stub.php
 config.bat
 node_modules
+
+# Local agent lifecycle hooks
+/.codex/
