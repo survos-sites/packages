@@ -2,13 +2,11 @@
 
 namespace App\Dto;
 
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use App\Filter\DtoFilter;
 use App\State\DtoProcessor;
 use App\State\DtoProvider;
 
@@ -16,14 +14,13 @@ use App\State\DtoProvider;
     provider: DtoProvider::class,
     processor: DtoProcessor::class,
     operations: [
-        new  GetCollection(),
-//        new GetCollection(filters: [DtoFilter::class, 'test_dto.search_filter']),
+        new GetCollection(parameters: [
+            'name' => new QueryParameter(schema: ['type' => 'string'], description: 'Filter by name (partial match)'),
+            'marking' => new QueryParameter(schema: ['type' => 'string']),
+        ]),
         new Get()
     ]
 )]
-//#[ApiFilter(DtoFilter::class)]
-//#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'marking' => 'exact'])]
-#[ApiFilter(DtoFilter::class, properties: ['name' => 'partial', 'marking' => 'exact'])]
 class PackageDto {
     #[ApiProperty('identifier', identifier: true)]
     public int $id;
