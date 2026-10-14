@@ -24,26 +24,26 @@ final class PackageWorkflow
     // This name is used for injecting the workflow into a controller!
     public const WORKFLOW_NAME = 'PackageWorkflow';
 
-    #[AsyncTransition(PackagePlace::Discovered, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', async: true, transport: 'bundle.load')]
-    #[AsyncTransition(PackagePlace::RequirementsCompatible, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', async: true, transport: 'bundle.load')]
-    #[AsyncTransition(PackagePlace::RequirementsUnsupported, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', async: true, transport: 'bundle.load')]
-    #[AsyncTransition(PackagePlace::Documented, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', async: true, transport: 'bundle.load')]
+    #[AsyncTransition(PackagePlace::Discovered, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
+    #[AsyncTransition(PackagePlace::RequirementsCompatible, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
+    #[AsyncTransition(PackagePlace::RequirementsUnsupported, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
+    #[AsyncTransition(PackagePlace::Documented, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
     public const TRANSITION_LOAD = 'load';
 
     #[Transition(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible,
         'Accept compatible PHP and applicable Symfony core constraints; absent constraints need no check',
-        guard: 'subject.requirementsCompatible === true')]
+        icon: 'tabler:circle-check', iconClass: 'text-success', guard: 'subject.requirementsCompatible === true')]
     public const TRANSITION_ACCEPT_REQUIREMENTS = 'accept_requirements';
 
     #[Transition(PackagePlace::MetadataLoaded, PackagePlace::RequirementsUnsupported,
         'A declared PHP or Symfony core constraint is incompatible',
-        guard: 'subject.requirementsCompatible === false')]
+        icon: 'tabler:circle-x', iconClass: 'text-danger', guard: 'subject.requirementsCompatible === false')]
     public const TRANSITION_REJECT_REQUIREMENTS = 'reject_requirements';
 
     #[AsyncTransition(PackagePlace::RequirementsCompatible, PackagePlace::Documented,
         'Fetch README.md and AGENTS.md for Symfony bundles; dependencies stop at requirements compatible',
         guard: "subject.type == 'symfony-bundle'",
-        async: true, transport: 'bundle.fetch.docs')]
+        icon: 'tabler:book-download', iconClass: 'text-info', async: true, transport: 'bundle.fetch.docs')]
     public const TRANSITION_FETCH_DOCS = 'fetch_docs';
 
     public function __construct(
