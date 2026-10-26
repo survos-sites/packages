@@ -44,3 +44,6 @@ node_modules
 
 # Generated crawler results
 /tests/crawldata.json
+
+# Local Symfony configuration types (composer config:reference)
+/config/reference.php

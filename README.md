@@ -179,3 +179,17 @@ The older README fetcher is in `survos/repo`,
 `src/Services/AppService.php::syncProjectWithGithub()` (`files: ['readme']`). It
 uses GitHub's contents/readme API and stores the base64-decoded body on Project.
 It is not connected to this catalogue's workflow.
+
+## PHP configuration tooling
+
+Class-bearing configuration uses PHP and imported `::class` references. Run
+`vendor/bin/rector process --config=rector-config.php --dry-run` to check these
+files. Standalone service definitions explicitly preserve their previous
+autowiring defaults; `App::config()` otherwise enables autowiring automatically.
+
+`config/reference.php` is generated locally and ignored by Git. After a fresh
+checkout or dependency changes, run `composer config:reference` to rebuild the
+development container and regenerate IDE/static-analysis configuration types.
+`composer setup` includes this step. Normal debug container rebuilds regenerate
+the file too; production builds with debug disabled do not. Do not set
+`APP_DEBUG=0` when running this development setup command.

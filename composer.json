@@ -163,7 +163,9 @@
             "php -d memory_limit=512M bin/console cache:clear",
             "@auto-scripts"
         ],
+        "config:reference": "@php -d memory_limit=512M bin/console cache:clear --env=dev --no-interaction",
         "setup": [
+            "@config:reference",
             "php -d memory_limit=4048M bin/console app:load-data"
         ],
         "load": [
