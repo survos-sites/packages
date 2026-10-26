@@ -42,6 +42,7 @@
         "survos/core-bundle": "^2.0",
         "survos/crawler-bundle": "^2.0",
         "survos/elastic-bundle": "^2.24",
+        "survos/grid-bundle": "^2.36",
         "survos/js-twig-bundle": "^2.0",
         "survos/lingua-core": "^2.0",
         "survos/menu-bundle": "^2.42.7",
