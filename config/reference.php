@@ -283,6 +283,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         options?: array<string, mixed>,
  *         failure_transport?: scalar|Param|null, // Transport name to send failed messages to (after all retries have failed). // Default: null
  *         outbox?: scalar|Param|null, // Name or DSN of the transport that stores the messages inside the current database transaction; consume that transport to forward them to this one. A value that is not the name of a configured transport is a DSN, used to create the "orders.outbox" transport for an "orders" transport. // Default: null
+ *         inbox?: bool|array{ // Records the handled messages in a database table, in the transaction of their handlers, so that a redelivered message is not handled twice. Needs the "identity_stamps" option and a middleware that runs the handlers in a transaction.
+ *             enabled?: bool|Param, // Default: false
+ *             connection?: scalar|Param|null, // Name of the Doctrine DBAL connection of that transaction, the default connection when not set. // Default: null
+ *             table_name?: scalar|Param|null, // Default: "messenger_inbox"
+ *             retention?: int|Param, // Number of seconds a record is kept, which must exceed the time the transport can take to redeliver a message. // Default: 604800
+ *         },
  *         retry_strategy?: Param|string|array{
  *             service?: scalar|Param|null, // Service id to override the retry strategy entirely. // Default: null
  *             max_retries?: int|Param, // Default: 3
@@ -290,6 +296,15 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             multiplier?: float|Param, // If greater than 1, delay will grow exponentially for each retry: this delay = (delay * (multiple ^ retries)). // Default: 2
  *             max_delay?: int|Param, // Max time in ms that a retry should ever be delayed (0 = infinite). // Default: 0
  *             jitter?: float|Param, // Randomness to apply to the delay (between 0 and 1). // Default: 0.1
+ *         },
+ *         cooldown_strategy?: Param|bool|string|array{ // Stops consuming this transport for a while after its messages fail. With the default strategy, each worker counts its own failures.
+ *             enabled?: bool|Param, // Default: false
+ *             service?: scalar|Param|null, // Service id to override the cooldown strategy entirely. // Default: null
+ *             failure_threshold?: int|Param, // Number of failures in a row that start a cooldown. // Default: 5
+ *             delay?: int|Param, // Duration in ms of the first cooldown (or the initial value when multiplier is used). // Default: 1000
+ *             multiplier?: float|Param, // If greater than 1, the cooldown will grow exponentially for each further failure in a row: this delay = (delay * (multiplier ^ (failures - failure_threshold))). // Default: 2
+ *             max_delay?: int|Param, // Max duration in ms of a cooldown (0 = infinite). // Default: 60000
+ *             jitter?: float|Param, // Randomness to apply to the duration (between 0 and 1). // Default: 0.1
  *         },
  *         rate_limiter?: scalar|Param|null, // Rate limiter name to use when processing messages. // Default: null
  *         priority?: int|Param, // Order in which "messenger:consume --all" consumes this transport, higher comes first. // Default: 0
@@ -2297,9 +2312,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     debug?: bool|Param, // Default: false
  *     version?: scalar|Param|null, // Default: 1
  *     db?: scalar|Param|null, // Default: "db"
- *     routing?: array{
- *         routes_to_expose?: list<scalar|Param|null>,
- *     },
+ *     routing?: array<mixed>,
  *     stores?: list<array{ // Default: []
  *         batch?: int|Param, // batch size when loading api // Default: null
  *         name?: scalar|Param|null, // the store name
@@ -2426,6 +2439,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/workflow"
  *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  * }
+ * @psalm-type UxRouterConfig = array{
+ *     dump_directory?: scalar|Param|null, // The directory where routes and TypeScript types are dumped. // Default: "%kernel.project_dir%/var/routes"
+ *     dump_typescript?: bool|Param, // Control whether TypeScript types are dumped alongside routes. Disable this if you do not use TypeScript (e.g. in production when using AssetMapper). // Default: true
+ *     routes?: Param|string|list<scalar|Param|null>,
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -2482,6 +2500,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_grid?: SurvosGridConfig,
  *     survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
  *     survos_workflow_extras?: SurvosWorkflowExtrasConfig,
+ *     ux_router?: UxRouterConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -2542,6 +2561,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_doc?: SurvosDocConfig,
  *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
  *         survos_workflow_extras?: SurvosWorkflowExtrasConfig,
+ *         ux_router?: UxRouterConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -2600,6 +2620,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_grid?: SurvosGridConfig,
  *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
  *         survos_workflow_extras?: SurvosWorkflowExtrasConfig,
+ *         ux_router?: UxRouterConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -2660,6 +2681,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_doc?: SurvosDocConfig,
  *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
  *         survos_workflow_extras?: SurvosWorkflowExtrasConfig,
+ *         ux_router?: UxRouterConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
@@ -2706,6 +2728,9 @@ namespace Symfony\Component\Routing\Loader\Configurator;
  * @psalm-type RouteConfig = array{
  *     path: string|array<string,string>,
  *     controller?: string,
+ *     template?: string,
+ *     redirect_to_route?: string,
+ *     redirect_to?: string,
  *     methods?: string|list<string>,
  *     requirements?: array<string,string>,
  *     defaults?: array<string,mixed>,

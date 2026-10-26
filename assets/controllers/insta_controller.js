@@ -1,7 +1,7 @@
 import {Controller} from '@hotwired/stimulus';
 
 
-import { path } from '@survos/js-twig/routing';
+import { path } from 'router'; // the app's assets/router.js (symfony/ux-router)
 import {prettyPrintJson} from 'pretty-print-json';
 import Twig from 'twig';
 import instantsearch from 'instantsearch.js'

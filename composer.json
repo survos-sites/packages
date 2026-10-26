@@ -82,6 +82,7 @@
         "symfony/twig-bundle": "^8.1",
         "symfony/ux-chartjs": "^3.4",
         "symfony/ux-icons": "^3.4",
+        "symfony/ux-router": "^3.6",
         "symfony/ux-turbo": "^3.4",
         "symfony/validator": "^8.1",
         "symfony/web-link": "^8.1",
@@ -148,6 +149,7 @@
         }
     },
     "scripts": {
+        "pre-install-cmd": "mkdir -p var/routes",
         "auto-scripts": {
             "cache:warmup": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
@@ -170,6 +172,7 @@
         "index": [
             "php -d memory_limit=2048M bin/console elastic:index:rebuild app_package"
         ],
-        "coverage": "php -d xpcov.enabled=1 vendor/bin/phpunit --coverage-html coverage"
+        "coverage": "php -d xpcov.enabled=1 vendor/bin/phpunit --coverage-html coverage",
+        "pre-update-cmd": "mkdir -p var/routes"
     }
 }
