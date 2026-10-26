@@ -66,13 +66,14 @@ final class PackagistChangesRefresher
                 if (!$package) {
                     continue;
                 }
-                if ($package->marking === PackagePlace::Discovered || !$this->workflow->can($package, WF::TRANSITION_LOAD)) {
-                    // Mid-flight: `new` already has its kickoff load queued, and composer_loaded /
-                    // php_ok are inside a chain that started from fresh data.
+                $load = $package->isIn(PackagePlace::Discovered) ? null : $this->enabledLoad($package);
+                if (null === $load) {
+                    // Mid-flight: a new package already has its kickoff load queued, and a package
+                    // with a pending track is inside a chain that started from fresh data.
                     $result->skipped[] = $name;
                     continue;
                 }
-                $this->executor->execute($this->workflow, $package, WF::TRANSITION_LOAD);
+                $this->executor->execute($this->workflow, $package, $load);
                 $result->queued[] = $name;
             }
             $cursor->advance($data['timestamp']);
@@ -80,5 +81,17 @@ final class PackagistChangesRefresher
         $this->entityManager->flush();
 
         return $result;
+    }
+
+    /** The reload that applies to the package's settled places, or null while any track is pending. */
+    private function enabledLoad(Package $package): ?string
+    {
+        foreach (WF::LOAD_TRANSITIONS as $name) {
+            if ($this->workflow->can($package, $name)) {
+                return $name;
+            }
+        }
+
+        return null;
     }
 }

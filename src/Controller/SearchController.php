@@ -19,7 +19,7 @@ final class SearchController extends AbstractController
     private const array FACETS = [
         'symfonyVersions' => 'Symfony',
         'phpVersions' => 'PHP',
-        'marking' => 'Status',
+        'places' => 'Status',
         'vendor' => 'Vendor',
         'sourceType' => 'Source',
     ];

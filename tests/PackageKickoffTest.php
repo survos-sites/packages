@@ -48,12 +48,12 @@ final class PackageKickoffTest extends KernelTestCase
         $package = $em->find(Package::class, Package::idFromName(RemoteFixtures::PACKAGE));
         if ($sync) {
             self::assertSame([], $loads);
-            self::assertSame(PackagePlace::Documented, $package->marking);
+            self::assertTrue($package->isIn(PackagePlace::Documented));
             // Dependencies persisted inside the sync chain were started and finished too.
-            self::assertGreaterThan(1, $em->getRepository(Package::class)->count(['marking' => PackagePlace::RequirementsCompatible]));
+            self::assertGreaterThan(1, (int) $em->getConnection()->fetchOne('SELECT count(*) FROM package WHERE places @> :m::jsonb', ['m' => json_encode([PackagePlace::RequirementsCompatible->value])]));
         } else {
             self::assertSame([$package->id], array_values($loads));
-            self::assertSame(PackagePlace::Discovered, $package->marking);
+            self::assertEquals(PackagePlace::marking(PackagePlace::Discovered), $package->getMarking());
         }
     }
 }

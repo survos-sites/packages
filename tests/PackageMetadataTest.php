@@ -15,17 +15,17 @@ final class PackageMetadataTest extends TestCase
     public function testMetadataDoesNotChangeWorkflowStateAndClearsOldCompatibility(): void
     {
         $package = new Package('acme/component');
-        $package->marking = \App\Workflow\PackagePlace::MetadataLoaded;
+        $package->setMarking(\App\Workflow\PackagePlace::marking(\App\Workflow\PackagePlace::MetadataLoaded));
         $package->data = ['type' => 'library', 'require' => ['php' => '^8.3']];
         $service = new PackageService(new NullLogger(), $this->createStub(SerializerInterface::class));
         $service->populateFromComposerData($package);
-        self::assertSame(\App\Workflow\PackagePlace::MetadataLoaded, $package->marking);
+        self::assertSame(\App\Workflow\PackagePlace::marking(\App\Workflow\PackagePlace::MetadataLoaded), $package->getMarking());
         self::assertTrue($package->hasValidPhpVersion);
         self::assertFalse($package->isSymfonyBundle);
         self::assertFalse($package->hasValidSymfonyVersion);
         $package->data['require']['php'] = '^5.6';
         $service->populateFromComposerData($package);
-        self::assertSame(\App\Workflow\PackagePlace::MetadataLoaded, $package->marking);
+        self::assertSame(\App\Workflow\PackagePlace::marking(\App\Workflow\PackagePlace::MetadataLoaded), $package->getMarking());
         self::assertFalse($package->hasValidPhpVersion);
     }
     public function testFirstFailurePrioritizesPhpAndClearsOnRefresh(): void
@@ -54,7 +54,7 @@ final class PackageMetadataTest extends TestCase
         self::assertTrue($package->isAbandoned);
         self::assertTrue($package->hasValidPhpVersion);
         // Metadata never sets the marking; the workflow does when the package is persisted.
-        self::assertNull($package->marking);
+        self::assertSame([], $package->places);
     }
 
     public function testSymfonyEightGateUsesAllDeclaredCoreRequirements(): void

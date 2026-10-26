@@ -21,7 +21,7 @@ final class WorkflowCatalogTest extends KernelTestCase
             'supports' => [Package::class],
             'support_strategy' => null,
             'source_class' => WF::class,
-            'type' => 'state_machine',
+            'type' => 'workflow',
             'marking_property' => 'marking',
         ], $catalog->all()[WF::WORKFLOW_NAME]);
         self::assertSame(WF::WORKFLOW_NAME, $catalog->get(WF::WORKFLOW_NAME)->getName());

@@ -30,16 +30,20 @@ dispatch: it would duplicate the queued work. `--dispatch` remains a compatibili
 option on `app:load-data` but no longer redispatches existing rows. `--sync` applies
 before insertion so it also controls the automatic kickoff.
 
-When a Symfony bundle completes `valid`, its missing runtime `require` packages
+When a package passes the requirements check (`requirements_compatible`), its missing runtime `require` packages
 are inserted into the same catalogue and start through the same mechanism.
 Platform requirements and `require-dev` are excluded. Libraries do not recursively
 discover their dependencies. Composer `type` determines whether Symfony 8 compatibility
-checks apply; Symfony 7-only bundles do not pass the catalogue gate, while PHP-compatible libraries can reach `valid` without a Symfony requirement.
-`valid` continues to `fetch_docs`, which stores README.md and AGENTS.md from the
-source repository and settles in `documented`.
+checks apply; Symfony 7-only bundles do not pass the catalogue gate, while PHP-compatible libraries can pass without a Symfony requirement.
+Compatible Symfony bundles also run `fetch_docs`, which stores README.md and AGENTS.md from the
+source repository and ends in `documented`; every other package ends in `docs_skipped`.
+
+A package is in several places at once, one per independent track: metadata
+(`metadata_loaded`), requirements (`requirements_compatible` or `requirements_unsupported`) and
+documentation (`documented` or `docs_skipped`). See [docs/native-workflow.md](docs/native-workflow.md).
 
 Packages are kept fresh from Packagist's changes feed: a Symfony Scheduler schedule
-runs `app:packagist:changes` every 5 minutes and queues `load` only for tracked
+runs `app:packagist:changes` every 5 minutes and queues a reload only for tracked
 packages that changed. One worker consumes the schedule and the work queues with
 Symfony 8.2's `--concurrency`; see [docs/scheduler.md](docs/scheduler.md).
 

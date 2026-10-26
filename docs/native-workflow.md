@@ -5,41 +5,61 @@ The packages pipeline uses Symfony's native attribute registrar, with
 `survos/workflow-messenger-bundle` for queued execution. Every place and transition is
 explicitly declared: places in `PackagePlace`, transitions in `PackageWorkflow`.
 
-The local database is `packages`. `Package::marking` is a non-null `PackagePlace`
-enum, backed by PostgreSQL's `package_place` enum. The baseline migration fixes the
-allowed values explicitly; adding a persisted place requires a schema migration.
-The constructor/property default is `Discovered`, matching the workflow's initial
-place. For an uninitialized subject, native `getMarking()` initializes the configured
-initial marking; merely constructing an entity does not invoke the workflow.
+The local database is `packages`. A package is in **several places at once**: the
+workflow is a Symfony `workflow` (not a `state_machine`), and the marking is a set of
+places. Three independent tracks run side by side:
+
+| track | places | set by |
+|---|---|---|
+| metadata | `discovered` → `metadata_loaded` | `load` |
+| requirements | `requirements_pending` → `requirements_compatible` / `requirements_unsupported` | `accept_requirements` / `reject_requirements` |
+| documentation | `docs_pending` → `documented` / `docs_skipped` | `fetch_docs` / `skip_docs` |
+
+`Package::$places` is a `jsonb` list of the place names, so search buckets each place
+like `symfonyVersions`. The workflow's marking store reads and writes it through
+`getMarking()` / `setMarking()` in Symfony's `{place: 1}` shape. An empty list means the
+workflow has not set its initial place (`discovered`) yet; native `getMarking()`
+initializes it. `PackagePlace::marking(...)` builds a marking for code and tests.
+
+`load` consumes `discovered` and produces `metadata_loaded`, `requirements_pending` and
+`docs_pending`, so both follow-up tracks start together. Docs are fetched only for
+compatible Symfony bundles (`fetch_docs`); everything else takes `skip_docs`.
+
+**Refresh.** A refresh clears the requirements and documentation tracks and forks again, so
+requirements are always rechecked and docs always re-fetched. Symfony requires transition
+names to be unique per place, so there is one reload per settled combination:
+`reload_documented`, `reload_compatible` and `reload_unsupported`. They are mutually
+exclusive, so at most one is enabled, and none is enabled while a track is still pending.
+`PackageWorkflow::LOAD_TRANSITIONS` lists them with `load`; the Packagist refresher runs the
+first enabled one and skips packages mid-flight.
 
 The workflow definition and its event listeners live together in `PackageWorkflow`.
 Places are declared separately in `PackagePlace`. Queue names remain `bundle.load`
 and `bundle.fetch.docs`, even though dependency packages share the metadata queue.
+The baseline migration creates the `places` column directly; there is no enum to migrate.
 
 ## Execution
 
 1. Persisting a new Package collects it for kickoff after its flush commits.
 2. `load` runs on `bundle.load`, reloads the entity under the package lock, and
    invokes the existing native `AsTransitionListener` to fetch Packagist data.
-3. The app's `PackagePipeline` selects ordered `next` transitions and applies
-   synchronous validation. Libraries may reach `requirements_compatible`; only compatible Symfony
-   bundles continue to documentation.
-4. `PackageSubjectStore` flushes the resulting marking and data, then the
-   pipeline queues `fetch_docs` on `bundle.fetch.docs`.
-5. The documentation worker fetches README/AGENTS.md and persists `documented`.
+3. In the worker, the ordered `next` candidates of each current place are tried:
+   `accept_requirements` or `reject_requirements` is applied synchronously, and
+   `fetch_docs` is queued on `bundle.fetch.docs` (or `skip_docs` is applied).
+4. The documentation worker fetches README/AGENTS.md and persists `documented`.
    Missing documents are valid results; other HTTP failures use Messenger retries.
 
 The subject store receives the original transition context, including
 `cascade: none`. `app:load-data --sync` executes the whole pipeline synchronously.
-Extras itself requires no Messenger: `next` selects candidates; this application's
-pipeline decides whether to apply or queue them.
+Extras itself requires no Messenger: `next` selects candidates; the bundles'
+executor decides whether to apply or queue them.
 
 ```bash
 # New packages start automatically after persistence.
 php bin/console app:load-data --vendor=symfony --name=monolog-bundle --limit=1
 
 # Refresh one existing package through the application command.
-php bin/console state:iterate Package --transition=load \
+php bin/console state:iterate Package --transition=reload_documented \
   --filter='name=symfony/monolog-bundle' --limit=1
 
 php bin/console messenger:consume bundle.load --time-limit=3600
@@ -128,5 +148,5 @@ independently versioned Symfony packages are not Symfony core version constraint
 The package exposes `phpCompatibility` and `symfonyCompatibility` as `unknown`,
 `not_applicable`, `compatible` or `incompatible`. Any incompatible result rejects
 the requirements. These are metadata results, not separate workflow places.
-Compatible libraries stop at requirements compatible; bundles additionally fetch
-documentation. Abandonment is a property and does not prevent processing.
+Compatible libraries finish the requirements track and skip documentation; compatible
+Symfony bundles additionally fetch documentation. Abandonment is a property and does not prevent processing.

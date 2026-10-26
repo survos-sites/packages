@@ -6,7 +6,7 @@
 
     {% set facet_columns = [
         {name: 'vendor', browsable: true, order: 1},
-        {name: 'marking', browsable: true},
+        {name: 'places', browsable: true, title: 'status'},
         {name: 'sourceType', browsable: true},
 
         {name: 'symfonyVersions', browsable: true, title: 'symfony'},
@@ -23,7 +23,7 @@
         {name: 'phpVersionString', title: 'php', order: 0},
         {name: 'vendor', browsable: true, order: 0},
 #        {name: 'phpUnitVersion', browsable: true, title: 'phpunitStr', order: 0},
-        {name: 'marking', browsable: true},
+        {name: 'places', browsable: true, title: 'status'},
         {name: 'description', searchable: true},
         {name: 'symfonyVersions', browsable: true, title: 'symfony', order: 0},
         {name: 'keywords', title: 'keywords', block: 'list', order: 0},
@@ -64,15 +64,11 @@
                 {{ row.shortName }}
             </span>
     </twig:block>
-    <twig:block name="marking">
-        {% set icon = globals.iconMap[row.marking]|default(false) %}
-        {% if icon %}
-            <span title="{{ row.marking }}">
-                {{ icon }}
-                </span>
-        {% else %}
-            {{ row.marking }}
-        {% endif %}
+    <twig:block name="places">
+        {% for place in row.places|default([]) %}
+            {% set icon = globals.iconMap[place]|default(false) %}
+            {% if icon %}<span title="{{ place }}">{{ icon }}</span>{% else %}<span class="badge bg-secondary-lt">{{ place }}</span>{% endif %}
+        {% endfor %}
     </twig:block>
     <twig:block name="description">
             <span class="line-limit-2" style="max-width: 600px">
