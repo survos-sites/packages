@@ -1,0 +1,63 @@
+<?php
+
+use Survos\ElasticBundle\Message\ReindexDocuments;
+use Survos\ElasticBundle\Message\RemoveDocuments;
+use Symfony\Component\DependencyInjection\Loader\Configurator\App;
+
+return App::config([
+    'framework' => [
+        'messenger' => [
+            'failure_transport' => 'failed',
+            'transports' => [
+                'bundle.load' => [
+                    'dsn' => '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%',
+                    'options' => [
+                        'exchange' => ['name' => 'bundle.load'],
+                        'queues' => ['bundle.load' => null],
+                        // Keep at 1. The 8.2 AMQP transport prefetches max(prefetch_count,
+                        // --fetch-size), and --fetch-size defaults to --concurrency, so a
+                        // --concurrency=4 worker still gets 4. A larger value lets the broker push
+                        // messages a worker never handles: when it stops (--limit, --time-limit,
+                        // a deploy) they come back flagged redelivered, and
+                        // RejectRedeliveredMessageMiddleware spends one of their retries.
+                        'prefetch_count' => 1,
+                        'delay' => ['durable' => true],
+                    ],
+                    'retry_strategy' => ['max_retries' => 3, 'multiplier' => 2],
+                ],
+                'bundle.fetch.docs' => [
+                    'dsn' => '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%',
+                    'options' => [
+                        'prefetch_count' => 1,
+                        'exchange' => ['name' => 'bundle.fetch.docs'],
+                        'queues' => ['bundle.fetch.docs' => null],
+                        'delay' => ['durable' => true],
+                    ],
+                    'retry_strategy' => ['max_retries' => 3, 'multiplier' => 2],
+                ],
+                'elastic' => [
+                    'dsn' => '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%',
+                    'options' => [
+                        'prefetch_count' => 50,
+                        'exchange' => ['name' => 'packages.elastic'],
+                        'queues' => ['packages.elastic' => null],
+                        'delay' => ['durable' => true],
+                    ],
+                    'retry_strategy' => ['max_retries' => 3, 'multiplier' => 2],
+                ],
+                'failed' => 'doctrine://default?queue_name=failed&auto_setup=true',
+                'sync' => 'sync://',
+            ],
+            'default_bus' => 'messenger.bus.default',
+            'buses' => [
+                'messenger.bus.default' => [
+                    'middleware' => ['logging'],
+                ],
+            ],
+            'routing' => [
+                ReindexDocuments::class => 'elastic',
+                RemoveDocuments::class => 'elastic',
+            ],
+        ],
+    ],
+]);
