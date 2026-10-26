@@ -13,6 +13,18 @@
         </div>
         <div class="pk-searchbox" {{ stimulus_target(sc, 'query') }}></div>
     </header>
+    {% if indexProblem %}
+    <div class="alert alert-warning" role="alert">
+        <strong>Search is not set up on this server.</strong>
+        {% if indexProblem == 'unreachable' %}
+            Elasticsearch cannot be reached; start it and check <code>ELASTICSEARCH_DSN</code>.
+        {% else %}
+            The search index does not exist yet. Create and fill it with:
+            <pre class="mb-0">bin/console elastic:index:create
+bin/console elastic:index:populate</pre>
+        {% endif %}
+    </div>
+    {% endif %}
     <div class="pk-error" hidden role="alert" {{ stimulus_target(sc, 'error') }}></div>
     <div class="pk-workspace">
         <aside class="pk-sidebar" aria-label="Search filters">

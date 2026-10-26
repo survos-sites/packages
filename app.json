@@ -9,7 +9,7 @@
     "scripts": {
         "dokku": {
             "predeploy": "sh -c 'bin/console messenger:stop-workers && bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration'",
-            "postdeploy": "bin/console about"
+            "postdeploy": "sh -c 'bin/console elastic:index:create && bin/console about'"
         }
     },
     "addons": [

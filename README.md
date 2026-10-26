@@ -138,6 +138,20 @@ requests — so nothing is ever emitted twice.
 To see what any page collected, open the **Schema.org** panel in the web debug
 toolbar.
 
+## Search index
+
+Search reads the Elasticsearch index `packages_package`. It is not created by
+`composer install` (Elasticsearch may not be reachable at build time). On a fresh
+checkout, or when the homepage says search is not set up:
+
+```bash
+bin/console elastic:index:create     # idempotent; also run on every Dokku deploy
+bin/console elastic:index:populate   # bulk-loads every package from the database
+```
+
+After a large `app:load-data`, re-run `populate` (or `elastic:index:rebuild` for a
+zero-downtime swap); the `elastic` worker only keeps single changes in sync.
+
 ## Symfony 8.2 development setup
 
 Core Symfony requirements remain `^8.1`, with Flex selecting `^8.2` and
