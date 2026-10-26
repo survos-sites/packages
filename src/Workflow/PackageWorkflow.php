@@ -17,34 +17,70 @@ use Symfony\Component\Workflow\Attribute\AsCompletedListener;
 use Symfony\Component\Workflow\Attribute\AsTransitionListener;
 use Symfony\Component\Workflow\Event\CompletedEvent;
 use Symfony\Component\Workflow\Event\TransitionEvent;
+use Symfony\Component\Workflow\WorkflowType;
 
-#[AsWorkflow(supports: [Package::class], name: self::WORKFLOW_NAME, places: PackagePlace::class, description: 'Load and validate package metadata, then fetch repository documentation')]
+#[AsWorkflow(supports: [Package::class], name: self::WORKFLOW_NAME, type: WorkflowType::Workflow, markingProperty: 'marking', places: PackagePlace::class, description: 'Load package metadata, then check requirements and fetch documentation as independent tracks')]
 final class PackageWorkflow
 {
     // This name is used for injecting the workflow into a controller!
     public const WORKFLOW_NAME = 'PackageWorkflow';
 
-    #[AsyncTransition(PackagePlace::Discovered, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
-    #[AsyncTransition(PackagePlace::RequirementsCompatible, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
-    #[AsyncTransition(PackagePlace::RequirementsUnsupported, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
-    #[AsyncTransition(PackagePlace::Documented, PackagePlace::MetadataLoaded, 'Fetch package metadata from Packagist', icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
+    /** Docs are fetched only for compatible Symfony bundles. */
+    private const string DOCS_WANTED = "subject.type == 'symfony-bundle' && subject.requirementsCompatible === true";
+
+    #[AsyncTransition(PackagePlace::Discovered, [PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending],
+        'Fetch package metadata from Packagist and start the requirements and documentation tracks',
+        icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
     public const TRANSITION_LOAD = 'load';
 
-    #[Transition(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible,
+    // A refresh clears the derived tracks and forks again. Symfony requires transition names to be
+    // unique per place, so there is one reload per settled combination; they are mutually exclusive.
+    #[AsyncTransition([PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented],
+        [PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending],
+        'Refresh metadata; recheck requirements and re-fetch documentation',
+        icon: 'tabler:refresh', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
+    public const TRANSITION_RELOAD_DOCUMENTED = 'reload_documented';
+
+    #[AsyncTransition([PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::DocsSkipped],
+        [PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending],
+        'Refresh metadata; recheck requirements (no documentation for this package)',
+        icon: 'tabler:refresh', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
+    public const TRANSITION_RELOAD_COMPATIBLE = 'reload_compatible';
+
+    #[AsyncTransition([PackagePlace::MetadataLoaded, PackagePlace::RequirementsUnsupported, PackagePlace::DocsSkipped],
+        [PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending],
+        'Refresh metadata; recheck requirements',
+        icon: 'tabler:refresh', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
+    public const TRANSITION_RELOAD_UNSUPPORTED = 'reload_unsupported';
+
+    /** Every way to (re)load; at most one is enabled for a package at a time. */
+    public const array LOAD_TRANSITIONS = [
+        self::TRANSITION_LOAD,
+        self::TRANSITION_RELOAD_DOCUMENTED,
+        self::TRANSITION_RELOAD_COMPATIBLE,
+        self::TRANSITION_RELOAD_UNSUPPORTED,
+    ];
+
+    #[Transition(PackagePlace::RequirementsPending, PackagePlace::RequirementsCompatible,
         'Accept compatible PHP and applicable Symfony core constraints; absent constraints need no check',
         icon: 'tabler:circle-check', iconClass: 'text-success', guard: 'subject.requirementsCompatible === true')]
     public const TRANSITION_ACCEPT_REQUIREMENTS = 'accept_requirements';
 
-    #[Transition(PackagePlace::MetadataLoaded, PackagePlace::RequirementsUnsupported,
+    #[Transition(PackagePlace::RequirementsPending, PackagePlace::RequirementsUnsupported,
         'A declared PHP or Symfony core constraint is incompatible',
         icon: 'tabler:circle-x', iconClass: 'text-danger', guard: 'subject.requirementsCompatible === false')]
     public const TRANSITION_REJECT_REQUIREMENTS = 'reject_requirements';
 
-    #[AsyncTransition(PackagePlace::RequirementsCompatible, PackagePlace::Documented,
-        'Fetch README.md and AGENTS.md for Symfony bundles; dependencies stop at requirements compatible',
-        guard: "subject.type == 'symfony-bundle'",
+    #[AsyncTransition(PackagePlace::DocsPending, PackagePlace::Documented,
+        'Fetch README.md and AGENTS.md for compatible Symfony bundles',
+        guard: self::DOCS_WANTED,
         icon: 'tabler:book-download', iconClass: 'text-info', async: true, transport: 'bundle.fetch.docs')]
     public const TRANSITION_FETCH_DOCS = 'fetch_docs';
+
+    #[Transition(PackagePlace::DocsPending, PackagePlace::DocsSkipped,
+        'Not a compatible Symfony bundle; there is no documentation to fetch',
+        icon: 'tabler:book-off', iconClass: 'text-muted', guard: '!('.self::DOCS_WANTED.')')]
+    public const TRANSITION_SKIP_DOCS = 'skip_docs';
 
     public function __construct(
         private readonly SerializerInterface $serializer,
@@ -67,6 +103,9 @@ final class PackageWorkflow
     }
 
     #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
+    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_RELOAD_DOCUMENTED)]
+    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_RELOAD_COMPATIBLE)]
+    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_RELOAD_UNSUPPORTED)]
     public function onLoadComposer(TransitionEvent $event): void
     {
         $package = $event->getSubject();

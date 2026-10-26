@@ -53,7 +53,7 @@ class PackageController extends AbstractController
                 throw $this->createAccessDeniedException('Invalid transition token.');
             }
             if ($transition === '_reset') {
-                $package->marking = PackagePlace::Discovered;
+                $package->setMarking(PackagePlace::marking(PackagePlace::Discovered));
                 $this->entityManager->flush();
                 $this->next->continue($workflow, $package);
             } else {

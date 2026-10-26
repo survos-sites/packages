@@ -44,19 +44,19 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         self::assertCount(1, $load);
         self::assertSame(WF::TRANSITION_LOAD, $load[0]->transition);
         self::assertSame(Package::class, $load[0]->subject->type);
-        self::assertSame(PackagePlace::Discovered, $this->fresh()->marking);
+        self::assertEquals(PackagePlace::marking(PackagePlace::Discovered), $this->fresh()->getMarking());
 
         $this->work('bundle.load');
         $package = $this->fresh();
-        // load (async) then accept_requirements (sync, in the worker), then fetch_docs queued.
-        self::assertSame(PackagePlace::RequirementsCompatible, $package->marking);
+        // load (async) forks into both tracks; accept_requirements runs in the worker, fetch_docs is queued.
+        self::assertEquals(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::DocsPending), $package->getMarking());
         self::assertCount(1, $this->sent('bundle.fetch.docs'));
         // Discovered dependencies were persisted and kicked off too.
         self::assertGreaterThan(1, count($this->sent('bundle.load')));
 
         $this->work('bundle.fetch.docs');
         $package = $this->fresh();
-        self::assertSame(PackagePlace::Documented, $package->marking);
+        self::assertEquals(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented), $package->getMarking());
         self::assertSame(RemoteFixtures::README, $package->readme);
     }
 
@@ -65,7 +65,7 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         $package = $this->packageWithoutKickoff();
         self::getContainer()->get(TransitionExecutorInterface::class)->execute($this->workflow(), $package, WF::TRANSITION_LOAD, ['cascade' => 'none']);
         $this->work('bundle.load');
-        self::assertSame(PackagePlace::MetadataLoaded, $this->fresh()->marking);
+        self::assertEquals(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending), $this->fresh()->getMarking());
         self::assertCount(0, $this->sent('bundle.fetch.docs'));
     }
 
@@ -77,21 +77,40 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         });
 
         $package = $this->fresh();
-        self::assertSame(PackagePlace::Documented, $package->marking);
+        self::assertEquals(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented), $package->getMarking());
         self::assertSame(RemoteFixtures::README, $package->readme);
         self::assertCount(0, $this->sent('bundle.load'));
         self::assertCount(0, $this->sent('bundle.fetch.docs'));
+    }
+
+    public function testRefreshClearsTheDerivedTracksAndRefetchesDocs(): void
+    {
+        $executor = self::getContainer()->get(TransitionExecutorInterface::class);
+        $executor->synchronously(function (): void {
+            $this->em->persist(new Package(RemoteFixtures::PACKAGE));
+            $this->em->flush();
+        });
+        $package = $this->fresh();
+        $package->readme = 'stale';
+        $this->em->flush();
+
+        $executor->synchronously(fn () => $executor->execute($this->workflow(), $package, WF::TRANSITION_RELOAD_DOCUMENTED));
+        $this->em->clear();
+
+        $package = $this->fresh();
+        self::assertEquals(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented), $package->getMarking());
+        self::assertSame(RemoteFixtures::README, $package->readme, 'docs are always re-fetched on refresh');
     }
 
     public function testDirectNativeApplyContinuesAfterFlush(): void
     {
         $package = $this->packageWithoutKickoff();
         $this->workflow()->apply($package, WF::TRANSITION_LOAD, ['cascade' => 'sync']);
-        self::assertSame(PackagePlace::MetadataLoaded, $package->marking);
+        self::assertEquals(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending), $package->getMarking());
         self::assertCount(0, $this->sent('bundle.load'));
 
         $this->em->flush();
-        self::assertSame(PackagePlace::Documented, $this->fresh()->marking);
+        self::assertEquals(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented), $this->fresh()->getMarking());
         self::assertCount(0, $this->sent('bundle.fetch.docs'));
     }
 
@@ -107,7 +126,7 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         $this->transport('bundle.load')->reset();
         $iterate->execute(['class-name' => Package::class, '--marking' => 'discovered', '--sync' => true]);
         $iterate->assertCommandIsSuccessful();
-        self::assertSame(PackagePlace::Documented, $this->fresh()->marking);
+        self::assertEquals(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented), $this->fresh()->getMarking());
         self::assertCount(0, $this->sent('bundle.fetch.docs'));
 
         $stats = new CommandTester((new Application(self::$kernel))->find('state:stats'));

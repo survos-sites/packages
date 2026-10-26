@@ -12,18 +12,19 @@ use Survos\WorkflowExtrasBundle\Attribute\Transition;
 
 final class PackageWorkflowDefinitionTest extends TestCase
 {
-    public function testSettledPlacesLeaveOnlyByReloadAndDocumentedFollowsValid(): void
+    public function testSettledPlacesLeaveOnlyByReloadAndDocumentedStaysReachable(): void
     {
+        $reloads = [WF::TRANSITION_RELOAD_DOCUMENTED, WF::TRANSITION_RELOAD_COMPATIBLE, WF::TRANSITION_RELOAD_UNSUPPORTED];
         $incoming = false;
         foreach ((new \ReflectionClass(WF::class))->getReflectionConstants() as $constant) {
             foreach ($constant->getAttributes(Transition::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
                 $transition = $attribute->newInstance();
                 $name = $constant->getValue();
-                if (in_array(PackagePlace::Documented, (is_array($transition->from) ? $transition->from : [$transition->from]), true)) {
-                    self::assertSame(WF::TRANSITION_LOAD, $name, 'documented is settled: only a refresh leaves it.');
-                }
-                if (in_array(PackagePlace::RequirementsCompatible, (is_array($transition->from) ? $transition->from : [$transition->from]), true)) {
-                    self::assertContains($name, [WF::TRANSITION_FETCH_DOCS, WF::TRANSITION_LOAD]);
+                $from = is_array($transition->from) ? $transition->from : [$transition->from];
+                foreach ([PackagePlace::Documented, PackagePlace::DocsSkipped, PackagePlace::RequirementsCompatible, PackagePlace::RequirementsUnsupported, PackagePlace::MetadataLoaded] as $settled) {
+                    if (in_array($settled, $from, true)) {
+                        self::assertContains($name, $reloads, $settled->value.' is settled: only a refresh leaves it.');
+                    }
                 }
                 $incoming = $incoming || in_array(PackagePlace::Documented, (is_array($transition->to) ? $transition->to : [$transition->to]), true);
             }

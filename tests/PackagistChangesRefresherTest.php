@@ -21,7 +21,8 @@ use Survos\WorkflowMessengerBundle\Service\TransitionDispatcher;
 use Survos\WorkflowMessengerBundle\Service\TransitionRouter;
 use Survos\WorkflowMessengerBundle\Service\WorkflowLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
-use Symfony\Component\Workflow\StateMachine;
+use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
+use Symfony\Component\Workflow\Workflow;
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Metadata\InMemoryMetadataStore;
@@ -61,9 +62,9 @@ final class PackagistChangesRefresherTest extends TestCase
         $em = $this->createStub(EntityManagerInterface::class);
         $em->method('find')->willReturn($cursor);
         $settled = new Package('acme/settled-bundle');
-        $settled->marking = PackagePlace::Documented;
+        $settled->setMarking(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented));
         $busy = new Package('acme/busy-bundle');
-        $busy->marking = PackagePlace::Discovered;
+        $busy->setMarking(PackagePlace::marking(PackagePlace::Discovered));
         $packages = $this->createStub(PackageRepository::class);
         $packages->method('find')->willReturnCallback(static fn (string $id): ?Package => ['acme--settled-bundle' => $settled, 'acme--busy-bundle' => $busy][$id] ?? null);
         $workflow = $this->createStub(WorkflowInterface::class);
@@ -93,7 +94,7 @@ final class PackagistChangesRefresherTest extends TestCase
         self::assertSame(['acme/settled-bundle'], $changes->queued);
         self::assertSame(['acme/busy-bundle'], $changes->skipped);
         self::assertSame(['gone/bundle'], $changes->deleted);
-        self::assertSame([['acme--settled-bundle', WF::TRANSITION_LOAD, ['bundle.load']]], $dispatched);
+        self::assertSame([['acme--settled-bundle', WF::TRANSITION_RELOAD_DOCUMENTED, ['bundle.load']]], $dispatched);
         self::assertSame('200', $cursor->position);
     }
 
@@ -112,10 +113,12 @@ final class PackagistChangesRefresherTest extends TestCase
 
     private function refresher(MockHttpClient $http, EntityManagerInterface $em, PackageRepository $packages, MessageBusInterface $bus, WorkflowInterface $workflow): PackagistChangesRefresher
     {
-        $transition = new Transition(WF::TRANSITION_LOAD, PackagePlace::Documented->value, PackagePlace::MetadataLoaded->value);
+        $settled = [PackagePlace::MetadataLoaded->value, PackagePlace::RequirementsCompatible->value, PackagePlace::Documented->value];
+        $pending = [PackagePlace::MetadataLoaded->value, PackagePlace::RequirementsPending->value, PackagePlace::DocsPending->value];
+        $transition = new Transition(WF::TRANSITION_RELOAD_DOCUMENTED, $settled, $pending);
         $metadata = new \SplObjectStorage();
         $metadata[$transition] = ['async' => true, 'transport' => 'bundle.load'];
-        $routingWorkflow = new StateMachine(new Definition([PackagePlace::Documented->value, PackagePlace::MetadataLoaded->value], [$transition], PackagePlace::Documented->value, new InMemoryMetadataStore([], [], $metadata)), name: WF::WORKFLOW_NAME);
+        $routingWorkflow = new Workflow(new Definition(array_unique([...$settled, ...$pending, PackagePlace::Discovered->value]), [$transition], PackagePlace::Discovered->value, new InMemoryMetadataStore([], [], $metadata)), new MethodMarkingStore(false, 'marking'), name: WF::WORKFLOW_NAME);
         $dispatcher = new TransitionDispatcher($bus, new WorkflowLocator(new ServiceLocator([WF::WORKFLOW_NAME => fn () => $routingWorkflow])), new TransitionRouter(null, ['bundle.load']));
         $store = $this->createStub(SubjectStoreInterface::class);
         $store->method('reference')->willReturnCallback(static fn (Package $package) => new SubjectReference(Package::class, $package->id));

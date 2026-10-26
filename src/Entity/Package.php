@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use App\Workflow\PackagePlace;
 
-use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SortFilter;
 use ApiPlatform\Metadata\QueryParameter;
@@ -33,7 +32,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [new Get(), new GetCollection(
         name: 'doctrine-packages',
         parameters: [
-            'marking' => new QueryParameter(filter: new ExactFilter()),
             'name' => new QueryParameter(filter: new PartialSearchFilter(caseSensitive: true)),
             'description' => new QueryParameter(filter: new PartialSearchFilter(caseSensitive: true)),
             'order[:property]' => new QueryParameter(filter: new SortFilter(), properties: self::SORTABLE),
@@ -55,16 +53,44 @@ class Package implements RouteParametersInterface, \Stringable
 {
     use RouteIdentityTrait;
 
-    #[ORM\Column(type: \App\Doctrine\Type\PackagePlaceType::NAME, enumType: PackagePlace::class)]
+    /**
+     * Every place the package is in. It is in one place per track at once (metadata,
+     * requirements, documentation), so this is a list, which search buckets per element like
+     * symfonyVersions. Empty until the workflow sets its initial place on persist.
+     *
+     * @var list<string>
+     */
+    #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
     #[Groups(['marking', 'package.read', 'browse'])]
-    public ?PackagePlace $marking = null; // the workflow sets its initial place on persist
+    public array $places = [];
+
+    /**
+     * The workflow's marking store reads and writes this pair, in Symfony's {place: 1} shape.
+     *
+     * @return array<string, int>
+     */
+    public function getMarking(): array
+    {
+        return array_fill_keys($this->places, 1);
+    }
+
+    /** @param array<string, int> $marking */
+    public function setMarking(array $marking, array $context = []): void
+    {
+        $this->places = array_keys($marking);
+    }
+
+    public function isIn(PackagePlace $place): bool
+    {
+        return in_array($place->value, $this->places, true);
+    }
 
     #[ORM\Column]
     #[Groups(['package.read'])]
     public bool $abandoned = false;
 
     private const SORTABLE = [
-        'marking', 'vendor', 'name', 'stars',
+        'vendor', 'name', 'stars',
         'lastUpdatedOnPackagist',
         'downloads'];
 
@@ -81,7 +107,7 @@ class Package implements RouteParametersInterface, \Stringable
      * and is refused outright. See config/packages/survos_search.yaml.
      */
     public const array FILTERABLE_FIELDS = [
-        'symfonyVersions', 'phpVersions', 'vendor', 'sourceType', 'marking',
+        'symfonyVersions', 'phpVersions', 'vendor', 'sourceType', 'places',
     ];
 
     public const array SORTABLE_FIELDS = [

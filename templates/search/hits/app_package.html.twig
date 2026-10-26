@@ -17,9 +17,9 @@
                         {% for v in doc.phpVersions ?? [] %}
                             <span class="badge bg-purple-lt">php {{ v }}</span>
                         {% endfor %}
-                        {% if doc.marking is defined and doc.marking %}
-                            <span class="badge bg-secondary-lt">{{ doc.marking.value ?? doc.marking }}</span>
-                        {% endif %}
+                        {% for place in doc.places|default([]) %}
+                            <span class="badge bg-secondary-lt">{{ place }}</span>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="text-nowrap text-secondary small text-end">

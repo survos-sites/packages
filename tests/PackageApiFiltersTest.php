@@ -21,7 +21,6 @@ final class PackageApiFiltersTest extends KernelTestCase
         $operation = $metadata->getOperation('doctrine-packages');
         $parameters = $operation->getParameters();
         foreach ([
-            'marking' => 'documented',
             'name' => 'Acme',
             'description' => 'Symfony',
             'order[stars]' => 'desc',
@@ -41,13 +40,13 @@ final class PackageApiFiltersTest extends KernelTestCase
         );
 
         $dql = $query->getDQL();
-        self::assertStringContainsString('p.marking = :', $dql);
+        self::assertStringNotContainsString('p.places', $dql, 'places is a list; search facets it, the API does not filter by exact match');
         self::assertStringContainsString('p.name LIKE :', $dql);
         self::assertStringContainsString('p.description LIKE :', $dql);
         self::assertStringNotContainsString('LOWER(', $dql);
         self::assertStringContainsString('p.stars DESC', $dql);
         self::assertStringContainsString('p.name ASC', $dql);
-        self::assertSame(['documented', '%Acme%', '%Symfony%'], array_map(
+        self::assertSame(['%Acme%', '%Symfony%'], array_map(
             static fn ($parameter) => $parameter->getValue(), $query->getParameters()->toArray(),
         ));
     }
