@@ -8845,12 +8845,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "93f71682852c143df400243992cff54abe03471d"
+                "reference": "b3f1fd177d6a951ec5223e742a4dcc5342137f40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/93f71682852c143df400243992cff54abe03471d",
-                "reference": "93f71682852c143df400243992cff54abe03471d",
+                "url": "https://api.github.com/repos/symfony/console/zipball/b3f1fd177d6a951ec5223e742a4dcc5342137f40",
+                "reference": "b3f1fd177d6a951ec5223e742a4dcc5342137f40",
                 "shasum": ""
             },
             "require": {
@@ -8938,7 +8938,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-14T17:55:52+00:00"
+            "time": "2026-10-25T15:30:26+00:00"
         },
         {
             "name": "symfony/css-selector",
