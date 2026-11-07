@@ -32,9 +32,31 @@ final class RequiredPackageDiscoveryTest extends TestCase
             $pending[] = $package;
         });
         $em->expects(self::never())->method('flush');
-        $discovery = new RequiredPackageDiscovery($repository, $em);
+        $discovery = new RequiredPackageDiscovery($repository, $em, new \Symfony\Component\Lock\LockFactory(new \Symfony\Component\Lock\Store\InMemoryStore()));
         $discovery->discover($bundle);
         $discovery->discover($bundle);
+    }
+
+    public function testDiscoveryLockIsHeldUntilFlushAndReleasedOnReset(): void
+    {
+        $locks = new \Symfony\Component\Lock\LockFactory(new \Symfony\Component\Lock\Store\InMemoryStore());
+        $em = $this->createStub(EntityManagerInterface::class);
+        $em->method('getUnitOfWork')->willReturn($this->createStub(UnitOfWork::class));
+        $discovery = new RequiredPackageDiscovery($this->createStub(PackageRepository::class), $em, $locks);
+        $bundle = new Package('acme/bundle');
+        $bundle->data = ['type' => 'symfony-bundle', 'require' => []];
+        $otherWorker = $locks->createLock('packages:dependency-discovery', ttl: null);
+
+        $discovery->discover($bundle);
+        self::assertFalse($otherWorker->acquire());
+        $discovery->postFlush();
+        self::assertTrue($otherWorker->acquire());
+        $otherWorker->release();
+        $discovery->discover($bundle);
+        self::assertFalse($otherWorker->acquire());
+        $discovery->reset();
+        self::assertTrue($otherWorker->acquire());
+        $otherWorker->release();
     }
 
     public function testLibrariesDoNotExpandTheCatalogueRecursively(): void
@@ -45,6 +67,6 @@ final class RequiredPackageDiscoveryTest extends TestCase
         $repository->expects(self::never())->method('findOneBy');
         $em = $this->createMock(EntityManagerInterface::class);
         $em->expects(self::never())->method('persist');
-        (new RequiredPackageDiscovery($repository, $em))->discover($library);
+        (new RequiredPackageDiscovery($repository, $em, new \Symfony\Component\Lock\LockFactory(new \Symfony\Component\Lock\Store\InMemoryStore())))->discover($library);
     }
 }

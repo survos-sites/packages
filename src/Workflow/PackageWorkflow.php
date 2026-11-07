@@ -120,7 +120,12 @@ final class PackageWorkflow
     {
         // One detailed request provides everything we need. Let HTTP failures reach
         // Messenger so retries and the Doctrine failure transport can handle them.
-        $result = $this->packagistClient->get($package->name);
+        try {
+            $result = $this->packagistClient->get($package->name);
+        } catch (\Psr\Http\Client\ClientExceptionInterface|\Symfony\Contracts\HttpClient\Exception\ExceptionInterface $error) {
+            // Do not send a live HTTP response through the parallel worker channel.
+            throw new \RuntimeException($error->getMessage(), (int) $error->getCode());
+        }
         $package->abandoned = (bool) $result->isAbandoned();
         $package->replacement = $result->getReplacementPackage();
         $selected = null;

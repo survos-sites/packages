@@ -13,7 +13,7 @@ The workflow itself is diagrammed in [workflow/PackageWorkflow.md](workflow/Pack
            every 5 min                 changed + tracked
 scheduler_packagist ──▶ app:packagist:changes ──▶ bundle.load ──▶ … ──▶ bundle.fetch.docs
    (tick)              (reads feed from cursor)     (load)               (README, AGENTS.md)
-         └──────────── all consumed by ONE worker, --concurrency=4 ────────────┘
+         └──────────── all consumed by ONE worker, --concurrency=32 ────────────┘
 ```
 
 ## 1. Decide *what* to reload, not *whether* to load
@@ -56,7 +56,7 @@ bin/console app:packagist:changes -v
 ```
 
 Repeat fetches are cheap anyway: the Packagist client sits on a caching scoped
-HttpClient (`config/packages/http_client.yaml`), and `/packages/{name}.json` is
+HttpClient (`config/packages/http_client.php`), and `/packages/{name}.json` is
 cacheable for 12 h (`s-maxage=43200`).
 
 ## 2. The schedule
@@ -120,12 +120,12 @@ messages the parent pulls per call.
 The Procfile runs the whole pipeline in one process type:
 
 ```
-bundle-load: php -d memory_limit=512M bin/console messenger:consume scheduler_packagist bundle.load bundle.fetch.docs --concurrency=4 --time-limit=3600 --memory-limit=256M
+bundle-load: php -d memory_limit=512M bin/console messenger:consume scheduler_packagist bundle.fetch.docs bundle.load --concurrency=32 --time-limit=3600 --memory-limit=256M
 ```
 
 - **Receivers are polled in the order given**, so the schedule's tick is never
   starved by a backlog of `load` messages.
-- **Only the parent reads the schedule**, so `--concurrency=4` does not mean four
+- **Only the parent reads the schedule**, so `--concurrency=32` does not mean 32
   ticks; the tick is handled in a child like any other message.
 - **Concurrency needs per-entity locking.** Two children can receive transitions for
   the same package. [`PackageTransitionLockMiddleware`](../src/Messenger/PackageTransitionLockMiddleware.php)
@@ -153,10 +153,14 @@ short `--limit` runs.
 
 ### Which AMQP transport?
 
-`amqp://` DSNs are built by Symfony's own `symfony/amqp-messenger` (ext-amqp), which
-is the transport that supports `--concurrency` and `--fetch-size` here.
-`jwage/phpamqplib-messenger` is installed but only answers `phpamqplib://` DSNs, so
-it is not involved.
+`amqp://` selects Symfony's native ext-amqp transport. `phpamqplib://` selects
+`jwage/phpamqplib-messenger`. The November 7 update installs Symfony 8.2.0-BETA1
+and pins [jwage PR #166](https://github.com/jwage/phpamqplib-messenger/pull/166)
+(commit b546b3e). This resubscribes an eagerly started consumer when the requested
+prefetch changes; without the fix, configured prefetch 1 stayed at 1 even with
+`--concurrency=32`. Broker inspection confirms the PR raises it to 32.
+The local benchmark selects jwage through `.env.local`; the committed default
+DSN remains native AMQP. Both support the worker's concurrency/fetch-size path.
 
 ## Running it
 
@@ -164,7 +168,7 @@ Locally:
 
 ```bash
 bin/console app:packagist:changes                         # first run: stores the cursor
-bin/console messenger:consume scheduler_packagist bundle.load bundle.fetch.docs --concurrency=4 -vv
+bin/console messenger:consume scheduler_packagist bundle.fetch.docs bundle.load --concurrency=32 -vv
 ```
 
 The schedule is also listed in zenstruck messenger-monitor at `/admin/messenger`.

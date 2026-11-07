@@ -61,8 +61,38 @@ final class PackageDocsFetcherTest extends TestCase
     public function testServerErrorsReachMessenger(): void
     {
         $package = $this->package('git@github.com:acme/demo.git', 'abc123');
-        $this->expectException(\Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface::class);
-        (new PackageDocsFetcher(new MockHttpClient(new MockResponse('', ['http_code' => 503]))))->fetch($package);
+        // Match DispatchTask::run(): parallel children omit trace arguments.
+        $previous = ini_set('zend.exception_ignore_args', '1');
+        try {
+            (new PackageDocsFetcher(new MockHttpClient(new MockResponse('', ['http_code' => 503]))))->fetch($package);
+            self::fail('Expected an HTTP failure');
+        } catch (\RuntimeException $error) {
+            self::assertStringContainsString('503', $error->getMessage());
+            self::assertNull($error->getPrevious());
+            self::assertSame($error->getMessage(), unserialize(serialize($error))->getMessage());
+            self::assertNull($package->docsFetchedAt);
+        } finally {
+            ini_set('zend.exception_ignore_args', $previous);
+        }
+    }
+
+    public function testRejectsInvalidUtf8BeforePersistence(): void
+    {
+        $package = $this->package('https://github.com/acme/demo', 'abc123');
+        $fetcher = new PackageDocsFetcher(new MockHttpClient(new MockResponse("invalid \xf3 text")));
+
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Document is not valid PostgreSQL UTF-8 text');
+        $fetcher->fetch($package);
+    }
+
+    public function testRejectsNullBytesBeforePersistence(): void
+    {
+        $package = $this->package('https://github.com/acme/demo', 'abc123');
+        $fetcher = new PackageDocsFetcher(new MockHttpClient(new MockResponse("null\0byte")));
+
+        $this->expectException(\UnexpectedValueException::class);
+        $fetcher->fetch($package);
     }
 
     private function package(string $url, string $reference): Package

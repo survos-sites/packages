@@ -14,12 +14,7 @@ return App::config([
                     'options' => [
                         'exchange' => ['name' => 'bundle.load'],
                         'queues' => ['bundle.load' => null],
-                        // Keep at 1. The 8.2 AMQP transport prefetches max(prefetch_count,
-                        // --fetch-size), and --fetch-size defaults to --concurrency, so a
-                        // --concurrency=4 worker still gets 4. A larger value lets the broker push
-                        // messages a worker never handles: when it stops (--limit, --time-limit,
-                        // a deploy) they come back flagged redelivered, and
-                        // RejectRedeliveredMessageMiddleware spends one of their retries.
+                        // The jwage PR adjusts this to the worker's requested fetch size.
                         'prefetch_count' => 1,
                         'delay' => ['durable' => true],
                     ],

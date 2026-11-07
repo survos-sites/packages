@@ -27,8 +27,8 @@ web: frankenphp run --config /etc/caddy/Caddyfile
 # from the database -- searches keep working, they just return stale documents.
 elastic: php -d memory_limit=512M bin/console messenger:consume elastic --time-limit=3600 --memory-limit=256M
 # One worker for the package pipeline (see docs/scheduler.md). Receivers are polled in
-# the order given: the packagist schedule's tick first, then load, then docs. With
-# --concurrency the parent fetches and up to 4 child processes handle messages in
+# the order given: the packagist schedule's tick first, then docs, then load. With
+# --concurrency the parent fetches and up to 32 child processes handle messages in
 # parallel (Symfony 8.2, needs amphp/parallel). The process type keeps its old name
 # so existing `ps:scale bundle-load=1` settings still apply.
-bundle-load: php -d memory_limit=512M bin/console messenger:consume scheduler_packagist bundle.load bundle.fetch.docs --time-limit=3600 --memory-limit=256M
+bundle-load: php -d memory_limit=512M bin/console messenger:consume scheduler_packagist bundle.fetch.docs bundle.load --concurrency=32 --time-limit=3600 --memory-limit=256M

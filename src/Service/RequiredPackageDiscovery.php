@@ -9,11 +9,16 @@ use App\Repository\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /** Discover the runtime components of curated bundles, not the whole dependency tree. */
-final class RequiredPackageDiscovery
+#[\Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener(event: \Doctrine\ORM\Events::postFlush)]
+final class RequiredPackageDiscovery implements \Symfony\Contracts\Service\ResetInterface
 {
+    private ?\Symfony\Component\Lock\LockInterface $discoveryLock = null;
+
     public function __construct(
         private PackageRepository $packages,
         private EntityManagerInterface $entityManager,
+        #[\Symfony\Component\DependencyInjection\Attribute\Autowire(service: 'lock.database.factory')]
+        private \Symfony\Component\Lock\LockFactory $locks,
     ) {
     }
 
@@ -21,6 +26,18 @@ final class RequiredPackageDiscovery
     {
         if (!$bundle->isSymfonyBundle) {
             return;
+        }
+
+        // Different bundles can discover the same dependency. Hold this short lock
+        // through the owning handler's flush, not merely through the existence check.
+        if ($this->discoveryLock === null) {
+            $lock = $this->locks->createLock('packages:dependency-discovery', ttl: null);
+            if (!$lock->acquire()) {
+                throw new \Symfony\Component\Messenger\Exception\RecoverableMessageHandlingException(
+                    'Another worker is committing discovered dependencies.', retryDelay: 100,
+                );
+            }
+            $this->discoveryLock = $lock;
         }
 
         $pending = [];
@@ -41,5 +58,16 @@ final class RequiredPackageDiscovery
             $pending[$name] = true;
         }
         // The workflow handler owns the flush. Initial-place kickoff owns dispatch.
+    }
+
+    public function postFlush(): void
+    {
+        $this->reset();
+    }
+
+    public function reset(): void
+    {
+        $this->discoveryLock?->release();
+        $this->discoveryLock = null;
     }
 }

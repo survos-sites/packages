@@ -76,7 +76,7 @@ final class PackageWorkflowTest extends TestCase
     {
         return new PackageWorkflow($serializer,
             $this->createStub(PackageService::class),
-            new \App\Service\RequiredPackageDiscovery($this->createStub(PackageRepository::class), $this->createStub(EntityManagerInterface::class)),
+            new \App\Service\RequiredPackageDiscovery($this->createStub(PackageRepository::class), $this->createStub(EntityManagerInterface::class), new \Symfony\Component\Lock\LockFactory(new \Symfony\Component\Lock\Store\InMemoryStore())),
             $client,
             new \App\Service\PackageDocsFetcher(new \Symfony\Component\HttpClient\MockHttpClient()));
     }

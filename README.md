@@ -16,13 +16,33 @@ bin/console list
 ```
 
 ```bash
-#bin/load-database.sh
+# 1. Seed package names; new rows automatically queue their initial load.
+php bin/console app:load-data --no-debug
 
-bin/console app:load-data
-bin/console mess:stats
+# 2. Consume metadata and documentation together (docs first avoids starvation).
+php bin/console messenger:consume bundle.fetch.docs bundle.load --concurrency=32 --no-debug
 
-bin/console mess:consume bundle.load --limit 1 -vv
+# In another terminal, keep Elasticsearch current.
+php bin/console messenger:consume elastic --concurrency=4 --no-debug
+
+# 3. Inspect actual completed rows as well as queue counts.
+php bin/console state:stats Package
+php bin/console messenger:stats
 ```
+
+For a bounded throughput sample, add `--time-limit=60` and wrap the consumer
+with `/usr/bin/time -p`. Compare database metadata/documentation counts before
+and after; drained messages may include stale work or retries. Keep the HTTP
+cache, but label these timings as cache-retaining runs, not cold downloads.
+`--stop-when-empty` is useful for draining, but delayed retries can remain.
+Composer data comes from Packagist's version metadata, not a separate download
+of the repository's literal `composer.json`. README and AGENTS.md are fetched
+only for compatible Symfony bundles; a completed docs attempt can find no file.
+
+The updated jwage transport is selected by a `phpamqplib://` DSN in
+`MESSENGER_TRANSPORT_DSN_RABBITMQ`; `amqp://` selects Symfony's native transport.
+The local benchmark uses jwage. Both are installed; installing jwage alone does
+not switch the active transport.
 
 New Package rows start automatically after persistence using the initial place's
 `next: [load]`. Do not follow setup with a second `state:iterate ... --marking=discovered`
@@ -49,7 +69,7 @@ Symfony 8.2's `--concurrency`; see [docs/scheduler.md](docs/scheduler.md).
 
 ```bash
 bin/console app:packagist:changes        # first run stores the feed cursor
-bin/console messenger:consume scheduler_packagist bundle.load bundle.fetch.docs --concurrency=4 -vv
+bin/console messenger:consume scheduler_packagist bundle.fetch.docs bundle.load --concurrency=32 -vv
 ```
 
 For deliberate recovery of stranded existing rows, inspect the queues first and
@@ -156,14 +176,13 @@ bin/console elastic:index:populate   # bulk-loads every package from the databas
 After a large `app:load-data`, re-run `populate` (or `elastic:index:rebuild` for a
 zero-downtime swap); the `elastic` worker only keeps single changes in sync.
 
-## Symfony 8.2 development setup
+## Symfony 8.2 beta setup
 
-Core Symfony requirements remain `^8.1`, with Flex selecting `^8.2` and
+Symfony components are locked to `8.2.0-BETA1`. Core requirements remain `^8.1`, with Flex selecting `^8.2` and
 `minimum-stability: dev`. Work queues (`bundle.load` and `elastic`) use RabbitMQ;
-set `MESSENGER_TRANSPORT_DSN_RABBITMQ` to an `amqp://` URL for Symfony's native
-AMQP transport. Failed messages use `doctrine://default` in the app database;
-a separate Messenger database is no longer needed. Consumers remain serial in
-`Procfile`; installing Amp does not itself enable concurrency.
+set `MESSENGER_TRANSPORT_DSN_RABBITMQ` to `phpamqplib://` for jwage or
+`amqp://` for Symfony's native AMQP transport. Failed messages use `doctrine://default` in the app database;
+a separate Messenger database is no longer needed. The package worker in `Procfile` uses `--concurrency=32`; installing Amp alone does not enable concurrency.
 
 The metadata loader propagates request failures for retry and selects the default
 branch, falling back to the highest release or latest branch if necessary. Apply
@@ -193,3 +212,5 @@ development container and regenerate IDE/static-analysis configuration types.
 `composer setup` includes this step. Normal debug container rebuilds regenerate
 the file too; production builds with debug disabled do not. Do not set
 `APP_DEBUG=0` when running this development setup command.
+
+Local throughput measurements from November 7 are recorded in [docs/throughput.md](docs/throughput.md).

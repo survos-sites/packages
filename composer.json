@@ -27,7 +27,7 @@
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.4",
         "inspector-apm/inspector-symfony": "^1.2",
-        "jwage/phpamqplib-messenger": "dev-main@dev",
+        "jwage/phpamqplib-messenger": "dev-codex/fix-consumer-prefetch-resubscription",
         "knplabs/knp-time-bundle": "^2.2",
         "knplabs/packagist-api": "^3.0",
         "league/commonmark": "^2.10",
@@ -176,5 +176,10 @@
         ],
         "coverage": "php -d xpcov.enabled=1 vendor/bin/phpunit --coverage-html coverage",
         "pre-update-cmd": "mkdir -p var/routes"
-    }
+    },
+    "repositories": [{
+        "name": "jwage-pr",
+        "type": "vcs",
+        "url": "https://github.com/tacman/phpamqplib-messenger"
+    }]
 }

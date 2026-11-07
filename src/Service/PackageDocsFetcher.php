@@ -47,12 +47,25 @@ final class PackageDocsFetcher
     private function first(string $base, array $names): ?string
     {
         foreach ($names as $name) {
-            $response = $this->httpClient->request('GET', $base.'/'.$name);
-            if (404 === $response->getStatusCode()) {
-                continue;
-            }
+            try {
+                $response = $this->httpClient->request('GET', $base.'/'.$name);
+                if (404 === $response->getStatusCode()) {
+                    continue;
+                }
 
-            return $response->getContent();
+                $content = $response->getContent();
+                if (!mb_check_encoding($content, 'UTF-8') || str_contains($content, "\0")) {
+                    // Reject unsuitable text before PostgreSQL throws a PDOException,
+                    // which PHP currently cannot round-trip safely between workers.
+                    throw new \UnexpectedValueException(sprintf('Document is not valid PostgreSQL UTF-8 text: %s/%s', $base, $name));
+                }
+
+                return $content;
+            } catch (\Symfony\Contracts\HttpClient\Exception\ExceptionInterface $error) {
+                // Parallel Messenger sends errors across processes. Live HTTP responses
+                // cannot be serialized; keep the diagnostic, but not the response/previous.
+                throw new \RuntimeException($error->getMessage(), (int) $error->getCode());
+            }
         }
 
         return null;
