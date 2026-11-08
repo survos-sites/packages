@@ -23,7 +23,7 @@ php bin/console app:load-data --no-debug
 php bin/console messenger:consume bundle.fetch.docs bundle.load --concurrency=32 --no-debug
 
 # In another terminal, keep Elasticsearch current.
-php bin/console messenger:consume elastic --concurrency=4 --no-debug
+php bin/console messenger:consume elastic --no-debug
 
 # 3. Inspect actual completed rows as well as queue counts.
 php bin/console state:stats Package

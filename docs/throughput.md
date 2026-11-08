@@ -50,8 +50,26 @@ With package concurrency 32 and a separate ES consumer at concurrency 4:
   parallel worker. HTTP failures are similarly wrapped without live responses
   while Symfony #67982 remains unresolved.
 
-The subsequent backlog drain is recorded separately in `var/benchmark/pr166-backlog.json`.
-Elasticsearch runs throughout; its queue can lag behind metadata completion.
+## Larger PR run
+
+The subsequent run added 14,351 metadata records and 2,431 README bodies in
+167.01 seconds (85.93 metadata records/sec including startup and queue drain).
+The first 125 seconds averaged 106.47 metadata records/sec. There were 2,916
+additional completed documentation attempts. The first roughly 30 seconds also
+had the preceding docs-only drain consumer active; this was not a controlled
+comparison between worker layouts.
+
+Both package queues drained and the worker exited 0. Final database counts:
+16,497 total rows, 16,461 with metadata, 3,029 README bodies, 3,652 docs attempts.
+However, 3,697 rows still have docs_pending (3,679 requirements-compatible and
+18 requirements-pending), and 36 rows remain discovered despite empty queues.
+This needs investigation; empty queues do **not** establish a complete import.
+Three malformed UTF-8 documents are in the failure transport.
+
+Elasticsearch ran throughout but accumulated a backlog. Its worker was changed
+from concurrency 4 to the serial batch-handler setup already used in Procfile;
+the backlog then decreased substantially. Search completion is not included in
+the package timing. Raw samples: `var/benchmark/pr166-backlog.json`.
 Composer data is Packagist version metadata, not a literal composer.json download.
 
 Raw local logs and count snapshots: `var/benchmark/`. HTTP cache is preserved
