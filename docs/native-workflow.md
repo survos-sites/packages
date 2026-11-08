@@ -5,38 +5,34 @@ The packages pipeline uses Symfony's native attribute registrar, with
 `survos/workflow-messenger-bundle` for queued execution. Every place and transition is
 explicitly declared: places in `PackagePlace`, transitions in `PackageWorkflow`.
 
-The local database is `packages`. A package is in **several places at once**: the
-workflow is a Symfony `workflow` (not a `state_machine`), and the marking is a set of
-places. Three independent tracks run side by side:
+The local database is `packages`. Each package has one durable `state`, managed by
+a Symfony `state_machine`:
 
-| track | places | set by |
-|---|---|---|
-| metadata | `discovered` → `metadata_loaded` | `load` |
-| requirements | `requirements_pending` → `requirements_compatible` / `requirements_unsupported` | `accept_requirements` / `reject_requirements` |
-| documentation | `docs_pending` → `documented` / `docs_skipped` | `fetch_docs` / `skip_docs` |
+```text
+discovered --load--> metadata_loaded --accept--> accepted --fetch_docs--> documented
+                                     --reject--> rejected
+```
 
-`Package::$places` is a `jsonb` list of the place names, so search buckets each place
-like `symfonyVersions`. The workflow's marking store reads and writes it through
-`getMarking()` / `setMarking()` in Symfony's `{place: 1}` shape. An empty list means the
-workflow has not set its initial place (`discovered`) yet; native `getMarking()`
-initializes it. `PackagePlace::marking(...)` builds a marking for code and tests.
+Accepted libraries finish at `accepted`; only accepted Symfony bundles fetch docs.
+`rejected` stops processing, with `rejectionReason` on the entity describing PHP or
+Symfony incompatibility, `package_not_found`, or `no_versions`. Transient HTTP
+failures still throw and retry rather than becoming permanent rejections.
+`metadata_loaded` means the metadata request completed, including an explicit
+unavailable outcome; unavailable packages do not get invented metadata.
 
-`load` consumes `discovered` and produces `metadata_loaded`, `requirements_pending` and
-`docs_pending`, so both follow-up tracks start together. Docs are fetched only for
-compatible Symfony bundles (`fetch_docs`); everything else takes `skip_docs`.
+`Package::$state` is a scalar database column. `getState()` / `setState()` serve the
+marking store; the computed `places` array preserves the search facet/API shape.
+`getMarking()` / `setMarking()` provide the single-place `{place: 1}` helper shape.
+A null state is initialized to `discovered` by the workflow.
 
-**Refresh.** A refresh clears the requirements and documentation tracks and forks again, so
-requirements are always rechecked and docs always re-fetched. Symfony requires transition
-names to be unique per place, so there is one reload per settled combination:
-`reload_documented`, `reload_compatible` and `reload_unsupported`. They are mutually
-exclusive, so at most one is enabled, and none is enabled while a track is still pending.
-`PackageWorkflow::LOAD_TRANSITIONS` lists them with `load`; the Packagist refresher runs the
-first enabled one and skips packages mid-flight.
+**Refresh.** The same `load` transition is available from `accepted`, `rejected`
+and `documented`. It returns to `metadata_loaded`, rechecks criteria, and fetches
+docs again for accepted bundles. The changes-feed refresher skips in-flight rows.
 
-The workflow definition and its event listeners live together in `PackageWorkflow`.
-Places are declared separately in `PackagePlace`. Queue names remain `bundle.load`
-and `bundle.fetch.docs`, even though dependency packages share the metadata queue.
-The baseline migration creates the `places` column directly; there is no enum to migrate.
+Places live in `PackagePlace`, transitions/listeners in `PackageWorkflow`. Queue
+names remain `bundle.load` and `bundle.fetch.docs`. Migration
+`Version20261108120000` converts old multi-place markings to a scalar state and
+retains metadata, documents and rejection reasons without fetching anything.
 
 ## Execution
 
@@ -44,8 +40,8 @@ The baseline migration creates the `places` column directly; there is no enum to
 2. `load` runs on `bundle.load`, reloads the entity under the package lock, and
    invokes the existing native `AsTransitionListener` to fetch Packagist data.
 3. In the worker, the ordered `next` candidates of each current place are tried:
-   `accept_requirements` or `reject_requirements` is applied synchronously, and
-   `fetch_docs` is queued on `bundle.fetch.docs` (or `skip_docs` is applied).
+   `accept` or `reject` is applied synchronously. Accepted bundles queue
+   `fetch_docs` on `bundle.fetch.docs`; accepted libraries and rejected packages stop.
 4. The documentation worker fetches README/AGENTS.md and persists `documented`.
    Missing documents are valid results; other HTTP failures use Messenger retries.
 
@@ -59,11 +55,12 @@ executor decides whether to apply or queue them.
 php bin/console app:load-data --vendor=symfony --name=monolog-bundle --limit=1
 
 # Refresh one existing package through the application command.
-php bin/console state:iterate Package --transition=reload_documented \
+php bin/console state:iterate Package --transition=load \
   --filter='name=symfony/monolog-bundle' --limit=1
 
-php bin/console messenger:consume bundle.load --time-limit=3600
-php bin/console messenger:consume bundle.fetch.docs --time-limit=3600
+php bin/console messenger:consume bundle.fetch.docs bundle.load --concurrency=32 --no-debug
+# Separate terminal: preserve Elasticsearch batching.
+php bin/console messenger:consume elastic --no-debug
 ```
 
 ## Discovery and explorer
@@ -86,7 +83,7 @@ cascade options; unsupported legacy reset/dump options are deliberately absent.
 
 ```bash
 php bin/console state:stats Package
-php bin/console messenger:consume bundle.load bundle.fetch.docs elastic --concurrency=4
+php bin/console messenger:stats
 ```
 
 ## Persistence and delivery
@@ -148,5 +145,15 @@ independently versioned Symfony packages are not Symfony core version constraint
 The package exposes `phpCompatibility` and `symfonyCompatibility` as `unknown`,
 `not_applicable`, `compatible` or `incompatible`. Any incompatible result rejects
 the requirements. These are metadata results, not separate workflow places.
-Compatible libraries finish the requirements track and skip documentation; compatible
-Symfony bundles additionally fetch documentation. Abandonment is a property and does not prevent processing.
+Compatible libraries finish at `accepted`; compatible Symfony bundles additionally
+fetch documentation and finish at `documented`. Abandonment is a property and does not prevent processing.
+
+
+## Follow-up: configurable criteria
+
+Move the target PHP and Symfony versions into environment-backed configuration,
+keeping the current defaults. Later criteria may include license, README or
+AGENTS.md availability. Store rejection reasons on the entity instead of adding
+places per rule. Re-evaluate cached metadata when targets change; this can also
+provide the eligibility filter for future RAG ingestion. This configuration change
+is planned, not implemented by the state-machine restoration.

@@ -67,44 +67,26 @@ final class PackageWorkflowTest extends TestCase
         self::assertSame('1.10.0', $package->version);
     }
 
-    public function testOnlyConfirmed404CanBeMarkedNotFound(): void
+    public function testMissingPackageRecordsARejectionReasonWithoutInventingMetadata(): void
     {
         $client = $this->createStub(Client::class);
         $client->method('get')->willThrowException(new \Packagist\Api\PackageNotFoundException('Not found', 404));
-        $this->handler($client, $this->createStub(SerializerInterface::class))->onMarkUnavailable($this->unavailableEvent(PackageWorkflow::TRANSITION_MARK_NOT_FOUND));
-        $this->addToAssertionCount(1);
+        $package = new Package('example/bundle');
+        $this->handler($client, $this->createStub(SerializerInterface::class))->onLoadComposer($this->event($package));
+        self::assertSame('package_not_found', $package->rejectionReason);
+        self::assertNull($package->data);
     }
 
-    public function testOnlyEmptyVersionListsCanBeMarkedNoVersions(): void
+    public function testEmptyVersionListRecordsARejectionReason(): void
     {
         $metadata = $this->createStub(Metadata::class);
         $metadata->method('getVersions')->willReturn([]);
         $client = $this->createStub(Client::class);
         $client->method('get')->willReturn($metadata);
-        $this->handler($client, $this->createStub(SerializerInterface::class))->onMarkUnavailable($this->unavailableEvent(PackageWorkflow::TRANSITION_MARK_NO_VERSIONS));
-        $this->addToAssertionCount(1);
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('unavailableTransitions')]
-    public function testAvailablePackageCannotBeMarkedUnavailable(string $transition): void
-    {
-        $metadata = $this->createStub(Metadata::class);
-        $metadata->method('getVersions')->willReturn([new Version()]);
-        $client = $this->createStub(Client::class);
-        $client->method('get')->willReturn($metadata);
-        $this->expectException(\UnexpectedValueException::class);
-        $this->handler($client, $this->createStub(SerializerInterface::class))->onMarkUnavailable($this->unavailableEvent($transition));
-    }
-
-    public static function unavailableTransitions(): iterable
-    {
-        yield [PackageWorkflow::TRANSITION_MARK_NOT_FOUND];
-        yield [PackageWorkflow::TRANSITION_MARK_NO_VERSIONS];
-    }
-
-    private function unavailableEvent(string $transition): TransitionEvent
-    {
-        return new TransitionEvent(new Package('example/bundle'), new Marking(['discovered' => 1]), new Transition($transition, 'discovered', 'unavailable'));
+        $package = new Package('example/bundle');
+        $this->handler($client, $this->createStub(SerializerInterface::class))->onLoadComposer($this->event($package));
+        self::assertSame('no_versions', $package->rejectionReason);
+        self::assertNull($package->data);
     }
 
     private function event(Package $package): TransitionEvent

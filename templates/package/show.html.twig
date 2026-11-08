@@ -44,8 +44,8 @@
 
                         <div class="col-md-6">
                             <h5>Requirements</h5>
-                            {% if package.requirementsFailureReason %}
-                                <p class="text-danger">{{ package.requirementsFailureLabel }}</p>
+                            {% if package.rejectionReason %}
+                                <p class="text-danger">{{ package.rejectionLabel }}</p>
                             {% endif %}
                             <ul class="list-unstyled">
                                 <li><strong>Symfony:</strong> <code>{{ package.symfonyVersionString ?? 'No declared core constraint' }}</code> — {{ package.symfonyCompatibility|replace({'_': ' '}) }}</li>

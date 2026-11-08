@@ -39,12 +39,10 @@ Composer data comes from Packagist's version metadata, not a separate download
 of the repository's literal `composer.json`. README and AGENTS.md are fetched
 only for compatible Symfony bundles; a completed docs attempt can find no file.
 
-Unavailable metadata has explicit final places: `package_not_found` (confirmed
-Packagist 404) and `no_versions` (confirmed empty version list). These are completed
-outcomes, not successfully loaded metadata; failure history is retained. The
-`mark_not_found` and `mark_no_versions` transitions verify the outcome before
-settling a discovered package. `retry_not_found` / `retry_no_versions` reopen it
-for loading, and changes-feed updates can select those retry transitions.
+Unavailable metadata ends in `rejected`, with `rejectionReason` set to
+`package_not_found` (Packagist 404) or `no_versions` (empty version list).
+PHP/Symfony incompatibility uses the same terminal state with its own reason.
+Transient failures still use Messenger retries. An explicit `load` can recheck a rejection.
 
 Documentation is stored as UTF-8. Valid UTF-8 is preserved; UTF-16 with a BOM,
 ASCII UTF-16LE runs appended by mixed editors, and legacy Windows-1252 text are
@@ -62,17 +60,21 @@ dispatch: it would duplicate the queued work. `--dispatch` remains a compatibili
 option on `app:load-data` but no longer redispatches existing rows. `--sync` applies
 before insertion so it also controls the automatic kickoff.
 
-When a package passes the requirements check (`requirements_compatible`), its missing runtime `require` packages
-are inserted into the same catalogue and start through the same mechanism.
-Platform requirements and `require-dev` are excluded. Libraries do not recursively
-discover their dependencies. Composer `type` determines whether Symfony 8 compatibility
-checks apply; Symfony 7-only bundles do not pass the catalogue gate, while PHP-compatible libraries can pass without a Symfony requirement.
-Compatible Symfony bundles also run `fetch_docs`, which stores README.md and AGENTS.md from the
-source repository and ends in `documented`; every other package ends in `docs_skipped`.
+The state machine has five places:
 
-A package is in several places at once, one per independent track: metadata
-(`metadata_loaded`), requirements (`requirements_compatible` or `requirements_unsupported`) and
-documentation (`documented` or `docs_skipped`). See [docs/native-workflow.md](docs/native-workflow.md).
+```text
+discovered → metadata_loaded → accepted → documented (Symfony bundles)
+                             ↘ rejected
+```
+
+Accepted libraries finish at `accepted`. Rejected packages stop before docs or
+dependency discovery; the reason lives on the entity. Accepted Symfony bundles
+discover missing runtime `require` packages and fetch README/AGENTS.md. Platform
+requirements and `require-dev` are excluded; libraries do not recursively discover
+dependencies. Missing documents are valid completed attempts.
+
+Each package has one persisted `state`; the search `places` facet is derived from it.
+See [docs/native-workflow.md](docs/native-workflow.md).
 
 Packages are kept fresh from Packagist's changes feed: a Symfony Scheduler schedule
 runs `app:packagist:changes` every 5 minutes and queues a reload only for tracked

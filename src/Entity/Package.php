@@ -53,22 +53,17 @@ class Package implements RouteParametersInterface, \Stringable
 {
     use RouteIdentityTrait;
 
-    /**
-     * Every place the package is in. It is in one place per track at once (metadata,
-     * requirements, documentation), so this is a list, which search buckets per element like
-     * symfonyVersions. Empty until the workflow sets its initial place on persist.
-     *
-     * @var list<string>
-     */
-    #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
+    #[ORM\Column(length: 32, nullable: true)]
     #[Groups(['marking', 'package.read', 'browse'])]
-    public array $places = [];
+    public ?string $state = null;
 
-    /**
-     * The workflow's marking store reads and writes this pair, in Symfony's {place: 1} shape.
-     *
-     * @return array<string, int>
-     */
+    /** @var list<string> Compatibility view for existing search facets and templates. */
+    #[Groups(['marking', 'package.read', 'browse'])]
+    public array $places {
+        get => $this->state === null ? [] : [$this->state];
+    }
+
+    /** @return array<string, int> */
     public function getMarking(): array
     {
         return array_fill_keys($this->places, 1);
@@ -77,7 +72,20 @@ class Package implements RouteParametersInterface, \Stringable
     /** @param array<string, int> $marking */
     public function setMarking(array $marking, array $context = []): void
     {
-        $this->places = array_keys($marking);
+        if (count($marking) > 1) {
+            throw new \InvalidArgumentException('A package can occupy only one state.');
+        }
+        $this->state = $marking === [] ? null : PackagePlace::from(array_key_first($marking))->value;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(string $state, array $context = []): void
+    {
+        $this->state = PackagePlace::from($state)->value;
     }
 
     public function isIn(PackagePlace $place): bool
@@ -183,12 +191,14 @@ class Package implements RouteParametersInterface, \Stringable
         get => $this->symfonyVersions === null ? 'unknown' : ($this->symfonyVersionString === null ? 'not_applicable' : ($this->hasValidSymfonyVersion ? 'compatible' : 'incompatible'));
     }
 
-    #[ORM\Column(length: 32, nullable: true)]
+    #[ORM\Column(name: 'requirements_failure_reason', length: 32, nullable: true)]
     #[Groups(['package.read'])]
-    public ?string $requirementsFailureReason = null;
+    public ?string $rejectionReason = null;
 
-    public ?string $requirementsFailureLabel {
-        get => match ($this->requirementsFailureReason) {
+    public ?string $rejectionLabel {
+        get => match ($this->rejectionReason) {
+            'package_not_found' => 'Package not available on Packagist',
+            'no_versions' => 'Packagist exposes no versions',
             'php_incompatible' => 'PHP constraint excludes supported versions',
             'symfony_incompatible' => 'Symfony constraints exclude supported versions',
             default => null,

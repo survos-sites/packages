@@ -19,84 +19,34 @@ use Symfony\Component\Workflow\Event\CompletedEvent;
 use Symfony\Component\Workflow\Event\TransitionEvent;
 use Symfony\Component\Workflow\WorkflowType;
 
-#[AsWorkflow(supports: [Package::class], name: self::WORKFLOW_NAME, type: WorkflowType::Workflow, markingProperty: 'marking', places: PackagePlace::class, description: 'Load package metadata, then check requirements and fetch documentation as independent tracks')]
+#[AsWorkflow(supports: [Package::class], name: self::WORKFLOW_NAME, type: WorkflowType::StateMachine, markingProperty: 'state', places: PackagePlace::class, description: 'Load metadata, accept or reject the package, then fetch documentation for accepted bundles')]
 final class PackageWorkflow
 {
     // This name is used for injecting the workflow into a controller!
     public const WORKFLOW_NAME = 'PackageWorkflow';
 
-    /** Docs are fetched only for compatible Symfony bundles. */
-    private const string DOCS_WANTED = "subject.type == 'symfony-bundle' && subject.requirementsCompatible === true";
-
-    #[AsyncTransition(PackagePlace::Discovered, [PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending],
-        'Fetch package metadata from Packagist and start the requirements and documentation tracks',
-        icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
+    #[AsyncTransition(PackagePlace::Discovered, PackagePlace::MetadataLoaded, 'Load Packagist metadata', async: true, transport: 'bundle.load')]
+    #[AsyncTransition(PackagePlace::Accepted, PackagePlace::MetadataLoaded, 'Refresh an accepted package', async: true, transport: 'bundle.load')]
+    #[AsyncTransition(PackagePlace::Rejected, PackagePlace::MetadataLoaded, 'Recheck a rejected package', async: true, transport: 'bundle.load')]
+    #[AsyncTransition(PackagePlace::Documented, PackagePlace::MetadataLoaded, 'Refresh metadata and documentation', async: true, transport: 'bundle.load')]
     public const TRANSITION_LOAD = 'load';
 
-    #[AsyncTransition(PackagePlace::Discovered, PackagePlace::PackageNotFound,
-        'Verify the Packagist 404 and record an unavailable outcome', async: true, transport: 'bundle.load')]
-    public const TRANSITION_MARK_NOT_FOUND = 'mark_not_found';
+    public const array LOAD_TRANSITIONS = [self::TRANSITION_LOAD];
 
-    #[AsyncTransition(PackagePlace::Discovered, PackagePlace::NoVersions,
-        'Verify an empty Packagist version list and record an unavailable outcome', async: true, transport: 'bundle.load')]
-    public const TRANSITION_MARK_NO_VERSIONS = 'mark_no_versions';
+    #[Transition(PackagePlace::MetadataLoaded, PackagePlace::Accepted,
+        'Accept supported PHP and Symfony criteria, then discover dependencies',
+        guard: 'subject.rejectionReason === null && subject.requirementsCompatible === true')]
+    public const TRANSITION_ACCEPT = 'accept';
 
-    #[Transition(PackagePlace::PackageNotFound, PackagePlace::Discovered, 'Retry metadata for a package that was unavailable')]
-    public const TRANSITION_RETRY_NOT_FOUND = 'retry_not_found';
+    #[Transition(PackagePlace::MetadataLoaded, PackagePlace::Rejected,
+        'Reject unavailable metadata or unsupported PHP/Symfony criteria; retain the reason',
+        guard: 'subject.rejectionReason !== null || subject.requirementsCompatible === false')]
+    public const TRANSITION_REJECT = 'reject';
 
-    #[Transition(PackagePlace::NoVersions, PackagePlace::Discovered, 'Retry metadata for a package that had no versions')]
-    public const TRANSITION_RETRY_NO_VERSIONS = 'retry_no_versions';
-
-    // A refresh clears the derived tracks and forks again. Symfony requires transition names to be
-    // unique per place, so there is one reload per settled combination; they are mutually exclusive.
-    #[AsyncTransition([PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented],
-        [PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending],
-        'Refresh metadata; recheck requirements and re-fetch documentation',
-        icon: 'tabler:refresh', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
-    public const TRANSITION_RELOAD_DOCUMENTED = 'reload_documented';
-
-    #[AsyncTransition([PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::DocsSkipped],
-        [PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending],
-        'Refresh metadata; recheck requirements (no documentation for this package)',
-        icon: 'tabler:refresh', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
-    public const TRANSITION_RELOAD_COMPATIBLE = 'reload_compatible';
-
-    #[AsyncTransition([PackagePlace::MetadataLoaded, PackagePlace::RequirementsUnsupported, PackagePlace::DocsSkipped],
-        [PackagePlace::MetadataLoaded, PackagePlace::RequirementsPending, PackagePlace::DocsPending],
-        'Refresh metadata; recheck requirements',
-        icon: 'tabler:refresh', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
-    public const TRANSITION_RELOAD_UNSUPPORTED = 'reload_unsupported';
-
-    /** Every way to (re)load; at most one is enabled for a package at a time. */
-    public const array LOAD_TRANSITIONS = [
-        self::TRANSITION_LOAD,
-        self::TRANSITION_RELOAD_DOCUMENTED,
-        self::TRANSITION_RELOAD_COMPATIBLE,
-        self::TRANSITION_RELOAD_UNSUPPORTED,
-        self::TRANSITION_RETRY_NOT_FOUND,
-        self::TRANSITION_RETRY_NO_VERSIONS,
-    ];
-
-    #[Transition(PackagePlace::RequirementsPending, PackagePlace::RequirementsCompatible,
-        'Accept compatible PHP and applicable Symfony core constraints; absent constraints need no check',
-        icon: 'tabler:circle-check', iconClass: 'text-success', guard: 'subject.requirementsCompatible === true')]
-    public const TRANSITION_ACCEPT_REQUIREMENTS = 'accept_requirements';
-
-    #[Transition(PackagePlace::RequirementsPending, PackagePlace::RequirementsUnsupported,
-        'A declared PHP or Symfony core constraint is incompatible',
-        icon: 'tabler:circle-x', iconClass: 'text-danger', guard: 'subject.requirementsCompatible === false')]
-    public const TRANSITION_REJECT_REQUIREMENTS = 'reject_requirements';
-
-    #[AsyncTransition(PackagePlace::DocsPending, PackagePlace::Documented,
-        'Fetch README.md and AGENTS.md for compatible Symfony bundles',
-        guard: self::DOCS_WANTED,
-        icon: 'tabler:book-download', iconClass: 'text-info', async: true, transport: 'bundle.fetch.docs')]
+    #[AsyncTransition(PackagePlace::Accepted, PackagePlace::Documented,
+        'Fetch README and AGENTS for an accepted Symfony bundle',
+        guard: "subject.type == 'symfony-bundle'", async: true, transport: 'bundle.fetch.docs')]
     public const TRANSITION_FETCH_DOCS = 'fetch_docs';
-
-    #[Transition(PackagePlace::DocsPending, PackagePlace::DocsSkipped,
-        'Not a compatible Symfony bundle; there is no documentation to fetch',
-        icon: 'tabler:book-off', iconClass: 'text-muted', guard: '!('.self::DOCS_WANTED.')')]
-    public const TRANSITION_SKIP_DOCS = 'skip_docs';
 
     public function __construct(
         private readonly SerializerInterface $serializer,
@@ -106,8 +56,8 @@ final class PackageWorkflow
         private readonly PackageDocsFetcher $docsFetcher,
     ) {}
 
-    #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_ACCEPT_REQUIREMENTS)]
-    public function onValidCompleted(CompletedEvent $event): void
+    #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_ACCEPT)]
+    public function onAcceptedCompleted(CompletedEvent $event): void
     {
         $this->requiredPackageDiscovery->discover($event->getSubject());
     }
@@ -119,47 +69,28 @@ final class PackageWorkflow
     }
 
     #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]
-    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_RELOAD_DOCUMENTED)]
-    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_RELOAD_COMPATIBLE)]
-    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_RELOAD_UNSUPPORTED)]
     public function onLoadComposer(TransitionEvent $event): void
     {
         $package = $event->getSubject();
         // `load` always loads: whether a package needs reloading is decided before the
         // transition is dispatched (https://packagist.org/apidoc#track-package-updates),
         // not here. Repeat fetches are absorbed by the caching packagist.client.
-        $this->loadLatestVersionData($package);
-        $this->packageService->populateFromComposerData($package);
+        $package->rejectionReason = null;
+        if ($this->loadLatestVersionData($package)) {
+            $this->packageService->populateFromComposerData($package);
+        }
     }
 
-    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_MARK_NOT_FOUND)]
-    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_MARK_NO_VERSIONS)]
-    public function onMarkUnavailable(TransitionEvent $event): void
-    {
-        $notFound = $event->getTransition()->getName() === self::TRANSITION_MARK_NOT_FOUND;
-        try {
-            $metadata = $this->packagistClient->get($event->getSubject()->name);
-        } catch (\Packagist\Api\PackageNotFoundException $error) {
-            if ($notFound) {
-                return;
-            }
-            throw $error;
-        } catch (\Psr\Http\Client\ClientExceptionInterface|\Symfony\Contracts\HttpClient\Exception\ExceptionInterface $error) {
-            throw new \RuntimeException($error->getMessage(), (int) $error->getCode());
-        }
-        if (!$notFound && count($metadata->getVersions()) === 0) {
-            return;
-        }
-
-        throw new \UnexpectedValueException('Packagist no longer confirms the requested unavailable outcome; retry metadata loading.');
-    }
-
-    private function loadLatestVersionData(Package $package): void
+    private function loadLatestVersionData(Package $package): bool
     {
         // One detailed request provides everything we need. Let HTTP failures reach
         // Messenger so retries and the Doctrine failure transport can handle them.
         try {
             $result = $this->packagistClient->get($package->name);
+        } catch (\Packagist\Api\PackageNotFoundException) {
+            $package->rejectionReason = 'package_not_found';
+
+            return false;
         } catch (\Psr\Http\Client\ClientExceptionInterface|\Symfony\Contracts\HttpClient\Exception\ExceptionInterface $error) {
             // Do not send a live HTTP response through the parallel worker channel.
             throw new \RuntimeException($error->getMessage(), (int) $error->getCode());
@@ -185,7 +116,9 @@ final class PackageWorkflow
         // Archived branches can disappear while published releases remain usable.
         $selected ??= $latestRelease ?? $latestBranch;
         if ($selected === null) {
-            throw new \UnexpectedValueException(sprintf('No versions in Packagist metadata for %s.', $package->name));
+            $package->rejectionReason = 'no_versions';
+
+            return false;
         }
 
         $package->version = $selected->getVersion();
@@ -195,6 +128,8 @@ final class PackageWorkflow
         $package->downloads = $result->getDownloads()?->getTotal();
         $package->description = $selected->getDescription();
         $package->data = json_decode($this->serializer->serialize($selected, 'json'), true, flags: JSON_THROW_ON_ERROR);
+
+        return true;
     }
 
 }

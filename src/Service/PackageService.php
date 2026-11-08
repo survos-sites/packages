@@ -63,7 +63,7 @@ class PackageService
     public function populateFromComposerData(Package $package): void
     {
         // Metadata extraction must never change the workflow marking.
-        $package->requirementsFailureReason = null;
+        $package->rejectionReason = null;
         $package->phpVersionString = null;
         $package->symfonyVersionString = null;
         $package->phpUnitVersionString = null;
@@ -100,7 +100,7 @@ class PackageService
             $package->symfonyVersionString = mb_strimwidth(implode('; ', $requirements), 0, 255, '…');
         }
 
-        $package->requirementsFailureReason = match (true) {
+        $package->rejectionReason = match (true) {
             $package->phpCompatibility === 'incompatible' => 'php_incompatible',
             $package->symfonyCompatibility === 'incompatible' => 'symfony_incompatible',
             default => null,

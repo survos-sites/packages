@@ -62,7 +62,7 @@ final class PackagistChangesRefresherTest extends TestCase
         $em = $this->createStub(EntityManagerInterface::class);
         $em->method('find')->willReturn($cursor);
         $settled = new Package('acme/settled-bundle');
-        $settled->setMarking(PackagePlace::marking(PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented));
+        $settled->setMarking(PackagePlace::marking(PackagePlace::Documented));
         $busy = new Package('acme/busy-bundle');
         $busy->setMarking(PackagePlace::marking(PackagePlace::Discovered));
         $packages = $this->createStub(PackageRepository::class);
@@ -94,7 +94,7 @@ final class PackagistChangesRefresherTest extends TestCase
         self::assertSame(['acme/settled-bundle'], $changes->queued);
         self::assertSame(['acme/busy-bundle'], $changes->skipped);
         self::assertSame(['gone/bundle'], $changes->deleted);
-        self::assertSame([['acme--settled-bundle', WF::TRANSITION_RELOAD_DOCUMENTED, ['bundle.load']]], $dispatched);
+        self::assertSame([['acme--settled-bundle', WF::TRANSITION_LOAD, ['bundle.load']]], $dispatched);
         self::assertSame('200', $cursor->position);
     }
 
@@ -113,9 +113,9 @@ final class PackagistChangesRefresherTest extends TestCase
 
     private function refresher(MockHttpClient $http, EntityManagerInterface $em, PackageRepository $packages, MessageBusInterface $bus, WorkflowInterface $workflow): PackagistChangesRefresher
     {
-        $settled = [PackagePlace::MetadataLoaded->value, PackagePlace::RequirementsCompatible->value, PackagePlace::Documented->value];
-        $pending = [PackagePlace::MetadataLoaded->value, PackagePlace::RequirementsPending->value, PackagePlace::DocsPending->value];
-        $transition = new Transition(WF::TRANSITION_RELOAD_DOCUMENTED, $settled, $pending);
+        $settled = [PackagePlace::Documented->value];
+        $pending = [PackagePlace::MetadataLoaded->value];
+        $transition = new Transition(WF::TRANSITION_LOAD, $settled, $pending);
         $metadata = new \SplObjectStorage();
         $metadata[$transition] = ['async' => true, 'transport' => 'bundle.load'];
         $routingWorkflow = new Workflow(new Definition(array_unique([...$settled, ...$pending, PackagePlace::Discovered->value]), [$transition], PackagePlace::Discovered->value, new InMemoryMetadataStore([], [], $metadata)), new MethodMarkingStore(false, 'marking'), name: WF::WORKFLOW_NAME);

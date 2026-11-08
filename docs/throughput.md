@@ -132,3 +132,32 @@ Final results for all **17,428** packages:
 - 66 retained failure records document the explicit unavailable outcomes.
 
 Validation: 30 tests / 163 assertions and container lint passed. HTTP cache retained.
+
+
+## Fresh state-machine reload, 2026-11-08
+
+At the user's request, dropped and recreated the local `packages` database while
+retaining the HTTP cache, then rebuilt the Elasticsearch index. The five-state
+pipeline is now discovered → metadata_loaded → accepted/rejected, followed by
+documented for accepted Symfony bundles. Rejection details live on the entity.
+
+- Seeding: **15,014 package names in 26.80 seconds**.
+- Metadata/docs consumer: `bundle.fetch.docs bundle.load --concurrency=32`, jwage
+  PR #166, configured prefetch 1 raised to 32; separate serial Elasticsearch consumer.
+- Full processing: **188.10 seconds**, about **92 metadata records/second** averaged
+  across startup and documentation work. About **215 seconds** including seeding,
+  excluding database/index setup. These are cache-retaining, not cold-network timings.
+- Final catalogue: **17,429** packages, including discovered runtime dependencies.
+- **17,362** metadata records, **7,359** completed docs attempts, **6,123** README bodies.
+- Final states: **7,359 documented**, **2,089 accepted libraries**, **7,981 rejected**.
+- Rejection reasons: 6,335 Symfony incompatible, 1,579 PHP incompatible,
+  63 unavailable on Packagist, four with no versions.
+- Zero discovered/metadata_loaded rows, zero accepted bundles awaiting docs,
+  zero failed messages. Metadata, docs and Elasticsearch queues all have zero
+  ready and zero unacknowledged messages. No recovery pass was needed.
+
+The reset also removed the previous failure history. Newly confirmed unavailable
+outcomes are recorded directly as rejection reasons, without failure messages.
+Local measurements: `var/benchmark/state-machine-reload.json`.
+Validation: main suite 43 tests / 225 assertions; targeted workflow/migration suite
+7 tests / 59 assertions; container lint passed.

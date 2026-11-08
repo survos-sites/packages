@@ -1,7 +1,7 @@
 # Keeping packages fresh: Symfony Scheduler + `--concurrency` (Symfony 8.2)
 
 This app tracks Symfony bundles from Packagist and runs each one through a workflow
-(`load` forks into a requirements track and a documentation track, which finish independently). This page shows how it stays
+(`load` → accept/reject → documentation for accepted Symfony bundles). This page shows how it stays
 current without re-fetching everything: a **schedule** reads Packagist's change feed
 every five minutes and queues `load` only for packages that actually changed, and
 one **concurrent worker** drains the schedule and the work queues together.
@@ -44,10 +44,9 @@ $message = new TransitionMessage($package->id, Package::class, WF::TRANSITION_LO
 $this->bus->dispatch($message, $this->asyncQueueLocator->stamps($message));
 ```
 
-Packages still `discovered` (their kickoff `load` is already queued) or with a track
-pending are skipped. A settled package has one matching `reload_*` transition
-(`reload_documented`, `reload_compatible` or `reload_unsupported`). It clears the requirements and
-documentation tracks and forks again, so a refresh always re-checks requirements and re-fetches docs.
+Packages still `discovered` (their kickoff is already queued) or `metadata_loaded`
+are skipped. Settled packages use the same `load` transition to recheck criteria
+and fetch docs again for accepted bundles.
 
 Run it by hand any time:
 

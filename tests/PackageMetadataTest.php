@@ -34,13 +34,13 @@ final class PackageMetadataTest extends TestCase
         $package = new Package('acme/example');
         $package->data = ['require' => ['php' => '^5.6', 'symfony/config' => '^7.0']];
         $service->populateFromComposerData($package);
-        self::assertSame('php_incompatible', $package->requirementsFailureReason);
+        self::assertSame('php_incompatible', $package->rejectionReason);
         $package->data['require']['php'] = '^8.4';
         $service->populateFromComposerData($package);
-        self::assertSame('symfony_incompatible', $package->requirementsFailureReason);
+        self::assertSame('symfony_incompatible', $package->rejectionReason);
         $package->data['require'] = [];
         $service->populateFromComposerData($package);
-        self::assertNull($package->requirementsFailureReason);
+        self::assertNull($package->rejectionReason);
         self::assertTrue($package->requirementsCompatible);
     }
 
