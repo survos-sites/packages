@@ -50,7 +50,7 @@
         "survos/search-bundle": "^2.24",
         "survos/tabler-bundle": "^2.42.7",
         "survos/workflow-extras-bundle": "^2.42.6",
-        "survos/workflow-messenger-bundle": "^2.42.9",
+        "survos/workflow-messenger-bundle": "^2.45.32",
         "symfony/amqp-messenger": "^8.1",
         "symfony/asset": "^8.1",
         "symfony/asset-mapper": "^8.1",

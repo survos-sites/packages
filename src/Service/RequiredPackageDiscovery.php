@@ -32,7 +32,9 @@ final class RequiredPackageDiscovery implements \Symfony\Contracts\Service\Reset
         // through the owning handler's flush, not merely through the existence check.
         if ($this->discoveryLock === null) {
             $lock = $this->locks->createLock('packages:dependency-discovery', ttl: null);
-            if (!$lock->acquire()) {
+            // PostgreSQL supports blocking advisory locks. This database-only critical
+            // section is short; contention should wait, not exhaust Messenger retries.
+            if (!$lock->acquire(true)) {
                 throw new \Symfony\Component\Messenger\Exception\RecoverableMessageHandlingException(
                     'Another worker is committing discovered dependencies.', retryDelay: 100,
                 );

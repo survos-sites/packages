@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0758135b470730d0c5677807d52b675b",
+    "content-hash": "6bd2595b3e536547b32be8fe90e6d6fe",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -8127,16 +8127,16 @@
         },
         {
             "name": "survos/workflow-messenger-bundle",
-            "version": "2.43.23",
+            "version": "2.45.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/workflow-messenger-bundle.git",
-                "reference": "0ed738e8ed8d8b61e5ae36cbfda29b0a88293deb"
+                "reference": "7f95ff8c07e3dcc90a9d1a5c28e605b5c7cfade5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/workflow-messenger-bundle/zipball/0ed738e8ed8d8b61e5ae36cbfda29b0a88293deb",
-                "reference": "0ed738e8ed8d8b61e5ae36cbfda29b0a88293deb",
+                "url": "https://api.github.com/repos/survos/workflow-messenger-bundle/zipball/7f95ff8c07e3dcc90a9d1a5c28e605b5c7cfade5",
+                "reference": "7f95ff8c07e3dcc90a9d1a5c28e605b5c7cfade5",
                 "shasum": ""
             },
             "require": {
@@ -8180,7 +8180,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/workflow-messenger-bundle/issues",
-                "source": "https://github.com/survos/workflow-messenger-bundle/tree/2.43.23"
+                "source": "https://github.com/survos/workflow-messenger-bundle/tree/2.45.32"
             },
             "funding": [
                 {
@@ -8188,7 +8188,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-27T13:37:41+00:00"
+            "time": "2026-11-08T00:10:18+00:00"
         },
         {
             "name": "symfony/amqp-messenger",

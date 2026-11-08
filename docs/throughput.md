@@ -75,3 +75,34 @@ Composer data is Packagist version metadata, not a literal composer.json downloa
 Raw local logs and count snapshots: `var/benchmark/`. HTTP cache is preserved
 for a later deliberate database reset. Recheck queue/DB status before restarting
 or resetting; delayed retries can outlive a consumer.
+
+## Continuation recovery and release 2.45.32
+
+The stranded work exposed two independently reproduced defects: workflow requests
+were acknowledged as blocked after a saved transition's continuation failed, and
+Symfony 8.2 parallel children skipped service reset after a thrown handler error.
+The latter lets dirty ORM marking changes survive into later work.
+
+Mono commit `0af642884` (released as **2.45.32**) resumes automatic next work from
+current durable places on marking-blocked retries, without replaying the saved
+transition. Guard-blocked requests remain blocked. Both single and batched failures
+discard unsaved changes through the store. Six new regression cases cover retry,
+cleanup and guard behavior; the bundle suite passes 48 tests / 199 assertions
+(with one pre-existing PHPUnit mock notice). This protects the workflow store;
+the separate upstream Symfony service-reset defect is not patched in vendor.
+
+Recovery preserved the original markings in a local JSON snapshot, restored the
+requirements step for affected compatible rows, and queued 3,694 continuations,
+excluding the three already failed documents. This also resumed dependency discovery.
+The first recovery exposed 1,082 exhausted lock-contention retries. Packages now
+waits on the short PostgreSQL advisory-lock critical section, and those exact
+failure IDs were retried. An orderly consumer restart drained one remaining
+unacknowledged delivery; the final requirements steps were completed without
+re-fetching the known invalid documents.
+
+Final audit: **zero unaccounted pending subjects**, zero requirements-pending rows,
+and both package queues plus Elasticsearch empty. The remaining 72 pending subjects
+match 72 failure records: six malformed documents, four packages with no versions,
+and 62 packages not found on Packagist. There are 17,428 catalogue rows, 17,362 with
+metadata, 7,352 completed documentation attempts and 6,116 README bodies.
+HTTP cache was retained. Local audit: `var/benchmark/recovery-audit.json`.

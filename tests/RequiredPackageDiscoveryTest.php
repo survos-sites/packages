@@ -37,6 +37,22 @@ final class RequiredPackageDiscoveryTest extends TestCase
         $discovery->discover($bundle);
     }
 
+    public function testDiscoveryWaitsForTheShortDatabaseLock(): void
+    {
+        $lock = $this->createMock(\Symfony\Component\Lock\SharedLockInterface::class);
+        $lock->expects(self::once())->method('acquire')->with(true)->willReturn(true);
+        $lock->expects(self::once())->method('release');
+        $locks = $this->createStub(\Symfony\Component\Lock\LockFactory::class);
+        $locks->method('createLock')->willReturn($lock);
+        $em = $this->createStub(EntityManagerInterface::class);
+        $em->method('getUnitOfWork')->willReturn($this->createStub(UnitOfWork::class));
+        $discovery = new RequiredPackageDiscovery($this->createStub(PackageRepository::class), $em, $locks);
+        $bundle = new Package('acme/bundle');
+        $bundle->data = ['type' => 'symfony-bundle', 'require' => []];
+        $discovery->discover($bundle);
+        $discovery->postFlush();
+    }
+
     public function testDiscoveryLockIsHeldUntilFlushAndReleasedOnReset(): void
     {
         $locks = new \Symfony\Component\Lock\LockFactory(new \Symfony\Component\Lock\Store\InMemoryStore());
