@@ -50,7 +50,7 @@ final class PackageKickoffTest extends KernelTestCase
             self::assertSame([], $loads);
             self::assertTrue($package->isIn(PackagePlace::Documented));
             // Dependencies persisted inside the sync chain were started and finished too.
-            self::assertGreaterThan(1, (int) $em->getConnection()->fetchOne('SELECT count(*) FROM package WHERE state = :state', ['state' => PackagePlace::Accepted->value]));
+            self::assertGreaterThan(1, (int) $em->getConnection()->fetchOne('SELECT count(*) FROM package WHERE state = :state', ['state' => PackagePlace::Documented->value]));
         } else {
             self::assertSame([$package->id], array_values($loads));
             self::assertEquals(PackagePlace::marking(PackagePlace::Discovered), $package->getMarking());

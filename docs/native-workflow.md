@@ -16,8 +16,8 @@ discovered --load--> metadata_loaded --accept--> accepted --fetch_docs--> docume
 The acceptance handler probes the canonical repository as its final step and
 records the evidence before any next guard runs. `accepted` has ordered
 `next: [canonical_failed, fetch_docs]`: a confirmed unavailable repository takes
-`canonical_failed` to the existing `rejected` place; an available Symfony bundle
-can fetch docs. Available libraries finish at `accepted`. The probe never applies
+`canonical_failed` to the existing `rejected` place; an available package
+can fetch docs, including dependency libraries. The probe never applies
 a transition itself, and guards never make HTTP requests. Dependency discovery
 also requires an available repository.
 
@@ -50,10 +50,12 @@ retains metadata, documents and rejection reasons without fetching anything.
 2. `load` runs on `bundle.load`, reloads the entity under the package lock, and
    invokes the existing native `AsTransitionListener` to fetch Packagist data.
 3. In the worker, the ordered `next` candidates of each current place are tried:
-   `accept` or `reject` is applied synchronously. Accepted bundles queue
-   `fetch_docs` on `bundle.fetch.docs`; accepted libraries and rejected packages stop.
+   `accept` or `reject` is applied synchronously. Accepted packages queue
+   `fetch_docs` on `bundle.fetch.docs`; rejected packages stop.
 4. The documentation worker fetches README/AGENTS.md and persists `documented`.
-   Missing documents are valid results; other HTTP failures use Messenger retries.
+   Missing README takes `readme_missing` to `rejected`; missing AGENTS is allowed.
+   Other HTTP failures use Messenger retries. `embed_readme` then persists the vector
+   through `bundle.embed`, without adding a place.
 
 The subject store receives the original transition context, including
 `cascade: none`. `app:load-data --sync` executes the whole pipeline synchronously.
@@ -155,8 +157,8 @@ independently versioned Symfony packages are not Symfony core version constraint
 The package exposes `phpCompatibility` and `symfonyCompatibility` as `unknown`,
 `not_applicable`, `compatible` or `incompatible`. Any incompatible result rejects
 the requirements. These are metadata results, not separate workflow places.
-Compatible libraries finish at `accepted`; compatible Symfony bundles additionally
-fetch documentation and finish at `documented`. Abandonment is a property and does not prevent processing.
+Compatible bundles and libraries fetch documentation. A confirmed missing README
+reaches `rejected`; readable documents continue to embedding while staying `documented`. Abandonment is a property and does not prevent processing.
 
 
 ## Follow-up: configurable criteria

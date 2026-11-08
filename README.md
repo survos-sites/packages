@@ -37,7 +37,7 @@ cache, but label these timings as cache-retaining runs, not cold downloads.
 `--stop-when-empty` is useful for draining, but delayed retries can remain.
 Composer data comes from Packagist's version metadata, not a separate download
 of the repository's literal `composer.json`. README and AGENTS.md are fetched
-only for compatible Symfony bundles; a completed docs attempt can find no file.
+for accepted bundles and dependency libraries. A confirmed missing README rejects the package.
 
 Unavailable metadata ends in `rejected`, with `rejectionReason` set to
 `package_not_found` (Packagist 404) or `no_versions` (empty version list).
@@ -87,15 +87,19 @@ before insertion so it also controls the automatic kickoff.
 The state machine has five places:
 
 ```text
-discovered → metadata_loaded → accepted → documented (Symfony bundles)
-                             ↘ rejected
+discovered --load--> metadata_loaded --accept--> accepted --fetch_docs--> documented
+                                    --reject--> rejected
+accepted   --canonical_failed--> rejected
+documented --readme_missing----> rejected
+documented --embed_readme------> documented (stores the vector; no new place)
 ```
 
-Accepted libraries finish at `accepted`. Rejected packages stop before docs or
-dependency discovery; the reason lives on the entity. Accepted Symfony bundles
-discover missing runtime `require` packages and fetch README/AGENTS.md. Platform
+Accepted packages fetch README/AGENTS.md, including libraries. Accepted Symfony
+bundles also discover missing runtime `require` packages. Rejection reasons live
+on the entity. Platform
 requirements and `require-dev` are excluded; libraries do not recursively discover
-dependencies. Missing documents are valid completed attempts.
+dependencies. Missing AGENTS.md is allowed; a confirmed missing or blank README is rejected.
+Unsupported sources and provider failures are not treated as missing files.
 
 Each package has one persisted `state`; the search `places` facet is derived from it.
 See [docs/native-workflow.md](docs/native-workflow.md).
@@ -252,3 +256,40 @@ the file too; production builds with debug disabled do not. Do not set
 `APP_DEBUG=0` when running this development setup command.
 
 Local throughput measurements from November 7 are recorded in [docs/throughput.md](docs/throughput.md).
+
+
+## README policy and semantic search
+
+No additional workflow places are needed. `documented` has ordered
+`next: [readme_missing, embed_readme]`: the first rejects a confirmed missing README;
+the second queues `bundle.embed` and persists a vector while retaining `documented`.
+The guarded embedding self-transition stops once a vector is present. Libraries now
+follow the same docs policy as bundles. GitHub, Bitbucket and GitLab sources support
+common README filenames; absent files, unsupported sources and HTTP failures are distinct.
+
+```bash
+# Review stored packages without reloading Packagist metadata.
+php bin/console app:packages:review-readmes --no-debug
+# Optional disjoint parallel partitions: --shards=4 --shard=0 (then 1, 2, 3).
+php bin/console app:packages:embed --no-debug
+php bin/console elastic:index:rebuild package_semantic --no-debug
+# Keep normal incremental embedding and search indexing workers running.
+php bin/console messenger:consume bundle.embed --no-debug
+php bin/console messenger:consume elastic --no-debug
+```
+
+`/semantic-search` uses SearchBundle's LiveComponent Lexical/Semantic/Hybrid tabs.
+The original InstantSearch browser remains at `/`. Semantic search uses persisted
+768-dimensional Nomic vectors, stored in PostgreSQL JSONB and projected into an ES
+`dense_vector`; there is no native pgvector column or SQL vector index. Rebuilding
+Elasticsearch never calls the model. Model digest, text version and full source text
+are fingerprinted; stale/rejected vectors map to null, and vectors/provenance are
+excluded from public hit fields. Provenance uses an opaque JSON scalar so automatic
+scalar field inference does not expose it through the original browser either.
+
+Set `PACKAGE_OLLAMA_URL`, `PACKAGE_EMBED_MODEL` and `PACKAGE_EMBED_REVISION` for the
+local embedding service. The model digest is verified. Full normalized READMEs are
+split into 1,500-character chunks, embedded with the Nomic document prefix, combined
+with character-weighted mean pooling and normalized. Query text uses the query prefix.
+No input is silently truncated. A profile change requires regeneration and reindexing.
+`app:packages:embed` is resumable and skips valid cached vectors.

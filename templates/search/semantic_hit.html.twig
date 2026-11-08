@@ -1,0 +1,7 @@
+<article class="card mb-3"><div class="card-body">
+<h3><a href="https://packagist.org/packages/{{ hit.name }}">{{ hit.name }}</a></h3>
+<p>{{ hit.description }}</p>
+{% if hitMetadata.mode|default('') == 'semantic' %}
+<small>Cosine similarity: {{ (score - 1)|number_format(3) }}</small>
+{% else %}<small>Score: {{ score|number_format(3) }}</small>{% endif %}
+</div></article>

@@ -43,6 +43,12 @@ final class SearchController extends AbstractController
         ]);
     }
 
+    #[Route('/semantic-search', name: 'app_semantic_search', methods: ['GET'])]
+    public function semantic(): Response
+    {
+        return $this->render('search/semantic.html.twig');
+    }
+
     #[Route('/search-template/package', name: 'app_search_template', methods: ['GET'])]
     public function template(): Response
     {

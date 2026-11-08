@@ -158,7 +158,7 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         $stats = new CommandTester((new Application(self::$kernel))->find('state:stats'));
         $stats->execute(['class-name' => 'Package']);
         $stats->assertCommandIsSuccessful();
-        self::assertMatchesRegularExpression('/documented\s+1\s/', $stats->getDisplay());
+        self::assertMatchesRegularExpression('/documented\s+[1-9][0-9]*\s/', $stats->getDisplay());
     }
 
     /** A package already in the database at `discovered`, as after an import. */

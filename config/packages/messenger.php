@@ -30,6 +30,16 @@ return App::config([
                     ],
                     'retry_strategy' => ['max_retries' => 3, 'multiplier' => 2],
                 ],
+                'bundle.embed' => [
+                    'dsn' => '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%',
+                    'options' => [
+                        'prefetch_count' => 1,
+                        'exchange' => ['name' => 'bundle.embed'],
+                        'queues' => ['bundle.embed' => null],
+                        'delay' => ['durable' => true],
+                    ],
+                    'retry_strategy' => ['max_retries' => 3, 'multiplier' => 2],
+                ],
                 'elastic' => [
                     'dsn' => '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%',
                     'options' => [

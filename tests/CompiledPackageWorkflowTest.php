@@ -12,6 +12,20 @@ use Symfony\Component\Workflow\StateMachine;
 
 final class CompiledPackageWorkflowTest extends KernelTestCase
 {
+    public function testMissingReadmeRejectsButUnsupportedFetchDoesNot(): void
+    {
+        self::bootKernel();
+        $p = new Package('example/library'); $p->state = 'documented';
+        $p->readme = "  "; $p->readmeStatus = 'missing';
+        $workflow = self::getContainer()->get('workflow.registry')->get($p, WF::WORKFLOW_NAME);
+        self::assertSame(['readme_missing', 'embed_readme'], $workflow->getMetadataStore()->getPlaceMetadata('documented')['next']);
+        self::assertTrue($workflow->can($p, 'readme_missing'));
+        self::assertFalse($workflow->can($p, 'embed_readme'));
+        $p->readmeStatus = 'unsupported'; self::assertFalse($workflow->can($p, 'readme_missing'));
+        $p->readmeStatus = 'missing'; $workflow->apply($p, 'readme_missing', ['cascade' => 'none']);
+        self::assertSame('rejected', $p->state); self::assertSame('readme_missing', $p->rejectionReason);
+    }
+
     public function testAcceptProbesBeforeNextGuardWithoutApplyingRejectionItself(): void
     {
         self::bootKernel();
@@ -64,7 +78,7 @@ final class CompiledPackageWorkflowTest extends KernelTestCase
         self::assertFalse($workflow->can($package, 'reject'));
         $workflow->apply($package, 'accept', ['cascade' => 'none']);
         self::assertSame(['accepted'], $package->places);
-        self::assertFalse($workflow->can($package, 'fetch_docs'), 'Libraries finish at accepted.');
+        self::assertTrue($workflow->can($package, 'fetch_docs'), 'Libraries also require a README.');
         $package->data['type'] = 'symfony-bundle';
         self::assertTrue($workflow->can($package, 'fetch_docs'));
         $package->setState('metadata_loaded');

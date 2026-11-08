@@ -48,10 +48,10 @@ final class PackageDocsFetcherTest extends TestCase
         self::assertNotNull($package->docsFetchedAt);
     }
 
-    public function testNonGithubSourceMakesNoRequests(): void
+    public function testUnsupportedSourceMakesNoRequests(): void
     {
         $client = new MockHttpClient(static fn () => self::fail('No request expected'));
-        $package = $this->package('https://gitlab.com/acme/demo.git', 'abc123');
+        $package = $this->package('https://unknown.example/acme/demo.git', 'abc123');
         (new PackageDocsFetcher($client))->fetch($package);
 
         self::assertNull($package->readme);

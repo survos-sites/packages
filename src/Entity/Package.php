@@ -211,8 +211,24 @@ class Package implements RouteParametersInterface, \Stringable
     }
 
 
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
+    #[\Survos\FieldBundle\Attribute\Field(visible: false)]
+    public ?array $embedding = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
+    #[\Survos\FieldBundle\Attribute\Field(visible: false)]
+    public ?string $embeddingFingerprint = null;
+
+    #[ORM\Column(length: 16, nullable: true)]
+    public ?string $readmeStatus = null;
+
+    public bool $hasReadme {
+        get => trim($this->readme ?? '') !== '';
+    }
+
     public ?string $rejectionLabel {
         get => match ($this->rejectionReason) {
+            'readme_missing' => 'No README found',
             'canonical_unavailable' => 'Canonical repository is unavailable',
             'package_not_found' => 'Package not available on Packagist',
             'no_versions' => 'Packagist exposes no versions',

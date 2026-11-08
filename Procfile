@@ -32,3 +32,5 @@ elastic: php -d memory_limit=512M bin/console messenger:consume elastic --time-l
 # parallel (Symfony 8.2, needs amphp/parallel). The process type keeps its old name
 # so existing `ps:scale bundle-load=1` settings still apply.
 bundle-load: php -d memory_limit=512M bin/console messenger:consume scheduler_packagist bundle.fetch.docs bundle.load --concurrency=32 --time-limit=3600 --memory-limit=256M
+# Embeddings use the configured local Ollama endpoint; keep this worker serial.
+bundle-embed: php -d memory_limit=512M bin/console messenger:consume bundle.embed --time-limit=3600 --memory-limit=256M

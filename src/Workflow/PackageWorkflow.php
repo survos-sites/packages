@@ -7,6 +7,7 @@ namespace App\Workflow;
 use App\Entity\Package;
 use App\Service\PackageDocsFetcher;
 use App\Service\CanonicalProbe;
+use App\Service\PackageEmbeddingService;
 use App\Service\PackageService;
 use App\Service\RequiredPackageDiscovery;
 use Packagist\Api\Client;
@@ -51,9 +52,19 @@ final class PackageWorkflow
     public const TRANSITION_CANONICAL_FAILED = 'canonical_failed';
 
     #[AsyncTransition(PackagePlace::Accepted, PackagePlace::Documented,
-        'Fetch README and AGENTS for an accepted Symfony bundle',
-        guard: "subject.type == 'symfony-bundle' && subject.canonicalAvailable", async: true, transport: 'bundle.fetch.docs')]
+        'Fetch README and AGENTS for an accepted package',
+        guard: "subject.canonicalAvailable", async: true, transport: 'bundle.fetch.docs')]
     public const TRANSITION_FETCH_DOCS = 'fetch_docs';
+
+    #[Transition(PackagePlace::Documented, PackagePlace::Rejected,
+        'Reject a completed documentation check with no README',
+        guard: "subject.readmeStatus == 'missing' && !subject.hasReadme")]
+    public const TRANSITION_README_MISSING = 'readme_missing';
+
+    #[AsyncTransition(PackagePlace::Documented, PackagePlace::Documented,
+        'Persist an embedding of the README', guard: 'subject.hasReadme && subject.embedding === null',
+        async: true, transport: 'bundle.embed')]
+    public const TRANSITION_EMBED_README = 'embed_readme';
 
     public function __construct(
         private readonly SerializerInterface $serializer,
@@ -62,6 +73,7 @@ final class PackageWorkflow
         private readonly Client $packagistClient,
         private readonly PackageDocsFetcher $docsFetcher,
         private readonly CanonicalProbe $canonicalProbe,
+        private readonly PackageEmbeddingService $embeddings,
     ) {}
 
     #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_ACCEPT)]
@@ -93,7 +105,31 @@ final class PackageWorkflow
     #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_FETCH_DOCS)]
     public function onFetchDocs(TransitionEvent $event): void
     {
-        $this->docsFetcher->fetch($event->getSubject());
+        $package = $event->getSubject();
+        $this->docsFetcher->fetch($package);
+        if (!$this->embeddings->isCurrent($package)) {
+            $package->embedding = null;
+            $package->embeddingFingerprint = null;
+        }
+    }
+
+    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_README_MISSING)]
+    public function onReadmeMissing(TransitionEvent $event): void
+    {
+        $package = $event->getSubject();
+        $package->rejectionReason = 'readme_missing';
+        $package->embedding = null;
+        $package->embeddingFingerprint = null;
+    }
+
+    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_EMBED_README)]
+    public function onEmbedReadme(TransitionEvent $event): void
+    {
+        try {
+            $this->embeddings->vectorize($event->getSubject());
+        } catch (\Symfony\Contracts\HttpClient\Exception\ExceptionInterface $error) {
+            throw new \RuntimeException($error->getMessage(), (int) $error->getCode());
+        }
     }
 
     #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_LOAD)]

@@ -16,13 +16,13 @@ enum PackagePlace: string
         next: [PackageWorkflow::TRANSITION_ACCEPT, PackageWorkflow::TRANSITION_REJECT])]
     case MetadataLoaded = 'metadata_loaded';
 
-    #[Place('Accepted package; libraries finish here and Symfony bundles fetch docs', next: [PackageWorkflow::TRANSITION_CANONICAL_FAILED, PackageWorkflow::TRANSITION_FETCH_DOCS])]
+    #[Place('Accepted package; reject unavailable repositories or fetch docs', next: [PackageWorkflow::TRANSITION_CANONICAL_FAILED, PackageWorkflow::TRANSITION_FETCH_DOCS])]
     case Accepted = 'accepted';
 
     #[Place('Rejected package; processing stops until an explicit metadata refresh')]
     case Rejected = 'rejected';
 
-    #[Place('Accepted bundle whose README/AGENTS fetch was attempted; files may be absent', label: 'Docs fetched')]
+    #[Place('Accepted bundle whose README/AGENTS fetch was attempted; files may be absent', label: 'Docs fetched', next: [PackageWorkflow::TRANSITION_README_MISSING, PackageWorkflow::TRANSITION_EMBED_README])]
     case Documented = 'documented';
 
     /** @return array<string, int> */

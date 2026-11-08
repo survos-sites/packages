@@ -192,3 +192,35 @@ files and 7,359 documentation attempts. Elasticsearch was rebuilt from the local
 rows for the additional entity fields; mapping-failure messages were retried.
 Final package/search queues and failure transport are empty.
 Validation: 57 tests / 300 assertions, targeted workflow tests 5 / 17, container lint.
+
+
+## README requirement and semantic search, 2026-11-08
+
+The README requirement now applies to accepted bundles and dependency libraries.
+Five places remain; `documented` tries `readme_missing` then `embed_readme`. Confirmed
+missing/blank READMEs reject; provider errors and unsupported sources do not.
+Existing metadata was retained. Missing documents were rechecked against common
+filenames using GitHub, Bitbucket and GitLab endpoints; already stored READMEs were
+reused. The review resulted in 654 `readme_missing` rejections.
+
+Final audit: 8,145 nonblank READMEs in documented packages have valid 768-dimensional
+vectors with current content/model fingerprints. Elasticsearch contains the same
+8,145 vectors. Repeating generation produced **zero new vectors and reused 8,145**.
+The 335 documented rows without a readable README still need a successful fetch
+or provider support; 25 accepted rows remain blocked on canonical/docs checks.
+They are not mislabeled as confirmed missing READMEs.
+
+Vectors and opaque provenance are stored in PostgreSQL JSONB, not native pgvector.
+The locally installed Nomic model digest is pinned. Full README text is chunked,
+embedded, weighted/pooled and normalized; reindexing only reads the persisted cache.
+The semantic index scopes all modes to documented packages with valid vectors.
+
+Browser verification at `/semantic-search`: a file-upload/Doctrine description
+returned attachment and uploader libraries. On the intermediate index, raising the
+cutoff from 0.35 to 0.7 reduced results from 4,448 to 30; adding Symfony 8.2 reduced
+that to 13. Hybrid submission also returned results and retained the facet.
+Final coverage was rebuilt after generation completed.
+
+Validation: 60 tests / 326 assertions, targeted workflow tests 5 / 17, container/Twig
+lint and Doctrine schema validation passed. Package, embedding and Elasticsearch
+queues drained; no failed messages remain.

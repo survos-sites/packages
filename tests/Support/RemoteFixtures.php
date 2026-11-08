@@ -12,8 +12,17 @@ final class RemoteFixtures
     public const PACKAGE = 'symfony/monolog-bundle';
     public const README = "# MonologBundle\n";
 
-    public function __invoke(string $method, string $url): MockResponse
+    public function __invoke(string $method, string $url, array $options = []): MockResponse
     {
+        if (str_ends_with($url, '/api/tags')) {
+            return new MockResponse(json_encode(['models' => [['name' => 'nomic-embed-text:latest', 'digest' => '0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f']]]));
+        }
+        if (str_ends_with($url, '/api/embed')) {
+            $inputs = json_decode($options['body'], true)['input'];
+            $vector = array_fill(0, 768, 0.0);
+            $vector[0] = 1.0;
+            return new MockResponse(json_encode(['embeddings' => array_fill(0, count($inputs), $vector)]));
+        }
         if ($url === 'https://api.bitbucket.org/2.0/repositories/yaboroda/ybsy-file-bundle') {
             return new MockResponse('', ['http_code' => 404]);
         }
@@ -30,7 +39,7 @@ final class RemoteFixtures
                 'time' => '2026-01-01T00:00:00+00:00', 'source' => ['url' => 'https://github.com/'.$m[1].'.git'], 'require' => [],
             ]]]], JSON_THROW_ON_ERROR), ['response_headers' => ['content-type' => 'application/json']]);
         }
-        if (str_starts_with($url, 'https://raw.githubusercontent.com/symfony/monolog-bundle/')) {
+        if (str_starts_with($url, 'https://raw.githubusercontent.com/')) {
             return str_ends_with($url, '/README.md') ? new MockResponse(self::README) : new MockResponse('', ['http_code' => 404]);
         }
 
