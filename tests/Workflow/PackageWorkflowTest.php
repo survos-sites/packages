@@ -100,6 +100,7 @@ final class PackageWorkflowTest extends TestCase
             $this->createStub(PackageService::class),
             new \App\Service\RequiredPackageDiscovery($this->createStub(PackageRepository::class), $this->createStub(EntityManagerInterface::class), new \Symfony\Component\Lock\LockFactory(new \Symfony\Component\Lock\Store\InMemoryStore())),
             $client,
-            new \App\Service\PackageDocsFetcher(new \Symfony\Component\HttpClient\MockHttpClient()));
+            new \App\Service\PackageDocsFetcher(new \Symfony\Component\HttpClient\MockHttpClient()),
+            new \App\Service\CanonicalProbe(new \Symfony\Component\HttpClient\MockHttpClient()));
     }
 }

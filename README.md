@@ -44,6 +44,30 @@ Unavailable metadata ends in `rejected`, with `rejectionReason` set to
 PHP/Symfony incompatibility uses the same terminal state with its own reason.
 Transient failures still use Messenger retries. An explicit `load` can recheck a rejection.
 
+Canonical repositories are probed at the end of `accept`, before its ordered
+`next: [canonical_failed, fetch_docs]` guards run. Confirmed unavailable repositories
+finish in the existing `rejected` state with `canonical_unavailable`; successful
+probes allow docs and dependency discovery. Access errors, rate limits and network
+failures are inconclusive and retry, not permanent rejections. Probe evidence is
+stored on the entity and definitive results are reused for 24 hours.
+
+After migrating an existing installation, rebuild the search mapping from local
+rows with `php bin/console elastic:index:rebuild app_package --no-debug`.
+Recheck existing accepted/documented packages without reloading metadata or docs:
+
+```bash
+# GITHUB_TOKEN enables batched GitHub GraphQL repository checks.
+# For a local authenticated gh session (the token is not printed):
+GITHUB_TOKEN=$(gh auth token) php bin/console app:canonical:recheck --no-debug
+# Optional: --name=vendor/package, --force to bypass the probe cache.
+php bin/console messenger:consume elastic --no-debug
+```
+
+The recheck retains inconclusive outcomes for another pass and skips a rate-limited provider for the rest of the pass.
+Packages already rejected by PHP/Symfony criteria are not probed. A normal `load`
+refresh re-evaluates previously rejected packages. Existing rows use their stored
+source URL; new loads also retain Packagist's canonical repository URL.
+
 Documentation is stored as UTF-8. Valid UTF-8 is preserved; UTF-16 with a BOM,
 ASCII UTF-16LE runs appended by mixed editors, and legacy Windows-1252 text are
 normalized before persistence. Binary control bytes still fail explicitly.

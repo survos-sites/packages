@@ -35,6 +35,32 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         $this->em->createQuery('DELETE FROM '.Package::class.' p')->execute();
     }
 
+    public function testCanonicalRecheckPreservesMetadataAndDocuments(): void
+    {
+        $package = new Package('yaboroda/ybsy-file-bundle');
+        $package->state = 'documented';
+        $package->data = ['type' => 'symfony-bundle', 'source' => ['url' => 'https://bitbucket.org/yaboroda/ybsy-file-bundle.git']];
+        $package->readme = 'Preserved README';
+        $package->agentsMd = 'Preserved instructions';
+        $package->docsFetchedAt = new \DateTimeImmutable('2026-10-01');
+        $data = $package->data;
+        $this->em->persist($package);
+        $this->em->flush();
+        $application = new Application(self::$kernel);
+        $tester = new CommandTester($application->find('app:canonical:recheck'));
+        self::assertSame(0, $tester->execute(['--name' => $package->name]));
+        $this->em->clear();
+        $package = $this->em->getRepository(Package::class)->findOneBy(['name' => 'yaboroda/ybsy-file-bundle']);
+        self::assertSame('rejected', $package->state);
+        self::assertSame('canonical_unavailable', $package->rejectionReason);
+        self::assertSame($data, $package->data);
+        self::assertSame('Preserved README', $package->readme);
+        self::assertSame('Preserved instructions', $package->agentsMd);
+        self::assertSame('2026-10-01', $package->docsFetchedAt->format('Y-m-d'));
+        self::assertCount(0, $this->sent('bundle.load'));
+        self::assertCount(0, $this->sent('bundle.fetch.docs'));
+    }
+
     public function testPersistedPackageIsKickedOffAndWorkersFinishIt(): void
     {
         $this->em->persist(new Package(RemoteFixtures::PACKAGE));

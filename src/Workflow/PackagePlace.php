@@ -16,7 +16,7 @@ enum PackagePlace: string
         next: [PackageWorkflow::TRANSITION_ACCEPT, PackageWorkflow::TRANSITION_REJECT])]
     case MetadataLoaded = 'metadata_loaded';
 
-    #[Place('Accepted package; libraries finish here and Symfony bundles fetch docs', next: PackageWorkflow::TRANSITION_FETCH_DOCS)]
+    #[Place('Accepted package; libraries finish here and Symfony bundles fetch docs', next: [PackageWorkflow::TRANSITION_CANONICAL_FAILED, PackageWorkflow::TRANSITION_FETCH_DOCS])]
     case Accepted = 'accepted';
 
     #[Place('Rejected package; processing stops until an explicit metadata refresh')]

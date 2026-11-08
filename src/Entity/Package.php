@@ -195,8 +195,25 @@ class Package implements RouteParametersInterface, \Stringable
     #[Groups(['package.read'])]
     public ?string $rejectionReason = null;
 
+    #[ORM\Column(nullable: true)]
+    public ?string $canonicalUrl = null;
+
+    /** Last repository probe; no workflow state is inferred during HTTP I/O. */
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
+    public ?array $canonicalProbe = null;
+
+    public bool $canonicalUnavailable {
+        get => ($this->canonicalProbe['outcome'] ?? null) === 'unavailable';
+    }
+
+    public bool $canonicalAvailable {
+        get => ($this->canonicalProbe['outcome'] ?? null) === 'available';
+    }
+
+
     public ?string $rejectionLabel {
         get => match ($this->rejectionReason) {
+            'canonical_unavailable' => 'Canonical repository is unavailable',
             'package_not_found' => 'Package not available on Packagist',
             'no_versions' => 'Packagist exposes no versions',
             'php_incompatible' => 'PHP constraint excludes supported versions',

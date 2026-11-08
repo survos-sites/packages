@@ -161,3 +161,34 @@ outcomes are recorded directly as rejection reasons, without failure messages.
 Local measurements: `var/benchmark/state-machine-reload.json`.
 Validation: main suite 43 tests / 225 assertions; targeted workflow/migration suite
 7 tests / 59 assertions; container lint passed.
+
+
+## Canonical repository recheck, 2026-11-08
+
+Added repository probing at the end of `accept`, with ordered
+`next: [canonical_failed, fetch_docs]`. The probe records evidence; the guards
+perform no I/O. `canonical_failed` uses the existing rejected place and records
+`canonical_unavailable`. It is also available from documented for rechecking old
+rows without downloading metadata or docs again.
+
+Recheck results for the 9,448 previously accepted/documented packages:
+
+- 8,955 repositories available.
+- 289 confirmed unavailable, now rejected; includes `yaboroda/ybsy-file-bundle`,
+  confirmed HTTP 404 by Bitbucket's repository API.
+- 204 inconclusive, retained without rejection: 195 rate-limited, four access/login
+  responses, five missing URLs or network/TLS failures. These need a later pass.
+- The other 7,981 packages were already rejected by metadata/compatibility rules
+  and were not probed.
+
+GitHub page requests encountered rate limits; authenticated batched GraphQL
+checks completed the GitHub portion. Bitbucket throttling remained inconclusive;
+once a provider returns 429, the rest of that provider's checks are deferred for
+that pass. Set GITHUB_TOKEN for authenticated batching. Definitive results have a
+24-hour entity cache; inconclusive results are retried on the next command run.
+
+Stored content remains at 17,362 metadata records, 6,123 README bodies, 119 AGENTS
+files and 7,359 documentation attempts. Elasticsearch was rebuilt from the local
+rows for the additional entity fields; mapping-failure messages were retried.
+Final package/search queues and failure transport are empty.
+Validation: 57 tests / 300 assertions, targeted workflow tests 5 / 17, container lint.

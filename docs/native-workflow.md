@@ -13,9 +13,19 @@ discovered --load--> metadata_loaded --accept--> accepted --fetch_docs--> docume
                                      --reject--> rejected
 ```
 
-Accepted libraries finish at `accepted`; only accepted Symfony bundles fetch docs.
+The acceptance handler probes the canonical repository as its final step and
+records the evidence before any next guard runs. `accepted` has ordered
+`next: [canonical_failed, fetch_docs]`: a confirmed unavailable repository takes
+`canonical_failed` to the existing `rejected` place; an available Symfony bundle
+can fetch docs. Available libraries finish at `accepted`. The probe never applies
+a transition itself, and guards never make HTTP requests. Dependency discovery
+also requires an available repository.
+
+`canonical_failed` is additionally available from `documented` for the explicit
+repository-only recheck command. That command probes first, then applies the
+same guarded transition; it never reloads metadata or fetches documents.
 `rejected` stops processing, with `rejectionReason` on the entity describing PHP or
-Symfony incompatibility, `package_not_found`, or `no_versions`. Transient HTTP
+Symfony incompatibility, `package_not_found`, `no_versions`, or `canonical_unavailable`. Transient HTTP
 failures still throw and retry rather than becoming permanent rejections.
 `metadata_loaded` means the metadata request completed, including an explicit
 unavailable outcome; unavailable packages do not get invented metadata.

@@ -6,6 +6,7 @@ namespace App\Workflow;
 
 use App\Entity\Package;
 use App\Service\PackageDocsFetcher;
+use App\Service\CanonicalProbe;
 use App\Service\PackageService;
 use App\Service\RequiredPackageDiscovery;
 use Packagist\Api\Client;
@@ -43,9 +44,15 @@ final class PackageWorkflow
         guard: 'subject.rejectionReason !== null || subject.requirementsCompatible === false')]
     public const TRANSITION_REJECT = 'reject';
 
+    #[Transition(PackagePlace::Accepted, PackagePlace::Rejected,
+        'Reject a confirmed unavailable canonical repository', guard: 'subject.canonicalUnavailable')]
+    #[Transition(PackagePlace::Documented, PackagePlace::Rejected,
+        'Reject a previously documented repository confirmed unavailable on recheck', guard: 'subject.canonicalUnavailable')]
+    public const TRANSITION_CANONICAL_FAILED = 'canonical_failed';
+
     #[AsyncTransition(PackagePlace::Accepted, PackagePlace::Documented,
         'Fetch README and AGENTS for an accepted Symfony bundle',
-        guard: "subject.type == 'symfony-bundle'", async: true, transport: 'bundle.fetch.docs')]
+        guard: "subject.type == 'symfony-bundle' && subject.canonicalAvailable", async: true, transport: 'bundle.fetch.docs')]
     public const TRANSITION_FETCH_DOCS = 'fetch_docs';
 
     public function __construct(
@@ -54,12 +61,33 @@ final class PackageWorkflow
         private readonly RequiredPackageDiscovery $requiredPackageDiscovery,
         private readonly Client $packagistClient,
         private readonly PackageDocsFetcher $docsFetcher,
+        private readonly CanonicalProbe $canonicalProbe,
     ) {}
 
     #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_ACCEPT)]
     public function onAcceptedCompleted(CompletedEvent $event): void
     {
-        $this->requiredPackageDiscovery->discover($event->getSubject());
+        if ($event->getSubject()->canonicalAvailable) {
+            $this->requiredPackageDiscovery->discover($event->getSubject());
+        }
+    }
+
+    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_ACCEPT)]
+    public function onAccept(TransitionEvent $event): void
+    {
+        // The probe is the last acceptance step. Ordered next guards use its result.
+        $package = $event->getSubject();
+        $this->canonicalProbe->probe($package);
+        if (($package->canonicalProbe['outcome'] ?? null) === 'inconclusive') {
+            // Keep live HTTP responses out of parallel Messenger exception payloads.
+            throw new \RuntimeException(sprintf('Canonical probe inconclusive for %s (HTTP %s)', $package->name, $package->canonicalProbe['status'] ?? 'unknown'));
+        }
+    }
+
+    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_CANONICAL_FAILED)]
+    public function onCanonicalFailed(TransitionEvent $event): void
+    {
+        $event->getSubject()->rejectionReason = 'canonical_unavailable';
     }
 
     #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_FETCH_DOCS)]
@@ -95,6 +123,7 @@ final class PackageWorkflow
             // Do not send a live HTTP response through the parallel worker channel.
             throw new \RuntimeException($error->getMessage(), (int) $error->getCode());
         }
+        $package->canonicalUrl = $result->getRepository() ?: null;
         $package->abandoned = (bool) $result->isAbandoned();
         $package->replacement = $result->getReplacementPackage();
         $selected = null;

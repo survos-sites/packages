@@ -12,7 +12,7 @@ use Survos\WorkflowExtrasBundle\Attribute\Transition;
 
 final class PackageWorkflowDefinitionTest extends TestCase
 {
-    public function testFivePlacesAndFourTransitionNames(): void
+    public function testFivePlacesAndFiveTransitionNames(): void
     {
         self::assertSame(['discovered', 'metadata_loaded', 'accepted', 'rejected', 'documented'], array_column(PackagePlace::cases(), 'value'));
         $names = [];
@@ -21,7 +21,7 @@ final class PackageWorkflowDefinitionTest extends TestCase
                 $names[] = $constant->getValue();
             }
         }
-        self::assertSame(['load', 'accept', 'reject', 'fetch_docs'], $names);
+        self::assertSame(['load', 'accept', 'reject', 'canonical_failed', 'fetch_docs'], $names);
     }
 
     public function testRequirementsDoNotDependOnPackageType(): void
