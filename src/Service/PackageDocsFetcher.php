@@ -53,14 +53,7 @@ final class PackageDocsFetcher
                     continue;
                 }
 
-                $content = $response->getContent();
-                if (!mb_check_encoding($content, 'UTF-8') || str_contains($content, "\0")) {
-                    // Reject unsuitable text before PostgreSQL throws a PDOException,
-                    // which PHP currently cannot round-trip safely between workers.
-                    throw new \UnexpectedValueException(sprintf('Document is not valid PostgreSQL UTF-8 text: %s/%s', $base, $name));
-                }
-
-                return $content;
+                return self::normalizeText($response->getContent(), $base.'/'.$name);
             } catch (\Symfony\Contracts\HttpClient\Exception\ExceptionInterface $error) {
                 // Parallel Messenger sends errors across processes. Live HTTP responses
                 // cannot be serialized; keep the diagnostic, but not the response/previous.
@@ -70,4 +63,29 @@ final class PackageDocsFetcher
 
         return null;
     }
+
+    private static function normalizeText(string $content, string $url): string
+    {
+        // Some repositories contain a UTF-16 file, or an ASCII UTF-16LE line
+        // appended to an otherwise UTF-8 README by a different editor.
+        if (str_starts_with($content, "\xff\xfe")) {
+            $content = mb_convert_encoding(substr($content, 2), 'UTF-8', 'UTF-16LE');
+        } elseif (str_starts_with($content, "\xfe\xff")) {
+            $content = mb_convert_encoding(substr($content, 2), 'UTF-8', 'UTF-16BE');
+        } else {
+            $content = preg_replace_callback('/(?:[\x09\x0A\x0D\x20-\x7E]\x00){2,}/',
+                static fn (array $match): string => mb_convert_encoding($match[0], 'UTF-8', 'UTF-16LE'), $content);
+        }
+        // Legacy Western-European README files commonly use Windows-1252
+        // (including Latin-1 accented letters). Preserve valid UTF-8 verbatim.
+        if (!mb_check_encoding($content, 'UTF-8')) {
+            $content = mb_convert_encoding($content, 'UTF-8', 'Windows-1252');
+        }
+        if (preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F]/', $content)) {
+            throw new \UnexpectedValueException(sprintf('Document contains binary control bytes: %s', $url));
+        }
+
+        return $content;
+    }
+
 }

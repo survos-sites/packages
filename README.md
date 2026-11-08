@@ -39,6 +39,18 @@ Composer data comes from Packagist's version metadata, not a separate download
 of the repository's literal `composer.json`. README and AGENTS.md are fetched
 only for compatible Symfony bundles; a completed docs attempt can find no file.
 
+Unavailable metadata has explicit final places: `package_not_found` (confirmed
+Packagist 404) and `no_versions` (confirmed empty version list). These are completed
+outcomes, not successfully loaded metadata; failure history is retained. The
+`mark_not_found` and `mark_no_versions` transitions verify the outcome before
+settling a discovered package. `retry_not_found` / `retry_no_versions` reopen it
+for loading, and changes-feed updates can select those retry transitions.
+
+Documentation is stored as UTF-8. Valid UTF-8 is preserved; UTF-16 with a BOM,
+ASCII UTF-16LE runs appended by mixed editors, and legacy Windows-1252 text are
+normalized before persistence. Binary control bytes still fail explicitly.
+
+
 The updated jwage transport is selected by a `phpamqplib://` DSN in
 `MESSENGER_TRANSPORT_DSN_RABBITMQ`; `amqp://` selects Symfony's native transport.
 The local benchmark uses jwage. Both are installed; installing jwage alone does

@@ -106,3 +106,29 @@ match 72 failure records: six malformed documents, four packages with no version
 and 62 packages not found on Packagist. There are 17,428 catalogue rows, 17,362 with
 metadata, 7,352 completed documentation attempts and 6,116 README bodies.
 HTTP cache was retained. Local audit: `var/benchmark/recovery-audit.json`.
+
+
+## Completed catalogue, 2026-11-08
+
+Fresh upstream checks reconfirmed all 66 metadata exceptions: 62 HTTP 404s and
+four empty version lists. Added verified `package_not_found` and `no_versions`
+places and explicit retry transitions; the original failure messages remain as
+history. No fake metadata was stored to make the counts look complete.
+
+All six document failures were recovered by normalizing legacy Western-European
+encoding or UTF-16 text (three files contained an ASCII UTF-16LE line appended to
+UTF-8). One delivery remained unacknowledged during the concurrent final pass;
+an orderly worker stop and serial drain recovered it. This observation is retained
+for transport follow-up, not attributed conclusively to the workflow fix.
+
+Final results for all **17,428** packages:
+
+- 17,362 have Packagist metadata.
+- 7,358 completed documentation attempts; 6,122 README bodies found.
+- 10,004 docs skipped by the compatibility/type policy.
+- 62 unavailable on Packagist; four have no versions.
+- Zero discovered, requirements-pending or docs-pending rows.
+- Package and Elasticsearch queues: zero ready and zero unacknowledged messages.
+- 66 retained failure records document the explicit unavailable outcomes.
+
+Validation: 30 tests / 163 assertions and container lint passed. HTTP cache retained.

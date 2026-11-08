@@ -33,6 +33,20 @@ final class PackageWorkflow
         icon: 'tabler:download', iconClass: 'text-primary', async: true, transport: 'bundle.load')]
     public const TRANSITION_LOAD = 'load';
 
+    #[AsyncTransition(PackagePlace::Discovered, PackagePlace::PackageNotFound,
+        'Verify the Packagist 404 and record an unavailable outcome', async: true, transport: 'bundle.load')]
+    public const TRANSITION_MARK_NOT_FOUND = 'mark_not_found';
+
+    #[AsyncTransition(PackagePlace::Discovered, PackagePlace::NoVersions,
+        'Verify an empty Packagist version list and record an unavailable outcome', async: true, transport: 'bundle.load')]
+    public const TRANSITION_MARK_NO_VERSIONS = 'mark_no_versions';
+
+    #[Transition(PackagePlace::PackageNotFound, PackagePlace::Discovered, 'Retry metadata for a package that was unavailable')]
+    public const TRANSITION_RETRY_NOT_FOUND = 'retry_not_found';
+
+    #[Transition(PackagePlace::NoVersions, PackagePlace::Discovered, 'Retry metadata for a package that had no versions')]
+    public const TRANSITION_RETRY_NO_VERSIONS = 'retry_no_versions';
+
     // A refresh clears the derived tracks and forks again. Symfony requires transition names to be
     // unique per place, so there is one reload per settled combination; they are mutually exclusive.
     #[AsyncTransition([PackagePlace::MetadataLoaded, PackagePlace::RequirementsCompatible, PackagePlace::Documented],
@@ -59,6 +73,8 @@ final class PackageWorkflow
         self::TRANSITION_RELOAD_DOCUMENTED,
         self::TRANSITION_RELOAD_COMPATIBLE,
         self::TRANSITION_RELOAD_UNSUPPORTED,
+        self::TRANSITION_RETRY_NOT_FOUND,
+        self::TRANSITION_RETRY_NO_VERSIONS,
     ];
 
     #[Transition(PackagePlace::RequirementsPending, PackagePlace::RequirementsCompatible,
@@ -114,6 +130,28 @@ final class PackageWorkflow
         // not here. Repeat fetches are absorbed by the caching packagist.client.
         $this->loadLatestVersionData($package);
         $this->packageService->populateFromComposerData($package);
+    }
+
+    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_MARK_NOT_FOUND)]
+    #[AsTransitionListener(self::WORKFLOW_NAME, self::TRANSITION_MARK_NO_VERSIONS)]
+    public function onMarkUnavailable(TransitionEvent $event): void
+    {
+        $notFound = $event->getTransition()->getName() === self::TRANSITION_MARK_NOT_FOUND;
+        try {
+            $metadata = $this->packagistClient->get($event->getSubject()->name);
+        } catch (\Packagist\Api\PackageNotFoundException $error) {
+            if ($notFound) {
+                return;
+            }
+            throw $error;
+        } catch (\Psr\Http\Client\ClientExceptionInterface|\Symfony\Contracts\HttpClient\Exception\ExceptionInterface $error) {
+            throw new \RuntimeException($error->getMessage(), (int) $error->getCode());
+        }
+        if (!$notFound && count($metadata->getVersions()) === 0) {
+            return;
+        }
+
+        throw new \UnexpectedValueException('Packagist no longer confirms the requested unavailable outcome; retry metadata loading.');
     }
 
     private function loadLatestVersionData(Package $package): void

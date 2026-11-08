@@ -76,14 +76,25 @@ final class PackageDocsFetcherTest extends TestCase
         }
     }
 
-    public function testRejectsInvalidUtf8BeforePersistence(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('encodedDocuments')]
+    public function testNormalizesLegacyDocuments(string $raw, string $expected): void
     {
         $package = $this->package('https://github.com/acme/demo', 'abc123');
-        $fetcher = new PackageDocsFetcher(new MockHttpClient(new MockResponse("invalid \xf3 text")));
+        $client = new MockHttpClient(static fn () => new MockResponse($raw));
+        (new PackageDocsFetcher($client))->fetch($package);
+        self::assertSame($expected, $package->readme);
+        self::assertSame($expected, $package->agentsMd);
+        self::assertNotNull($package->docsFetchedAt);
+    }
 
-        $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('Document is not valid PostgreSQL UTF-8 text');
-        $fetcher->fetch($package);
+    public static function encodedDocuments(): iterable
+    {
+        yield 'UTF-8 stays unchanged' => ['Éléphant 🐘', 'Éléphant 🐘'];
+        yield 'legacy Latin accents' => ["Asociaci\xf3n \xc9l\xe9phant", 'Asociación Éléphant'];
+        yield 'Windows punctuation' => ["\x93Hello\x94", '“Hello”'];
+        yield 'UTF-16LE appended line' => ["# UTF-8\n#\0 \0A\0\r\0\n\0", "# UTF-8\n# A\r\n"];
+        yield 'UTF-16LE BOM' => ["\xff\xfe".mb_convert_encoding('Éléphant', 'UTF-16LE', 'UTF-8'), 'Éléphant'];
+        yield 'UTF-16BE BOM' => ["\xfe\xff".mb_convert_encoding('Éléphant', 'UTF-16BE', 'UTF-8'), 'Éléphant'];
     }
 
     public function testRejectsNullBytesBeforePersistence(): void

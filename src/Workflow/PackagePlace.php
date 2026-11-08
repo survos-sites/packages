@@ -20,6 +20,12 @@ enum PackagePlace: string
     #[Place('Package discovered; load metadata from Packagist', icon: 'tabler:radar', iconClass: 'text-primary', initial: true, next: PackageWorkflow::TRANSITION_LOAD)]
     case Discovered = 'discovered';
 
+    #[Place('Packagist has no public package with this name; the failed request is retained', label: 'Not on Packagist', icon: 'tabler:package-off')]
+    case PackageNotFound = 'package_not_found';
+
+    #[Place('Packagist lists the package but exposes no versions', label: 'No versions', icon: 'tabler:package-off')]
+    case NoVersions = 'no_versions';
+
     #[Place('Metadata loaded from Packagist. Stays marked until the next refresh.', icon: 'tabler:package', iconClass: 'text-info')]
     case MetadataLoaded = 'metadata_loaded';
 
