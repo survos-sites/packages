@@ -3,7 +3,6 @@
 declare(strict_types=1);
 namespace App\Tests;
 use App\Entity\Package;
-use App\Entity\PackageFile;
 use App\Service\PackageEmbeddingService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -36,24 +35,5 @@ final class PackageEmbeddingTest extends TestCase
         $p->state = 'documented'; $p->readme .= ' Changed'; self::assertNull($service->cachedVector($p));
         $p->embedding = array_fill(0, 768, 0.0); self::assertFalse(PackageEmbeddingService::validVector($p->embedding));
         $p->embedding[0] = INF; self::assertFalse(PackageEmbeddingService::validVector($p->embedding));
-    }
-
-    public function testADocumentIsEmbeddedOnceAndKeepsItsOwnFingerprint(): void
-    {
-        $calls = 0;
-        $http = new MockHttpClient(function ($method, $url) use (&$calls) {
-            if (str_ends_with($url, '/api/tags')) { return new MockResponse('{"models":[{"name":"model","digest":"rev"}]}'); }
-            ++$calls;
-            $vector = array_fill(0, 768, 0.0); $vector[0] = 1.0;
-            return new MockResponse(json_encode(['embeddings' => [$vector]]));
-        });
-        $service = new PackageEmbeddingService($http, $this->createStub(EntityManagerInterface::class), 'http://localhost', 'model', 'rev');
-        $file = new PackageFile(new Package('acme/demo'), PackageFile::AGENTS, 'AGENTS.md', 'Run the tests.');
-        self::assertFalse($service->isFileCurrent($file));
-        $service->vectorizeFile($file);
-        $service->vectorizeFile($file);
-        self::assertSame(1, $calls);
-        self::assertTrue($service->isFileCurrent($file));
-        self::assertStringStartsWith('acme/demo', PackageEmbeddingService::fileText($file));
     }
 }

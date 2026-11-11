@@ -7,6 +7,8 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\App;
 return App::config([
     'framework' => [
         'messenger' => [
+            // Every message carries an id, and a message dispatched by a handler records its cause and shares the root's correlation.
+            'identity_stamps' => true,
             'failure_transport' => 'failed',
             'transports' => [
                 'bundle.load' => [
@@ -36,6 +38,16 @@ return App::config([
                         'prefetch_count' => 1,
                         'exchange' => ['name' => 'bundle.embed'],
                         'queues' => ['bundle.embed' => null],
+                        'delay' => ['durable' => true],
+                    ],
+                    'retry_strategy' => ['max_retries' => 3, 'multiplier' => 2],
+                ],
+                'bundle.extract' => [
+                    'dsn' => '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%',
+                    'options' => [
+                        'prefetch_count' => 1,
+                        'exchange' => ['name' => 'bundle.extract'],
+                        'queues' => ['bundle.extract' => null],
                         'delay' => ['durable' => true],
                     ],
                     'retry_strategy' => ['max_retries' => 3, 'multiplier' => 2],

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * One document of a package (its README or AGENTS.md), content-addressed: a changed
- * document is a new row, so an unchanged one is never embedded again.
+ * document is a new row, so an unchanged one is never processed again.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'package_file')]
@@ -28,11 +28,9 @@ class PackageFile
     #[ORM\Column(length: 32, nullable: true)]
     public ?string $state = null;
 
+    /** What the extract transition found: headings, shell commands, counts. */
     #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
-    public ?array $embedding = null;
-
-    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
-    public ?string $embeddingFingerprint = null;
+    public ?array $extract = null;
 
     #[ORM\Column(length: 64)]
     private(set) string $sha;

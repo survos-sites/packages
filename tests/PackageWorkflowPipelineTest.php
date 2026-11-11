@@ -16,6 +16,10 @@ use Survos\WorkflowMessengerBundle\Message\TransitionRequest;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Stamp\CausationStamp;
+use Symfony\Component\Messenger\Stamp\CorrelationStamp;
+use Symfony\Component\Messenger\Stamp\MessageIdStamp;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use Symfony\Component\Messenger\Worker;
@@ -88,7 +92,7 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         self::assertSame(RemoteFixtures::README, $package->readme);
     }
 
-    public function testFetchedDocumentsBecomeFilesThatAreEmbeddedByTheirOwnMessages(): void
+    public function testFetchedDocumentsBecomeFilesThatAreExtractedByTheirOwnMessages(): void
     {
         $this->em->persist(new Package(RemoteFixtures::PACKAGE));
         $this->em->flush();
@@ -102,11 +106,36 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         self::assertSame(RemoteFixtures::README, $files[0]->content);
         self::assertSame('fetched', $files[0]->state);
 
-        $embeds = array_values(array_filter($this->sent('bundle.embed'), static fn (TransitionRequest $r) => PackageFileWorkflow::WORKFLOW_NAME === $r->workflow));
-        self::assertCount(1, $embeds, 'the file is kicked off by its own flush inside the fetch_docs handler');
-        self::assertSame(PackageFile::class, $embeds[0]->subject->type);
-        self::assertSame($files[0]->id, $embeds[0]->subject->id);
-        self::assertSame(PackageFileWorkflow::TRANSITION_EMBED, $embeds[0]->transition);
+        $extracts = array_values(array_filter($this->envelopes('bundle.extract'), static fn (Envelope $e) => $e->getMessage() instanceof TransitionRequest && PackageFileWorkflow::WORKFLOW_NAME === $e->getMessage()->workflow));
+        self::assertCount(1, $extracts, 'the file is kicked off by its own flush inside the fetch_docs handler');
+        $request = $extracts[0]->getMessage();
+        self::assertSame(PackageFile::class, $request->subject->type);
+        self::assertSame($files[0]->id, $request->subject->id);
+        self::assertSame(PackageFileWorkflow::TRANSITION_EXTRACT, $request->transition);
+
+        $this->work('bundle.extract');
+        $this->em->clear();
+        $file = $this->em->find(PackageFile::class, $files[0]->id);
+        self::assertSame('extracted', $file->state);
+        self::assertNotEmpty($file->extract['headings']);
+    }
+
+    public function testFileMessagesRecordTheFetchMessageAsTheirCauseAndShareItsCorrelation(): void
+    {
+        $this->em->persist(new Package(RemoteFixtures::PACKAGE));
+        $this->em->flush();
+        $this->work('bundle.load');
+        $this->work('bundle.fetch.docs');
+
+        $fetch = $this->envelopes('bundle.fetch.docs')[0];
+        $extract = array_values(array_filter($this->envelopes('bundle.extract'), static fn (Envelope $e) => $e->getMessage() instanceof TransitionRequest && PackageFileWorkflow::WORKFLOW_NAME === $e->getMessage()->workflow))[0];
+
+        $fetchId = $fetch->last(MessageIdStamp::class)?->getId();
+        self::assertNotNull($fetchId, 'every message carries its own id');
+        self::assertNotSame($fetchId, $extract->last(MessageIdStamp::class)?->getId());
+        self::assertSame($fetchId, $extract->last(CausationStamp::class)?->getId(), 'the file message was caused by the fetch message');
+        self::assertNotNull($fetch->last(CorrelationStamp::class)?->getId());
+        self::assertSame($fetch->last(CorrelationStamp::class)->getId(), $extract->last(CorrelationStamp::class)?->getId(), 'and belongs to the same flow');
     }
 
     public function testRefetchKeepsUnchangedDocumentsAndReplacesChangedOnes(): void
@@ -238,6 +267,12 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
     private function transport(string $name): InMemoryTransport
     {
         return self::getContainer()->get('messenger.transport.'.$name);
+    }
+
+    /** @return list<Envelope> */
+    private function envelopes(string $name): array
+    {
+        return array_values($this->transport($name)->getSent());
     }
 
     /** @return list<TransitionRequest> */
