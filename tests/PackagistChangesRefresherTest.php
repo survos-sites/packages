@@ -72,7 +72,7 @@ final class PackagistChangesRefresherTest extends TestCase
         $dispatched = [];
         $bus = $this->createStub(MessageBusInterface::class);
         $bus->method('dispatch')->willReturnCallback(function (TransitionRequest $m, array $stamps) use (&$dispatched): Envelope {
-            $dispatched[] = [$m->subject->id, $m->transition, $stamps[0]->getTransportNames()];
+            $dispatched[] = [$m->subject->id, $m->transition, current(array_filter($stamps, static fn ($s) => $s instanceof \Symfony\Component\Messenger\Stamp\TransportNamesStamp))->getTransportNames()];
 
             return new Envelope($m);
         });
