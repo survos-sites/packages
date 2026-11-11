@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Package;
+use App\Entity\PackageFile;
 use Symfony\Component\HttpClient\NoPrivateNetworkHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -26,13 +27,18 @@ final class PackageDocsFetcher
         $this->httpClient = new NoPrivateNetworkHttpClient($httpClient);
     }
 
-    public function fetch(Package $package): void
+    /** @return array<string, string> the name each found document was fetched under, by PackageFile kind */
+    public function fetch(Package $package): array
     {
         $base = self::rawBaseUrl($package);
-        $package->readme = $base ? $this->first($base, self::README_NAMES) : null;
-        $package->agentsMd = $base ? $this->first($base, self::AGENTS_NAMES) : null;
+        $readme = $base ? $this->first($base, self::README_NAMES) : null;
+        $agents = $base ? $this->first($base, self::AGENTS_NAMES) : null;
+        $package->readme = $readme[1] ?? null;
+        $package->agentsMd = $agents[1] ?? null;
         $package->readmeStatus = $base === null ? 'unsupported' : ($package->hasReadme ? 'found' : 'missing');
         $package->docsFetchedAt = new \DateTimeImmutable();
+
+        return array_filter([PackageFile::README => $readme[0] ?? null, PackageFile::AGENTS => $agents[0] ?? null]);
     }
 
     /** Provider-specific pinned document URL; null means unsupported, not missing. */
@@ -57,8 +63,11 @@ final class PackageDocsFetcher
         return null;
     }
 
-    /** @param list<string> $names */
-    private function first(string $base, array $names): ?string
+    /**
+     * @param list<string> $names
+     * @return array{string, string}|null the matching name and the document
+     */
+    private function first(string $base, array $names): ?array
     {
         foreach ($names as $name) {
             try {
@@ -77,7 +86,7 @@ final class PackageDocsFetcher
                     throw new \RuntimeException('Document request redirected to login: '.$url);
                 }
                 $content = self::normalizeText($response->getContent(), $url);
-                if (trim($content) !== '') { return $content; }
+                if (trim($content) !== '') { return [$name, $content]; }
             } catch (\Symfony\Contracts\HttpClient\Exception\ExceptionInterface $error) {
                 // Parallel Messenger sends errors across processes. Live HTTP responses
                 // cannot be serialized; keep the diagnostic, but not the response/previous.

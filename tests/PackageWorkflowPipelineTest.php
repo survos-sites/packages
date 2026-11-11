@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests;
 
 use App\Entity\Package;
+use App\Entity\PackageFile;
+use App\Workflow\PackageFileWorkflow;
 use App\Tests\Support\RemoteFixtures;
 use App\Workflow\PackagePlace;
 use App\Workflow\PackageWorkflow as WF;
@@ -84,6 +86,55 @@ final class PackageWorkflowPipelineTest extends KernelTestCase
         $package = $this->fresh();
         self::assertEquals(PackagePlace::marking(PackagePlace::Documented), $package->getMarking());
         self::assertSame(RemoteFixtures::README, $package->readme);
+    }
+
+    public function testFetchedDocumentsBecomeFilesThatAreEmbeddedByTheirOwnMessages(): void
+    {
+        $this->em->persist(new Package(RemoteFixtures::PACKAGE));
+        $this->em->flush();
+        $this->work('bundle.load');
+        $this->work('bundle.fetch.docs');
+
+        $files = $this->em->getRepository(PackageFile::class)->findBy(['package' => $this->fresh()]);
+        self::assertCount(1, $files, 'the fixture has a README and no AGENTS.md');
+        self::assertSame(PackageFile::README, $files[0]->kind);
+        self::assertSame('README.md', $files[0]->path);
+        self::assertSame(RemoteFixtures::README, $files[0]->content);
+        self::assertSame('fetched', $files[0]->state);
+
+        $embeds = array_values(array_filter($this->sent('bundle.embed'), static fn (TransitionRequest $r) => PackageFileWorkflow::WORKFLOW_NAME === $r->workflow));
+        self::assertCount(1, $embeds, 'the file is kicked off by its own flush inside the fetch_docs handler');
+        self::assertSame(PackageFile::class, $embeds[0]->subject->type);
+        self::assertSame($files[0]->id, $embeds[0]->subject->id);
+        self::assertSame(PackageFileWorkflow::TRANSITION_EMBED, $embeds[0]->transition);
+    }
+
+    public function testRefetchKeepsUnchangedDocumentsAndReplacesChangedOnes(): void
+    {
+        $executor = self::getContainer()->get(TransitionExecutorInterface::class);
+        $executor->synchronously(function (): void {
+            $this->em->persist(new Package(RemoteFixtures::PACKAGE));
+            $this->em->flush();
+        });
+        $package = $this->fresh();
+        $first = $this->em->getRepository(PackageFile::class)->findBy(['package' => $package]);
+        self::assertCount(1, $first);
+        $firstId = $first[0]->id;
+
+        $executor->synchronously(fn () => $executor->execute($this->workflow(), $package, WF::TRANSITION_LOAD));
+        $this->em->clear();
+        $again = $this->em->getRepository(PackageFile::class)->findBy(['package' => $this->fresh()]);
+        self::assertSame([$firstId], array_map(static fn (PackageFile $f) => $f->id, $again), 'unchanged content keeps its row');
+
+        $package = $this->fresh();
+        $stale = new PackageFile($package, PackageFile::README, null, 'old README');
+        $this->em->persist($stale);
+        $this->em->remove($again[0] = $this->em->find(PackageFile::class, $firstId));
+        $this->em->flush();
+        $executor->synchronously(fn () => $executor->execute($this->workflow(), $this->fresh(), WF::TRANSITION_LOAD));
+        $this->em->clear();
+        $files = $this->em->getRepository(PackageFile::class)->findBy(['package' => $this->fresh()]);
+        self::assertSame([$firstId], array_map(static fn (PackageFile $f) => $f->id, $files), 'a changed document replaces the stale row');
     }
 
     public function testCascadeNoneStopsAfterTheRequestedTransition(): void

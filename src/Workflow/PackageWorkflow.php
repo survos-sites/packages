@@ -8,6 +8,7 @@ use App\Entity\Package;
 use App\Service\PackageDocsFetcher;
 use App\Service\CanonicalProbe;
 use App\Service\PackageEmbeddingService;
+use App\Service\PackageFileSync;
 use App\Service\PackageService;
 use App\Service\RequiredPackageDiscovery;
 use Packagist\Api\Client;
@@ -74,6 +75,7 @@ final class PackageWorkflow
         private readonly PackageDocsFetcher $docsFetcher,
         private readonly CanonicalProbe $canonicalProbe,
         private readonly PackageEmbeddingService $embeddings,
+        private readonly PackageFileSync $files,
     ) {}
 
     #[AsCompletedListener(self::WORKFLOW_NAME, self::TRANSITION_ACCEPT)]
@@ -106,7 +108,7 @@ final class PackageWorkflow
     public function onFetchDocs(TransitionEvent $event): void
     {
         $package = $event->getSubject();
-        $this->docsFetcher->fetch($package);
+        $this->files->sync($package, $this->docsFetcher->fetch($package));
         if (!$this->embeddings->isCurrent($package)) {
             $package->embedding = null;
             $package->embeddingFingerprint = null;

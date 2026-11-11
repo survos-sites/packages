@@ -102,6 +102,7 @@ final class PackageWorkflowTest extends TestCase
             $client,
             new \App\Service\PackageDocsFetcher(new \Symfony\Component\HttpClient\MockHttpClient()),
             new \App\Service\CanonicalProbe(new \Symfony\Component\HttpClient\MockHttpClient()),
-            new \App\Service\PackageEmbeddingService(new \Symfony\Component\HttpClient\MockHttpClient(), $this->createStub(EntityManagerInterface::class), 'http://localhost', 'test', 'revision'));
+            new \App\Service\PackageEmbeddingService(new \Symfony\Component\HttpClient\MockHttpClient(), $this->createStub(EntityManagerInterface::class), 'http://localhost', 'test', 'revision'),
+            new \App\Service\PackageFileSync($this->createStub(EntityManagerInterface::class)));
     }
 }

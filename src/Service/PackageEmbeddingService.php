@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Package;
+use App\Entity\PackageFile;
 use Doctrine\ORM\EntityManagerInterface;
 use Survos\SearchBundle\Contract\EmbeddingProviderInterface;
 use Survos\SearchBundle\Search\EmbeddingProfile;
@@ -31,6 +32,28 @@ final class PackageEmbeddingService implements EmbeddingProviderInterface
     public static function text(Package $package): string
     {
         return trim($package->name."\n".$package->description."\n".preg_replace('/\s+/u', ' ', $package->readme ?? ''));
+    }
+
+    /** What a document is embedded as: the package it belongs to, then its text. */
+    public static function fileText(PackageFile $file): string
+    {
+        return trim($file->package->name."\n".preg_replace('/\s+/u', ' ', $file->content));
+    }
+
+    public function isFileCurrent(PackageFile $file): bool
+    {
+        return $file->embeddingFingerprint === $this->profile->fingerprint(self::fileText($file))
+            && self::validVector($file->embedding);
+    }
+
+    public function vectorizeFile(PackageFile $file): void
+    {
+        if ($this->isFileCurrent($file)) {
+            return;
+        }
+        $text = self::fileText($file);
+        $file->embedding = $this->generate($text, 'search_document: ');
+        $file->embeddingFingerprint = $this->profile->fingerprint($text);
     }
 
     public static function validVector(?array $vector): bool

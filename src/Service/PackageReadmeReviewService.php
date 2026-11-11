@@ -11,7 +11,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Workflow\Registry;
 final class PackageReadmeReviewService
 {
-    public function __construct(private EntityManagerInterface $em, private Registry $registry, private PackageDocsFetcher $docs) {}
+    public function __construct(private EntityManagerInterface $em, private Registry $registry, private PackageDocsFetcher $docs, private PackageFileSync $files) {}
 
     #[AsCommand('app:packages:review-readmes', 'Apply README policy to stored packages, fetching only absent documentation')]
     public function review(SymfonyStyle $io, #[Option('Number of disjoint review partitions')] int $shards = 1, #[Option('Zero-based partition')] int $shard = 0): int
@@ -25,7 +25,7 @@ final class PackageReadmeReviewService
                     if (!$workflow->can($p, WF::TRANSITION_FETCH_DOCS)) { ++$inconclusive; $this->em->detach($p); continue; }
                     $workflow->apply($p, WF::TRANSITION_FETCH_DOCS, ['cascade' => 'none']);
                 } elseif (!$p->hasReadme) {
-                    $this->docs->fetch($p);
+                    $this->files->sync($p, $this->docs->fetch($p));
                 } else {
                     $p->readmeStatus = 'found';
                 }
