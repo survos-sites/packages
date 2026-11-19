@@ -79,6 +79,9 @@ ENV APP_ENV=prod APP_DEBUG=0
 # cache/container files.
 COPY --from=build --chown=www-data:www-data /app /app
 
+COPY --chmod=755 docker/healthcheck.sh /usr/local/bin/packages-healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 CMD ["/usr/local/bin/packages-healthcheck"]
+
 EXPOSE 80
 
 CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
