@@ -28,6 +28,9 @@ if [[ "$command" =~ ^git:from-image\ packages\ (ghcr\.io/survos-sites/packages@s
   trap 'rm -rf -- "$DOCKER_CONFIG"' EXIT
   printf '%s' "$registry_token" | docker login ghcr.io --username "$registry_user" --password-stdin >/dev/null 2>&1
   unset registry_token
+  # Dokku's registry helpers select their own auth directory. Pull explicitly
+  # with this temporary login first; git:from-image reuses the local digest.
+  docker pull "$image"
   /usr/bin/dokku git:from-image packages "$image"
 else
   printf '%s\n' 'This key permits only the packages image deployment and verification commands.' >&2
