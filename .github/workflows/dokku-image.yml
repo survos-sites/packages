@@ -98,6 +98,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     environment: production
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Configure deployment SSH
         env:
@@ -125,11 +128,16 @@ jobs:
       - name: Deploy the exact tested image
         env:
           DIGEST: ${{ needs.build.outputs.digest }}
+          GHCR_USERNAME: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           [[ "$DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]
           ssh fsn1 apps:exists packages
-          ssh fsn1 git:from-image packages "$IMAGE@$DIGEST"
+          # The forced-command wrapper reads these from stdin and removes its
+          # temporary Docker authentication directory when deployment finishes.
+          printf '%s\n%s\n' "$GHCR_USERNAME" "$GHCR_TOKEN" | \
+            ssh fsn1 git:from-image packages "$IMAGE@$DIGEST"
 
       - name: Verify the running release
         run: |

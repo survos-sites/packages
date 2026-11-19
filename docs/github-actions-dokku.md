@@ -25,15 +25,18 @@ keep it private unless public distribution is intentional. The workflow's
 
 1. Create the GitHub `production` environment. Restrict deployments to `main`;
    optionally configure required reviewers if supported by the repository plan.
-2. Register a dedicated CI SSH key with Dokku, restricted to the `packages` app
-   where supported. Set environment secret `DOKKU_SSH_PRIVATE_KEY` to its private
+2. Install `ops/packages-ci-ssh` root-owned and executable at
+   `/usr/local/bin/packages-ci-ssh`. Register a dedicated key in Dokku's
+   `authorized_keys` with `restrict,command="/usr/local/bin/packages-ci-ssh"`.
+   The wrapper accepts only this workflow's packages commands. Set environment secret `DOKKU_SSH_PRIVATE_KEY` to its private
    key. Do not copy a personal administrative SSH key into GitHub.
 3. Set environment secret `DOKKU_SSH_KNOWN_HOSTS` to the independently verified
    SSH host-key line(s) for `fsn1.survos.com`. Do not trust a fresh unauthenticated
    `ssh-keyscan` result inside the deployment workflow.
-4. For a private GHCR image, configure Dokku's registry authentication once with
-   a dedicated read-packages credential. Do not persist the short-lived Actions
-   token as the server's recovery credential. Never log the token.
+4. The deployment job passes its read-only, short-lived `GITHUB_TOKEN` over
+   SSH stdin. The forced-command wrapper logs into GHCR using a temporary
+   `DOCKER_CONFIG`, and deletes it after deployment. No long-lived registry
+   token is stored on fsn1. Ensure this repository has read access to its package.
 5. Check effective PostgreSQL configuration and run full
    `php bin/console doctrine:schema:validate` against local PostgreSQL before the
    first production release. Review the existing PHPUnit/PHPStan results too;
@@ -52,7 +55,7 @@ an active release is not cancelled by a newer invocation.
 
 The SSH hostname is fixed as `fsn1.survos.com`, using the local alias `fsn1`.
 Application runtime secrets remain in Dokku; CI receives only its deployment
-key. The deployment job validates the live Doctrine schema and public health
+key and its automatic per-job registry token. The deployment job validates the live Doctrine schema and public health
 endpoint after Dokku's normal deployment checks succeed. Before calling the
 first release complete, also verify a database-backed page, a compiled asset,
 and any currently scaled consumers. A post-release verification failure marks
@@ -62,7 +65,10 @@ the workflow failed but does not automatically undo a deployed release.
 
 Retain prior image digests in GHCR. Redeploy a known-good digest with
 `ssh dokku@fsn1 git:from-image packages ghcr.io/survos-sites/packages@sha256:...`.
-This does not reverse database migrations. Review schema compatibility first.
+This does not reverse database migrations. Review schema compatibility first. A private image that has been pruned locally
+needs fresh registry authentication to pull again; keep known-good images locally
+and retain their digests in GHCR. The CI key requires the registry username and
+token on stdin for every image deployment.
 
 Image deployment updates Dokku's app repository to reference the image. The
 GitHub source repository remains authoritative. A later `git push dokku` switches

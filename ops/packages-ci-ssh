@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Install root-owned at /usr/local/bin/packages-ci-ssh on fsn1; use as the
+# forced command for the dedicated GitHub Actions key in dokku authorized_keys.
+set -euo pipefail
+command=${SSH_ORIGINAL_COMMAND:-}
+unset SSH_ORIGINAL_COMMAND
+export SSH_NAME=github-actions-packages
+export SSH_USER=dokku
+
+case "$command" in
+  'apps:exists packages') exec /usr/bin/dokku apps:exists packages ;;
+  'ps:report packages') exec /usr/bin/dokku ps:report packages ;;
+  'run packages php bin/console doctrine:schema:validate --no-interaction')
+    exec /usr/bin/dokku run packages php bin/console doctrine:schema:validate --no-interaction
+    ;;
+esac
+
+if [[ "$command" =~ ^git:from-image\ packages\ (ghcr\.io/survos-sites/packages@sha256:[a-f0-9]{64})$ ]]; then
+  image=${BASH_REMATCH[1]}
+  # A per-job, read-only GITHUB_TOKEN arrives over SSH stdin, never in argv.
+  IFS= read -r registry_user
+  IFS= read -r registry_token
+  test -n "$registry_user"
+  test -n "$registry_token"
+  umask 077
+  DOCKER_CONFIG=$(mktemp -d /tmp/packages-ci-auth.XXXXXXXX)
+  export DOCKER_CONFIG
+  trap 'rm -rf -- "$DOCKER_CONFIG"' EXIT
+  printf '%s' "$registry_token" | docker login ghcr.io --username "$registry_user" --password-stdin >/dev/null 2>&1
+  unset registry_token
+  /usr/bin/dokku git:from-image packages "$image"
+else
+  printf '%s\n' 'This key permits only the packages image deployment and verification commands.' >&2
+  exit 64
+fi
