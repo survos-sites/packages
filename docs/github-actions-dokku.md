@@ -85,3 +85,22 @@ configuration, or enable deployments merely by being merged.
 To disable the CI endpoint, stop/disable `packages-ci-sshd`, remove the TCP 2222
 firewall rule, and remove its authorized key and GitHub environment secrets.
 The administrative SSH service on port 22 is independent.
+
+## fsn1 runtime requirements
+
+Keep `PORT=80` in Dokku config and explicitly map `http:80:80`. The base
+FrankenPHP image also exposes the Caddy admin port 2019; automatic port detection
+can otherwise select that port. Cloudflare currently provides the public HTTPS
+endpoint; do not add an origin HTTPS mapping without an origin certificate.
+
+`REDIS_URL` must point to the authenticated shared Redis service reachable from
+containers, not localhost. Values remain in Dokku config. The application uses
+`survos.packages` as its cache namespace to avoid collisions with other apps.
+Validate the existing packages RabbitMQ user and vhost before enabling consumers;
+a running broker container alone does not establish that its metadata store is
+healthy. Do not reset broker data to repair a failed authentication check.
+
+The November state migration supports both the older PostgreSQL enum `marking`
+column and the later JSONB `places` column. It preserves checkpoints and document
+content. The first image deployment backup is retained on fsn1 at
+`/var/backups/packages/bundles2-before-ci-20261119.dump` (root-readable only).
