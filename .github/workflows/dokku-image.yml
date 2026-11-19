@@ -117,6 +117,7 @@ jobs:
           cat > "$HOME/.ssh/config" <<'EOF'
           Host fsn1
             HostName fsn1.survos.com
+            Port 2222
             User dokku
             IdentityFile ~/.ssh/id_ed25519
             IdentitiesOnly yes

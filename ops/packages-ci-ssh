@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Install root-owned at /usr/local/bin/packages-ci-ssh on fsn1; use as the
-# forced command for the dedicated GitHub Actions key in dokku authorized_keys.
+# forced command of the dedicated packages-ci-sshd listener on port 2222.
 set -euo pipefail
 command=${SSH_ORIGINAL_COMMAND:-}
 unset SSH_ORIGINAL_COMMAND

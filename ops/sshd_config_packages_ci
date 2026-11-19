@@ -1,0 +1,26 @@
+# Independent deployment-only SSH listener. Does not include the admin config.
+Port 2222
+ListenAddress 0.0.0.0
+HostKey /etc/ssh/ssh_host_ed25519_key
+PidFile /run/sshd-packages-ci.pid
+AuthorizedKeysFile /etc/ssh/packages-ci.authorized_keys
+AllowUsers dokku
+AuthenticationMethods publickey
+PubkeyAuthentication yes
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitEmptyPasswords no
+PermitRootLogin no
+UsePAM yes
+StrictModes yes
+PermitUserEnvironment no
+PermitUserRC no
+DisableForwarding yes
+X11Forwarding no
+PermitTTY no
+PermitTunnel no
+ForceCommand /usr/local/bin/packages-ci-ssh
+MaxAuthTries 3
+LoginGraceTime 20
+MaxStartups 5:30:20
+LogLevel VERBOSE

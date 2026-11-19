@@ -26,12 +26,17 @@ keep it private unless public distribution is intentional. The workflow's
 1. Create the GitHub `production` environment. Restrict deployments to `main`;
    optionally configure required reviewers if supported by the repository plan.
 2. Install `ops/packages-ci-ssh` root-owned and executable at
-   `/usr/local/bin/packages-ci-ssh`. Register a dedicated key in Dokku's
-   `authorized_keys` with `restrict,command="/usr/local/bin/packages-ci-ssh"`.
+   `/usr/local/bin/packages-ci-ssh`. Install `ops/sshd_config_packages_ci` as `/etc/ssh/sshd_config_packages_ci`
+   and `ops/packages-ci-sshd.service` as a systemd unit. Put the dedicated public
+   key, prefixed with `restrict`, in root-owned
+   `/etc/ssh/packages-ci.authorized_keys`. Validate with `sshd -t -f` before
+   enabling the service. Allow TCP 2222 in the Hetzner firewall; keep the existing
+   port 22 rules unchanged. This listener allows only the `dokku` user, that
+   one key, and the forced command; shells, passwords and forwarding are disabled.
    The wrapper accepts only this workflow's packages commands. Set environment secret `DOKKU_SSH_PRIVATE_KEY` to its private
    key. Do not copy a personal administrative SSH key into GitHub.
 3. Set environment secret `DOKKU_SSH_KNOWN_HOSTS` to the independently verified
-   SSH host-key line(s) for `fsn1.survos.com`. Do not trust a fresh unauthenticated
+   SSH host-key line(s) for `[fsn1.survos.com]:2222`. Do not trust a fresh unauthenticated
    `ssh-keyscan` result inside the deployment workflow.
 4. The deployment job passes its read-only, short-lived `GITHUB_TOKEN` over
    SSH stdin. The forced-command wrapper logs into GHCR using a temporary
@@ -53,7 +58,7 @@ If the enable flag is absent or the selected ref is not main, the deployment job
 is skipped even when `deploy=true`. Builds and deployments are serialized, and
 an active release is not cancelled by a newer invocation.
 
-The SSH hostname is fixed as `fsn1.survos.com`, using the local alias `fsn1`.
+The SSH hostname is fixed as `fsn1.survos.com`, on port 2222, using the local alias `fsn1`.
 Application runtime secrets remain in Dokku; CI receives only its deployment
 key and its automatic per-job registry token. The deployment job validates the live Doctrine schema and public health
 endpoint after Dokku's normal deployment checks succeed. Before calling the
@@ -76,3 +81,7 @@ back to source deployment; avoid mixing both methods during a release.
 
 This change does not configure GitHub secrets, register keys, change server
 configuration, or enable deployments merely by being merged.
+
+To disable the CI endpoint, stop/disable `packages-ci-sshd`, remove the TCP 2222
+firewall rule, and remove its authorized key and GitHub environment secrets.
+The administrative SSH service on port 22 is independent.
