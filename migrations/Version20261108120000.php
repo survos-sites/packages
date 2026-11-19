@@ -17,6 +17,16 @@ final class Version20261108120000 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->abortIf(!$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform, 'PostgreSQL is required.');
+        // Older production deployments used a single PostgreSQL enum marking.
+        // Normalize it to the intermediate representation before the shared
+        // conversion below; never reset existing checkpoints or document data.
+        $columns = $this->connection->fetchFirstColumn("SELECT column_name FROM information_schema.columns WHERE table_schema = current_schema() AND table_name = 'package'");
+        if (!in_array('places', $columns, true)) {
+            $this->abortIf(!in_array('marking', $columns, true), 'Expected package.places or the legacy package.marking column.');
+            $this->addSql('ALTER TABLE package ADD places JSONB');
+            $this->addSql('UPDATE package SET places = jsonb_build_array(marking::text)');
+            $this->addSql('ALTER TABLE package DROP marking');
+        }
         $this->addSql('ALTER TABLE package ADD state VARCHAR(32) DEFAULT NULL');
         $this->addSql(<<<'SQL'
             UPDATE package SET requirements_failure_reason = CASE

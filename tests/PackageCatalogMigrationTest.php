@@ -75,6 +75,36 @@ final class PackageCatalogMigrationTest extends TestCase
         }
     }
 
+    public function testLegacyEnumMarkingPreservesCheckpointsAndDocuments(): void
+    {
+        $this->connection->executeStatement("CREATE TYPE package_place AS ENUM ('discovered', 'metadata_loaded', 'requirements_compatible', 'requirements_unsupported', 'documented')");
+        $this->connection->executeStatement('CREATE TABLE package (id INT PRIMARY KEY, marking package_place NOT NULL, requirements_failure_reason VARCHAR(32), readme TEXT)');
+        $cases = [
+            ['discovered', 'discovered'],
+            ['metadata_loaded', 'metadata_loaded'],
+            ['requirements_compatible', 'accepted'],
+            ['requirements_unsupported', 'rejected'],
+            ['documented', 'documented'],
+        ];
+        foreach ($cases as $id => [$marking]) {
+            $this->connection->insert('package', ['id' => $id, 'marking' => $marking, 'requirements_failure_reason' => 'php_incompatible', 'readme' => 'Keep this README']);
+        }
+        require_once dirname(__DIR__).'/migrations/Version20261108120000.php';
+        $migration = new \DoctrineMigrations\Version20261108120000($this->connection, new NullLogger());
+        $migration->up(new Schema());
+        foreach ($migration->getSql() as $query) {
+            $this->connection->executeStatement($query->getStatement());
+        }
+        foreach ($cases as $id => [, $state]) {
+            $row = $this->connection->fetchAssociative('SELECT * FROM package WHERE id=?', [$id]);
+            self::assertSame($state, $row['state']);
+            self::assertSame('php_incompatible', $row['requirements_failure_reason']);
+            self::assertSame('Keep this README', $row['readme']);
+            self::assertArrayNotHasKey('marking', $row);
+            self::assertArrayNotHasKey('places', $row);
+        }
+    }
+
     private function migrate(Schema $schema): void
     {
         foreach (['20261014104544', '20261014123000'] as $version) {
